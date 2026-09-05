@@ -1,0 +1,141 @@
+syntax = "proto3";
+
+message LoginLogInfo {
+  int64 id = 1;
+  optional int64 user_id = 2;
+  string username = 3;
+  int32 login_result = 4;
+  optional string failure_reason = 5;
+  string login_ip = 6;
+  optional int64 device_id = 7;
+  optional string user_agent = 8;
+  int64 login_at = 9;
+}
+
+message LoginLogListReq {
+  int32 page = 1;
+  int32 page_size = 2;
+  string username = 3;
+  int32 login_result = 4;
+  int64 user_id = 5;
+  int64 login_at_from = 6;
+  int64 login_at_to = 7;
+}
+
+message LoginLogListResp {
+  repeated LoginLogInfo list = 1;
+  int64 total = 2;
+}
+
+message CreateAdminActionLogReq {
+  int64 user_id = 1;
+  string request_method = 2;
+  string request_path = 3;
+  optional string request_query = 4;
+  optional string request_body = 5;
+  int32 action_result = 6;
+  int32 response_status = 7;
+  optional string response_body = 8;
+  int32 duration_ms = 9;
+  string client_ip = 10;
+  optional string user_agent = 11;
+}
+
+message AdminActionLogInfo {
+  int64 id = 1;
+  int64 user_id = 2;
+  string username = 3;
+  string request_method = 4;
+  string request_path = 5;
+  optional string request_query = 6;
+  optional string request_body = 7;
+  int32 action_result = 8;
+  int32 response_status = 9;
+  optional string response_body = 10;
+  int32 duration_ms = 11;
+  string client_ip = 12;
+  optional string user_agent = 13;
+  int64 created_at = 14;
+}
+
+message AdminActionLogListReq {
+  int32 page = 1;
+  int32 page_size = 2;
+  int64 user_id = 3;
+  string username = 4;
+  string request_method = 5;
+  string request_path = 6;
+  int32 action_result = 7;
+  int64 created_at_from = 8;
+  int64 created_at_to = 9;
+}
+
+message AdminActionLogListResp {
+  repeated AdminActionLogInfo list = 1;
+  int64 total = 2;
+}
+
+message CreateErrorLogReq {
+  optional int64 user_id = 1;
+  string request_method = 2;
+  string request_path = 3;
+  optional string request_query = 4;
+  optional string request_body = 5;
+  string service_name = 6;
+  int32 response_status = 7;
+  optional string response_body = 8;
+  optional string subject = 9;
+  optional string detail = 10;
+  int32 duration_ms = 11;
+  string client_ip = 12;
+  optional string user_agent = 13;
+}
+
+message ErrorLogInfo {
+  int64 id = 1;
+  optional int64 user_id = 2;
+  string username = 3;
+  string request_method = 4;
+  string request_path = 5;
+  optional string request_query = 6;
+  optional string request_body = 7;
+  string service_name = 8;
+  int32 response_status = 9;
+  optional string response_body = 10;
+  optional string subject = 11;
+  optional string detail = 12;
+  int32 duration_ms = 13;
+  string client_ip = 14;
+  optional string user_agent = 15;
+  optional int64 operator_id = 16;
+  int64 created_at = 17;
+}
+
+message ErrorLogListReq {
+  int32 page = 1;
+  int32 page_size = 2;
+  int64 user_id = 3;
+  string request_path = 4;
+  string service_name = 5;
+  int32 response_status = 6;
+  int64 created_at_from = 7;
+  int64 created_at_to = 8;
+}
+
+message ErrorLogListResp {
+  repeated ErrorLogInfo list = 1;
+  int64 total = 2;
+}
+
+service Core {
+  // group: log
+  rpc getLoginLogList (LoginLogListReq) returns (LoginLogListResp);
+  // group: log
+  rpc createAdminActionLog (CreateAdminActionLogReq) returns (Empty);
+  // group: log
+  rpc getAdminActionLogList (AdminActionLogListReq) returns (AdminActionLogListResp);
+  // group: log
+  rpc createErrorLog (CreateErrorLogReq) returns (Empty);
+  // group: log
+  rpc getErrorLogList (ErrorLogListReq) returns (ErrorLogListResp);
+}

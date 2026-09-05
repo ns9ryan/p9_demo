@@ -1,0 +1,629 @@
+syntax = "proto3";
+
+package core;
+option go_package = "./core";
+
+message AdminActionLogInfo {
+  int64 id = 1;
+  int64 user_id = 2;
+  string username = 3;
+  string request_method = 4;
+  string request_path = 5;
+  optional string request_query = 6;
+  optional string request_body = 7;
+  int32 action_result = 8;
+  int32 response_status = 9;
+  optional string response_body = 10;
+  int32 duration_ms = 11;
+  string client_ip = 12;
+  optional string user_agent = 13;
+  int64 created_at = 14;
+}
+
+message AdminActionLogListReq {
+  int32 page = 1;
+  int32 page_size = 2;
+  int64 user_id = 3;
+  string username = 4;
+  string request_method = 5;
+  string request_path = 6;
+  int32 action_result = 7;
+  int64 created_at_from = 8;
+  int64 created_at_to = 9;
+}
+
+message AdminActionLogListResp {
+  repeated AdminActionLogInfo list = 1;
+  int64 total = 2;
+}
+
+message ApiAuthItem {
+  string path = 1;
+  string method = 2;
+}
+
+message ApiAuthReq {
+  int64 role_id = 1;
+  repeated ApiAuthItem data = 2;
+}
+
+message ApiAuthResp {
+  repeated ApiAuthItem list = 1;
+}
+
+message ApiInfo {
+  int64 id = 1;
+  string description = 2;
+  string api_group = 3;
+  string method = 4;
+  string path = 5;
+  int32 is_required = 6;
+  string service_name = 7;
+  int64 created_at = 8;
+  int64 updated_at = 9;
+  optional string test = 10;
+}
+
+message ApiListReq {
+  int32 page = 1;
+  int32 page_size = 2;
+  string path = 3;
+  string method = 4;
+  string api_group = 5;
+  string service_name = 6;
+  string description = 7;
+}
+
+message ApiListResp {
+  repeated ApiInfo list = 1;
+  int64 total = 2;
+}
+
+message BindRolesReq {
+  int64 user_id = 1;
+  repeated int64 role_ids = 2;
+}
+
+message BootstrapAdminReq {
+  string init_token = 1;
+  string username = 2;
+  string password = 3;
+  string display_name = 4;
+}
+
+message BootstrapOperatorReq {
+  string init_token = 1;
+  string operator_code = 2;
+  string timezone_code = 3;
+  string settlement_currency_code = 4;
+  string username = 5;
+  string password = 6;
+  string display_name = 7;
+}
+
+message CheckTokenReq {
+  string access_token = 1;
+}
+
+message CheckTokenResp {
+  int64 user_id = 1;
+  string user_code = 2;
+  string username = 3;
+  int64 operator_id = 4;
+  repeated string role_codes = 5;
+  string salt = 6;
+  int64 expires_at = 7;
+  string operator_code = 8;
+  bool is_platform = 9;
+  string token_type = 10;
+}
+
+message CreateAdminActionLogReq {
+  int64 user_id = 1;
+  string request_method = 2;
+  string request_path = 3;
+  optional string request_query = 4;
+  optional string request_body = 5;
+  int32 action_result = 6;
+  int32 response_status = 7;
+  optional string response_body = 8;
+  int32 duration_ms = 9;
+  string client_ip = 10;
+  optional string user_agent = 11;
+}
+
+message CreateApiReq {
+  string description = 1;
+  string api_group = 2;
+  string method = 3;
+  string path = 4;
+  int32 is_required = 5;
+  string service_name = 6;
+}
+
+message CreateErrorLogReq {
+  optional int64 user_id = 1;
+  string request_method = 2;
+  string request_path = 3;
+  optional string request_query = 4;
+  optional string request_body = 5;
+  string service_name = 6;
+  int32 response_status = 7;
+  optional string response_body = 8;
+  optional string subject = 9;
+  optional string detail = 10;
+  int32 duration_ms = 11;
+  string client_ip = 12;
+  optional string user_agent = 13;
+}
+
+message CreateMenuReq {
+  int64 parent_id = 1;
+  int32 menu_type = 2;
+  string path = 3;
+  string name = 4;
+  string component = 5;
+  string redirect = 6;
+  string title = 7;
+  string icon = 8;
+  string permission = 9;
+  int32 hide_menu = 10;
+  int32 sort = 11;
+  int32 disabled = 12;
+}
+
+message CreateRoleReq {
+  string role_code = 1;
+  string role_name = 2;
+  string description = 3;
+  int32 status = 4;
+  int32 sort_no = 5;
+}
+
+message CreateUserReq {
+  string username = 1;
+  string password = 2;
+  string display_name = 3;
+  optional string mobile = 4;
+  optional string email = 5;
+  int32 status = 6;
+  repeated int64 role_ids = 7;
+}
+
+message Empty {}
+
+message EnforceReq {
+  repeated string role_codes = 1;
+  int64 operator_id = 2;
+  string path = 3;
+  string method = 4;
+}
+
+message EnforceResp {
+  bool allowed = 1;
+}
+
+message ErrorLogInfo {
+  int64 id = 1;
+  optional int64 user_id = 2;
+  string username = 3;
+  string request_method = 4;
+  string request_path = 5;
+  optional string request_query = 6;
+  optional string request_body = 7;
+  string service_name = 8;
+  int32 response_status = 9;
+  optional string response_body = 10;
+  optional string subject = 11;
+  optional string detail = 12;
+  int32 duration_ms = 13;
+  string client_ip = 14;
+  optional string user_agent = 15;
+  optional int64 operator_id = 16;
+  int64 created_at = 17;
+}
+
+message ErrorLogListReq {
+  int32 page = 1;
+  int32 page_size = 2;
+  int64 user_id = 3;
+  string request_path = 4;
+  string service_name = 5;
+  int32 response_status = 6;
+  int64 created_at_from = 7;
+  int64 created_at_to = 8;
+}
+
+message ErrorLogListResp {
+  repeated ErrorLogInfo list = 1;
+  int64 total = 2;
+}
+
+message IDReq {
+  int64 id = 1;
+}
+
+message IDsReq {
+  int64 id = 1;
+  repeated int64 ids = 2;
+}
+
+message IssuePreviewTokenReq {
+  string operator_code = 1;
+}
+
+message IssuePreviewTokenResp {
+  string access_token = 1;
+  int64 expire = 2;
+  string operator_code = 3;
+  string home_path = 4;
+}
+
+message LoginLogInfo {
+  int64 id = 1;
+  optional int64 user_id = 2;
+  string username = 3;
+  int32 login_result = 4;
+  optional string failure_reason = 5;
+  string login_ip = 6;
+  optional int64 device_id = 7;
+  optional string user_agent = 8;
+  int64 login_at = 9;
+}
+
+message LoginLogListReq {
+  int32 page = 1;
+  int32 page_size = 2;
+  string username = 3;
+  int32 login_result = 4;
+  int64 user_id = 5;
+  int64 login_at_from = 6;
+  int64 login_at_to = 7;
+}
+
+message LoginLogListResp {
+  repeated LoginLogInfo list = 1;
+  int64 total = 2;
+}
+
+message LoginReq {
+  string username = 1;
+  string password = 2;
+  string operator_code = 3;
+  string client_ip = 4;
+  string user_agent = 5;
+}
+
+message LoginResp {
+  TokenInfo token = 1;
+  UserPublic user = 2;
+}
+
+message LogoutReq {
+  string refresh_token = 1;
+}
+
+message MenuAuthReq {
+  int64 role_id = 1;
+  repeated int64 menu_ids = 2;
+}
+
+message MenuAuthResp {
+  repeated int64 menu_ids = 1;
+}
+
+message MenuInfo {
+  int64 id = 1;
+  int64 parent_id = 2;
+  int32 menu_type = 3;
+  string path = 4;
+  string name = 5;
+  string component = 6;
+  string redirect = 7;
+  string title = 8;
+  string icon = 9;
+  string permission = 10;
+  int32 hide_menu = 11;
+  int32 sort = 12;
+  int32 disabled = 13;
+  int64 created_at = 14;
+  int64 updated_at = 15;
+}
+
+message MenuListResp {
+  repeated MenuInfo list = 1;
+}
+
+message MenuNode {
+  int64 id = 1;
+  int64 parent_id = 2;
+  int32 menu_type = 3;
+  string path = 4;
+  string name = 5;
+  string component = 6;
+  string redirect = 7;
+  string title = 8;
+  string icon = 9;
+  string permission = 10;
+  int32 hide_menu = 11;
+  int32 sort = 12;
+  repeated MenuNode children = 13;
+}
+
+message MenuTreeResp {
+  repeated MenuNode list = 1;
+}
+
+message OperatorInfo {
+  int64 id = 1;
+  string operator_code = 2;
+  string timezone_code = 3;
+  string settlement_currency_code = 4;
+  int32 status = 5;
+  int32 required_config_version = 6;
+  int32 completed_config_version = 7;
+  int64 config_completed_at = 8;
+  int64 created_at = 9;
+  int64 updated_at = 10;
+}
+
+message PageReq {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+
+message PasswordReq {
+  int64 user_id = 1;
+  string password = 2;
+}
+
+message PermResp {
+  repeated string permissions = 1;
+}
+
+message RefreshReq {
+  string refresh_token = 1;
+}
+
+message RegisterCatalogReq {
+  repeated RegisterMenuReq menus = 1;
+  repeated CreateApiReq apis = 2;
+}
+
+message RegisterMenuReq {
+  string name = 1;
+  string title = 2;
+  int32 menu_type = 3;
+  string path = 4;
+  string component = 5;
+  string redirect = 6;
+  string icon = 7;
+  string permission = 8;
+  int32 hide_menu = 9;
+  int32 sort = 10;
+  int32 disabled = 11;
+  string parent_name = 12;
+}
+
+message RoleIdReq {
+  int64 role_id = 1;
+  int64 id = 2;
+}
+
+message RoleInfo {
+  int64 id = 1;
+  optional int64 operator_id = 2;
+  string role_code = 3;
+  string role_name = 4;
+  optional string description = 5;
+  int32 status = 6;
+  bool is_system = 7;
+  int32 sort_no = 8;
+  int64 created_at = 9;
+  int64 updated_at = 10;
+}
+
+message RoleListReq {
+  int32 page = 1;
+  int32 page_size = 2;
+  string role_name = 3;
+}
+
+message RoleListResp {
+  repeated RoleInfo list = 1;
+  int64 total = 2;
+}
+
+message SelfPasswordReq {
+  string old_password = 1;
+  string password = 2;
+}
+
+message TokenInfo {
+  string access_token = 1;
+  string refresh_token = 2;
+  int64 expire = 3;
+  int64 refresh_expire = 4;
+}
+
+message UpdateApiReq {
+  int64 id = 1;
+  optional string description = 2;
+  optional string api_group = 3;
+  optional string method = 4;
+  optional string path = 5;
+  optional int32 is_required = 6;
+  optional string service_name = 7;
+}
+
+message UpdateMenuReq {
+  int64 id = 1;
+  optional int64 parent_id = 2;
+  optional int32 menu_type = 3;
+  optional string path = 4;
+  optional string name = 5;
+  optional string component = 6;
+  optional string redirect = 7;
+  optional string title = 8;
+  optional string icon = 9;
+  optional string permission = 10;
+  optional int32 hide_menu = 11;
+  optional int32 sort = 12;
+  optional int32 disabled = 13;
+}
+
+message UpdateOperatorReq {
+  optional string timezone_code = 1;
+  optional string settlement_currency_code = 2;
+}
+
+message UpdateRoleReq {
+  int64 id = 1;
+  optional string role_name = 2;
+  optional string description = 3;
+  optional int32 status = 4;
+  optional int32 sort_no = 5;
+}
+
+message UpdateUserReq {
+  int64 id = 1;
+  optional string display_name = 2;
+  optional string mobile = 3;
+  optional string email = 4;
+  optional int32 status = 5;
+}
+
+message UserListReq {
+  int32 page = 1;
+  int32 page_size = 2;
+  string username = 3;
+  string mobile = 4;
+  string email = 5;
+  string display_name = 6;
+  repeated int64 role_ids = 7;
+}
+
+message UserListResp {
+  repeated UserPublic list = 1;
+  int64 total = 2;
+}
+
+message UserPublic {
+  int64 id = 1;
+  string user_code = 2;
+  string username = 3;
+  string display_name = 4;
+  optional int64 operator_id = 5;
+  bool is_super_admin = 6;
+  int32 status = 7;
+  repeated string role_codes = 8;
+  string home_path = 9;
+  int64 created_at = 10;
+  optional int64 last_login_at = 11;
+  optional string mobile = 12;
+  optional string email = 13;
+}
+
+service Core {
+  //  API management
+  //  group: api
+  rpc createApi(CreateApiReq) returns (ApiInfo);
+  //  group: api
+  rpc updateApi(UpdateApiReq) returns (Empty);
+  //  group: api
+  rpc deleteApi(IDsReq) returns (Empty);
+  //  group: api
+  rpc getApiList(ApiListReq) returns (ApiListResp);
+  //  group: api
+  rpc registerApi(CreateApiReq) returns (ApiInfo);
+  //  group: auth
+  rpc login(LoginReq) returns (LoginResp);
+  //  group: auth
+  rpc refresh(RefreshReq) returns (LoginResp);
+  //  group: auth
+  rpc logout(LogoutReq) returns (Empty);
+  //  group: auth
+  rpc logoutAll(Empty) returns (Empty);
+  //  group: auth
+  rpc checkToken(CheckTokenReq) returns (CheckTokenResp);
+  //  group: auth
+  rpc enforce(EnforceReq) returns (EnforceResp);
+  //  group: auth
+  rpc bootstrapAdmin(BootstrapAdminReq) returns (UserPublic);
+  //  group: auth
+  rpc bootstrapOperator(BootstrapOperatorReq) returns (UserPublic);
+  //  authorization management service
+  //  group: authority
+  rpc updateMenuAuthority(MenuAuthReq) returns (Empty);
+  //  group: authority
+  rpc getMenuAuthority(RoleIdReq) returns (MenuAuthResp);
+  //  group: authority
+  rpc updateApiAuthority(ApiAuthReq) returns (Empty);
+  //  group: authority
+  rpc getApiAuthority(RoleIdReq) returns (ApiAuthResp);
+  //  group: base
+  rpc ping(Empty) returns (Empty);
+  //  group: catalog
+  rpc registerCatalog(RegisterCatalogReq) returns (Empty);
+  //  group: log
+  rpc getLoginLogList(LoginLogListReq) returns (LoginLogListResp);
+  //  group: log
+  rpc createAdminActionLog(CreateAdminActionLogReq) returns (Empty);
+  //  group: log
+  rpc getAdminActionLogList(AdminActionLogListReq) returns (AdminActionLogListResp);
+  //  group: log
+  rpc createErrorLog(CreateErrorLogReq) returns (Empty);
+  //  group: log
+  rpc getErrorLogList(ErrorLogListReq) returns (ErrorLogListResp);
+  //  Menu management
+  //  group: menu
+  rpc getMenuByRole(Empty) returns (MenuTreeResp);
+  //  group: menu
+  rpc createMenu(CreateMenuReq) returns (MenuInfo);
+  //  group: menu
+  rpc updateMenu(UpdateMenuReq) returns (Empty);
+  //  group: menu
+  rpc deleteMenu(IDsReq) returns (Empty);
+  //  group: menu
+  rpc getMenuList(Empty) returns (MenuListResp);
+  //  Operator management
+  //  group: operator
+  rpc getOperator(Empty) returns (OperatorInfo);
+  //  group: operator
+  rpc updateOperator(UpdateOperatorReq) returns (Empty);
+  //  group: operator
+  rpc issuePreviewToken(IssuePreviewTokenReq) returns (IssuePreviewTokenResp);
+  //  Role management
+  //  group: role
+  rpc createRole(CreateRoleReq) returns (RoleInfo);
+  //  group: role
+  rpc updateRole(UpdateRoleReq) returns (Empty);
+  //  group: role
+  rpc deleteRole(IDsReq) returns (Empty);
+  //  group: role
+  rpc getRoleList(RoleListReq) returns (RoleListResp);
+  //  group: role
+  rpc getRoleById(IDReq) returns (RoleInfo);
+  //  User management
+  //  group: user
+  rpc getUserInfo(Empty) returns (UserPublic);
+  //  group: user
+  rpc getUserPerm(Empty) returns (PermResp);
+  //  group: user
+  rpc changeOwnPassword(SelfPasswordReq) returns (Empty);
+  //  group: user
+  rpc createUser(CreateUserReq) returns (UserPublic);
+  //  group: user
+  rpc updateUser(UpdateUserReq) returns (Empty);
+  //  group: user
+  rpc deleteUser(IDsReq) returns (Empty);
+  //  group: user
+  rpc getUserList(UserListReq) returns (UserListResp);
+  //  group: user
+  rpc getUserById(IDReq) returns (UserPublic);
+  //  group: user
+  rpc updateUserPassword(PasswordReq) returns (Empty);
+  //  group: user
+  rpc bindUserRoles(BindRolesReq) returns (Empty);
+}
+

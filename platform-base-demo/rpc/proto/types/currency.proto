@@ -1,0 +1,117 @@
+syntax = "proto3";
+
+package currency;
+
+option go_package = "oa.98ent.com/p9/platform-base/rpc/pb/base/currency";
+
+// 货币信息
+message CurrencyInfo {
+  // 货币ID
+  int64 id = 1;
+  // 货币编码
+  string code = 2;
+  // 多语言名称
+  map<string, string> name_i18n = 3;
+  // 货币类型: 1法定货币, 2虚拟货币
+  int64 currency_type = 4;
+  // 货币符号
+  string symbol = 5;
+  // 金额换算倍率, 如 USD=100, VND=1
+  int64 amount_factor = 6;
+  // 状态: 1启用, 2停用
+  int64 status = 7;
+  // 排序值, 数值越小越靠前
+  int64 sort_no = 8;
+}
+
+// 创建货币请求
+message CreateCurrencyRequest {
+  // 货币编码
+  string code = 1;
+  // 多语言名称
+  map<string, string> name_i18n = 2;
+  // 货币类型: 1法定货币, 2虚拟货币
+  int64 currency_type = 3;
+  // 货币符号
+  string symbol = 4;
+  // 金额换算倍率, 如 USD=100, VND=1
+  int64 amount_factor = 5;
+  // 状态: 1启用, 2停用
+  optional int64 status = 6;
+}
+
+// 创建货币响应
+message CreateCurrencyResponse {
+  // 货币ID
+  int64 id = 1;
+}
+
+// 修改货币请求
+message UpdateCurrencyRequest {
+  // 货币ID
+  int64 id = 1;
+
+  // 多语言名称, 为空时不修改
+  map<string, string> name_i18n = 2;
+  // 货币符号
+  optional string symbol = 3;
+  // 状态: 1启用, 2停用
+  optional int64 status = 4;
+}
+
+// 修改货币响应
+message UpdateCurrencyResponse {}
+
+// 获取货币请求
+message GetCurrencyRequest {
+  // 货币ID
+  int64 id = 1;
+}
+
+// 获取货币响应
+message GetCurrencyResponse {
+  // 货币信息
+  CurrencyInfo currency = 1;
+}
+
+// 获取货币管理列表请求
+message ListCurrenciesRequest {
+  // 页码, 从1开始
+  int64 page = 1;
+  // 每页数量
+  int64 page_size = 2;
+
+  // 状态: 1启用, 2停用
+  optional int64 status = 3;
+}
+
+// 获取货币管理列表响应
+message ListCurrenciesResponse {
+  // 数据总数
+  int64 total = 1;
+  // 货币列表
+  repeated CurrencyInfo list = 2;
+}
+
+// 获取全部货币请求
+message ListAllCurrenciesRequest {
+  // 状态: 1启用, 2停用
+  optional int64 status = 1;
+}
+
+// 获取全部货币响应
+message ListAllCurrenciesResponse {
+  // 货币列表
+  repeated CurrencyInfo list = 1;
+}
+
+// 调整货币排序请求
+message ReorderCurrencyRequest {
+  // 需要移动的货币ID
+  int64 id = 1;
+  // 目标货币ID
+  int64 target_id = 2;
+}
+
+// 调整货币排序响应
+message ReorderCurrencyResponse {}

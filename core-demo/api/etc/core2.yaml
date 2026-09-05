@@ -1,0 +1,16 @@
+Name: operator-core-api
+Host: 0.0.0.0
+Port: 18100
+
+Log:
+  Mode: console
+  Level: info
+
+CROSConf:
+  Address: '*'
+
+CoreRpc:
+  Endpoints:
+    - 127.0.0.1:19100
+  NonBlock: true
+  Timeout: 10000

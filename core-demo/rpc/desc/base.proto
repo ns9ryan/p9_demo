@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package core;
+
+option go_package = "./core";
+
+message Empty {}
+
+message IDReq {
+  int64 id = 1;
+}
+
+message IDsReq {
+  int64 id = 1;
+  repeated int64 ids = 2;
+}
+
+message PageReq {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+
+service Core {
+  // group: base
+  rpc ping (Empty) returns (Empty);
+}

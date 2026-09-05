@@ -1,0 +1,19 @@
+# RPC服务配置
+Name:     platform-base-rpc # RPC服务名称
+ListenOn: 0.0.0.0:19001     # RPC监听地址
+Mode:     dev               # 运行模式
+
+# Etcd服务注册配置
+Etcd:
+  Hosts:
+    - 127.0.0.1:12379     # Etcd地址
+  Key: platform-base-rpc  # 服务注册Key
+
+# 数据库配置
+DatabaseConf:
+  Host:     127.0.0.1     # 数据库地址
+  Port:     15432         # 数据库端口
+  DBName:   p9_platform   # 数据库名称
+  Username: root          # 数据库用户名
+  Password: root          # 数据库密码
+  SSLMode:  disable       # SSL模式

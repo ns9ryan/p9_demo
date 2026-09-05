@@ -1,0 +1,107 @@
+syntax = "v1"
+
+info (
+	title:   "role api"
+	desc:    "role management"
+	author:  "p9"
+	version: "v1"
+)
+
+import "../base.api"
+
+// Role info | 角色信息
+type RoleInfo {
+	// ID | 角色ID
+	Id          int64  `json:"id"`
+	// Operator ID | 分站ID
+	OperatorId  int64  `json:"operator_id,optional"`
+	// Role code | 角色编码
+	RoleCode    string `json:"role_code"`
+	// Role name | 角色名称
+	RoleName    string `json:"role_name"`
+	// Description | 描述
+	Description string `json:"description,optional"`
+	// Status | 状态
+	Status      int32  `json:"status"`
+	// System role | 是否系统角色
+	IsSystem    bool   `json:"is_system"`
+	// Sort | 排序
+	SortNo      int32  `json:"sort_no"`
+	// Created at unix | 创建时间
+	CreatedAt   int64  `json:"created_at"`
+	// Updated at unix | 更新时间
+	UpdatedAt   int64  `json:"updated_at"`
+}
+
+// Create role request | 创建角色
+type CreateRoleReq {
+	// Role code | 角色编码
+	RoleCode    string `json:"role_code"`
+	// Role name | 角色名称
+	RoleName    string `json:"role_name"`
+	// Description | 描述
+	Description string `json:"description,optional"`
+	// Status | 状态
+	Status      int32  `json:"status,optional"`
+	// Sort | 排序
+	SortNo      int32  `json:"sort_no,optional"`
+}
+
+// Update role request | 更新角色
+type UpdateRoleReq {
+	// Role ID | 角色ID
+	Id          int64  `json:"id"`
+	// Role name | 角色名称
+	RoleName    string `json:"role_name,optional"`
+	// Description | 描述
+	Description string `json:"description,optional"`
+	// Status | 状态
+	Status      int32  `json:"status,optional"`
+	// Sort | 排序
+	SortNo      int32  `json:"sort_no,optional"`
+}
+
+// Role list request | 角色列表
+type RoleListReq {
+	// Page | 页码
+	Page     int32  `json:"page,optional"`
+	// Page size | 每页条数
+	PageSize int32  `json:"page_size,optional"`
+	// Role name | 角色名称
+	RoleName string `json:"role_name,optional"`
+}
+
+// Role list response | 角色列表
+type RoleListResp {
+	// List | 列表
+	List  []RoleInfo `json:"list"`
+	// Total | 总数
+	Total int64      `json:"total"`
+}
+
+@server (
+	prefix:     /admin
+	group:      role
+	middleware: Jwt,ActionLog,Authority
+)
+service Core {
+	@doc "创建角色"
+	@handler createRole
+	post /role/create (CreateRoleReq) returns (RoleInfo)
+
+	@doc "更新角色"
+	@handler updateRole
+	post /role/update (UpdateRoleReq) returns (BaseMsgResp)
+
+	@doc "删除角色"
+	@handler deleteRole
+	post /role/delete (IDsReq) returns (BaseMsgResp)
+
+	@doc "角色列表"
+	@handler getRoleList
+	post /role/list (RoleListReq) returns (RoleListResp)
+
+	@doc "角色详情"
+	@handler getRoleById
+	get /role/detail (IDQuery) returns (RoleInfo)
+}

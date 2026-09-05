@@ -1,0 +1,109 @@
+syntax = "proto3";
+
+package region;
+
+option go_package = "oa.98ent.com/p9/platform-base/rpc/pb/base/region";
+
+// 国家地区信息
+message RegionInfo {
+  // 国家或地区ID
+  int64 id = 1;
+  // 国家或地区编码
+  string code = 2;
+  // 国际电话区号, 不包含加号
+  string calling_code = 3;
+  // 多语言名称
+  map<string, string> name_i18n = 4;
+  // 状态: 1启用, 2停用
+  int64 status = 5;
+  // 排序值, 数值越小越靠前
+  int64 sort_no = 6;
+}
+
+// 创建国家地区请求
+message CreateRegionRequest {
+  // 国家或地区编码
+  string code = 1;
+  // 国际电话区号, 不包含加号
+  string calling_code = 2;
+  // 多语言名称
+  map<string, string> name_i18n = 3;
+  // 状态: 1启用, 2停用
+  optional int64 status = 4;
+}
+
+// 创建国家地区响应
+message CreateRegionResponse {
+  // 国家或地区ID
+  int64 id = 1;
+}
+
+// 修改国家地区请求
+message UpdateRegionRequest {
+  // 国家或地区ID
+  int64 id = 1;
+
+  // 国际电话区号, 不传时不修改
+  optional string calling_code = 2;
+  // 多语言名称, 为空时不修改
+  map<string, string> name_i18n = 3;
+  // 状态: 1启用, 2停用
+  optional int64 status = 4;
+}
+
+// 修改国家地区响应
+message UpdateRegionResponse {}
+
+// 获取国家地区请求
+message GetRegionRequest {
+  // 国家或地区ID
+  int64 id = 1;
+}
+
+// 获取国家地区响应
+message GetRegionResponse {
+  // 国家地区信息
+  RegionInfo region = 1;
+}
+
+// 获取国家地区管理列表请求
+message ListRegionsRequest {
+  // 页码, 从1开始
+  int64 page = 1;
+  // 每页数量
+  int64 page_size = 2;
+
+  // 状态: 1启用, 2停用
+  optional int64 status = 3;
+}
+
+// 获取国家地区管理列表响应
+message ListRegionsResponse {
+  // 数据总数
+  int64 total = 1;
+  // 国家地区列表
+  repeated RegionInfo list = 2;
+}
+
+// 获取全部国家地区请求
+message ListAllRegionsRequest {
+  // 状态: 1启用, 2停用
+  optional int64 status = 1;
+}
+
+// 获取全部国家地区响应
+message ListAllRegionsResponse {
+  // 国家地区列表
+  repeated RegionInfo list = 1;
+}
+
+// 调整国家地区排序请求
+message ReorderRegionRequest {
+  // 需要移动的国家地区ID
+  int64 id = 1;
+  // 目标国家地区ID
+  int64 target_id = 2;
+}
+
+// 调整国家地区排序响应
+message ReorderRegionResponse {}

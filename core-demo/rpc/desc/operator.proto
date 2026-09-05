@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+message OperatorInfo {
+  int64 id = 1;
+  string operator_code = 2;
+  string timezone_code = 3;
+  string settlement_currency_code = 4;
+  int32 status = 5;
+  int32 required_config_version = 6;
+  int32 completed_config_version = 7;
+  int64 config_completed_at = 8;
+  int64 created_at = 9;
+  int64 updated_at = 10;
+}
+
+message UpdateOperatorReq {
+  optional string timezone_code = 1;
+  optional string settlement_currency_code = 2;
+}
+
+message IssuePreviewTokenReq {
+  string operator_code = 1;
+}
+
+message IssuePreviewTokenResp {
+  string access_token = 1;
+  int64 expire = 2;
+  string operator_code = 3;
+  string home_path = 4;
+}
+
+service Core {
+  // Operator management
+  // group: operator
+  rpc getOperator (Empty) returns (OperatorInfo);
+  // group: operator
+  rpc updateOperator (UpdateOperatorReq) returns (Empty);
+  // group: operator
+  rpc issuePreviewToken (IssuePreviewTokenReq) returns (IssuePreviewTokenResp);
+}

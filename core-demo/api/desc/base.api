@@ -1,0 +1,152 @@
+syntax = "v1"
+
+info (
+	title:   "base api"
+	desc:    "shared types for core-api"
+	author:  "p9"
+	version: "v1"
+)
+
+// Login request | 登录请求
+type LoginReq {
+	// Username | 用户名
+	Username     string `json:"username"`
+	// Password | 密码
+	Password     string `json:"password"`
+	// Operator code | 分站编码
+	OperatorCode string `json:"operator_code,optional"`
+}
+
+// Token pair | 令牌
+type TokenInfo {
+	// Access token | 访问令牌
+	AccessToken   string `json:"access_token"`
+	// Refresh token | 刷新令牌
+	RefreshToken  string `json:"refresh_token"`
+	// Access expire unix | 访问令牌过期时间
+	Expire        int64  `json:"expire"`
+	// Refresh expire unix | 刷新令牌过期时间
+	RefreshExpire int64  `json:"refresh_expire"`
+}
+
+// Public user info | 用户公开信息
+type UserPublic {
+	// User ID | 用户ID
+	Id           int64    `json:"id"`
+	// User code | 用户编码
+	UserCode     string   `json:"user_code"`
+	// Username | 用户名
+	Username     string   `json:"username"`
+	// Display name | 显示名
+	DisplayName  string   `json:"display_name"`
+	// Operator ID | 分站ID
+	OperatorId   int64    `json:"operator_id,optional"`
+	// Super admin | 是否超管
+	IsSuperAdmin bool     `json:"is_super_admin"`
+	// Status | 状态
+	Status       int32    `json:"status"`
+	// Role codes | 角色编码
+	RoleCodes    []string `json:"role_codes"`
+	// Home path | 首页路径
+	HomePath     string   `json:"home_path,optional"`
+	// Created at unix | 创建时间
+	CreatedAt    int64    `json:"created_at"`
+	// Last login unix | 最近登录时间
+	LastLoginAt  int64    `json:"last_login_at,optional"`
+	// Mobile | 手机号
+	Mobile       string   `json:"mobile,optional"`
+	// Email | 邮箱
+	Email        string   `json:"email,optional"`
+}
+
+// Login response | 登录响应
+type LoginResp {
+	// Token | 令牌
+	Token TokenInfo  `json:"token"`
+	// User | 用户
+	User  UserPublic `json:"user"`
+}
+
+// Refresh request | 刷新令牌请求
+type RefreshReq {
+	// Refresh token | 刷新令牌
+	RefreshToken string `json:"refresh_token"`
+}
+
+// Logout request | 登出请求
+type LogoutReq {
+	// Refresh token | 刷新令牌
+	RefreshToken string `json:"refresh_token"`
+}
+
+// Bootstrap admin request | 初始化平台超管
+type BootstrapAdminReq {
+	// Init token | 初始化口令
+	InitToken   string `header:"X-Init-Token"`
+	// Username | 用户名
+	Username    string `json:"username"`
+	// Password | 密码
+	Password    string `json:"password"`
+	// Display name | 显示名
+	DisplayName string `json:"display_name,optional"`
+}
+
+// Bootstrap operator request | 初始化分站
+type BootstrapOperatorReq {
+	// Init token | 初始化口令
+	InitToken              string `header:"X-Init-Token"`
+	// Operator code | 分站编码
+	OperatorCode           string `json:"operator_code"`
+	// Timezone code | 时区
+	TimezoneCode           string `json:"timezone_code,optional"`
+	// Settlement currency | 结算币种
+	SettlementCurrencyCode string `json:"settlement_currency_code,optional"`
+	// Username | 用户名
+	Username               string `json:"username"`
+	// Password | 密码
+	Password               string `json:"password"`
+	// Display name | 显示名
+	DisplayName            string `json:"display_name,optional"`
+}
+
+// Change own password request | 修改本人密码
+type SelfPasswordReq {
+	// Old password | 原密码
+	OldPassword string `json:"old_password"`
+	// New password | 新密码
+	Password    string `json:"password"`
+}
+
+// Permission codes | 权限码
+type PermResp {
+	// Permissions | 权限编码列表
+	Permissions []string `json:"permissions"`
+}
+
+// IDs request | ID 列表
+type IDsReq {
+	// ID | 单个ID
+	Id  int64   `json:"id,optional"`
+	// IDs | ID列表
+	Ids []int64 `json:"ids,optional"`
+}
+
+// Page request | 分页
+type PageReq {
+	// Page | 页码
+	Page     int32 `json:"page,optional"`
+	// Page size | 每页条数
+	PageSize int32 `json:"page_size,optional"`
+}
+
+// ID query | ID 查询
+type IDQuery {
+	// ID | 主键
+	Id int64 `form:"id"`
+}
+
+// Base message | 结果信息
+type BaseMsgResp {
+	// Result | 结果信息
+	Result string `json:"result"`
+}

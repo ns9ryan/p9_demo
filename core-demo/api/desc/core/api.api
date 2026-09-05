@@ -1,0 +1,115 @@
+syntax = "v1"
+
+info (
+	title:   "api management"
+	desc:    "register and manage APIs"
+	author:  "p9"
+	version: "v1"
+)
+
+import "../base.api"
+
+// Create API request | 创建接口
+type CreateApiReq {
+	// Description | 描述
+	Description string `json:"description,optional"`
+	// API group | 分组
+	ApiGroup    string `json:"api_group,optional"`
+	// Method | HTTP 方法
+	Method      string `json:"method"`
+	// Path | 路径
+	Path        string `json:"path"`
+	// Required | 是否必选
+	IsRequired  int32  `json:"is_required,optional"`
+	// Service name | 服务名
+	ServiceName string `json:"service_name,optional"`
+}
+
+// Update API request | 更新接口
+type UpdateApiReq {
+	// API ID | 接口ID
+	Id          int64  `json:"id"`
+	// Description | 描述
+	Description string `json:"description,optional"`
+	// API group | 分组
+	ApiGroup    string `json:"api_group,optional"`
+	// Method | HTTP 方法
+	Method      string `json:"method,optional"`
+	// Path | 路径
+	Path        string `json:"path,optional"`
+	// Required | 是否必选
+	IsRequired  int32  `json:"is_required,optional"`
+	// Service name | 服务名
+	ServiceName string `json:"service_name,optional"`
+}
+
+// API info | 接口信息
+type ApiInfo {
+	// ID | 接口ID
+	Id          int64  `json:"id"`
+	// Description | 描述
+	Description string `json:"description"`
+	// API group | 分组
+	ApiGroup    string `json:"api_group"`
+	// Method | HTTP 方法
+	Method      string `json:"method"`
+	// Path | 路径
+	Path        string `json:"path"`
+	// Required | 是否必选
+	IsRequired  int32  `json:"is_required"`
+	// Service name | 服务名
+	ServiceName string `json:"service_name"`
+	// Created at unix | 创建时间
+	CreatedAt   int64  `json:"created_at"`
+	// Updated at unix | 更新时间
+	UpdatedAt   int64  `json:"updated_at"`
+}
+
+// API list request | 接口列表
+type ApiListReq {
+	// Page | 页码
+	Page        int32  `json:"page,optional"`
+	// Page size | 每页条数
+	PageSize    int32  `json:"page_size,optional"`
+	// Path | 路径
+	Path        string `json:"path,optional"`
+	// Method | HTTP 方法
+	Method      string `json:"method,optional"`
+	// API group | 分组
+	ApiGroup    string `json:"api_group,optional"`
+	// Service name | 服务名
+	ServiceName string `json:"service_name,optional"`
+	// Description | 描述
+	Description string `json:"description,optional"`
+}
+
+// API list response | 接口列表
+type ApiListResp {
+	// List | 列表
+	List  []ApiInfo `json:"list"`
+	// Total | 总数
+	Total int64     `json:"total"`
+}
+
+@server (
+	prefix:     /admin
+	group:      api
+	middleware: Jwt,ActionLog,Authority
+)
+service Core {
+	@doc "创建接口"
+	@handler createApi
+	post /api/create (CreateApiReq) returns (ApiInfo)
+
+	@doc "更新接口"
+	@handler updateApi
+	post /api/update (UpdateApiReq) returns (BaseMsgResp)
+
+	@doc "删除接口"
+	@handler deleteApi
+	post /api/delete (IDsReq) returns (BaseMsgResp)
+
+	@doc "接口列表"
+	@handler getApiList
+	post /api/list (ApiListReq) returns (ApiListResp)
+}

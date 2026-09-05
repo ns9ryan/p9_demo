@@ -1,0 +1,54 @@
+syntax = "v1"
+
+info (
+	title:   "public api"
+	desc:    "login, refresh, bootstrap and preview token"
+	author:  "p9"
+	version: "v1"
+)
+
+import "../base.api"
+
+// Issue preview token request | 签发预览令牌
+type IssuePreviewTokenReq {
+	// Operator code | 分站编码
+	OperatorCode string `json:"operator_code"`
+}
+
+// Issue preview token response | 预览令牌
+type IssuePreviewTokenResp {
+	// Access token | 访问令牌
+	AccessToken  string `json:"access_token"`
+	// Expire unix | 过期时间
+	Expire       int64  `json:"expire"`
+	// Operator code | 分站编码
+	OperatorCode string `json:"operator_code"`
+	// Home path | 首页路径
+	HomePath     string `json:"home_path"`
+}
+
+@server (
+	prefix: /admin
+	group:  public
+)
+service Core {
+	@doc "登录"
+	@handler login
+	post /login (LoginReq) returns (LoginResp)
+
+	@doc "刷新访问令牌"
+	@handler refresh
+	post /refresh (RefreshReq) returns (LoginResp)
+
+	@doc "初始化平台超管"
+	@handler bootstrapAdmin
+	post /bootstrap/admin (BootstrapAdminReq) returns (UserPublic)
+
+	@doc "初始化分站及超管"
+	@handler bootstrapOperator
+	post /bootstrap/operator (BootstrapOperatorReq) returns (UserPublic)
+
+	@doc "签发总网预览令牌，只读"
+	@handler issuePreviewToken
+	post /preview-token (IssuePreviewTokenReq) returns (IssuePreviewTokenResp)
+}

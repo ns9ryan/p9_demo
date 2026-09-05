@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+message RegisterMenuReq {
+  string name = 1;
+  string title = 2;
+  int32 menu_type = 3;
+  string path = 4;
+  string component = 5;
+  string redirect = 6;
+  string icon = 7;
+  string permission = 8;
+  int32 hide_menu = 9;
+  int32 sort = 10;
+  int32 disabled = 11;
+  string parent_name = 12;
+}
+
+message RegisterCatalogReq {
+  repeated RegisterMenuReq menus = 1;
+  repeated CreateApiReq apis = 2;
+}
+
+service Core {
+  // group: catalog
+  rpc registerCatalog (RegisterCatalogReq) returns (Empty);
+}

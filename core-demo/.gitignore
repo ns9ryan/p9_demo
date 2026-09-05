@@ -1,0 +1,8 @@
+# 本地编译产物（make build-mac / build-linux / build-win）
+core_api
+core_rpc
+core_api.exe
+core_rpc.exe
+*.exe
+api/.DS_Store
+.DS_Store

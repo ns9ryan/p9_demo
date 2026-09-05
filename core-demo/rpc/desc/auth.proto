@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+message LoginReq {
+  string username = 1;
+  string password = 2;
+  string operator_code = 3;
+  string client_ip = 4;
+  string user_agent = 5;
+}
+
+message TokenInfo {
+  string access_token = 1;
+  string refresh_token = 2;
+  int64 expire = 3;
+  int64 refresh_expire = 4;
+}
+
+message LoginResp {
+  TokenInfo token = 1;
+  UserPublic user = 2;
+}
+
+message RefreshReq {
+  string refresh_token = 1;
+}
+
+message LogoutReq {
+  string refresh_token = 1;
+}
+
+message CheckTokenReq {
+  string access_token = 1;
+}
+
+message CheckTokenResp {
+  int64 user_id = 1;
+  string user_code = 2;
+  string username = 3;
+  int64 operator_id = 4;
+  repeated string role_codes = 5;
+  string salt = 6;
+  int64 expires_at = 7;
+  string operator_code = 8;
+  bool is_platform = 9;
+  string token_type = 10;
+}
+
+message EnforceReq {
+  repeated string role_codes = 1;
+  int64 operator_id = 2;
+  string path = 3;
+  string method = 4;
+}
+
+message EnforceResp {
+  bool allowed = 1;
+}
+
+message BootstrapAdminReq {
+  string init_token = 1;
+  string username = 2;
+  string password = 3;
+  string display_name = 4;
+}
+
+message BootstrapOperatorReq {
+  string init_token = 1;
+  string operator_code = 2;
+  string timezone_code = 3;
+  string settlement_currency_code = 4;
+  string username = 5;
+  string password = 6;
+  string display_name = 7;
+}
+
+service Core {
+  // group: auth
+  rpc login (LoginReq) returns (LoginResp);
+  // group: auth
+  rpc refresh (RefreshReq) returns (LoginResp);
+  // group: auth
+  rpc logout (LogoutReq) returns (Empty);
+  // group: auth
+  rpc logoutAll (Empty) returns (Empty);
+  // group: auth
+  rpc checkToken (CheckTokenReq) returns (CheckTokenResp);
+  // group: auth
+  rpc enforce (EnforceReq) returns (EnforceResp);
+  // group: auth
+  rpc bootstrapAdmin (BootstrapAdminReq) returns (UserPublic);
+  // group: auth
+  rpc bootstrapOperator (BootstrapOperatorReq) returns (UserPublic);
+}

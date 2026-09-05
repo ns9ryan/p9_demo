@@ -1,0 +1,166 @@
+syntax = "v1"
+
+info (
+	title:   "menu api"
+	desc:    "menu tree and menu management"
+	author:  "p9"
+	version: "v1"
+)
+
+import "../base.api"
+
+// Menu tree node | 菜单树节点
+type MenuNode {
+	// ID | 菜单ID
+	Id         int64      `json:"id"`
+	// Parent ID | 父级ID
+	ParentId   int64      `json:"parent_id"`
+	// Menu type | 菜单类型
+	MenuType   int32      `json:"menu_type"`
+	// Path | 路由路径
+	Path       string     `json:"path"`
+	// Name | 路由名
+	Name       string     `json:"name"`
+	// Component | 前端组件
+	Component  string     `json:"component"`
+	// Redirect | 重定向
+	Redirect   string     `json:"redirect"`
+	// Title | 标题
+	Title      string     `json:"title"`
+	// Icon | 图标
+	Icon       string     `json:"icon"`
+	// Permission | 权限码
+	Permission string     `json:"permission"`
+	// Hide menu | 是否隐藏
+	HideMenu   int32      `json:"hide_menu"`
+	// Sort | 排序
+	Sort       int32      `json:"sort"`
+	// Children | 子菜单
+	Children   []MenuNode `json:"children"`
+}
+
+// Menu info | 菜单信息
+type MenuInfo {
+	// ID | 菜单ID
+	Id         int64  `json:"id"`
+	// Parent ID | 父级ID
+	ParentId   int64  `json:"parent_id"`
+	// Menu type | 菜单类型
+	MenuType   int32  `json:"menu_type"`
+	// Path | 路由路径
+	Path       string `json:"path"`
+	// Name | 路由名
+	Name       string `json:"name"`
+	// Component | 前端组件
+	Component  string `json:"component"`
+	// Redirect | 重定向
+	Redirect   string `json:"redirect"`
+	// Title | 标题
+	Title      string `json:"title"`
+	// Icon | 图标
+	Icon       string `json:"icon"`
+	// Permission | 权限码
+	Permission string `json:"permission"`
+	// Hide menu | 是否隐藏
+	HideMenu   int32  `json:"hide_menu"`
+	// Sort | 排序
+	Sort       int32  `json:"sort"`
+	// Disabled | 是否禁用
+	Disabled   int32  `json:"disabled"`
+	// Created at unix | 创建时间
+	CreatedAt  int64  `json:"created_at"`
+	// Updated at unix | 更新时间
+	UpdatedAt  int64  `json:"updated_at"`
+}
+
+// Create menu request | 创建菜单
+type CreateMenuReq {
+	// Parent ID | 父级ID
+	ParentId   int64  `json:"parent_id,optional"`
+	// Menu type | 菜单类型
+	MenuType   int32  `json:"menu_type"`
+	// Path | 路由路径
+	Path       string `json:"path,optional"`
+	// Name | 路由名
+	Name       string `json:"name"`
+	// Component | 前端组件
+	Component  string `json:"component,optional"`
+	// Redirect | 重定向
+	Redirect   string `json:"redirect,optional"`
+	// Title | 标题
+	Title      string `json:"title"`
+	// Icon | 图标
+	Icon       string `json:"icon,optional"`
+	// Permission | 权限码
+	Permission string `json:"permission,optional"`
+	// Hide menu | 是否隐藏
+	HideMenu   int32  `json:"hide_menu,optional"`
+	// Sort | 排序
+	Sort       int32  `json:"sort,optional"`
+	// Disabled | 是否禁用
+	Disabled   int32  `json:"disabled,optional"`
+}
+
+// Update menu request | 更新菜单
+type UpdateMenuReq {
+	// Menu ID | 菜单ID
+	Id         int64   `json:"id"`
+	// Parent ID | 父级ID
+	ParentId   *int64  `json:"parent_id,optional"`
+	// Menu type | 菜单类型
+	MenuType   *int32  `json:"menu_type,optional"`
+	// Path | 路由路径
+	Path       string  `json:"path,optional"`
+	// Name | 路由名
+	Name       string  `json:"name,optional"`
+	// Component | 前端组件
+	Component  string  `json:"component,optional"`
+	// Redirect | 重定向
+	Redirect   string  `json:"redirect,optional"`
+	// Title | 标题
+	Title      string  `json:"title,optional"`
+	// Icon | 图标
+	Icon       string  `json:"icon,optional"`
+	// Permission | 权限码
+	Permission string  `json:"permission,optional"`
+	// Hide menu | 是否隐藏
+	HideMenu   *int32  `json:"hide_menu,optional"`
+	// Sort | 排序
+	Sort       *int32  `json:"sort,optional"`
+	// Disabled | 是否禁用
+	Disabled   *int32  `json:"disabled,optional"`
+}
+
+@server (
+	prefix:     /admin
+	group:      menu
+	middleware: Jwt,ActionLog
+)
+service Core {
+	@doc "当前角色菜单树"
+	@handler getMenuByRole
+	get /menu/role returns ([]MenuNode)
+}
+
+@server (
+	prefix:     /admin
+	group:      menu
+	middleware: Jwt,ActionLog,Authority
+)
+service Core {
+	@doc "创建菜单"
+	@handler createMenu
+	post /menu/create (CreateMenuReq) returns (MenuInfo)
+
+	@doc "更新菜单"
+	@handler updateMenu
+	post /menu/update (UpdateMenuReq) returns (BaseMsgResp)
+
+	@doc "删除菜单"
+	@handler deleteMenu
+	post /menu/delete (IDsReq) returns (BaseMsgResp)
+
+	@doc "菜单列表"
+	@handler getMenuList
+	post /menu/list returns ([]MenuInfo)
+}

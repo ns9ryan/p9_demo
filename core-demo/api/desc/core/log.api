@@ -1,0 +1,205 @@
+syntax = "v1"
+
+info (
+	title:   "log api"
+	desc:    "admin login and action logs"
+	author:  "p9"
+	version: "v1"
+)
+
+import "../base.api"
+
+// Login log | 登录日志
+type LoginLogInfo {
+	// ID | 日志ID
+	Id            int64  `json:"id"`
+	// User ID | 用户ID
+	UserId        int64  `json:"user_id,optional"`
+	// Username | 用户名
+	Username      string `json:"username"`
+	// Login result | 登录结果（多语言语义）
+	LoginResult   string `json:"login_result"`
+	// Failure reason | 失败原因
+	FailureReason string `json:"failure_reason,optional"`
+	// Login IP | 登录IP
+	LoginIp       string `json:"login_ip"`
+	// Device ID | 设备ID
+	DeviceId      int64  `json:"device_id,optional"`
+	// User agent | 浏览器和设备标识
+	UserAgent     string `json:"user_agent,optional"`
+	// Login at unix | 登录时间
+	LoginAt       int64  `json:"login_at"`
+}
+
+// Login log list request | 登录日志列表请求
+type LoginLogListReq {
+	// Page | 页码
+	Page        int32  `json:"page,optional"`
+	// Page size | 每页条数
+	PageSize    int32  `json:"page_size,optional"`
+	// Username | 用户名
+	Username    string `json:"username,optional"`
+	// Login result | 登录结果 1成功 2失败
+	LoginResult int32  `json:"login_result,optional"`
+	// User ID | 用户ID
+	UserId      int64  `json:"user_id,optional"`
+	// Login at from unix | 开始时间
+	LoginAtFrom int64  `json:"login_at_from,optional"`
+	// Login at to unix | 结束时间
+	LoginAtTo   int64  `json:"login_at_to,optional"`
+}
+
+// Login log list response | 登录日志列表
+type LoginLogListResp {
+	// List | 列表
+	List  []LoginLogInfo `json:"list"`
+	// Total | 总数
+	Total int64          `json:"total"`
+}
+
+// Admin action log | 操作日志
+type AdminActionLogInfo {
+	// ID | 日志ID
+	Id             int64  `json:"id"`
+	// User ID | 用户ID
+	UserId         int64  `json:"user_id"`
+	// Username | 用户名
+	Username       string `json:"username"`
+	// Request method | HTTP方法
+	RequestMethod  string `json:"request_method"`
+	// Request path | 请求路径
+	RequestPath    string `json:"request_path"`
+	// Request query | 查询参数
+	RequestQuery   string `json:"request_query,optional"`
+	// Request body | 脱敏后的请求内容
+	RequestBody    string `json:"request_body,optional"`
+	// Action result | 操作结果（多语言语义）
+	ActionResult   string `json:"action_result"`
+	// Response status | HTTP状态码
+	ResponseStatus int32  `json:"response_status"`
+	// Response body | 脱敏后的响应内容
+	ResponseBody   string `json:"response_body,optional"`
+	// Duration ms | 耗时毫秒
+	DurationMs     int32  `json:"duration_ms"`
+	// Client IP | 操作IP
+	ClientIp       string `json:"client_ip"`
+	// User agent | 浏览器和设备标识
+	UserAgent      string `json:"user_agent,optional"`
+	// Created at unix | 操作时间
+	CreatedAt      int64  `json:"created_at"`
+}
+
+// Admin action log list request | 操作日志列表请求
+type AdminActionLogListReq {
+	// Page | 页码
+	Page          int32  `json:"page,optional"`
+	// Page size | 每页条数
+	PageSize      int32  `json:"page_size,optional"`
+	// User ID | 用户ID
+	UserId        int64  `json:"user_id,optional"`
+	// Username | 用户名
+	Username      string `json:"username,optional"`
+	// Request method | HTTP方法
+	RequestMethod string `json:"request_method,optional"`
+	// Request path | 请求路径
+	RequestPath   string `json:"request_path,optional"`
+	// Action result | 操作结果 1成功 2失败
+	ActionResult  int32  `json:"action_result,optional"`
+	// Created at from unix | 开始时间
+	CreatedAtFrom int64  `json:"created_at_from,optional"`
+	// Created at to unix | 结束时间
+	CreatedAtTo   int64  `json:"created_at_to,optional"`
+}
+
+// Admin action log list response | 操作日志列表
+type AdminActionLogListResp {
+	// List | 列表
+	List  []AdminActionLogInfo `json:"list"`
+	// Total | 总数
+	Total int64                `json:"total"`
+}
+
+// Error log | 错误日志
+type ErrorLogInfo {
+	// ID | 日志ID
+	Id             int64  `json:"id"`
+	// User ID | 用户ID
+	UserId         int64  `json:"user_id,optional"`
+	// Username | 用户名
+	Username       string `json:"username"`
+	// Request method | HTTP方法
+	RequestMethod  string `json:"request_method"`
+	// Request path | 请求路径
+	RequestPath    string `json:"request_path"`
+	// Request query | 查询参数
+	RequestQuery   string `json:"request_query,optional"`
+	// Request body | 脱敏后的请求内容
+	RequestBody    string `json:"request_body,optional"`
+	// Service name | 出错服务名
+	ServiceName    string `json:"service_name"`
+	// Response status | HTTP状态码
+	ResponseStatus int32  `json:"response_status"`
+	// Response body | 脱敏后的响应内容
+	ResponseBody   string `json:"response_body,optional"`
+	// Subject | 错误摘要
+	Subject        string `json:"subject,optional"`
+	// Detail | 错误堆栈
+	Detail         string `json:"detail,optional"`
+	// Duration ms | 耗时毫秒
+	DurationMs     int32  `json:"duration_ms"`
+	// Client IP | 客户端IP
+	ClientIp       string `json:"client_ip"`
+	// User agent | 浏览器和设备标识
+	UserAgent      string `json:"user_agent,optional"`
+	// Operator ID | 厅ID
+	OperatorId     int64  `json:"operator_id,optional"`
+	// Created at unix | 发生时间
+	CreatedAt      int64  `json:"created_at"`
+}
+
+// Error log list request | 错误日志列表请求
+type ErrorLogListReq {
+	// Page | 页码
+	Page           int32  `json:"page,optional"`
+	// Page size | 每页条数
+	PageSize       int32  `json:"page_size,optional"`
+	// User ID | 用户ID
+	UserId         int64  `json:"user_id,optional"`
+	// Request path | 请求路径
+	RequestPath    string `json:"request_path,optional"`
+	// Service name | 服务名
+	ServiceName    string `json:"service_name,optional"`
+	// Response status | HTTP状态码
+	ResponseStatus int32  `json:"response_status,optional"`
+	// Created at from unix | 开始时间
+	CreatedAtFrom  int64  `json:"created_at_from,optional"`
+	// Created at to unix | 结束时间
+	CreatedAtTo    int64  `json:"created_at_to,optional"`
+}
+
+// Error log list response | 错误日志列表
+type ErrorLogListResp {
+	// List | 列表
+	List  []ErrorLogInfo `json:"list"`
+	// Total | 总数
+	Total int64          `json:"total"`
+}
+
+@server (
+	prefix:     /admin
+	group:      log
+	middleware: Jwt,ActionLog,Authority
+)
+service Core {
+	@doc "登录日志列表"
+	@handler getLoginLogList
+	post /log/login/list (LoginLogListReq) returns (LoginLogListResp)
+
+	@doc "操作日志列表"
+	@handler getAdminActionLogList
+	post /log/action/list (AdminActionLogListReq) returns (AdminActionLogListResp)
+
+	@doc "错误日志列表"
+	@handler getErrorLogList
+	post /log/error/list (ErrorLogListReq) returns (ErrorLogListResp)
+}

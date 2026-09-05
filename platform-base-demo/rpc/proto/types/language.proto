@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+package language;
+
+option go_package = "oa.98ent.com/p9/platform-base/rpc/pb/base/language";
+
+// 语言信息
+message LanguageInfo {
+  // 语言ID
+  int64 id = 1;
+  // 语言编码
+  string code = 2;
+  // 多语言名称
+  map<string, string> name_i18n = 3;
+  // 状态: 1启用, 2停用
+  int64 status = 4;
+  // 排序值, 数值越小越靠前
+  int64 sort_no = 5;
+}
+
+// 创建语言请求
+message CreateLanguageRequest {
+  // 语言编码
+  string code = 1;
+  // 多语言名称
+  map<string, string> name_i18n = 2;
+  // 状态: 1启用, 2停用
+  optional int64 status = 3;
+}
+
+// 创建语言响应
+message CreateLanguageResponse {
+  // 语言ID
+  int64 id = 1;
+}
+
+// 修改语言请求
+message UpdateLanguageRequest {
+  // 语言ID
+  int64 id = 1;
+
+  // 多语言名称, 为空时不修改
+  map<string, string> name_i18n = 2;
+  // 状态: 1启用, 2停用
+  optional int64 status = 3;
+}
+
+// 修改语言响应
+message UpdateLanguageResponse {}
+
+// 获取语言请求
+message GetLanguageRequest {
+  // 语言ID
+  int64 id = 1;
+}
+
+// 获取语言响应
+message GetLanguageResponse {
+  // 语言信息
+  LanguageInfo language = 1;
+}
+
+// 获取语言管理列表请求
+message ListLanguagesRequest {
+  // 页码, 从1开始
+  int64 page = 1;
+  // 每页数量
+  int64 page_size = 2;
+
+  // 状态: 1启用, 2停用
+  optional int64 status = 3;
+}
+
+// 获取语言管理列表响应
+message ListLanguagesResponse {
+  // 数据总数
+  int64 total = 1;
+  // 语言列表
+  repeated LanguageInfo list = 2;
+}
+
+// 获取全部语言请求
+message ListAllLanguagesRequest {
+  // 状态: 1启用, 2停用
+  optional int64 status = 1;
+}
+
+// 获取全部语言响应
+message ListAllLanguagesResponse {
+  // 语言列表
+  repeated LanguageInfo list = 1;
+}
+
+// 调整语言排序请求
+message ReorderLanguageRequest {
+  // 需要移动的语言ID
+  int64 id = 1;
+  // 目标语言ID
+  int64 target_id = 2;
+}
+
+// 调整语言排序响应
+message ReorderLanguageResponse {}

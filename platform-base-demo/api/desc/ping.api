@@ -1,0 +1,14 @@
+syntax = "v1"
+
+// Ping响应
+type PingResponse {}
+
+@server (
+	group: ping
+)
+service platform_base {
+	// Ping
+	@handler Ping
+	get /ping returns (PingResponse)
+}
+

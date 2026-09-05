@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+package timezone;
+
+option go_package = "oa.98ent.com/p9/platform-base/rpc/pb/base/timezone";
+
+// 时区信息
+message TimezoneInfo {
+  // 时区ID
+  int64 id = 1;
+  // IANA 时区编码
+  string code = 2;
+  // 多语言名称
+  map<string, string> name_i18n = 3;
+  // 状态: 1启用, 2停用
+  int64 status = 4;
+  // 排序值, 数值越小越靠前
+  int64 sort_no = 5;
+}
+
+// 创建时区请求
+message CreateTimezoneRequest {
+  // IANA 时区编码
+  string code = 1;
+  // 多语言名称
+  map<string, string> name_i18n = 2;
+  // 状态: 1启用, 2停用
+  optional int64 status = 3;
+}
+
+// 创建时区响应
+message CreateTimezoneResponse {
+  // 时区ID
+  int64 id = 1;
+}
+
+// 修改时区请求
+message UpdateTimezoneRequest {
+  // 时区ID
+  int64 id = 1;
+
+  // 多语言名称, 为空时不修改
+  map<string, string> name_i18n = 2;
+  // 状态: 1启用, 2停用
+  optional int64 status = 3;
+}
+
+// 修改时区响应
+message UpdateTimezoneResponse {}
+
+// 获取时区请求
+message GetTimezoneRequest {
+  // 时区ID
+  int64 id = 1;
+}
+
+// 获取时区响应
+message GetTimezoneResponse {
+  // 时区信息
+  TimezoneInfo timezone = 1;
+}
+
+// 获取时区管理列表请求
+message ListTimezonesRequest {
+  // 页码, 从1开始
+  int64 page = 1;
+  // 每页数量
+  int64 page_size = 2;
+
+  // 状态: 1启用, 2停用
+  optional int64 status = 3;
+}
+
+// 获取时区管理列表响应
+message ListTimezonesResponse {
+  // 数据总数
+  int64 total = 1;
+  // 时区列表
+  repeated TimezoneInfo list = 2;
+}
+
+// 获取全部时区请求
+message ListAllTimezonesRequest {
+  // 状态: 1启用, 2停用
+  optional int64 status = 1;
+}
+
+// 获取全部时区响应
+message ListAllTimezonesResponse {
+  // 时区列表
+  repeated TimezoneInfo list = 1;
+}
+
+// 调整时区排序请求
+message ReorderTimezoneRequest {
+  // 需要移动的时区ID
+  int64 id = 1;
+  // 目标时区ID
+  int64 target_id = 2;
+}
+
+// 调整时区排序响应
+message ReorderTimezoneResponse {}

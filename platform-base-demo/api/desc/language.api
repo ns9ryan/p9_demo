@@ -1,0 +1,118 @@
+syntax = "v1"
+
+import "types/common.api"
+
+type (
+	// 语言信息
+	LanguageInfo {
+		// 语言ID
+		Id int64 `json:"id"`
+		// 语言编码
+		Code string `json:"code"`
+		// 多语言名称
+		NameI18n map[string]string `json:"name_i18n"`
+		// 状态: 1启用, 2停用
+		Status int64 `json:"status"`
+		// 排序值, 数值越小越靠前
+		SortNo int64 `json:"sort_no"`
+	}
+	// 创建语言请求
+	CreateLanguageRequest {
+		// 语言编码
+		Code string `json:"code" validate:"required,max=35"`
+		// 多语言名称
+		NameI18n map[string]string `json:"name_i18n" validate:"required"`
+		// 状态: 1启用, 2停用
+		Status *int64 `json:"status,optional" validate:"omitempty,oneof=1 2"`
+	}
+	// 创建语言响应
+	CreateLanguageResponse {
+		// 语言ID
+		Id int64 `json:"id"`
+	}
+	// 修改语言请求
+	UpdateLanguageRequest {
+		// 语言ID
+		Id int64 `json:"id" validate:"required,gt=0"`
+		// 多语言名称, 为空时不修改
+		NameI18n map[string]string `json:"name_i18n,optional"`
+		// 状态: 1启用, 2停用
+		Status *int64 `json:"status,optional" validate:"omitempty,oneof=1 2"`
+	}
+	// 修改语言响应
+	UpdateLanguageResponse  {}
+	// 获取语言请求
+	GetLanguageRequest {
+		// 语言ID
+		Id int64 `form:"id" validate:"required,gt=0"`
+	}
+	// 获取语言响应
+	GetLanguageResponse {
+		// 语言信息
+		Language LanguageInfo `json:"language"`
+	}
+	// 获取语言管理列表请求
+	ListLanguagesRequest {
+		// 分页参数
+		PageRequest
+		// 状态: 1启用, 2停用
+		Status *int64 `form:"status,optional" validate:"omitempty,oneof=1 2"`
+	}
+	// 获取语言管理列表响应
+	ListLanguagesResponse {
+		// 数据总数
+		Total int64 `json:"total"`
+		// 语言列表
+		List []LanguageInfo `json:"list"`
+	}
+	// 获取全部语言请求
+	ListAllLanguagesRequest {
+		// 状态: 1启用, 2停用
+		Status *int64 `form:"status,optional" validate:"omitempty,oneof=1 2"`
+	}
+	// 获取全部语言响应
+	ListAllLanguagesResponse {
+		// 语言列表
+		List []LanguageInfo `json:"list"`
+	}
+	// 调整语言排序请求
+	ReorderLanguageRequest {
+		// 需要移动的语言ID
+		Id int64 `json:"id" validate:"required,gt=0"`
+		// 目标语言ID
+		TargetId int64 `json:"target_id" validate:"required,gt=0"`
+	}
+	// 调整语言排序响应
+	ReorderLanguageResponse  {}
+)
+
+@server (
+	group:  language
+	prefix: /language
+)
+service platform_base {
+	// 创建语言
+	@handler CreateLanguage
+	post /create (CreateLanguageRequest) returns (CreateLanguageResponse)
+
+	// 修改语言
+	@handler UpdateLanguage
+	post /update (UpdateLanguageRequest) returns (UpdateLanguageResponse)
+
+	// 获取语言
+	@handler GetLanguage
+	get /get (GetLanguageRequest) returns (GetLanguageResponse)
+
+	// 获取语言管理列表
+	@handler ListLanguages
+	get /list (ListLanguagesRequest) returns (ListLanguagesResponse)
+
+	// 获取全部语言
+	@handler ListAllLanguages
+	get /list-all (ListAllLanguagesRequest) returns (ListAllLanguagesResponse)
+
+	// 调整语言排序
+	@handler ReorderLanguage
+	post /reorder (ReorderLanguageRequest) returns (ReorderLanguageResponse)
+}
+

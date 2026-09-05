@@ -1,0 +1,17 @@
+Name: promo-api
+Host: 0.0.0.0
+Port: 8890
+
+Log:
+  Mode: console
+  Level: info
+
+DB:
+  Driver: postgres
+  DSN: "host=127.0.0.1 user=postgres password=app123 dbname=postgres port=5432 sslmode=disable TimeZone=UTC"
+
+CoreRpc:
+  Endpoints:
+    - 127.0.0.1:8080
+  NonBlock: true
+  Timeout: 10000

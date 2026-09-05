@@ -1,0 +1,16 @@
+# API服务配置
+Name: platform-base-api   # API服务名称
+Host: 0.0.0.0             # API监听地址
+Port: 18001               # API监听端口
+Mode: dev                 # 运行模式
+
+# Platform Base RPC配置
+PlatformBaseRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:12379     # Etcd地址
+    Key: platform-base-rpc  # RPC服务注册Key
+
+# 国际化配置
+I18n:
+  DefaultLanguage: zh-CN  # 默认语言

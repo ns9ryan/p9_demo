@@ -1,0 +1,18 @@
+syntax = "v1"
+
+info (
+	title:   "Core API"
+	desc:    "分站 core HTTP 接口"
+	author:  "p9"
+	version: "1.0.0"
+)
+
+import "base.api"
+import "./core/public.api"
+import "./core/user.api"
+import "./core/operator.api"
+import "./core/role.api"
+import "./core/menu.api"
+import "./core/api.api"
+import "./core/authority.api"
+import "./core/log.api"

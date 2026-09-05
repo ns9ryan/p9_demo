@@ -1,0 +1,7 @@
+syntax = "v1"
+
+import "ping.api"
+import "language.api"
+import "timezone.api"
+import "currency.api"
+import "region.api"

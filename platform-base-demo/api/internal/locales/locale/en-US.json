@@ -1,0 +1,14 @@
+{
+	"common": {
+		"invalid_request": "Invalid request",
+		"data_not_found": "Data not found",
+		"constraint_error": "Data constraint conflict",
+		"validation_error": "Validation failed",
+		"database_error": "Database operation failed",
+
+		"internal_error": "Internal server error",
+		"too_many_requests": "Too many requests",
+		"service_unavailable": "Service unavailable",
+		"request_timeout": "Request timeout"
+	}
+}

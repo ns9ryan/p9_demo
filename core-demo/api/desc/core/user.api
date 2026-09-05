@@ -1,0 +1,146 @@
+syntax = "v1"
+
+info (
+	title:   "user api"
+	desc:    "user session and user management"
+	author:  "p9"
+	version: "v1"
+)
+
+import "../base.api"
+
+// Create user request | 创建用户
+type CreateUserReq {
+	// Username | 用户名
+	Username    string  `json:"username"`
+	// Password | 密码
+	Password    string  `json:"password"`
+	// Display name | 显示名
+	DisplayName string  `json:"display_name"`
+	// Mobile | 手机号
+	Mobile      string  `json:"mobile,optional"`
+	// Email | 邮箱
+	Email       string  `json:"email,optional"`
+	// Status | 状态
+	Status      int32   `json:"status,optional"`
+	// Role IDs | 角色ID
+	RoleIds     []int64 `json:"role_ids,optional"`
+}
+
+// Update user request | 更新用户
+type UpdateUserReq {
+	// User ID | 用户ID
+	Id          int64  `json:"id"`
+	// Display name | 显示名
+	DisplayName string `json:"display_name,optional"`
+	// Mobile | 手机号
+	Mobile      string `json:"mobile,optional"`
+	// Email | 邮箱
+	Email       string `json:"email,optional"`
+	// Status | 状态
+	Status      int32  `json:"status,optional"`
+}
+
+// User list request | 用户列表
+type UserListReq {
+	// Page | 页码
+	Page        int32   `json:"page,optional"`
+	// Page size | 每页条数
+	PageSize    int32   `json:"page_size,optional"`
+	// Username | 用户名
+	Username    string  `json:"username,optional"`
+	// Mobile | 手机号
+	Mobile      string  `json:"mobile,optional"`
+	// Email | 邮箱
+	Email       string  `json:"email,optional"`
+	// Display name | 显示名
+	DisplayName string  `json:"display_name,optional"`
+	// Role IDs | 角色ID
+	RoleIds     []int64 `json:"role_ids,optional"`
+}
+
+// User list response | 用户列表
+type UserListResp {
+	// List | 列表
+	List  []UserPublic `json:"list"`
+	// Total | 总数
+	Total int64        `json:"total"`
+}
+
+// Update user password request | 重置用户密码
+type PasswordReq {
+	// User ID | 用户ID
+	UserId   int64  `json:"user_id"`
+	// Password | 新密码
+	Password string `json:"password"`
+}
+
+// Bind roles request | 绑定角色
+type BindRolesReq {
+	// User ID | 用户ID
+	UserId  int64   `json:"user_id"`
+	// Role IDs | 角色ID
+	RoleIds []int64 `json:"role_ids"`
+}
+
+@server (
+	prefix:     /admin
+	group:      user
+	middleware: Jwt,ActionLog
+)
+service Core {
+	@doc "登出当前会话"
+	@handler logout
+	post /logout (LogoutReq) returns (BaseMsgResp)
+
+	@doc "登出全部会话"
+	@handler logoutAll
+	post /logout/all returns (BaseMsgResp)
+
+	@doc "当前用户信息"
+	@handler getUserInfo
+	get /user/info returns (UserPublic)
+
+	@doc "当前用户权限码"
+	@handler getUserPerm
+	get /user/perm returns (PermResp)
+
+	@doc "修改本人密码"
+	@handler changeOwnPassword
+	post /user/password/self (SelfPasswordReq) returns (BaseMsgResp)
+}
+
+@server (
+	prefix:     /admin
+	group:      user
+	middleware: Jwt,ActionLog,Authority
+)
+service Core {
+	@doc "创建用户"
+	@handler createUser
+	post /user/create (CreateUserReq) returns (UserPublic)
+
+	@doc "更新用户"
+	@handler updateUser
+	post /user/update (UpdateUserReq) returns (BaseMsgResp)
+
+	@doc "删除用户"
+	@handler deleteUser
+	post /user/delete (IDsReq) returns (BaseMsgResp)
+
+	@doc "用户列表"
+	@handler getUserList
+	post /user/list (UserListReq) returns (UserListResp)
+
+	@doc "用户详情"
+	@handler getUserById
+	get /user/detail (IDQuery) returns (UserPublic)
+
+	@doc "重置用户密码"
+	@handler updateUserPassword
+	post /user/password (PasswordReq) returns (BaseMsgResp)
+
+	@doc "绑定用户角色"
+	@handler bindUserRoles
+	post /user/roles (BindRolesReq) returns (BaseMsgResp)
+}

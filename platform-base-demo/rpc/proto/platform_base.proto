@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package platform_base;
+
+option go_package = "oa.98ent.com/p9/platform-base/rpc/pb/base";
+
+import "types/ping.proto";
+import "types/language.proto";
+import "types/timezone.proto";
+import "types/currency.proto";
+import "types/region.proto";
+
+// Ping 服务
+service PingService {
+  // Ping
+  rpc Ping(ping.PingRequest) returns (ping.PingResponse);
+}
+
+// 语言服务
+service LanguageService {
+  // 创建语言
+  rpc Create(language.CreateLanguageRequest) returns (language.CreateLanguageResponse);
+
+  // 修改语言
+  rpc Update(language.UpdateLanguageRequest) returns (language.UpdateLanguageResponse);
+
+  // 获取语言
+  rpc Get(language.GetLanguageRequest) returns (language.GetLanguageResponse);
+
+  // 获取语言管理列表
+  rpc List(language.ListLanguagesRequest) returns (language.ListLanguagesResponse);
+
+  // 获取全部语言
+  rpc ListAll(language.ListAllLanguagesRequest) returns (language.ListAllLanguagesResponse);
+
+  // 调整语言排序
+  rpc Reorder(language.ReorderLanguageRequest) returns (language.ReorderLanguageResponse);
+}
+
+// 时区服务
+service TimezoneService {
+  // 创建时区
+  rpc Create(timezone.CreateTimezoneRequest) returns (timezone.CreateTimezoneResponse);
+
+  // 修改时区
+  rpc Update(timezone.UpdateTimezoneRequest) returns (timezone.UpdateTimezoneResponse);
+
+  // 获取时区
+  rpc Get(timezone.GetTimezoneRequest) returns (timezone.GetTimezoneResponse);
+
+  // 获取时区管理列表
+  rpc List(timezone.ListTimezonesRequest) returns (timezone.ListTimezonesResponse);
+
+  // 获取全部时区
+  rpc ListAll(timezone.ListAllTimezonesRequest) returns (timezone.ListAllTimezonesResponse);
+
+  // 调整时区排序
+  rpc Reorder(timezone.ReorderTimezoneRequest) returns (timezone.ReorderTimezoneResponse);
+}
+
+// 货币服务
+service CurrencyService {
+  // 创建货币
+  rpc Create(currency.CreateCurrencyRequest) returns (currency.CreateCurrencyResponse);
+
+  // 修改货币
+  rpc Update(currency.UpdateCurrencyRequest) returns (currency.UpdateCurrencyResponse);
+
+  // 获取货币
+  rpc Get(currency.GetCurrencyRequest) returns (currency.GetCurrencyResponse);
+
+  // 获取货币管理列表
+  rpc List(currency.ListCurrenciesRequest) returns (currency.ListCurrenciesResponse);
+
+  // 获取全部货币
+  rpc ListAll(currency.ListAllCurrenciesRequest) returns (currency.ListAllCurrenciesResponse);
+
+  // 调整货币排序
+  rpc Reorder(currency.ReorderCurrencyRequest) returns (currency.ReorderCurrencyResponse);
+}
+
+// 国家地区服务
+service RegionService {
+  // 创建国家地区
+  rpc Create(region.CreateRegionRequest) returns (region.CreateRegionResponse);
+
+  // 修改国家地区
+  rpc Update(region.UpdateRegionRequest) returns (region.UpdateRegionResponse);
+
+  // 获取国家地区
+  rpc Get(region.GetRegionRequest) returns (region.GetRegionResponse);
+
+  // 获取国家地区管理列表
+  rpc List(region.ListRegionsRequest) returns (region.ListRegionsResponse);
+
+  // 获取全部国家地区
+  rpc ListAll(region.ListAllRegionsRequest) returns (region.ListAllRegionsResponse);
+
+  // 调整国家地区排序
+  rpc Reorder(region.ReorderRegionRequest) returns (region.ReorderRegionResponse);
+}

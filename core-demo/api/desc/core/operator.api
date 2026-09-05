@@ -1,0 +1,57 @@
+syntax = "v1"
+
+info (
+	title:   "operator api"
+	desc:    "current operator"
+	author:  "p9"
+	version: "v1"
+)
+
+import "../base.api"
+
+// Operator info | 分站信息
+type OperatorInfo {
+	// ID | 分站ID
+	Id                     int64  `json:"id"`
+	// Operator code | 分站编码
+	OperatorCode           string `json:"operator_code"`
+	// Timezone code | 时区
+	TimezoneCode           string `json:"timezone_code"`
+	// Settlement currency | 结算币种
+	SettlementCurrencyCode string `json:"settlement_currency_code"`
+	// Status | 状态
+	Status                 int32  `json:"status"`
+	// Required config version | 要求配置版本
+	RequiredConfigVersion  int32  `json:"required_config_version"`
+	// Completed config version | 已完成配置版本
+	CompletedConfigVersion int32  `json:"completed_config_version"`
+	// Config completed at unix | 配置完成时间
+	ConfigCompletedAt      int64  `json:"config_completed_at,optional"`
+	// Created at unix | 创建时间
+	CreatedAt              int64  `json:"created_at"`
+	// Updated at unix | 更新时间
+	UpdatedAt              int64  `json:"updated_at"`
+}
+
+// Update operator request | 更新分站
+type UpdateOperatorReq {
+	// Timezone code | 时区
+	TimezoneCode           string `json:"timezone_code,optional"`
+	// Settlement currency | 结算币种
+	SettlementCurrencyCode string `json:"settlement_currency_code,optional"`
+}
+
+@server (
+	prefix:     /admin
+	group:      operator
+	middleware: Jwt,ActionLog,Authority
+)
+service Core {
+	@doc "当前分站信息"
+	@handler getOperator
+	get /operator/self returns (OperatorInfo)
+
+	@doc "更新当前分站"
+	@handler updateOperator
+	post /operator/update (UpdateOperatorReq) returns (BaseMsgResp)
+}

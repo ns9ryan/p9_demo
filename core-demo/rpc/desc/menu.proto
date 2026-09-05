@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+message MenuNode {
+  int64 id = 1;
+  int64 parent_id = 2;
+  int32 menu_type = 3;
+  string path = 4;
+  string name = 5;
+  string component = 6;
+  string redirect = 7;
+  string title = 8;
+  string icon = 9;
+  string permission = 10;
+  int32 hide_menu = 11;
+  int32 sort = 12;
+  repeated MenuNode children = 13;
+}
+
+message MenuTreeResp {
+  repeated MenuNode list = 1;
+}
+
+message MenuInfo {
+  int64 id = 1;
+  int64 parent_id = 2;
+  int32 menu_type = 3;
+  string path = 4;
+  string name = 5;
+  string component = 6;
+  string redirect = 7;
+  string title = 8;
+  string icon = 9;
+  string permission = 10;
+  int32 hide_menu = 11;
+  int32 sort = 12;
+  int32 disabled = 13;
+  int64 created_at = 14;
+  int64 updated_at = 15;
+}
+
+message CreateMenuReq {
+  int64 parent_id = 1;
+  int32 menu_type = 2;
+  string path = 3;
+  string name = 4;
+  string component = 5;
+  string redirect = 6;
+  string title = 7;
+  string icon = 8;
+  string permission = 9;
+  int32 hide_menu = 10;
+  int32 sort = 11;
+  int32 disabled = 12;
+}
+
+message UpdateMenuReq {
+  int64 id = 1;
+  optional int64 parent_id = 2;
+  optional int32 menu_type = 3;
+  optional string path = 4;
+  optional string name = 5;
+  optional string component = 6;
+  optional string redirect = 7;
+  optional string title = 8;
+  optional string icon = 9;
+  optional string permission = 10;
+  optional int32 hide_menu = 11;
+  optional int32 sort = 12;
+  optional int32 disabled = 13;
+}
+
+message MenuListResp {
+  repeated MenuInfo list = 1;
+}
+
+service Core {
+  // Menu management
+  // group: menu
+  rpc getMenuByRole (Empty) returns (MenuTreeResp);
+  // group: menu
+  rpc createMenu (CreateMenuReq) returns (MenuInfo);
+  // group: menu
+  rpc updateMenu (UpdateMenuReq) returns (Empty);
+  // group: menu
+  rpc deleteMenu (IDsReq) returns (Empty);
+  // group: menu
+  rpc getMenuList (Empty) returns (MenuListResp);
+}

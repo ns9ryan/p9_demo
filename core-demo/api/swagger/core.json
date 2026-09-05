@@ -1,0 +1,3937 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "title": "Core API",
+    "version": "1.0.0"
+  },
+  "host": "localhost:18000",
+  "basePath": "/",
+  "paths": {
+    "/admin/api/create": {
+      "post": {
+        "description": "创建接口",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "api"
+        ],
+        "summary": "创建接口",
+        "operationId": "apiCreateApi",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "method",
+                "path"
+              ],
+              "properties": {
+                "api_group": {
+                  "description": "API group | 分组",
+                  "type": "string"
+                },
+                "description": {
+                  "description": "Description | 描述",
+                  "type": "string"
+                },
+                "is_required": {
+                  "description": "Required | 是否必选",
+                  "type": "integer"
+                },
+                "method": {
+                  "description": "Method | HTTP 方法",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "Path | 路径",
+                  "type": "string"
+                },
+                "service_name": {
+                  "description": "Service name | 服务名",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "api_group": {
+                  "description": "API group | 分组",
+                  "type": "string"
+                },
+                "created_at": {
+                  "description": "Created at unix | 创建时间",
+                  "type": "integer"
+                },
+                "description": {
+                  "description": "Description | 描述",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "ID | 接口ID",
+                  "type": "integer"
+                },
+                "is_required": {
+                  "description": "Required | 是否必选",
+                  "type": "integer"
+                },
+                "method": {
+                  "description": "Method | HTTP 方法",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "Path | 路径",
+                  "type": "string"
+                },
+                "service_name": {
+                  "description": "Service name | 服务名",
+                  "type": "string"
+                },
+                "updated_at": {
+                  "description": "Updated at unix | 更新时间",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/api/delete": {
+      "post": {
+        "description": "删除接口",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "api"
+        ],
+        "summary": "删除接口",
+        "operationId": "apiDeleteApi",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "ID | 单个ID",
+                  "type": "integer"
+                },
+                "ids": {
+                  "description": "IDs | ID列表",
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/api/list": {
+      "post": {
+        "description": "接口列表",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "api"
+        ],
+        "summary": "接口列表",
+        "operationId": "apiGetApiList",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "api_group": {
+                  "description": "API group | 分组",
+                  "type": "string"
+                },
+                "description": {
+                  "description": "Description | 描述",
+                  "type": "string"
+                },
+                "method": {
+                  "description": "Method | HTTP 方法",
+                  "type": "string"
+                },
+                "page": {
+                  "description": "Page | 页码",
+                  "type": "integer"
+                },
+                "page_size": {
+                  "description": "Page size | 每页条数",
+                  "type": "integer"
+                },
+                "path": {
+                  "description": "Path | 路径",
+                  "type": "string"
+                },
+                "service_name": {
+                  "description": "Service name | 服务名",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "description": "List | 列表",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "description",
+                      "api_group",
+                      "method",
+                      "path",
+                      "is_required",
+                      "service_name",
+                      "created_at",
+                      "updated_at"
+                    ],
+                    "properties": {
+                      "api_group": {
+                        "description": "API group | 分组",
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "description": "Created at unix | 创建时间",
+                        "type": "integer"
+                      },
+                      "description": {
+                        "description": "Description | 描述",
+                        "type": "string"
+                      },
+                      "id": {
+                        "description": "ID | 接口ID",
+                        "type": "integer"
+                      },
+                      "is_required": {
+                        "description": "Required | 是否必选",
+                        "type": "integer"
+                      },
+                      "method": {
+                        "description": "Method | HTTP 方法",
+                        "type": "string"
+                      },
+                      "path": {
+                        "description": "Path | 路径",
+                        "type": "string"
+                      },
+                      "service_name": {
+                        "description": "Service name | 服务名",
+                        "type": "string"
+                      },
+                      "updated_at": {
+                        "description": "Updated at unix | 更新时间",
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "description": "Total | 总数",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/api/update": {
+      "post": {
+        "description": "更新接口",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "api"
+        ],
+        "summary": "更新接口",
+        "operationId": "apiUpdateApi",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "api_group": {
+                  "description": "API group | 分组",
+                  "type": "string"
+                },
+                "description": {
+                  "description": "Description | 描述",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "API ID | 接口ID",
+                  "type": "integer"
+                },
+                "is_required": {
+                  "description": "Required | 是否必选",
+                  "type": "integer"
+                },
+                "method": {
+                  "description": "Method | HTTP 方法",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "Path | 路径",
+                  "type": "string"
+                },
+                "service_name": {
+                  "description": "Service name | 服务名",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/authority/api/role": {
+      "post": {
+        "description": "查询角色接口权限",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "authority"
+        ],
+        "summary": "查询角色接口权限",
+        "operationId": "authorityGetApiAuthority",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "ID | 角色ID（兼容）",
+                  "type": "integer"
+                },
+                "role_id": {
+                  "description": "Role ID | 角色ID",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "path",
+                  "method"
+                ],
+                "properties": {
+                  "method": {
+                    "description": "Method | HTTP 方法",
+                    "type": "string"
+                  },
+                  "path": {
+                    "description": "Path | 路径",
+                    "type": "string"
+                  }
+                }
+              },
+              "properties": {
+                "method": {
+                  "description": "Method | HTTP 方法",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "Path | 路径",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/authority/api/update": {
+      "post": {
+        "description": "更新角色接口权限",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "authority"
+        ],
+        "summary": "更新角色接口权限",
+        "operationId": "authorityUpdateApiAuthority",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "role_id"
+              ],
+              "properties": {
+                "data": {
+                  "description": "Data | 接口权限",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "path",
+                      "method"
+                    ],
+                    "properties": {
+                      "method": {
+                        "description": "Method | HTTP 方法",
+                        "type": "string"
+                      },
+                      "path": {
+                        "description": "Path | 路径",
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "role_id": {
+                  "description": "Role ID | 角色ID",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/authority/menu/role": {
+      "post": {
+        "description": "查询角色菜单权限",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "authority"
+        ],
+        "summary": "查询角色菜单权限",
+        "operationId": "authorityGetMenuAuthority",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "ID | 角色ID（兼容）",
+                  "type": "integer"
+                },
+                "role_id": {
+                  "description": "Role ID | 角色ID",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "menu_ids": {
+                  "description": "Menu IDs | 菜单ID",
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/authority/menu/update": {
+      "post": {
+        "description": "更新角色菜单权限",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "authority"
+        ],
+        "summary": "更新角色菜单权限",
+        "operationId": "authorityUpdateMenuAuthority",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "role_id"
+              ],
+              "properties": {
+                "menu_ids": {
+                  "description": "Menu IDs | 菜单ID",
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "role_id": {
+                  "description": "Role ID | 角色ID",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/bootstrap/admin": {
+      "post": {
+        "description": "初始化平台超管",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "public"
+        ],
+        "summary": "初始化平台超管",
+        "operationId": "publicBootstrapAdmin",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Init token | 初始化口令",
+            "name": "X-Init-Token",
+            "in": "header"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "username",
+                "password"
+              ],
+              "properties": {
+                "display_name": {
+                  "description": "Display name | 显示名",
+                  "type": "string"
+                },
+                "password": {
+                  "description": "Password | 密码",
+                  "type": "string"
+                },
+                "username": {
+                  "description": "Username | 用户名",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "created_at": {
+                  "description": "Created at unix | 创建时间",
+                  "type": "integer"
+                },
+                "display_name": {
+                  "description": "Display name | 显示名",
+                  "type": "string"
+                },
+                "email": {
+                  "description": "Email | 邮箱",
+                  "type": "string"
+                },
+                "home_path": {
+                  "description": "Home path | 首页路径",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "User ID | 用户ID",
+                  "type": "integer"
+                },
+                "is_super_admin": {
+                  "description": "Super admin | 是否超管",
+                  "type": "boolean"
+                },
+                "last_login_at": {
+                  "description": "Last login unix | 最近登录时间",
+                  "type": "integer"
+                },
+                "mobile": {
+                  "description": "Mobile | 手机号",
+                  "type": "string"
+                },
+                "operator_id": {
+                  "description": "Operator ID | 分站ID",
+                  "type": "integer"
+                },
+                "role_codes": {
+                  "description": "Role codes | 角色编码",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "status": {
+                  "description": "Status | 状态",
+                  "type": "integer"
+                },
+                "user_code": {
+                  "description": "User code | 用户编码",
+                  "type": "string"
+                },
+                "username": {
+                  "description": "Username | 用户名",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/bootstrap/operator": {
+      "post": {
+        "description": "初始化分站及超管",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "public"
+        ],
+        "summary": "初始化分站及超管",
+        "operationId": "publicBootstrapOperator",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Init token | 初始化口令",
+            "name": "X-Init-Token",
+            "in": "header"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "operator_code",
+                "username",
+                "password"
+              ],
+              "properties": {
+                "display_name": {
+                  "description": "Display name | 显示名",
+                  "type": "string"
+                },
+                "operator_code": {
+                  "description": "Operator code | 分站编码",
+                  "type": "string"
+                },
+                "password": {
+                  "description": "Password | 密码",
+                  "type": "string"
+                },
+                "settlement_currency_code": {
+                  "description": "Settlement currency | 结算币种",
+                  "type": "string"
+                },
+                "timezone_code": {
+                  "description": "Timezone code | 时区",
+                  "type": "string"
+                },
+                "username": {
+                  "description": "Username | 用户名",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "created_at": {
+                  "description": "Created at unix | 创建时间",
+                  "type": "integer"
+                },
+                "display_name": {
+                  "description": "Display name | 显示名",
+                  "type": "string"
+                },
+                "email": {
+                  "description": "Email | 邮箱",
+                  "type": "string"
+                },
+                "home_path": {
+                  "description": "Home path | 首页路径",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "User ID | 用户ID",
+                  "type": "integer"
+                },
+                "is_super_admin": {
+                  "description": "Super admin | 是否超管",
+                  "type": "boolean"
+                },
+                "last_login_at": {
+                  "description": "Last login unix | 最近登录时间",
+                  "type": "integer"
+                },
+                "mobile": {
+                  "description": "Mobile | 手机号",
+                  "type": "string"
+                },
+                "operator_id": {
+                  "description": "Operator ID | 分站ID",
+                  "type": "integer"
+                },
+                "role_codes": {
+                  "description": "Role codes | 角色编码",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "status": {
+                  "description": "Status | 状态",
+                  "type": "integer"
+                },
+                "user_code": {
+                  "description": "User code | 用户编码",
+                  "type": "string"
+                },
+                "username": {
+                  "description": "Username | 用户名",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/log/action/list": {
+      "post": {
+        "description": "操作日志列表",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "log"
+        ],
+        "summary": "操作日志列表",
+        "operationId": "logGetAdminActionLogList",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "action_result": {
+                  "description": "Action result | 操作结果 1成功 2失败",
+                  "type": "integer"
+                },
+                "created_at_from": {
+                  "description": "Created at from unix | 开始时间",
+                  "type": "integer"
+                },
+                "created_at_to": {
+                  "description": "Created at to unix | 结束时间",
+                  "type": "integer"
+                },
+                "page": {
+                  "description": "Page | 页码",
+                  "type": "integer"
+                },
+                "page_size": {
+                  "description": "Page size | 每页条数",
+                  "type": "integer"
+                },
+                "request_method": {
+                  "description": "Request method | HTTP方法",
+                  "type": "string"
+                },
+                "request_path": {
+                  "description": "Request path | 请求路径",
+                  "type": "string"
+                },
+                "user_id": {
+                  "description": "User ID | 用户ID",
+                  "type": "integer"
+                },
+                "username": {
+                  "description": "Username | 用户名",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "description": "List | 列表",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "user_id",
+                      "username",
+                      "request_method",
+                      "request_path",
+                      "action_result",
+                      "response_status",
+                      "duration_ms",
+                      "client_ip",
+                      "created_at"
+                    ],
+                    "properties": {
+                      "action_result": {
+                        "description": "Action result | 操作结果（多语言语义）",
+                        "type": "string"
+                      },
+                      "client_ip": {
+                        "description": "Client IP | 操作IP",
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "description": "Created at unix | 操作时间",
+                        "type": "integer"
+                      },
+                      "duration_ms": {
+                        "description": "Duration ms | 耗时毫秒",
+                        "type": "integer"
+                      },
+                      "id": {
+                        "description": "ID | 日志ID",
+                        "type": "integer"
+                      },
+                      "request_body": {
+                        "description": "Request body | 脱敏后的请求内容",
+                        "type": "string"
+                      },
+                      "request_method": {
+                        "description": "Request method | HTTP方法",
+                        "type": "string"
+                      },
+                      "request_path": {
+                        "description": "Request path | 请求路径",
+                        "type": "string"
+                      },
+                      "request_query": {
+                        "description": "Request query | 查询参数",
+                        "type": "string"
+                      },
+                      "response_body": {
+                        "description": "Response body | 脱敏后的响应内容",
+                        "type": "string"
+                      },
+                      "response_status": {
+                        "description": "Response status | HTTP状态码",
+                        "type": "integer"
+                      },
+                      "user_agent": {
+                        "description": "User agent | 浏览器和设备标识",
+                        "type": "string"
+                      },
+                      "user_id": {
+                        "description": "User ID | 用户ID",
+                        "type": "integer"
+                      },
+                      "username": {
+                        "description": "Username | 用户名",
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "description": "Total | 总数",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/log/error/list": {
+      "post": {
+        "description": "错误日志列表",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "log"
+        ],
+        "summary": "错误日志列表",
+        "operationId": "logGetErrorLogList",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "created_at_from": {
+                  "description": "Created at from unix | 开始时间",
+                  "type": "integer"
+                },
+                "created_at_to": {
+                  "description": "Created at to unix | 结束时间",
+                  "type": "integer"
+                },
+                "page": {
+                  "description": "Page | 页码",
+                  "type": "integer"
+                },
+                "page_size": {
+                  "description": "Page size | 每页条数",
+                  "type": "integer"
+                },
+                "request_path": {
+                  "description": "Request path | 请求路径",
+                  "type": "string"
+                },
+                "response_status": {
+                  "description": "Response status | HTTP状态码",
+                  "type": "integer"
+                },
+                "service_name": {
+                  "description": "Service name | 服务名",
+                  "type": "string"
+                },
+                "user_id": {
+                  "description": "User ID | 用户ID",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "description": "List | 列表",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "username",
+                      "request_method",
+                      "request_path",
+                      "service_name",
+                      "response_status",
+                      "duration_ms",
+                      "client_ip",
+                      "created_at"
+                    ],
+                    "properties": {
+                      "client_ip": {
+                        "description": "Client IP | 客户端IP",
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "description": "Created at unix | 发生时间",
+                        "type": "integer"
+                      },
+                      "detail": {
+                        "description": "Detail | 错误堆栈",
+                        "type": "string"
+                      },
+                      "duration_ms": {
+                        "description": "Duration ms | 耗时毫秒",
+                        "type": "integer"
+                      },
+                      "id": {
+                        "description": "ID | 日志ID",
+                        "type": "integer"
+                      },
+                      "operator_id": {
+                        "description": "Operator ID | 厅ID",
+                        "type": "integer"
+                      },
+                      "request_body": {
+                        "description": "Request body | 脱敏后的请求内容",
+                        "type": "string"
+                      },
+                      "request_method": {
+                        "description": "Request method | HTTP方法",
+                        "type": "string"
+                      },
+                      "request_path": {
+                        "description": "Request path | 请求路径",
+                        "type": "string"
+                      },
+                      "request_query": {
+                        "description": "Request query | 查询参数",
+                        "type": "string"
+                      },
+                      "response_body": {
+                        "description": "Response body | 脱敏后的响应内容",
+                        "type": "string"
+                      },
+                      "response_status": {
+                        "description": "Response status | HTTP状态码",
+                        "type": "integer"
+                      },
+                      "service_name": {
+                        "description": "Service name | 出错服务名",
+                        "type": "string"
+                      },
+                      "subject": {
+                        "description": "Subject | 错误摘要",
+                        "type": "string"
+                      },
+                      "user_agent": {
+                        "description": "User agent | 浏览器和设备标识",
+                        "type": "string"
+                      },
+                      "user_id": {
+                        "description": "User ID | 用户ID",
+                        "type": "integer"
+                      },
+                      "username": {
+                        "description": "Username | 用户名",
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "description": "Total | 总数",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/log/login/list": {
+      "post": {
+        "description": "登录日志列表",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "log"
+        ],
+        "summary": "登录日志列表",
+        "operationId": "logGetLoginLogList",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "login_at_from": {
+                  "description": "Login at from unix | 开始时间",
+                  "type": "integer"
+                },
+                "login_at_to": {
+                  "description": "Login at to unix | 结束时间",
+                  "type": "integer"
+                },
+                "login_result": {
+                  "description": "Login result | 登录结果 1成功 2失败",
+                  "type": "integer"
+                },
+                "page": {
+                  "description": "Page | 页码",
+                  "type": "integer"
+                },
+                "page_size": {
+                  "description": "Page size | 每页条数",
+                  "type": "integer"
+                },
+                "user_id": {
+                  "description": "User ID | 用户ID",
+                  "type": "integer"
+                },
+                "username": {
+                  "description": "Username | 用户名",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "description": "List | 列表",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "username",
+                      "login_result",
+                      "login_ip",
+                      "login_at"
+                    ],
+                    "properties": {
+                      "device_id": {
+                        "description": "Device ID | 设备ID",
+                        "type": "integer"
+                      },
+                      "failure_reason": {
+                        "description": "Failure reason | 失败原因",
+                        "type": "string"
+                      },
+                      "id": {
+                        "description": "ID | 日志ID",
+                        "type": "integer"
+                      },
+                      "login_at": {
+                        "description": "Login at unix | 登录时间",
+                        "type": "integer"
+                      },
+                      "login_ip": {
+                        "description": "Login IP | 登录IP",
+                        "type": "string"
+                      },
+                      "login_result": {
+                        "description": "Login result | 登录结果（多语言语义）",
+                        "type": "string"
+                      },
+                      "user_agent": {
+                        "description": "User agent | 浏览器和设备标识",
+                        "type": "string"
+                      },
+                      "user_id": {
+                        "description": "User ID | 用户ID",
+                        "type": "integer"
+                      },
+                      "username": {
+                        "description": "Username | 用户名",
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "description": "Total | 总数",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/login": {
+      "post": {
+        "description": "登录",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "public"
+        ],
+        "summary": "登录",
+        "operationId": "publicLogin",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "username",
+                "password"
+              ],
+              "properties": {
+                "operator_code": {
+                  "description": "Operator code | 分站编码",
+                  "type": "string"
+                },
+                "password": {
+                  "description": "Password | 密码",
+                  "type": "string"
+                },
+                "username": {
+                  "description": "Username | 用户名",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "description": "Token | 令牌",
+                  "type": "object",
+                  "required": [
+                    "access_token",
+                    "refresh_token",
+                    "expire",
+                    "refresh_expire"
+                  ],
+                  "properties": {
+                    "access_token": {
+                      "description": "Access token | 访问令牌",
+                      "type": "string"
+                    },
+                    "expire": {
+                      "description": "Access expire unix | 访问令牌过期时间",
+                      "type": "integer"
+                    },
+                    "refresh_expire": {
+                      "description": "Refresh expire unix | 刷新令牌过期时间",
+                      "type": "integer"
+                    },
+                    "refresh_token": {
+                      "description": "Refresh token | 刷新令牌",
+                      "type": "string"
+                    }
+                  }
+                },
+                "user": {
+                  "description": "User | 用户",
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "user_code",
+                    "username",
+                    "display_name",
+                    "is_super_admin",
+                    "status",
+                    "role_codes",
+                    "created_at"
+                  ],
+                  "properties": {
+                    "created_at": {
+                      "description": "Created at unix | 创建时间",
+                      "type": "integer"
+                    },
+                    "display_name": {
+                      "description": "Display name | 显示名",
+                      "type": "string"
+                    },
+                    "email": {
+                      "description": "Email | 邮箱",
+                      "type": "string"
+                    },
+                    "home_path": {
+                      "description": "Home path | 首页路径",
+                      "type": "string"
+                    },
+                    "id": {
+                      "description": "User ID | 用户ID",
+                      "type": "integer"
+                    },
+                    "is_super_admin": {
+                      "description": "Super admin | 是否超管",
+                      "type": "boolean"
+                    },
+                    "last_login_at": {
+                      "description": "Last login unix | 最近登录时间",
+                      "type": "integer"
+                    },
+                    "mobile": {
+                      "description": "Mobile | 手机号",
+                      "type": "string"
+                    },
+                    "operator_id": {
+                      "description": "Operator ID | 分站ID",
+                      "type": "integer"
+                    },
+                    "role_codes": {
+                      "description": "Role codes | 角色编码",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "status": {
+                      "description": "Status | 状态",
+                      "type": "integer"
+                    },
+                    "user_code": {
+                      "description": "User code | 用户编码",
+                      "type": "string"
+                    },
+                    "username": {
+                      "description": "Username | 用户名",
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/logout": {
+      "post": {
+        "description": "登出当前会话",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "登出当前会话",
+        "operationId": "userLogout",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "refresh_token"
+              ],
+              "properties": {
+                "refresh_token": {
+                  "description": "Refresh token | 刷新令牌",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/logout/all": {
+      "post": {
+        "description": "登出全部会话",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "登出全部会话",
+        "operationId": "userLogoutAll",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/menu/create": {
+      "post": {
+        "description": "创建菜单",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "menu"
+        ],
+        "summary": "创建菜单",
+        "operationId": "menuCreateMenu",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "menu_type",
+                "name",
+                "title"
+              ],
+              "properties": {
+                "component": {
+                  "description": "Component | 前端组件",
+                  "type": "string"
+                },
+                "disabled": {
+                  "description": "Disabled | 是否禁用",
+                  "type": "integer"
+                },
+                "hide_menu": {
+                  "description": "Hide menu | 是否隐藏",
+                  "type": "integer"
+                },
+                "icon": {
+                  "description": "Icon | 图标",
+                  "type": "string"
+                },
+                "menu_type": {
+                  "description": "Menu type | 菜单类型",
+                  "type": "integer"
+                },
+                "name": {
+                  "description": "Name | 路由名",
+                  "type": "string"
+                },
+                "parent_id": {
+                  "description": "Parent ID | 父级ID",
+                  "type": "integer"
+                },
+                "path": {
+                  "description": "Path | 路由路径",
+                  "type": "string"
+                },
+                "permission": {
+                  "description": "Permission | 权限码",
+                  "type": "string"
+                },
+                "redirect": {
+                  "description": "Redirect | 重定向",
+                  "type": "string"
+                },
+                "sort": {
+                  "description": "Sort | 排序",
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "Title | 标题",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "component": {
+                  "description": "Component | 前端组件",
+                  "type": "string"
+                },
+                "created_at": {
+                  "description": "Created at unix | 创建时间",
+                  "type": "integer"
+                },
+                "disabled": {
+                  "description": "Disabled | 是否禁用",
+                  "type": "integer"
+                },
+                "hide_menu": {
+                  "description": "Hide menu | 是否隐藏",
+                  "type": "integer"
+                },
+                "icon": {
+                  "description": "Icon | 图标",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "ID | 菜单ID",
+                  "type": "integer"
+                },
+                "menu_type": {
+                  "description": "Menu type | 菜单类型",
+                  "type": "integer"
+                },
+                "name": {
+                  "description": "Name | 路由名",
+                  "type": "string"
+                },
+                "parent_id": {
+                  "description": "Parent ID | 父级ID",
+                  "type": "integer"
+                },
+                "path": {
+                  "description": "Path | 路由路径",
+                  "type": "string"
+                },
+                "permission": {
+                  "description": "Permission | 权限码",
+                  "type": "string"
+                },
+                "redirect": {
+                  "description": "Redirect | 重定向",
+                  "type": "string"
+                },
+                "sort": {
+                  "description": "Sort | 排序",
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "Title | 标题",
+                  "type": "string"
+                },
+                "updated_at": {
+                  "description": "Updated at unix | 更新时间",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/menu/delete": {
+      "post": {
+        "description": "删除菜单",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "menu"
+        ],
+        "summary": "删除菜单",
+        "operationId": "menuDeleteMenu",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "ID | 单个ID",
+                  "type": "integer"
+                },
+                "ids": {
+                  "description": "IDs | ID列表",
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/menu/list": {
+      "post": {
+        "description": "菜单列表",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "menu"
+        ],
+        "summary": "菜单列表",
+        "operationId": "menuGetMenuList",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "parent_id",
+                  "menu_type",
+                  "path",
+                  "name",
+                  "component",
+                  "redirect",
+                  "title",
+                  "icon",
+                  "permission",
+                  "hide_menu",
+                  "sort",
+                  "disabled",
+                  "created_at",
+                  "updated_at"
+                ],
+                "properties": {
+                  "component": {
+                    "description": "Component | 前端组件",
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "description": "Created at unix | 创建时间",
+                    "type": "integer"
+                  },
+                  "disabled": {
+                    "description": "Disabled | 是否禁用",
+                    "type": "integer"
+                  },
+                  "hide_menu": {
+                    "description": "Hide menu | 是否隐藏",
+                    "type": "integer"
+                  },
+                  "icon": {
+                    "description": "Icon | 图标",
+                    "type": "string"
+                  },
+                  "id": {
+                    "description": "ID | 菜单ID",
+                    "type": "integer"
+                  },
+                  "menu_type": {
+                    "description": "Menu type | 菜单类型",
+                    "type": "integer"
+                  },
+                  "name": {
+                    "description": "Name | 路由名",
+                    "type": "string"
+                  },
+                  "parent_id": {
+                    "description": "Parent ID | 父级ID",
+                    "type": "integer"
+                  },
+                  "path": {
+                    "description": "Path | 路由路径",
+                    "type": "string"
+                  },
+                  "permission": {
+                    "description": "Permission | 权限码",
+                    "type": "string"
+                  },
+                  "redirect": {
+                    "description": "Redirect | 重定向",
+                    "type": "string"
+                  },
+                  "sort": {
+                    "description": "Sort | 排序",
+                    "type": "integer"
+                  },
+                  "title": {
+                    "description": "Title | 标题",
+                    "type": "string"
+                  },
+                  "updated_at": {
+                    "description": "Updated at unix | 更新时间",
+                    "type": "integer"
+                  }
+                }
+              },
+              "properties": {
+                "component": {
+                  "description": "Component | 前端组件",
+                  "type": "string"
+                },
+                "created_at": {
+                  "description": "Created at unix | 创建时间",
+                  "type": "integer"
+                },
+                "disabled": {
+                  "description": "Disabled | 是否禁用",
+                  "type": "integer"
+                },
+                "hide_menu": {
+                  "description": "Hide menu | 是否隐藏",
+                  "type": "integer"
+                },
+                "icon": {
+                  "description": "Icon | 图标",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "ID | 菜单ID",
+                  "type": "integer"
+                },
+                "menu_type": {
+                  "description": "Menu type | 菜单类型",
+                  "type": "integer"
+                },
+                "name": {
+                  "description": "Name | 路由名",
+                  "type": "string"
+                },
+                "parent_id": {
+                  "description": "Parent ID | 父级ID",
+                  "type": "integer"
+                },
+                "path": {
+                  "description": "Path | 路由路径",
+                  "type": "string"
+                },
+                "permission": {
+                  "description": "Permission | 权限码",
+                  "type": "string"
+                },
+                "redirect": {
+                  "description": "Redirect | 重定向",
+                  "type": "string"
+                },
+                "sort": {
+                  "description": "Sort | 排序",
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "Title | 标题",
+                  "type": "string"
+                },
+                "updated_at": {
+                  "description": "Updated at unix | 更新时间",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/menu/role": {
+      "get": {
+        "description": "当前角色菜单树",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "menu"
+        ],
+        "summary": "当前角色菜单树",
+        "operationId": "menuGetMenuByRole",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "parent_id",
+                  "menu_type",
+                  "path",
+                  "name",
+                  "component",
+                  "redirect",
+                  "title",
+                  "icon",
+                  "permission",
+                  "hide_menu",
+                  "sort",
+                  "children"
+                ],
+                "properties": {
+                  "children": {
+                    "description": "Children | 子菜单",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id",
+                        "parent_id",
+                        "menu_type",
+                        "path",
+                        "name",
+                        "component",
+                        "redirect",
+                        "title",
+                        "icon",
+                        "permission",
+                        "hide_menu",
+                        "sort",
+                        "children"
+                      ],
+                      "properties": {
+                        "children": {
+                          "description": "Children | 子菜单",
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "id",
+                              "parent_id",
+                              "menu_type",
+                              "path",
+                              "name",
+                              "component",
+                              "redirect",
+                              "title",
+                              "icon",
+                              "permission",
+                              "hide_menu",
+                              "sort",
+                              "children"
+                            ],
+                            "properties": {
+                              "children": {
+                                "description": "Children | 子菜单",
+                                "type": "array",
+                                "items": {
+                                  "type": "object"
+                                }
+                              },
+                              "component": {
+                                "description": "Component | 前端组件",
+                                "type": "string"
+                              },
+                              "hide_menu": {
+                                "description": "Hide menu | 是否隐藏",
+                                "type": "integer"
+                              },
+                              "icon": {
+                                "description": "Icon | 图标",
+                                "type": "string"
+                              },
+                              "id": {
+                                "description": "ID | 菜单ID",
+                                "type": "integer"
+                              },
+                              "menu_type": {
+                                "description": "Menu type | 菜单类型",
+                                "type": "integer"
+                              },
+                              "name": {
+                                "description": "Name | 路由名",
+                                "type": "string"
+                              },
+                              "parent_id": {
+                                "description": "Parent ID | 父级ID",
+                                "type": "integer"
+                              },
+                              "path": {
+                                "description": "Path | 路由路径",
+                                "type": "string"
+                              },
+                              "permission": {
+                                "description": "Permission | 权限码",
+                                "type": "string"
+                              },
+                              "redirect": {
+                                "description": "Redirect | 重定向",
+                                "type": "string"
+                              },
+                              "sort": {
+                                "description": "Sort | 排序",
+                                "type": "integer"
+                              },
+                              "title": {
+                                "description": "Title | 标题",
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "component": {
+                          "description": "Component | 前端组件",
+                          "type": "string"
+                        },
+                        "hide_menu": {
+                          "description": "Hide menu | 是否隐藏",
+                          "type": "integer"
+                        },
+                        "icon": {
+                          "description": "Icon | 图标",
+                          "type": "string"
+                        },
+                        "id": {
+                          "description": "ID | 菜单ID",
+                          "type": "integer"
+                        },
+                        "menu_type": {
+                          "description": "Menu type | 菜单类型",
+                          "type": "integer"
+                        },
+                        "name": {
+                          "description": "Name | 路由名",
+                          "type": "string"
+                        },
+                        "parent_id": {
+                          "description": "Parent ID | 父级ID",
+                          "type": "integer"
+                        },
+                        "path": {
+                          "description": "Path | 路由路径",
+                          "type": "string"
+                        },
+                        "permission": {
+                          "description": "Permission | 权限码",
+                          "type": "string"
+                        },
+                        "redirect": {
+                          "description": "Redirect | 重定向",
+                          "type": "string"
+                        },
+                        "sort": {
+                          "description": "Sort | 排序",
+                          "type": "integer"
+                        },
+                        "title": {
+                          "description": "Title | 标题",
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "component": {
+                    "description": "Component | 前端组件",
+                    "type": "string"
+                  },
+                  "hide_menu": {
+                    "description": "Hide menu | 是否隐藏",
+                    "type": "integer"
+                  },
+                  "icon": {
+                    "description": "Icon | 图标",
+                    "type": "string"
+                  },
+                  "id": {
+                    "description": "ID | 菜单ID",
+                    "type": "integer"
+                  },
+                  "menu_type": {
+                    "description": "Menu type | 菜单类型",
+                    "type": "integer"
+                  },
+                  "name": {
+                    "description": "Name | 路由名",
+                    "type": "string"
+                  },
+                  "parent_id": {
+                    "description": "Parent ID | 父级ID",
+                    "type": "integer"
+                  },
+                  "path": {
+                    "description": "Path | 路由路径",
+                    "type": "string"
+                  },
+                  "permission": {
+                    "description": "Permission | 权限码",
+                    "type": "string"
+                  },
+                  "redirect": {
+                    "description": "Redirect | 重定向",
+                    "type": "string"
+                  },
+                  "sort": {
+                    "description": "Sort | 排序",
+                    "type": "integer"
+                  },
+                  "title": {
+                    "description": "Title | 标题",
+                    "type": "string"
+                  }
+                }
+              },
+              "properties": {
+                "children": {
+                  "description": "Children | 子菜单",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "parent_id",
+                      "menu_type",
+                      "path",
+                      "name",
+                      "component",
+                      "redirect",
+                      "title",
+                      "icon",
+                      "permission",
+                      "hide_menu",
+                      "sort",
+                      "children"
+                    ],
+                    "properties": {
+                      "children": {
+                        "description": "Children | 子菜单",
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "id",
+                            "parent_id",
+                            "menu_type",
+                            "path",
+                            "name",
+                            "component",
+                            "redirect",
+                            "title",
+                            "icon",
+                            "permission",
+                            "hide_menu",
+                            "sort",
+                            "children"
+                          ],
+                          "properties": {
+                            "children": {
+                              "description": "Children | 子菜单",
+                              "type": "array",
+                              "items": {
+                                "type": "object"
+                              }
+                            },
+                            "component": {
+                              "description": "Component | 前端组件",
+                              "type": "string"
+                            },
+                            "hide_menu": {
+                              "description": "Hide menu | 是否隐藏",
+                              "type": "integer"
+                            },
+                            "icon": {
+                              "description": "Icon | 图标",
+                              "type": "string"
+                            },
+                            "id": {
+                              "description": "ID | 菜单ID",
+                              "type": "integer"
+                            },
+                            "menu_type": {
+                              "description": "Menu type | 菜单类型",
+                              "type": "integer"
+                            },
+                            "name": {
+                              "description": "Name | 路由名",
+                              "type": "string"
+                            },
+                            "parent_id": {
+                              "description": "Parent ID | 父级ID",
+                              "type": "integer"
+                            },
+                            "path": {
+                              "description": "Path | 路由路径",
+                              "type": "string"
+                            },
+                            "permission": {
+                              "description": "Permission | 权限码",
+                              "type": "string"
+                            },
+                            "redirect": {
+                              "description": "Redirect | 重定向",
+                              "type": "string"
+                            },
+                            "sort": {
+                              "description": "Sort | 排序",
+                              "type": "integer"
+                            },
+                            "title": {
+                              "description": "Title | 标题",
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "component": {
+                        "description": "Component | 前端组件",
+                        "type": "string"
+                      },
+                      "hide_menu": {
+                        "description": "Hide menu | 是否隐藏",
+                        "type": "integer"
+                      },
+                      "icon": {
+                        "description": "Icon | 图标",
+                        "type": "string"
+                      },
+                      "id": {
+                        "description": "ID | 菜单ID",
+                        "type": "integer"
+                      },
+                      "menu_type": {
+                        "description": "Menu type | 菜单类型",
+                        "type": "integer"
+                      },
+                      "name": {
+                        "description": "Name | 路由名",
+                        "type": "string"
+                      },
+                      "parent_id": {
+                        "description": "Parent ID | 父级ID",
+                        "type": "integer"
+                      },
+                      "path": {
+                        "description": "Path | 路由路径",
+                        "type": "string"
+                      },
+                      "permission": {
+                        "description": "Permission | 权限码",
+                        "type": "string"
+                      },
+                      "redirect": {
+                        "description": "Redirect | 重定向",
+                        "type": "string"
+                      },
+                      "sort": {
+                        "description": "Sort | 排序",
+                        "type": "integer"
+                      },
+                      "title": {
+                        "description": "Title | 标题",
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "component": {
+                  "description": "Component | 前端组件",
+                  "type": "string"
+                },
+                "hide_menu": {
+                  "description": "Hide menu | 是否隐藏",
+                  "type": "integer"
+                },
+                "icon": {
+                  "description": "Icon | 图标",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "ID | 菜单ID",
+                  "type": "integer"
+                },
+                "menu_type": {
+                  "description": "Menu type | 菜单类型",
+                  "type": "integer"
+                },
+                "name": {
+                  "description": "Name | 路由名",
+                  "type": "string"
+                },
+                "parent_id": {
+                  "description": "Parent ID | 父级ID",
+                  "type": "integer"
+                },
+                "path": {
+                  "description": "Path | 路由路径",
+                  "type": "string"
+                },
+                "permission": {
+                  "description": "Permission | 权限码",
+                  "type": "string"
+                },
+                "redirect": {
+                  "description": "Redirect | 重定向",
+                  "type": "string"
+                },
+                "sort": {
+                  "description": "Sort | 排序",
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "Title | 标题",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/menu/update": {
+      "post": {
+        "description": "更新菜单",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "menu"
+        ],
+        "summary": "更新菜单",
+        "operationId": "menuUpdateMenu",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "component": {
+                  "description": "Component | 前端组件",
+                  "type": "string"
+                },
+                "disabled": {
+                  "description": "Disabled | 是否禁用",
+                  "type": "integer"
+                },
+                "hide_menu": {
+                  "description": "Hide menu | 是否隐藏",
+                  "type": "integer"
+                },
+                "icon": {
+                  "description": "Icon | 图标",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "Menu ID | 菜单ID",
+                  "type": "integer"
+                },
+                "menu_type": {
+                  "description": "Menu type | 菜单类型",
+                  "type": "integer"
+                },
+                "name": {
+                  "description": "Name | 路由名",
+                  "type": "string"
+                },
+                "parent_id": {
+                  "description": "Parent ID | 父级ID",
+                  "type": "integer"
+                },
+                "path": {
+                  "description": "Path | 路由路径",
+                  "type": "string"
+                },
+                "permission": {
+                  "description": "Permission | 权限码",
+                  "type": "string"
+                },
+                "redirect": {
+                  "description": "Redirect | 重定向",
+                  "type": "string"
+                },
+                "sort": {
+                  "description": "Sort | 排序",
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "Title | 标题",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/operator/self": {
+      "get": {
+        "description": "当前分站信息",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "operator"
+        ],
+        "summary": "当前分站信息",
+        "operationId": "operatorGetOperator",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "completed_config_version": {
+                  "description": "Completed config version | 已完成配置版本",
+                  "type": "integer"
+                },
+                "config_completed_at": {
+                  "description": "Config completed at unix | 配置完成时间",
+                  "type": "integer"
+                },
+                "created_at": {
+                  "description": "Created at unix | 创建时间",
+                  "type": "integer"
+                },
+                "id": {
+                  "description": "ID | 分站ID",
+                  "type": "integer"
+                },
+                "operator_code": {
+                  "description": "Operator code | 分站编码",
+                  "type": "string"
+                },
+                "required_config_version": {
+                  "description": "Required config version | 要求配置版本",
+                  "type": "integer"
+                },
+                "settlement_currency_code": {
+                  "description": "Settlement currency | 结算币种",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "Status | 状态",
+                  "type": "integer"
+                },
+                "timezone_code": {
+                  "description": "Timezone code | 时区",
+                  "type": "string"
+                },
+                "updated_at": {
+                  "description": "Updated at unix | 更新时间",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/operator/update": {
+      "post": {
+        "description": "更新当前分站",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "operator"
+        ],
+        "summary": "更新当前分站",
+        "operationId": "operatorUpdateOperator",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "settlement_currency_code": {
+                  "description": "Settlement currency | 结算币种",
+                  "type": "string"
+                },
+                "timezone_code": {
+                  "description": "Timezone code | 时区",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/preview-token": {
+      "post": {
+        "description": "签发总网预览令牌，只读",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "public"
+        ],
+        "summary": "签发总网预览令牌，只读",
+        "operationId": "publicIssuePreviewToken",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "operator_code"
+              ],
+              "properties": {
+                "operator_code": {
+                  "description": "Operator code | 分站编码",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "access_token": {
+                  "description": "Access token | 访问令牌",
+                  "type": "string"
+                },
+                "expire": {
+                  "description": "Expire unix | 过期时间",
+                  "type": "integer"
+                },
+                "home_path": {
+                  "description": "Home path | 首页路径",
+                  "type": "string"
+                },
+                "operator_code": {
+                  "description": "Operator code | 分站编码",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/refresh": {
+      "post": {
+        "description": "刷新访问令牌",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "public"
+        ],
+        "summary": "刷新访问令牌",
+        "operationId": "publicRefresh",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "refresh_token"
+              ],
+              "properties": {
+                "refresh_token": {
+                  "description": "Refresh token | 刷新令牌",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "description": "Token | 令牌",
+                  "type": "object",
+                  "required": [
+                    "access_token",
+                    "refresh_token",
+                    "expire",
+                    "refresh_expire"
+                  ],
+                  "properties": {
+                    "access_token": {
+                      "description": "Access token | 访问令牌",
+                      "type": "string"
+                    },
+                    "expire": {
+                      "description": "Access expire unix | 访问令牌过期时间",
+                      "type": "integer"
+                    },
+                    "refresh_expire": {
+                      "description": "Refresh expire unix | 刷新令牌过期时间",
+                      "type": "integer"
+                    },
+                    "refresh_token": {
+                      "description": "Refresh token | 刷新令牌",
+                      "type": "string"
+                    }
+                  }
+                },
+                "user": {
+                  "description": "User | 用户",
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "user_code",
+                    "username",
+                    "display_name",
+                    "is_super_admin",
+                    "status",
+                    "role_codes",
+                    "created_at"
+                  ],
+                  "properties": {
+                    "created_at": {
+                      "description": "Created at unix | 创建时间",
+                      "type": "integer"
+                    },
+                    "display_name": {
+                      "description": "Display name | 显示名",
+                      "type": "string"
+                    },
+                    "email": {
+                      "description": "Email | 邮箱",
+                      "type": "string"
+                    },
+                    "home_path": {
+                      "description": "Home path | 首页路径",
+                      "type": "string"
+                    },
+                    "id": {
+                      "description": "User ID | 用户ID",
+                      "type": "integer"
+                    },
+                    "is_super_admin": {
+                      "description": "Super admin | 是否超管",
+                      "type": "boolean"
+                    },
+                    "last_login_at": {
+                      "description": "Last login unix | 最近登录时间",
+                      "type": "integer"
+                    },
+                    "mobile": {
+                      "description": "Mobile | 手机号",
+                      "type": "string"
+                    },
+                    "operator_id": {
+                      "description": "Operator ID | 分站ID",
+                      "type": "integer"
+                    },
+                    "role_codes": {
+                      "description": "Role codes | 角色编码",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "status": {
+                      "description": "Status | 状态",
+                      "type": "integer"
+                    },
+                    "user_code": {
+                      "description": "User code | 用户编码",
+                      "type": "string"
+                    },
+                    "username": {
+                      "description": "Username | 用户名",
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/role/create": {
+      "post": {
+        "description": "创建角色",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "role"
+        ],
+        "summary": "创建角色",
+        "operationId": "roleCreateRole",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "role_code",
+                "role_name"
+              ],
+              "properties": {
+                "description": {
+                  "description": "Description | 描述",
+                  "type": "string"
+                },
+                "role_code": {
+                  "description": "Role code | 角色编码",
+                  "type": "string"
+                },
+                "role_name": {
+                  "description": "Role name | 角色名称",
+                  "type": "string"
+                },
+                "sort_no": {
+                  "description": "Sort | 排序",
+                  "type": "integer"
+                },
+                "status": {
+                  "description": "Status | 状态",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "created_at": {
+                  "description": "Created at unix | 创建时间",
+                  "type": "integer"
+                },
+                "description": {
+                  "description": "Description | 描述",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "ID | 角色ID",
+                  "type": "integer"
+                },
+                "is_system": {
+                  "description": "System role | 是否系统角色",
+                  "type": "boolean"
+                },
+                "operator_id": {
+                  "description": "Operator ID | 分站ID",
+                  "type": "integer"
+                },
+                "role_code": {
+                  "description": "Role code | 角色编码",
+                  "type": "string"
+                },
+                "role_name": {
+                  "description": "Role name | 角色名称",
+                  "type": "string"
+                },
+                "sort_no": {
+                  "description": "Sort | 排序",
+                  "type": "integer"
+                },
+                "status": {
+                  "description": "Status | 状态",
+                  "type": "integer"
+                },
+                "updated_at": {
+                  "description": "Updated at unix | 更新时间",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/role/delete": {
+      "post": {
+        "description": "删除角色",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "role"
+        ],
+        "summary": "删除角色",
+        "operationId": "roleDeleteRole",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "ID | 单个ID",
+                  "type": "integer"
+                },
+                "ids": {
+                  "description": "IDs | ID列表",
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/role/detail": {
+      "get": {
+        "description": "角色详情",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "role"
+        ],
+        "summary": "角色详情",
+        "operationId": "roleGetRoleById",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "ID | 主键",
+            "name": "id",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "created_at": {
+                  "description": "Created at unix | 创建时间",
+                  "type": "integer"
+                },
+                "description": {
+                  "description": "Description | 描述",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "ID | 角色ID",
+                  "type": "integer"
+                },
+                "is_system": {
+                  "description": "System role | 是否系统角色",
+                  "type": "boolean"
+                },
+                "operator_id": {
+                  "description": "Operator ID | 分站ID",
+                  "type": "integer"
+                },
+                "role_code": {
+                  "description": "Role code | 角色编码",
+                  "type": "string"
+                },
+                "role_name": {
+                  "description": "Role name | 角色名称",
+                  "type": "string"
+                },
+                "sort_no": {
+                  "description": "Sort | 排序",
+                  "type": "integer"
+                },
+                "status": {
+                  "description": "Status | 状态",
+                  "type": "integer"
+                },
+                "updated_at": {
+                  "description": "Updated at unix | 更新时间",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/role/list": {
+      "post": {
+        "description": "角色列表",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "role"
+        ],
+        "summary": "角色列表",
+        "operationId": "roleGetRoleList",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "page": {
+                  "description": "Page | 页码",
+                  "type": "integer"
+                },
+                "page_size": {
+                  "description": "Page size | 每页条数",
+                  "type": "integer"
+                },
+                "role_name": {
+                  "description": "Role name | 角色名称",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "description": "List | 列表",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "role_code",
+                      "role_name",
+                      "status",
+                      "is_system",
+                      "sort_no",
+                      "created_at",
+                      "updated_at"
+                    ],
+                    "properties": {
+                      "created_at": {
+                        "description": "Created at unix | 创建时间",
+                        "type": "integer"
+                      },
+                      "description": {
+                        "description": "Description | 描述",
+                        "type": "string"
+                      },
+                      "id": {
+                        "description": "ID | 角色ID",
+                        "type": "integer"
+                      },
+                      "is_system": {
+                        "description": "System role | 是否系统角色",
+                        "type": "boolean"
+                      },
+                      "operator_id": {
+                        "description": "Operator ID | 分站ID",
+                        "type": "integer"
+                      },
+                      "role_code": {
+                        "description": "Role code | 角色编码",
+                        "type": "string"
+                      },
+                      "role_name": {
+                        "description": "Role name | 角色名称",
+                        "type": "string"
+                      },
+                      "sort_no": {
+                        "description": "Sort | 排序",
+                        "type": "integer"
+                      },
+                      "status": {
+                        "description": "Status | 状态",
+                        "type": "integer"
+                      },
+                      "updated_at": {
+                        "description": "Updated at unix | 更新时间",
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "description": "Total | 总数",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/role/update": {
+      "post": {
+        "description": "更新角色",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "role"
+        ],
+        "summary": "更新角色",
+        "operationId": "roleUpdateRole",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "description": {
+                  "description": "Description | 描述",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "Role ID | 角色ID",
+                  "type": "integer"
+                },
+                "role_name": {
+                  "description": "Role name | 角色名称",
+                  "type": "string"
+                },
+                "sort_no": {
+                  "description": "Sort | 排序",
+                  "type": "integer"
+                },
+                "status": {
+                  "description": "Status | 状态",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/user/create": {
+      "post": {
+        "description": "创建用户",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "创建用户",
+        "operationId": "userCreateUser",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "username",
+                "password",
+                "display_name"
+              ],
+              "properties": {
+                "display_name": {
+                  "description": "Display name | 显示名",
+                  "type": "string"
+                },
+                "email": {
+                  "description": "Email | 邮箱",
+                  "type": "string"
+                },
+                "mobile": {
+                  "description": "Mobile | 手机号",
+                  "type": "string"
+                },
+                "password": {
+                  "description": "Password | 密码",
+                  "type": "string"
+                },
+                "role_ids": {
+                  "description": "Role IDs | 角色ID",
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "status": {
+                  "description": "Status | 状态",
+                  "type": "integer"
+                },
+                "username": {
+                  "description": "Username | 用户名",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "created_at": {
+                  "description": "Created at unix | 创建时间",
+                  "type": "integer"
+                },
+                "display_name": {
+                  "description": "Display name | 显示名",
+                  "type": "string"
+                },
+                "email": {
+                  "description": "Email | 邮箱",
+                  "type": "string"
+                },
+                "home_path": {
+                  "description": "Home path | 首页路径",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "User ID | 用户ID",
+                  "type": "integer"
+                },
+                "is_super_admin": {
+                  "description": "Super admin | 是否超管",
+                  "type": "boolean"
+                },
+                "last_login_at": {
+                  "description": "Last login unix | 最近登录时间",
+                  "type": "integer"
+                },
+                "mobile": {
+                  "description": "Mobile | 手机号",
+                  "type": "string"
+                },
+                "operator_id": {
+                  "description": "Operator ID | 分站ID",
+                  "type": "integer"
+                },
+                "role_codes": {
+                  "description": "Role codes | 角色编码",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "status": {
+                  "description": "Status | 状态",
+                  "type": "integer"
+                },
+                "user_code": {
+                  "description": "User code | 用户编码",
+                  "type": "string"
+                },
+                "username": {
+                  "description": "Username | 用户名",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/user/delete": {
+      "post": {
+        "description": "删除用户",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "删除用户",
+        "operationId": "userDeleteUser",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "ID | 单个ID",
+                  "type": "integer"
+                },
+                "ids": {
+                  "description": "IDs | ID列表",
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/user/detail": {
+      "get": {
+        "description": "用户详情",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "用户详情",
+        "operationId": "userGetUserById",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "ID | 主键",
+            "name": "id",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "created_at": {
+                  "description": "Created at unix | 创建时间",
+                  "type": "integer"
+                },
+                "display_name": {
+                  "description": "Display name | 显示名",
+                  "type": "string"
+                },
+                "email": {
+                  "description": "Email | 邮箱",
+                  "type": "string"
+                },
+                "home_path": {
+                  "description": "Home path | 首页路径",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "User ID | 用户ID",
+                  "type": "integer"
+                },
+                "is_super_admin": {
+                  "description": "Super admin | 是否超管",
+                  "type": "boolean"
+                },
+                "last_login_at": {
+                  "description": "Last login unix | 最近登录时间",
+                  "type": "integer"
+                },
+                "mobile": {
+                  "description": "Mobile | 手机号",
+                  "type": "string"
+                },
+                "operator_id": {
+                  "description": "Operator ID | 分站ID",
+                  "type": "integer"
+                },
+                "role_codes": {
+                  "description": "Role codes | 角色编码",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "status": {
+                  "description": "Status | 状态",
+                  "type": "integer"
+                },
+                "user_code": {
+                  "description": "User code | 用户编码",
+                  "type": "string"
+                },
+                "username": {
+                  "description": "Username | 用户名",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/user/info": {
+      "get": {
+        "description": "当前用户信息",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "当前用户信息",
+        "operationId": "userGetUserInfo",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "created_at": {
+                  "description": "Created at unix | 创建时间",
+                  "type": "integer"
+                },
+                "display_name": {
+                  "description": "Display name | 显示名",
+                  "type": "string"
+                },
+                "email": {
+                  "description": "Email | 邮箱",
+                  "type": "string"
+                },
+                "home_path": {
+                  "description": "Home path | 首页路径",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "User ID | 用户ID",
+                  "type": "integer"
+                },
+                "is_super_admin": {
+                  "description": "Super admin | 是否超管",
+                  "type": "boolean"
+                },
+                "last_login_at": {
+                  "description": "Last login unix | 最近登录时间",
+                  "type": "integer"
+                },
+                "mobile": {
+                  "description": "Mobile | 手机号",
+                  "type": "string"
+                },
+                "operator_id": {
+                  "description": "Operator ID | 分站ID",
+                  "type": "integer"
+                },
+                "role_codes": {
+                  "description": "Role codes | 角色编码",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "status": {
+                  "description": "Status | 状态",
+                  "type": "integer"
+                },
+                "user_code": {
+                  "description": "User code | 用户编码",
+                  "type": "string"
+                },
+                "username": {
+                  "description": "Username | 用户名",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/user/list": {
+      "post": {
+        "description": "用户列表",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "用户列表",
+        "operationId": "userGetUserList",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "display_name": {
+                  "description": "Display name | 显示名",
+                  "type": "string"
+                },
+                "email": {
+                  "description": "Email | 邮箱",
+                  "type": "string"
+                },
+                "mobile": {
+                  "description": "Mobile | 手机号",
+                  "type": "string"
+                },
+                "page": {
+                  "description": "Page | 页码",
+                  "type": "integer"
+                },
+                "page_size": {
+                  "description": "Page size | 每页条数",
+                  "type": "integer"
+                },
+                "role_ids": {
+                  "description": "Role IDs | 角色ID",
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "username": {
+                  "description": "Username | 用户名",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "description": "List | 列表",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "user_code",
+                      "username",
+                      "display_name",
+                      "is_super_admin",
+                      "status",
+                      "role_codes",
+                      "created_at"
+                    ],
+                    "properties": {
+                      "created_at": {
+                        "description": "Created at unix | 创建时间",
+                        "type": "integer"
+                      },
+                      "display_name": {
+                        "description": "Display name | 显示名",
+                        "type": "string"
+                      },
+                      "email": {
+                        "description": "Email | 邮箱",
+                        "type": "string"
+                      },
+                      "home_path": {
+                        "description": "Home path | 首页路径",
+                        "type": "string"
+                      },
+                      "id": {
+                        "description": "User ID | 用户ID",
+                        "type": "integer"
+                      },
+                      "is_super_admin": {
+                        "description": "Super admin | 是否超管",
+                        "type": "boolean"
+                      },
+                      "last_login_at": {
+                        "description": "Last login unix | 最近登录时间",
+                        "type": "integer"
+                      },
+                      "mobile": {
+                        "description": "Mobile | 手机号",
+                        "type": "string"
+                      },
+                      "operator_id": {
+                        "description": "Operator ID | 分站ID",
+                        "type": "integer"
+                      },
+                      "role_codes": {
+                        "description": "Role codes | 角色编码",
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "status": {
+                        "description": "Status | 状态",
+                        "type": "integer"
+                      },
+                      "user_code": {
+                        "description": "User code | 用户编码",
+                        "type": "string"
+                      },
+                      "username": {
+                        "description": "Username | 用户名",
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "description": "Total | 总数",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/user/password": {
+      "post": {
+        "description": "重置用户密码",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "重置用户密码",
+        "operationId": "userUpdateUserPassword",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "user_id",
+                "password"
+              ],
+              "properties": {
+                "password": {
+                  "description": "Password | 新密码",
+                  "type": "string"
+                },
+                "user_id": {
+                  "description": "User ID | 用户ID",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/user/password/self": {
+      "post": {
+        "description": "修改本人密码",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "修改本人密码",
+        "operationId": "userChangeOwnPassword",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "old_password",
+                "password"
+              ],
+              "properties": {
+                "old_password": {
+                  "description": "Old password | 原密码",
+                  "type": "string"
+                },
+                "password": {
+                  "description": "New password | 新密码",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/user/perm": {
+      "get": {
+        "description": "当前用户权限码",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "当前用户权限码",
+        "operationId": "userGetUserPerm",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "permissions": {
+                  "description": "Permissions | 权限编码列表",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/user/roles": {
+      "post": {
+        "description": "绑定用户角色",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "绑定用户角色",
+        "operationId": "userBindUserRoles",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "user_id",
+                "role_ids"
+              ],
+              "properties": {
+                "role_ids": {
+                  "description": "Role IDs | 角色ID",
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "user_id": {
+                  "description": "User ID | 用户ID",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/user/update": {
+      "post": {
+        "description": "更新用户",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "更新用户",
+        "operationId": "userUpdateUser",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "display_name": {
+                  "description": "Display name | 显示名",
+                  "type": "string"
+                },
+                "email": {
+                  "description": "Email | 邮箱",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "User ID | 用户ID",
+                  "type": "integer"
+                },
+                "mobile": {
+                  "description": "Mobile | 手机号",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "Status | 状态",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "Token": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "Token": []
+    }
+  ],
+  "x-date": "2026-09-03 14:50:08",
+  "x-description": "This is a goctls generated swagger file.",
+  "x-github": "https://github.com/suyuan32/simple-admin-core",
+  "x-goctl-version": "v1.14.8",
+  "x-simple-admin-doc": "https://doc.ryansu.tech/zh/"
+}

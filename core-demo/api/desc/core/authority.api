@@ -1,0 +1,71 @@
+syntax = "v1"
+
+info (
+	title:   "authority api"
+	desc:    "menu and api authorization"
+	author:  "p9"
+	version: "v1"
+)
+
+import "../base.api"
+
+// Role ID request | 角色ID
+type RoleIdReq {
+	// Role ID | 角色ID
+	RoleId int64 `json:"role_id,optional"`
+	// ID | 角色ID（兼容）
+	Id     int64 `json:"id,optional"`
+}
+
+// Update menu authority request | 更新菜单权限
+type MenuAuthReq {
+	// Role ID | 角色ID
+	RoleId  int64   `json:"role_id"`
+	// Menu IDs | 菜单ID
+	MenuIds []int64 `json:"menu_ids,optional"`
+}
+
+// Menu authority response | 菜单权限
+type MenuAuthResp {
+	// Menu IDs | 菜单ID
+	MenuIds []int64 `json:"menu_ids"`
+}
+
+// API authority item | 接口权限项
+type ApiAuthItem {
+	// Path | 路径
+	Path   string `json:"path"`
+	// Method | HTTP 方法
+	Method string `json:"method"`
+}
+
+// Update API authority request | 更新接口权限
+type ApiAuthReq {
+	// Role ID | 角色ID
+	RoleId int64         `json:"role_id"`
+	// Data | 接口权限
+	Data   []ApiAuthItem `json:"data,optional"`
+}
+
+@server (
+	prefix:     /admin
+	group:      authority
+	middleware: Jwt,ActionLog,Authority
+)
+service Core {
+	@doc "更新角色菜单权限"
+	@handler updateMenuAuthority
+	post /authority/menu/update (MenuAuthReq) returns (BaseMsgResp)
+
+	@doc "查询角色菜单权限"
+	@handler getMenuAuthority
+	post /authority/menu/role (RoleIdReq) returns (MenuAuthResp)
+
+	@doc "更新角色接口权限"
+	@handler updateApiAuthority
+	post /authority/api/update (ApiAuthReq) returns (BaseMsgResp)
+
+	@doc "查询角色接口权限"
+	@handler getApiAuthority
+	post /authority/api/role (RoleIdReq) returns ([]ApiAuthItem)
+}
