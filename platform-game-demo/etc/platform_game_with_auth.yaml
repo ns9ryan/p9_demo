@@ -1,0 +1,46 @@
+# Platform-Game API 配置示例
+# 包含 Core 服务鉴权配置
+
+RestConf:
+  Host: 0.0.0.0
+  Port: 8001
+  MaxConns: 10000
+  MaxBytes: 1048576
+  Timeout: 30000
+  CpuThreshold: 900
+  Verbose: true
+
+# gRPC 客户端配置（连接到 Platform-Game RPC 服务）
+GrpcClient:
+  Target: "localhost:9001"
+  Timeout: 10000
+
+# Core 服务 RPC 配置（用于鉴权）
+# 如果不配置此项，鉴权功能将不可用
+CoreRpc:
+  # Core 服务地址（IP:Port 或 DNS 名称）
+  Target: "localhost:9000"
+  # 连接超时（毫秒）
+  Timeout: 10000
+  # 其他可选配置
+  # NonBlock: true
+  # Retries: 3
+  # BackoffPolicy: "exponential"
+
+# Swagger 配置
+Swagger:
+  Host: "localhost"
+  Port: 8001
+  BasePath: "/"
+  Schemes:
+    - http
+  Info:
+    Title: "Platform-Game API"
+    Description: "游戏管理微服务 API 文档"
+    Version: "1.0.0"
+
+# Kafka 配置（可选）
+Kafka:
+  Brokers:
+    - "localhost:9092"
+  Topic: "platform-game-events"

@@ -1,0 +1,14 @@
+# RPC 服务配置
+Name: platform-game.rpc
+ListenOn: 0.0.0.0:19003
+Timeout: 10000
+
+# 数据库配置
+Database:
+  Driver: postgres
+  DSN: "user=root password=root host=localhost port=5432 dbname=app sslmode=disable"
+  MaxConns: 20
+  MaxIdle: 5
+
+# 游戏供应商 gRPC 服务地址（用于同步）
+GrpcServerAddr: 127.0.0.1:19009

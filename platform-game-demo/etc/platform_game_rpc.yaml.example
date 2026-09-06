@@ -1,0 +1,23 @@
+Name: platform-game-rpc
+ListenOn: 0.0.0.0:9080
+ServiceName: platform-game-rpc
+
+Database:
+  Driver: mysql
+  DSN: "root:password@tcp(127.0.0.1:3306)/platform_game?charset=utf8mb4&parseTime=True&loc=Local"
+  MaxConns: 20
+  MaxIdle: 5
+
+Redis:
+  Addr: "127.0.0.1:6379"
+  Password: ""
+  DB: 0
+
+Kafka:
+  Brokers:
+    - "127.0.0.1:9092"
+  Topic: "game-events"
+
+Log:
+  Level: info
+  Format: json

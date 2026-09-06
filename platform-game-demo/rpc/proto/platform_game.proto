@@ -1,0 +1,507 @@
+syntax = "proto3";
+
+package platform_game;
+
+option go_package = "oa.98ent.com/p9/platform-game/rpc/pb/platform_game";
+
+// ========== Game Related Messages ==========
+
+// GameInfo 游戏信息
+message GameInfo {
+  int64  id = 1;
+  int64  ven_id = 2;
+  int64  cat_id = 3;
+  int64  group_id = 4;
+  string ven_key = 5;
+  string code = 6;
+  string name = 7;
+  string image = 8;
+  int64  chan_id = 9;
+  uint32 load_type = 10;
+  int32  status = 11;
+  string name_i18n = 12;
+  int64  source_id = 13;
+  string source_code = 14;
+  string source_name_i18n = 15;
+  int32  source_status = 16;
+}
+
+// GetGameListResp 游戏列表响应
+message GetGameListResp {
+    int32 code = 1;
+    string message = 2;
+    repeated GameInfo data = 3;
+    int64 total = 4;
+}
+
+// GetGameResp 单个游戏响应
+message GetGameResp {
+    int32 code = 1;
+    string message = 2;
+    GameInfo data = 3;
+}
+
+// ========== Category Related Messages ==========
+
+// CategoryInfo 分类信息
+message CategoryInfo {
+    int64 id = 1;
+    string code = 2;
+    string name = 3;
+    int32 status = 4;
+    string name_i18n = 5;
+    string source_name_i18n = 6;
+}
+
+// GetGameCategoryListResp 游戏分类列表响应
+message GetGameCategoryListResp {
+    int32 code = 1;
+    string message = 2;
+    repeated CategoryInfo data = 3;
+    int64 total = 4;
+}
+
+// ========== Provider Related Messages ==========
+
+// ProviderInfo 供应商信息
+message ProviderInfo {
+    int64 id = 1;
+    string code = 2;
+    string name = 3;
+    int32 status = 4;
+    string name_i18n = 5;
+    string source_name_i18n = 6;
+}
+
+// GetGameProviderListResp 游戏供应商列表响应
+message GetGameProviderListResp {
+    int32 code = 1;
+    string message = 2;
+    repeated ProviderInfo data = 3;
+    int64 total = 4;
+}
+
+// ========== Channel Related Messages ==========
+
+// ChannelInfo 渠道信息
+message ChannelInfo {
+    int64 id = 1;
+    string code = 2;
+    string name = 3;
+    int32 status = 4;
+    string name_i18n = 5;
+    string source_name_i18n = 6;
+}
+
+// ========== Currency Related Messages ==========
+
+// CurrencyInfo 货币信息
+message CurrencyInfo {
+    int64 id = 1;
+    string code = 2;
+    string name = 3;
+    int64 game_id = 4;
+    int64 currency_id = 5;
+    string game_name_i18n = 6;
+    string currency_name_i18n = 7;
+}
+
+// GetGameCurrencyListResp 游戏货币列表响应
+message GetGameCurrencyListResp {
+    int32 code = 1;
+    string message = 2;
+    repeated CurrencyInfo data = 3;
+    int64 total = 4;
+}
+
+// ========== Request Messages ==========
+
+// PingRequest Ping请求
+message PingRequest {
+}
+
+// GetGameListRequest 获取游戏列表请求
+message GetGameListRequest {
+    int32 page = 1;
+    int32 page_size = 2;
+    string game_code = 3;
+    string name = 4;
+    int64 category_id = 5;
+    int64 provider_id = 6;
+    int64 channel_id = 7;
+    int32 status = 8;
+    int32 is_deleted = 9;  // 0=未删除(默认), 1=已删除, 其他=不过滤
+    string sort_by = 10;    // id/sort_no/created_at
+    string sort_order = 11; // asc/desc
+}
+
+// GetGameRequest 获取单个游戏请求
+message GetGameRequest {
+    int64 game_id = 1;
+}
+
+// GetGameCategoryListRequest 获取游戏分类列表请求
+message GetGameCategoryListRequest {
+    int32 page = 1;
+    int32 page_size = 2;
+    string category_code = 3;
+    string name = 4;
+    int32 status = 5;
+    int32 is_deleted = 6;
+    string sort_by = 7;     // id/sort_no/created_at
+    string sort_order = 8;  // asc/desc
+}
+
+// GetGameCategoryRequest 获取单个游戏分类请求
+message GetGameCategoryRequest {
+    int64 id = 1;
+}
+
+// GetGameProviderListRequest 获取游戏供应商列表请求
+message GetGameProviderListRequest {
+    int32 page = 1;
+    int32 page_size = 2;
+    string name = 3;
+    int32 status = 4;
+    int32 is_deleted = 5;
+    string sort_by = 6;     // id/sort_no/created_at
+    string sort_order = 7;  // asc/desc
+}
+
+// GetGameProviderRequest 获取单个游戏供应商请求
+message GetGameProviderRequest {
+    int64 id = 1;
+}
+
+// GetGameChannelRequest 获取单个游戏渠道请求
+message GetGameChannelRequest {
+    int64 id = 1;
+}
+
+// GetGameChannelListRequest 获取游戏渠道列表请求
+message GetGameChannelListRequest {
+    int32 page = 1;
+    int32 page_size = 2;
+    string channel_code = 3;
+    string name = 4;
+    int32 status = 5;
+    int32 is_deleted = 6;  // 0=未删除(默认), 1=已删除, 其他=不过滤
+    string sort_by = 7;     // id/sort_no/created_at
+    string sort_order = 8;  // asc/desc
+}
+
+// GameCategoryInfo 游戏分类信息（包含名称）
+message GameCategoryInfo {
+    int64 id = 1;
+    string name_i18n = 2;
+}
+
+// GameChannelResp 游戏渠道响应
+message GameChannelResp {
+    int64 id = 1;
+    int64 source_id = 2;
+    string channel_code = 3;
+    string name_i18n = 4;
+    string source_name_i18n = 5;
+    int32 status = 6;
+    int64 vendor_count = 7;           // 厂商数量
+    repeated GameCategoryInfo cat_ids = 8;  // 分类列表（包含名称）
+    int64 game_count = 9;             // 游戏数量
+    int64 created_at = 10;
+    int64 updated_at = 11;
+}
+
+// GetGameChannelResp 获取单个游戏渠道响应
+message GetGameChannelResp {
+    int32 code = 1;
+    string message = 2;
+    GameChannelResp data = 3;
+}
+
+// GetGameChannelListResp 游戏渠道列表响应
+message GetGameChannelListResp {
+    int32 code = 1;
+    string message = 2;
+    repeated GameChannelResp items = 3;
+    int64 total = 4;
+    int32 page = 5;
+    int32 page_size = 6;
+}
+
+// GetGameCurrencyListRequest 获取游戏货币列表请求
+message GetGameCurrencyListRequest {
+    int32 page = 1;
+    int32 page_size = 2;
+    int64 game_id = 3;
+    int64 currency_id = 4;
+    int32 status = 5;
+    int32 is_deleted = 6;
+    string sort_by = 7;     // id/created_at
+    string sort_order = 8;  // asc/desc
+}
+
+// GetGameCurrencyRequest 获取单个游戏货币请求
+message GetGameCurrencyRequest {
+    int64 id = 1;
+}
+
+// ========== Update Related Messages ==========
+
+// UpdateGameCategoryRequest 更新分类请求
+message UpdateGameCategoryRequest {
+    int64 id = 1;
+    string name_i18n = 2;
+    int32 sort_no = 3;
+    int32 status = 4;
+    bool force_logout = 5;
+}
+
+// UpdateGameProviderRequest 更新供应商请求
+message UpdateGameProviderRequest {
+    int64 id = 1;
+    string name_i18n = 2;
+    int32 sort_no = 3;
+    int32 status = 4;
+    bool force_logout = 5;
+}
+
+// UpdateGameChannelRequest 更新渠道请求
+message UpdateGameChannelRequest {
+    int64 id = 1;
+    string name_i18n = 2;
+    int32 sort_no = 3;
+    int32 status = 4;
+    bool force_logout = 5;
+}
+
+// UpdateGameCurrencyRequest 更新游戏货币请求
+message UpdateGameCurrencyRequest {
+    int64 id = 1;
+    int32 status = 2;
+    bool force_logout = 3;
+}
+
+// UpdateGameRequest 更新游戏请求
+message UpdateGameRequest {
+    int64 id = 1;
+    string name_i18n = 2;
+    int32 sort_no = 3;
+    int32 status = 4;
+    bool force_logout = 5;
+}
+
+// UpdateResp 通用更新响应 (返回更新后的对象)
+message UpdateResp {
+    int32 code = 1;
+    string message = 2;
+    bytes data = 3;  // 序列化后的对象数据，具体类型由请求决定
+}
+
+// ========== Checkpoint Related Messages ==========
+
+// GameSyncCheckpointInfo 游戏同步检查点信息
+message GameSyncCheckpointInfo {
+    int64 id = 1;
+    string sync_scope = 2;
+    string checkpoint_value = 3;
+    int64 remote_total = 4;
+    int64 local_total = 5;
+    int64 created_count = 6;
+    int64 updated_count = 7;
+    int64 deleted_count = 8;
+    int64 last_sync_at = 9;
+    int64 last_success_at = 10;
+    string last_error = 11;
+    int64 created_at = 12;
+    int64 updated_at = 13;
+}
+
+// GetGameSyncCheckpointResp 获取单个同步检查点响应
+message GetGameSyncCheckpointResp {
+    int32 code = 1;
+    string message = 2;
+    GameSyncCheckpointInfo data = 3;
+}
+
+// GetGameSyncCheckpointListResp 获取同步检查点列表响应
+message GetGameSyncCheckpointListResp {
+    int32 code = 1;
+    string message = 2;
+    repeated GameSyncCheckpointInfo items = 3;
+    int64 total = 4;
+    int32 page = 5;
+    int32 page_size = 6;
+}
+
+// GetGameSyncCheckpointRequest 获取单个同步检查点请求
+message GetGameSyncCheckpointRequest {
+    string sync_scope = 1;  // 同步范围，为空则获取最近一条
+}
+
+// GetGameSyncCheckpointListRequest 获取同步检查点列表请求
+message GetGameSyncCheckpointListRequest {
+    int32 page = 1;
+    int32 page_size = 2;
+    string sync_scope = 3;     // 可选：按 sync_scope 筛选
+    int64 start_time = 4;      // 可选：按时间区间筛选（秒）
+    int64 end_time = 5;        // 可选：按时间区间筛选（秒）
+}
+
+// ========== Sync Related Messages ==========
+
+// SyncStats 同步统计信息
+message SyncStats {
+    int32 total = 1;           // 总数
+    int32 added = 2;           // 新增
+    int32 updated = 3;         // 更新
+    int32 deleted = 4;         // 删除
+    int32 conflicts = 5;       // 冲突
+}
+
+// SyncDiff 同步差异项
+message SyncDiff {
+    string type = 1;           // 对象类型
+    string action = 2;         // 操作类型 (add/update/delete)
+    string object_id = 3;      // 对象ID
+    string description = 4;    // 描述
+    int64 object_numeric_id = 5; // P9对象ID
+    string object_code = 6;      // P9对象编码
+    int64 remote_id = 7;         // 上游对象ID
+    string remote_code = 8;      // 上游对象编码
+    string reason = 9;            // 差异原因
+    string conflict_type = 10;   // 冲突类型
+    string details = 11;          // 详细信息(JSON)
+}
+
+// SyncPreviewResp 同步预检查响应
+message SyncPreviewResp {
+    int32 code = 1;
+    string message = 2;
+    SyncStats stats = 3;
+    repeated SyncDiff diffs = 4;
+}
+
+// SyncRunResp 同步执行响应
+message SyncRunResp {
+    int32 code = 1;
+    string message = 2;
+    int64 total = 3;
+    int64 success = 4;
+    int64 failed = 5;
+    int64 created = 6;      // 新增数量
+    int64 updated = 7;      // 更新数量
+    int64 deleted = 8;      // 删除数量
+    int64 skipped = 9;      // 跳过数量
+}
+
+// SyncPreviewRequest 同步预检查请求
+message SyncPreviewRequest {
+    string object_type = 1;    // category/provider/channel/game/currency
+}
+
+// SyncRunRequest 同步执行请求
+message SyncRunRequest {
+    string object_type = 1;    // category/provider/channel/game/currency
+    bool auto_apply = 2;       // 是否自动应用
+}
+
+// SyncAllRequest 全量同步请求
+message SyncAllRequest {
+    bool auto_apply = 1;       // 是否自动应用
+}
+
+// ExecuteV2SqlRequest 执行 v2sql 初始化脚本
+message ExecuteV2SqlRequest {
+    // 指定要执行的 SQL 文件名（相对于 v2sql 目录），为空表示执行目录下所有 .sql 文件，按文件名排序执行
+    string file = 1;
+}
+
+// ExecuteV2SqlResp 执行结果
+message ExecuteV2SqlResp {
+    int32 code = 1;
+    string message = 2;
+    // 可选的执行输出或错误详情
+    string output = 3;
+}
+
+// ========== Service ==========
+
+// PingResponse Ping响应
+message PingResponse {
+    string message = 1;
+}
+
+// PlatformGameService - 平台游戏服务
+service PlatformGameService {
+    // Ping 健康检查
+    rpc Ping(PingRequest) returns (PingResponse);
+    
+    // ========== Game Query APIs ==========
+    
+    // 获取游戏列表
+    rpc GetGameList(GetGameListRequest) returns (GetGameListResp);
+    
+    // 获取单个游戏详情
+    rpc GetGame(GetGameRequest) returns (GetGameResp);
+    
+    // 获取游戏分类列表
+    rpc GetGameCategoryList(GetGameCategoryListRequest) returns (GetGameCategoryListResp);
+    
+    // 获取单个游戏分类
+    rpc GetGameCategory(GetGameCategoryRequest) returns (GetGameCategoryListResp);
+    
+    // 获取游戏供应商列表
+    rpc GetGameProviderList(GetGameProviderListRequest) returns (GetGameProviderListResp);
+    
+    // 获取单个游戏供应商
+    rpc GetGameProvider(GetGameProviderRequest) returns (GetGameProviderListResp);
+    
+    // 获取单个游戏渠道
+    rpc GetGameChannel(GetGameChannelRequest) returns (GetGameChannelResp);
+    
+    // 获取游戏渠道列表
+    rpc GetGameChannelList(GetGameChannelListRequest) returns (GetGameChannelListResp);
+    
+    // 获取游戏货币列表
+    rpc GetGameCurrencyList(GetGameCurrencyListRequest) returns (GetGameCurrencyListResp);
+    
+    // 获取单个游戏货币
+    rpc GetGameCurrency(GetGameCurrencyRequest) returns (GetGameCurrencyListResp);
+    
+    // 获取单个同步检查点
+    rpc GetGameSyncCheckpoint(GetGameSyncCheckpointRequest) returns (GetGameSyncCheckpointResp);
+    
+    // 获取同步检查点列表
+    rpc GetGameSyncCheckpointList(GetGameSyncCheckpointListRequest) returns (GetGameSyncCheckpointListResp);
+    
+    // ========== Update APIs ==========
+    
+    // 更新游戏分类
+    rpc UpdateGameCategory(UpdateGameCategoryRequest) returns (GetGameCategoryListResp);
+    
+    // 更新游戏供应商
+    rpc UpdateGameProvider(UpdateGameProviderRequest) returns (GetGameProviderListResp);
+    
+    // 更新游戏渠道
+    rpc UpdateGameChannel(UpdateGameChannelRequest) returns (GetGameChannelResp);
+    
+    // 更新游戏货币
+    rpc UpdateGameCurrency(UpdateGameCurrencyRequest) returns (GetGameCurrencyListResp);
+    
+    // 更新游戏
+    rpc UpdateGame(UpdateGameRequest) returns (GetGameResp);
+    
+    // ========== Sync APIs ==========
+    
+    // 同步预检查（查看差异，不修改数据）
+    rpc SyncPreview(SyncPreviewRequest) returns (SyncPreviewResp);
+    
+    // 同步执行（执行同步操作）
+    rpc SyncRun(SyncRunRequest) returns (SyncRunResp);
+    
+    // 全量同步（同步所有对象类型）
+    rpc SyncAll(SyncAllRequest) returns (SyncRunResp);
+
+    // 执行 v2sql 下的 SQL 初始化脚本（供运维/初始化使用）
+    rpc ExecuteV2Sql(ExecuteV2SqlRequest) returns (ExecuteV2SqlResp);
+}

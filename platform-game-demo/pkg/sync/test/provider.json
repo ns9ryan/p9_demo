@@ -1,0 +1,991 @@
+[
+    {
+        "id": 100001,
+        "code": "ORANGE",
+        "abbr": "ORANGE",
+        "name": "ORANGE",
+        "status": 1
+    },
+    {
+        "id": 110001,
+        "code": "TOP_BETBY",
+        "abbr": "TOP_BETBY",
+        "name": "TOP_BETBY",
+        "status": 1,
+        "chan_id": 10
+    },
+    {
+        "id": 120001,
+        "code": "CP",
+        "abbr": "CP",
+        "name": "CP",
+        "status": 1,
+        "chan_id": 9
+    },
+    {
+        "id": 130001,
+        "code": "CFA88",
+        "abbr": "CFA88",
+        "name": "CFA88",
+        "status": 1,
+        "chan_id": 11
+    },
+    {
+        "id": 140001,
+        "code": "SEVENSTAR",
+        "abbr": "SEVENSTAR",
+        "name": "Seven Star",
+        "status": 1,
+        "chan_id": 12
+    },
+    {
+        "id": 150001,
+        "code": "MT_CQ9",
+        "abbr": "MT_CQ9",
+        "name": "MT_CQ9",
+        "status": 1,
+        "chan_id": 13
+    },
+    {
+        "id": 160001,
+        "code": "HEIBAO_PP",
+        "abbr": "BP_PP",
+        "name": "PP",
+        "status": 1,
+        "chan_id": 14
+    },
+    {
+        "id": 160002,
+        "code": "HEIBAO_JILI",
+        "abbr": "BP_JILI",
+        "name": "JILI",
+        "status": 1,
+        "chan_id": 14
+    },
+    {
+        "id": 160003,
+        "code": "HEIBAO_TADA",
+        "abbr": "BP_TADA",
+        "name": "TADA",
+        "status": 1,
+        "chan_id": 14
+    },
+    {
+        "id": 160006,
+        "code": "HEIBAO_JDB-BUYU",
+        "abbr": "BP_JDB-BUYU",
+        "name": "JDB-BUYU",
+        "status": 1,
+        "chan_id": 14
+    },
+    {
+        "id": 160009,
+        "code": "HEIBAO_FACHAI",
+        "abbr": "BP_FACHAI",
+        "name": "FACHAI",
+        "status": 1,
+        "chan_id": 14
+    },
+    {
+        "id": 160013,
+        "code": "HEIBAO_SPRIBE",
+        "abbr": "BP_SPRIBE",
+        "name": "SPRIBE",
+        "status": 1,
+        "chan_id": 14
+    },
+    {
+        "id": 160016,
+        "code": "HEIBAO_CQ9",
+        "abbr": "BP_CQ9",
+        "name": "CQ9",
+        "status": 1,
+        "chan_id": 14
+    },
+    {
+        "id": 160019,
+        "code": "HEIBAO_V8POKER",
+        "abbr": "BP_V8POKER",
+        "name": "V8POKER",
+        "status": 1,
+        "chan_id": 14
+    },
+    {
+        "id": 160020,
+        "code": "HEIBAO_YGR-BUYU",
+        "abbr": "BP_YGR-BUYU",
+        "name": "YGR-BUYU",
+        "status": 1,
+        "chan_id": 14
+    },
+    {
+        "id": 170001,
+        "code": "PREDIX",
+        "abbr": "PREDIX",
+        "name": "Predix",
+        "status": 1,
+        "chan_id": 16
+    },
+    {
+        "id": 180001,
+        "code": "WHITECLIFF",
+        "abbr": "WC",
+        "name": "WC Evolution",
+        "status": 1,
+        "chan_id": 15
+    },
+    {
+        "id": 190001,
+        "code": "AWC_SEXYBCRT",
+        "abbr": "AWC_SEXYBCRT",
+        "name": "SEXY BACCARAT",
+        "status": 1,
+        "chan_id": 17
+    },
+    {
+        "id": 200001,
+        "code": "LUCKOAI",
+        "abbr": "LUCKOAI",
+        "name": "EEAI",
+        "status": 1,
+        "chan_id": 3
+    },
+    {
+        "id": 210001,
+        "code": "MTLIVE",
+        "abbr": "MTLIVE",
+        "name": "MTLIVE",
+        "status": 1,
+        "chan_id": 18
+    },
+    {
+        "id": 220001,
+        "code": "5G",
+        "abbr": "5G",
+        "name": "5G",
+        "status": 1,
+        "chan_id": 19
+    },
+    {
+        "id": 230001,
+        "code": "KA",
+        "abbr": "KA",
+        "name": "KA",
+        "status": 1,
+        "chan_id": 20
+    },
+    {
+        "id": 240001,
+        "code": "SAGAMING",
+        "abbr": "SAGAMING",
+        "name": "SAGAMING",
+        "status": 1,
+        "chan_id": 21
+    },
+    {
+        "id": 250001,
+        "code": "TFGAMING",
+        "abbr": "TFGAMING",
+        "name": "TFGAMING",
+        "status": 1,
+        "chan_id": 22
+    },
+    {
+        "id": 260001,
+        "code": "TOP10_PG",
+        "abbr": "TOP10_PG",
+        "name": "PG Soft",
+        "status": 1,
+        "chan_id": 23
+    },
+    {
+        "id": 260002,
+        "code": "TOP10_LTG",
+        "abbr": "TOP10_LTG",
+        "name": "LTG",
+        "status": 1,
+        "chan_id": 23
+    },
+    {
+        "id": 270001,
+        "code": "DIGMAAN",
+        "abbr": "DIGMAAN",
+        "name": "Digmaan",
+        "status": 1,
+        "chan_id": 24
+    },
+    {
+        "id": 280001,
+        "code": "V8POKER",
+        "abbr": "V8POKER",
+        "name": "V8POKER",
+        "status": 1,
+        "chan_id": 25
+    },
+    {
+        "id": 290001,
+        "code": "WM",
+        "abbr": "WM",
+        "name": "WM",
+        "status": 1,
+        "chan_id": 26
+    },
+    {
+        "id": 300001,
+        "code": "GL",
+        "abbr": "GL",
+        "name": "GL",
+        "status": 1,
+        "chan_id": 1
+    },
+    {
+        "id": 310001,
+        "code": "PP",
+        "abbr": "PP",
+        "name": "Pragmatic Play",
+        "status": 1,
+        "chan_id": 27
+    },
+    {
+        "id": 320001,
+        "code": "ATG",
+        "abbr": "ATG",
+        "name": "Agile Titan Gaming",
+        "status": 1,
+        "chan_id": 28
+    },
+    {
+        "id": 330001,
+        "code": "COSMOPLAY",
+        "abbr": "COSMOPLAY",
+        "name": "CosmoPlay",
+        "status": 1,
+        "chan_id": 29
+    },
+    {
+        "id": 340001,
+        "code": "DRAGONGAMING",
+        "abbr": "DRAGONGAMING",
+        "name": "Dragon Gaming",
+        "status": 1,
+        "chan_id": 30
+    },
+    {
+        "id": 350001,
+        "code": "VG",
+        "abbr": "VG",
+        "name": "VG",
+        "status": 1,
+        "chan_id": 31
+    },
+    {
+        "id": 360001,
+        "code": "OMG",
+        "abbr": "OMG",
+        "name": "OMG",
+        "status": 1,
+        "chan_id": 32
+    },
+    {
+        "id": 360002,
+        "code": "OMG_759",
+        "abbr": "OMG_759",
+        "name": "759",
+        "status": 1,
+        "chan_id": 32
+    },
+    {
+        "id": 360003,
+        "code": "OMG_2JGAME",
+        "abbr": "OMG_2JGAME",
+        "name": "2JGame",
+        "status": 1,
+        "chan_id": 32
+    },
+    {
+        "id": 360004,
+        "code": "OMG_ASKME",
+        "abbr": "OMG_ASKME",
+        "name": "ASKME",
+        "status": 1,
+        "chan_id": 32
+    },
+    {
+        "id": 360005,
+        "code": "OMG_CP",
+        "abbr": "OMG_CP",
+        "name": "CP",
+        "status": 1,
+        "chan_id": 32
+    },
+    {
+        "id": 360006,
+        "code": "OMG_FC",
+        "abbr": "OMG_FC",
+        "name": "FC",
+        "status": 1,
+        "chan_id": 32
+    },
+    {
+        "id": 360007,
+        "code": "OMG_GAMEART",
+        "abbr": "OMG_GAMEART",
+        "name": "GameArt",
+        "status": 1,
+        "chan_id": 32
+    },
+    {
+        "id": 360008,
+        "code": "OMG_HACKSAW",
+        "abbr": "OMG_HACKSAW",
+        "name": "Hacksaw",
+        "status": 1,
+        "chan_id": 32
+    },
+    {
+        "id": 360009,
+        "code": "OMG_IGT",
+        "abbr": "OMG_IGT",
+        "name": "IGT",
+        "status": 1,
+        "chan_id": 32
+    },
+    {
+        "id": 360010,
+        "code": "OMG_JDB",
+        "abbr": "OMG_JDB",
+        "name": "JDB",
+        "status": 1,
+        "chan_id": 32
+    },
+    {
+        "id": 360011,
+        "code": "OMG_JILI",
+        "abbr": "OMG_JILI",
+        "name": "JILI",
+        "status": 1,
+        "chan_id": 32
+    },
+    {
+        "id": 360012,
+        "code": "OMG_PG",
+        "abbr": "OMG_PG",
+        "name": "PG",
+        "status": 1,
+        "chan_id": 32
+    },
+    {
+        "id": 360013,
+        "code": "OMG_PP",
+        "abbr": "OMG_PP",
+        "name": "PP",
+        "status": 1,
+        "chan_id": 32
+    },
+    {
+        "id": 360014,
+        "code": "OMG_REDTIGER",
+        "abbr": "OMG_REDTIGER",
+        "name": "RedTiger",
+        "status": 1,
+        "chan_id": 32
+    },
+    {
+        "id": 360015,
+        "code": "OMG_SLOTMILLL",
+        "abbr": "OMG_SLOTMILLL",
+        "name": "Slotmill",
+        "status": 1,
+        "chan_id": 32
+    },
+    {
+        "id": 360016,
+        "code": "OMG_SPRIBE",
+        "abbr": "OMG_SPRIBE",
+        "name": "Spribe",
+        "status": 1,
+        "chan_id": 32
+    },
+    {
+        "id": 360017,
+        "code": "OMG_TADA",
+        "abbr": "OMG_TADA",
+        "name": "TADA",
+        "status": 1,
+        "chan_id": 32
+    },
+    {
+        "id": 360018,
+        "code": "OMG_WG",
+        "abbr": "OMG_WG",
+        "name": "WG",
+        "status": 1,
+        "chan_id": 32
+    },
+    {
+        "id": 370001,
+        "code": "VIA",
+        "abbr": "VIA",
+        "name": "VIA",
+        "status": 1,
+        "chan_id": 33
+    },
+    {
+        "id": 380001,
+        "code": "TCG_VNLOTTO",
+        "abbr": "TCG_VNLOTTO",
+        "name": "VNLOTTO",
+        "status": 1
+    },
+    {
+        "id": 390001,
+        "code": "568WIN",
+        "abbr": "568WIN",
+        "name": "568WIN",
+        "status": 1
+    },
+    {
+        "id": 400001,
+        "code": "BETBY",
+        "abbr": "ZF_BETBY",
+        "name": "ZF_BETBY",
+        "status": 1,
+        "chan_id": 2
+    },
+    {
+        "id": 500001,
+        "code": "DBLIVE",
+        "abbr": "DBLIVE",
+        "name": "DBLIVE",
+        "status": 1,
+        "chan_id": 4
+    },
+    {
+        "id": 600001,
+        "code": "ZHIFENG_AA",
+        "abbr": "ZF_AA",
+        "name": "AA Sexy",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600002,
+        "code": "ZHIFENG_ALG",
+        "abbr": "ZF_ALG",
+        "name": "Alize Slots",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600003,
+        "code": "ZHIFENG_ALGM",
+        "abbr": "ZF_ALGM",
+        "name": "Alize Mini",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600004,
+        "code": "ZHIFENG_AMBS",
+        "abbr": "ZF_AMBS",
+        "name": "Askmeslot",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600005,
+        "code": "ZHIFENG_AMUSNET",
+        "abbr": "ZF_AMUSNET",
+        "name": "Amusnet",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600006,
+        "code": "ZHIFENG_AP",
+        "abbr": "ZF_AP",
+        "name": "AdvantPlay",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600007,
+        "code": "ZHIFENG_AVIA",
+        "abbr": "ZF_AVIA",
+        "name": "Aviatrix",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600008,
+        "code": "ZHIFENG_BB",
+        "abbr": "ZF_BB",
+        "name": "Live88",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600009,
+        "code": "ZHIFENG_BNG",
+        "abbr": "ZF_BNG",
+        "name": "BNG",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600010,
+        "code": "ZHIFENG_CQ9",
+        "abbr": "ZF_CQ9",
+        "name": "CQ9",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600011,
+        "code": "ZHIFENG_DB",
+        "abbr": "ZF_DB",
+        "name": "DB Slots",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600012,
+        "code": "ZHIFENG_EVOBTG",
+        "abbr": "ZF_EVOBTG",
+        "name": "Big Time Gaming",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600013,
+        "code": "ZHIFENG_EVOLIVE",
+        "abbr": "ZF_EVOLIVE",
+        "name": "Evolution Live",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600014,
+        "code": "ZHIFENG_EVONLC",
+        "abbr": "ZF_EVONLC",
+        "name": "NoLimit City",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600015,
+        "code": "ZHIFENG_EVONTT",
+        "abbr": "ZF_EVONTT",
+        "name": "Netent",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600016,
+        "code": "ZHIFENG_EVOP",
+        "abbr": "ZF_EVOP",
+        "name": "Evoplay",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600017,
+        "code": "ZHIFENG_EVORT",
+        "abbr": "ZF_EVORT",
+        "name": "Red Tiger",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600018,
+        "code": "ZHIFENG_EW",
+        "abbr": "ZF_EW",
+        "name": "EpicWin",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600019,
+        "code": "ZHIFENG_EZUGI",
+        "abbr": "ZF_EZUGI",
+        "name": "Ezugi",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600020,
+        "code": "ZHIFENG_FC",
+        "abbr": "ZF_FC",
+        "name": "FaChai",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600021,
+        "code": "ZHIFENG_GPK7MJ",
+        "abbr": "ZF_GPK7MJ",
+        "name": "7mojo",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600022,
+        "code": "ZHIFENG_GPKBG",
+        "abbr": "ZF_GPKBG",
+        "name": "Bgaming",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600023,
+        "code": "ZHIFENG_GPKBM",
+        "abbr": "ZF_GPKBM",
+        "name": "Booming",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600024,
+        "code": "ZHIFENG_GPKSPINO",
+        "abbr": "ZF_GPKSPINO",
+        "name": "Spinomenal",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600025,
+        "code": "ZHIFENG_GPKTBG",
+        "abbr": "ZF_GPKTBG",
+        "name": "Turbo Games",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600026,
+        "code": "ZHIFENG_HB",
+        "abbr": "ZF_HB",
+        "name": "Habanero",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600027,
+        "code": "ZHIFENG_HSD",
+        "abbr": "ZF_HSD",
+        "name": "Hacksaw",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600028,
+        "code": "ZHIFENG_INOUT",
+        "abbr": "ZF_INOUT",
+        "name": "Inout",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600029,
+        "code": "ZHIFENG_JDB",
+        "abbr": "ZF_JDB",
+        "name": "JDB",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600030,
+        "code": "ZHIFENG_JDB-GTF",
+        "abbr": "ZF_JDB-GTF",
+        "name": "GTF",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600031,
+        "code": "ZHIFENG_JL",
+        "abbr": "ZF_JL",
+        "name": "Jili",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600032,
+        "code": "ZHIFENG_LIVE22",
+        "abbr": "ZF_LIVE22",
+        "name": "Live22",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600033,
+        "code": "ZHIFENG_LT",
+        "abbr": "ZF_LT",
+        "name": "Lite",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600034,
+        "code": "ZHIFENG_MG",
+        "abbr": "ZF_MG",
+        "name": "Micro Gaming",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600035,
+        "code": "ZHIFENG_PGS",
+        "abbr": "ZF_PGS",
+        "name": "PG Soft",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600036,
+        "code": "ZHIFENG_PNG",
+        "abbr": "ZF_PNG",
+        "name": "PlayNGo",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600037,
+        "code": "ZHIFENG_PP",
+        "abbr": "ZF_PP",
+        "name": "Pragmatic Play",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600038,
+        "code": "ZHIFENG_QM",
+        "abbr": "ZF_QM",
+        "name": "KingMidas",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600039,
+        "code": "ZHIFENG_RG",
+        "abbr": "ZF_RG",
+        "name": "Relax Gaming",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600040,
+        "code": "ZHIFENG_SPB",
+        "abbr": "ZF_SPB",
+        "name": "Spribe",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600041,
+        "code": "ZHIFENG_SPDG",
+        "abbr": "ZF_SPDG",
+        "name": "Spade Gaming",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600042,
+        "code": "ZHIFENG_TBP",
+        "abbr": "ZF_TBP",
+        "name": "The Better Platform",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600043,
+        "code": "ZHIFENG_WIFY",
+        "abbr": "ZF_WIFY",
+        "name": "Winfinity",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600044,
+        "code": "ZHIFENG_YB",
+        "abbr": "ZF_YB",
+        "name": "YeeBet",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 600045,
+        "code": "ZHIFENG_YBNGO",
+        "abbr": "ZF_YBNGO",
+        "name": "YellowBat",
+        "status": 1,
+        "chan_id": 5
+    },
+    {
+        "id": 700001,
+        "code": "LG_BETBY",
+        "abbr": "LG_BETBY",
+        "name": "Betby",
+        "status": 1,
+        "chan_id": 6
+    },
+    {
+        "id": 700002,
+        "code": "LG_100HP",
+        "abbr": "LG_100HP",
+        "name": "100 HP",
+        "status": 1,
+        "chan_id": 6
+    },
+    {
+        "id": 700003,
+        "code": "LG_MI",
+        "abbr": "LG_MI",
+        "name": "Mythic Isle",
+        "status": 1,
+        "chan_id": 6
+    },
+    {
+        "id": 700004,
+        "code": "LG_WE_SPORTS",
+        "abbr": "LG_WE_SPORTS",
+        "name": "World Entertainment Sports",
+        "status": 1,
+        "chan_id": 6
+    },
+    {
+        "id": 700005,
+        "code": "LG_IMOON",
+        "abbr": "LG_IMOON",
+        "name": "iMoon",
+        "status": 1,
+        "chan_id": 6
+    },
+    {
+        "id": 700006,
+        "code": "LG_HACKSAW",
+        "abbr": "LG_HACKSAW",
+        "name": "Hacksaw",
+        "status": 1,
+        "chan_id": 6
+    },
+    {
+        "id": 700007,
+        "code": "LG_CALETA",
+        "abbr": "LG_CALETA",
+        "name": "Caleta Gaming",
+        "status": 1,
+        "chan_id": 6
+    },
+    {
+        "id": 700008,
+        "code": "LG_WE_GAMES",
+        "abbr": "LG_WE_GAMES",
+        "name": "World Entertainment",
+        "status": 1,
+        "chan_id": 6
+    },
+    {
+        "id": 700009,
+        "code": "LG_IDEAL_GAMING",
+        "abbr": "LG_IDEAL_GAMING",
+        "name": "iDeal Gaming",
+        "status": 1,
+        "chan_id": 6
+    },
+    {
+        "id": 700010,
+        "code": "LG_ATG",
+        "abbr": "LG_ATG",
+        "name": "ATG",
+        "status": 1,
+        "chan_id": 6
+    },
+    {
+        "id": 700011,
+        "code": "LG_MANCALA",
+        "abbr": "LG_MANCALA",
+        "name": "Mancala",
+        "status": 1,
+        "chan_id": 6
+    },
+    {
+        "id": 700012,
+        "code": "LG_PLAYNGO",
+        "abbr": "LG_PLAYNGO",
+        "name": "Play'n Go",
+        "status": 1,
+        "chan_id": 6
+    },
+    {
+        "id": 700013,
+        "code": "LG_SA",
+        "abbr": "LG_SA",
+        "name": "SA Gaming",
+        "status": 1,
+        "chan_id": 6
+    },
+    {
+        "id": 700014,
+        "code": "LG_MASCOT",
+        "abbr": "LG_MASCOT",
+        "name": "Mascot",
+        "status": 1,
+        "chan_id": 6
+    },
+    {
+        "id": 700015,
+        "code": "LG_WOWGAMING",
+        "abbr": "LG_WOWGAMING",
+        "name": "WowGaming",
+        "status": 1,
+        "chan_id": 6
+    },
+    {
+        "id": 700016,
+        "code": "LG_DRAGOONSOFT",
+        "abbr": "LG_DRAGOONSOFT",
+        "name": "Dragoon Soft",
+        "status": 1,
+        "chan_id": 6
+    },
+    {
+        "id": 700017,
+        "code": "LG_PLAYSTAR",
+        "abbr": "LG_PLAYSTAR",
+        "name": "PlayStar",
+        "status": 1,
+        "chan_id": 6
+    },
+    {
+        "id": 700018,
+        "code": "LG_PLATIPUS",
+        "abbr": "LG_PLATIPUS",
+        "name": "Platipus",
+        "status": 1,
+        "chan_id": 6
+    },
+    {
+        "id": 700019,
+        "code": "LG_RED_EAGLE",
+        "abbr": "LG_RED_EAGLE",
+        "name": "Red Eagle",
+        "status": 1,
+        "chan_id": 6
+    },
+    {
+        "id": 800001,
+        "code": "XPG",
+        "abbr": "XPG",
+        "name": "XPG",
+        "status": 1,
+        "chan_id": 7
+    },
+    {
+        "id": 900001,
+        "code": "SG",
+        "abbr": "SG",
+        "name": "SG",
+        "status": 1,
+        "chan_id": 8
+    }
+]

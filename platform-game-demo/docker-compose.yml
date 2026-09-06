@@ -1,0 +1,31 @@
+name: platform-game
+
+services:
+  platform-game-rpc:
+    image: ${DOCKER_REPO:-192.168.0.15:5000/p9}/platform-game-rpc:${VERSION:-1.0.0}
+    container_name: platform-game-rpc
+    restart: always
+    ports:
+      - "19003:19003"
+    volumes:
+      - ./rpc/etc/platform_game.yaml:/app/etc/platform_game.yaml:ro
+    networks:
+      - p9-network
+
+  platform-game-api:
+    image: ${DOCKER_REPO:-192.168.0.15:5000/p9}/platform-game-api:${VERSION:-1.0.0}
+    container_name: platform-game-api
+    restart: always
+    ports:
+      - "18003:18003"
+    volumes:
+      - ./api/etc/platform_game.yaml:/app/etc/platform_game.yaml:ro
+    networks:
+      - p9-network
+
+volumes:
+  postgres_data:
+
+networks:
+  p9-network:
+    driver: bridge

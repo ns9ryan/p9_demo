@@ -1,0 +1,287 @@
+[
+    {
+        "id": 1,
+        "code": "GL",
+        "name": "GL",
+        "currency": "USDT",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 2,
+        "code": "ZF",
+        "name": "ZF1302(c)",
+        "currency": "USDT",
+        "status": 1,
+        "load_type": 4
+    },
+    {
+        "id": 3,
+        "code": "LUCKOAI",
+        "name": "LuckOAI",
+        "currency": "USDT",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 4,
+        "code": "DBLIVE",
+        "name": "DBLIVE",
+        "currency": "USDT",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 5,
+        "code": "ZHIFENG",
+        "name": "ZF1302ZT",
+        "currency": "USD",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 6,
+        "code": "LUCIFERGAMING",
+        "name": "LG26-TGIF-069",
+        "currency": "USD",
+        "status": 1,
+        "load_type": 5
+    },
+    {
+        "id": 7,
+        "code": "XPG",
+        "name": "XPG",
+        "currency": "USDT",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 8,
+        "code": "SG",
+        "name": "SG",
+        "currency": "USDT",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 9,
+        "code": "CP",
+        "name": "112_CP",
+        "currency": "USDT",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 10,
+        "code": "TOP",
+        "name": "TOP",
+        "currency": "USDT",
+        "status": 1,
+        "load_type": 4
+    },
+    {
+        "id": 11,
+        "code": "CFA88",
+        "name": "CFA88",
+        "currency": "USDT",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 12,
+        "code": "SEVENSTAR",
+        "name": "SEVENSTAR",
+        "currency": "USDT",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 13,
+        "code": "CQ9",
+        "name": "(SW2) MT-S9",
+        "currency": "USDT",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 14,
+        "code": "HEIBAO",
+        "name": "HEIBAO",
+        "currency": "USD",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 15,
+        "code": "WC",
+        "name": "(S90) - WC evolution",
+        "currency": "USDT",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 16,
+        "code": "PREDIX",
+        "name": "PREDIX",
+        "currency": "USD",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 17,
+        "code": "AWC",
+        "name": "277365 AWC[S9]",
+        "currency": "USDT",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 18,
+        "code": "MTLIVE",
+        "name": "MTLIVE",
+        "currency": "USD",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 19,
+        "code": "5G",
+        "name": "5G",
+        "currency": "USDT",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 20,
+        "code": "KA",
+        "name": "KA",
+        "currency": "USDT",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 21,
+        "code": "SAGaming",
+        "name": "M1781 (A15182) - SA Gaming - S9",
+        "currency": "USD",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 22,
+        "code": "TFGaming",
+        "name": "[14094] S9_TF",
+        "currency": "USD",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 23,
+        "code": "TOP10",
+        "name": "TOP10",
+        "currency": "USD",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 24,
+        "code": "DIGMAAN",
+        "name": "S128 Cockfight API",
+        "currency": "USD",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 25,
+        "code": "V8OKER",
+        "name": "V8OKER",
+        "currency": "USD",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 26,
+        "code": "WM",
+        "name": "WM",
+        "currency": "RMB",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 27,
+        "code": "PP",
+        "name": "PP",
+        "currency": "USDT",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 28,
+        "code": "ATG",
+        "name": "Agile Titan Gaming",
+        "currency": "USDT",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 29,
+        "code": "COSMOPLAY",
+        "name": "CosmoPlay",
+        "currency": "USDT",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 30,
+        "code": "DRAGONGAMING",
+        "name": "Dragon Gaming",
+        "currency": "USDT",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 31,
+        "code": "VG",
+        "name": "VG",
+        "currency": "USDT",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 32,
+        "code": "OMG",
+        "name": "OMG",
+        "currency": "USDT",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 33,
+        "code": "VIA",
+        "name": "VIA",
+        "currency": "USDT",
+        "status": 1,
+        "load_type": 1
+    },
+    {
+        "id": 34,
+        "code": "TCG",
+        "name": "TCG",
+        "currency": "USDT",
+        "status": 1
+    },
+    {
+        "id": 35,
+        "code": "568WIN",
+        "name": "568WIN",
+        "currency": "USDT",
+        "status": 1
+    },
+    {
+        "id": 36,
+        "code": "IM",
+        "name": "IM",
+        "currency": "USDT",
+        "status": 1
+    }
+]

@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package vendors;
+
+option go_package = "oa.98ent.com/p9/platform-game/rpc/pb/vendors";
+
+import "google/protobuf/empty.proto";
+
+// ===============================
+// 游戏
+// ===============================
+
+// GetGameRequest 获取游戏列表请求
+message GetGameRequest {
+  int32 action = 1;        // 动作类型，1表示查询
+  string ven_code = 2;     // 厂商名 ORANGE LUCKOAI BETBY GL
+  string ven_game_key = 3; // 厂商游戏键
+}
+
+// GameInfo 游戏信息（来自 game-vendor-gateway 返回值）
+message GameInfo {
+  int64  id = 1;
+  int64  ven_id = 2;
+  int64  cat_id = 3;
+  int64  group_id = 4;
+  string ven_key = 5;
+  string code = 6;
+  string name = 7;
+  string image = 8;
+  int64  chan_id = 9;        // GameChannel id
+  uint32 load_type = 10;     // GameLoadType 1.Embed 2.Ext link 4.SDK DOM (来自所属渠道 GameChannel.load_type)
+}
+
+// GameDeletedInfo 游戏删除记录
+message GameDeletedInfo {
+  int64  id = 1;
+  int64  ven_id = 2;
+  int64  cat_id = 3;
+  int64  group_id = 4;
+  string ven_key = 5;
+  string code = 6;
+  string name = 7;
+  string image = 8;
+  uint32 delete_utype = 9;   // 删除人类型：1.系统用户 2.合作商用户 3.代理用户 4.游戏用户
+  int64  delete_uid = 10;    // 删除人ID
+  string delete_notes = 11;  // 删除备注
+  int64  delete_at = 12;     // 删除时间
+  int64  chan_id = 13;       // GameChannel id
+  uint32 load_type = 14;     // GameLoadType 1.Embed 2.Ext link 4.SDK DOM (来自所属渠道 GameChannel.load_type)
+}
+
+// GetGameResponse 获取游戏列表响应
+message GetGameResponse {
+  int64 code = 1;
+  string msg = 2;
+  repeated GameInfo game_list = 3;
+}
+
+// GetGameDeletedResponse 获取已删除游戏列表响应
+message GetGameDeletedResponse {
+  int64 code = 1;
+  string msg = 2;
+  repeated GameDeletedInfo game_list = 3;
+}

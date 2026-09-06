@@ -1,0 +1,21 @@
+Name: platform-game
+Host: 0.0.0.0
+Port: 8080
+ServiceName: platform-game
+
+# gRPC客户端配置 - 用于调用RPC服务
+GrpcClient:
+  Target: "127.0.0.1:9001"   # RPC服务地址
+  Timeout: 5                   # 请求超时（秒）
+
+Kafka:
+  Brokers:
+    - "127.0.0.1:9092"
+  Topic: "game-events"
+
+Swagger:
+  Protocol: "https"
+
+Log:
+  Level: info
+  Format: json

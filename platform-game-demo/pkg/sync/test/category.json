@@ -1,0 +1,58 @@
+[
+    {
+        "id": 1,
+        "code": "VD",
+        "name": "视讯",
+        "status": 1,
+        "channel": 1
+    },
+    {
+        "id": 2,
+        "code": "SP",
+        "name": "体育",
+        "status": 1,
+        "channel": 1
+    },
+    {
+        "id": 3,
+        "code": "GM",
+        "name": "电子",
+        "status": 1,
+        "channel": 1
+    },
+    {
+        "id": 4,
+        "code": "LT",
+        "name": "彩票",
+        "status": 1,
+        "channel": 1
+    },
+    {
+        "id": 8,
+        "code": "BD",
+        "name": "棋牌",
+        "status": 1,
+        "channel": 1
+    },
+    {
+        "id": 10,
+        "code": "FH",
+        "name": "捕鱼",
+        "status": 1,
+        "channel": 1
+    },
+    {
+        "id": 12,
+        "code": "OT",
+        "name": "其他",
+        "status": 1,
+        "channel": 1
+    },
+    {
+        "id": 13,
+        "code": "FH",
+        "name": "其他AAA",
+        "status": 1,
+        "channel": 1
+    }
+]

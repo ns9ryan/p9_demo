@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package vendors;
+
+option go_package = "oa.98ent.com/p9/platform-game/rpc/pb/vendors";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+// 同步差异
+message SyncDiff {
+    string object_type = 1;                    // 对象类型
+    int64 object_id = 2;                       // P9对象ID
+    string object_code = 3;                    // P9对象编码
+    string action = 4;                         // 同步操作
+    int64 remote_id = 5;                       // 上游对象ID
+    string remote_code = 6;                    // 上游对象编码
+    string reason = 7;                         // 原因说明
+    string conflict_type = 8;                  // 冲突类型
+    string details = 9;                        // 详细信息(JSON)
+}
+
+// 同步统计
+message SyncStats {
+    int64 remote_total = 1;                    // 上游总数
+    int64 local_total = 2;                     // 本地总数
+    int64 create_total = 3;                    // 新增数量
+    int64 update_total = 4;                    // 更新数量
+    int64 delete_total = 5;                    // 删除数量
+    int64 noop_total = 6;                      // 无操作数量
+    int64 conflict_total = 7;                  // 冲突数量
+    int64 error_total = 8;                     // 错误数量
+}
+
+// 同步预检查请求
+message SyncPreviewReq {
+    string object_type = 1;                    // 对象类型：category/provider/channel/game
+    repeated int64 selected_ids = 2;           // 要同步的对象ID(可选)
+    repeated string selected_codes = 3;        // 要同步的对象编码(可选)
+    optional bool strict_conflict = 4;         // 是否在冲突时报错
+}
+
+// 同步预检查响应
+message SyncPreviewResp {
+    SyncStats stats = 1;                       // 统计信息
+    repeated SyncDiff diffs = 2;               // 差异列表
+}
+
+// 同步执行请求
+message SyncRunReq {
+    string object_type = 1;                    // 对象类型
+    repeated int64 selected_ids = 2;           // 要同步的对象ID(可选)
+    repeated string selected_codes = 3;        // 要同步的对象编码(可选)
+    optional bool auto_apply = 4;              // 是否真正修改数据库
+    optional bool strict_conflict = 5;         // 是否在冲突时报错
+}
+
+// 同步执行结果
+message SyncApplyResult {
+    int64 created = 1;                         // 成功新增数量
+    int64 updated = 2;                         // 成功更新数量
+    int64 deleted = 3;                         // 成功删除数量
+    int64 failed = 4;                          // 失败数量
+    int64 skipped = 5;                         // 跳过数量
+}
+
+// 同步执行响应
+message SyncRunResp {
+    SyncPreviewResp preview = 1;               // 预检查结果
+    SyncApplyResult apply = 2;                 // 执行结果
+}
+
+// 同步服务
+service SyncService {
+    rpc Preview(SyncPreviewReq) returns (SyncPreviewResp);
+    rpc Run(SyncRunReq) returns (SyncRunResp);
+}

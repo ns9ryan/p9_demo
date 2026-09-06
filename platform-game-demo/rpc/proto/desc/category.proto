@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package vendors;
+
+option go_package = "oa.98ent.com/p9/platform-game/rpc/pb/vendors";
+
+import "google/protobuf/empty.proto";
+
+// Empty 空消息用于无请求参数的接口调用
+message Empty {}
+
+// NameEntry 用于 names 多语言字段
+message NameEntry {
+  map<string, string> values = 1;
+}
+
+// ===============================
+// 游戏分类
+// ===============================
+
+// GameCategoryInfo 游戏分类（来自 game-vendor-gateway 返回值）
+message GameCategoryInfo {
+  int64 id = 1;
+  string code = 2;
+  string name = 3;
+  repeated NameEntry names = 4;
+  int64 weight = 5;
+  uint32 status = 6;        // 1.Normal 2.Paused
+  uint32 channel = 7;
+  uint32 update_utype = 8;
+  int64 update_uid = 9;
+  int64 updates = 10;
+  int64 update_at = 11;
+  uint32 create_utype = 12;
+  int64 create_uid = 13;
+  int64 create_at = 14;
+}
+
+// GameCategoryDeletedInfo 游戏分类删除记录
+message GameCategoryDeletedInfo {
+  int64 id = 1;
+  string code = 2;
+  string name = 3;
+  repeated NameEntry names = 4;
+  int64 weight = 5;
+  uint32 status = 6;        // 1.Normal 2.Paused
+  uint32 channel = 7;
+  uint32 update_utype = 8;
+  int64 update_uid = 9;
+  int64 updates = 10;
+  int64 update_at = 11;
+  uint32 create_utype = 12;
+  int64 create_uid = 13;
+  int64 create_at = 14;
+  uint32 delete_utype = 15;  // 删除人类型：1.系统用户 2.合作商用户 3.代理用户 4.游戏用户
+  int64  delete_uid = 16;    // 删除人ID
+  string delete_notes = 17;  // 删除备注
+  int64  delete_at = 18;     // 删除时间
+}
+
+// GetGameCategoryResponse 获取游戏分类列表响应
+message GetGameCategoryResponse {
+  int64 code = 1;
+  string msg = 2;
+  repeated GameCategoryInfo category_list = 3;
+}
+
+// GetGameCategoryDeletedResponse 获取已删除游戏分类列表响应
+message GetGameCategoryDeletedResponse {
+  int64 code = 1;
+  string msg = 2;
+  repeated GameCategoryDeletedInfo category_list = 3;
+}

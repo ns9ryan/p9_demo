@@ -1,0 +1,19 @@
+# Platform-Game Module
+
+module oa.98ent.com/p9/platform-game
+
+go 1.18
+
+// 注意：以下是必需的依赖，实际版本根据项目需要调整
+require (
+	github.com/zeromicro/go-zero v1.4.3
+	google.golang.org/grpc v1.50.0
+	google.golang.org/protobuf v1.28.1
+)
+
+// 可选依赖（根据实现选择）
+// require (
+//   github.com/go-sql-driver/mysql v1.6.0
+//   github.com/redis/go-redis/v9 v9.0.0
+//   github.com/segmentio/kafka-go v0.4.35
+// )
