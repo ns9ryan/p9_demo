@@ -18,74 +18,80 @@ import (
 
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodPost,
-				Path:    "/create",
-				Handler: currency.CreateCurrencyHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/get",
-				Handler: currency.GetCurrencyHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/list",
-				Handler: currency.ListCurrenciesHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/list-all",
-				Handler: currency.ListAllCurrenciesHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/reorder",
-				Handler: currency.ReorderCurrencyHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/update",
-				Handler: currency.UpdateCurrencyHandler(serverCtx),
-			},
-		},
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
+			[]rest.Route{
+				{
+					Method:  http.MethodPost,
+					Path:    "/create",
+					Handler: currency.CreateCurrencyHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/get",
+					Handler: currency.GetCurrencyHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/list",
+					Handler: currency.ListCurrenciesHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/list-all",
+					Handler: currency.ListAllCurrenciesHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/reorder",
+					Handler: currency.ReorderCurrencyHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/update",
+					Handler: currency.UpdateCurrencyHandler(serverCtx),
+				},
+			}...,
+		),
 		rest.WithPrefix("/currency"),
 	)
 
 	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodPost,
-				Path:    "/create",
-				Handler: language.CreateLanguageHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/get",
-				Handler: language.GetLanguageHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/list",
-				Handler: language.ListLanguagesHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/list-all",
-				Handler: language.ListAllLanguagesHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/reorder",
-				Handler: language.ReorderLanguageHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/update",
-				Handler: language.UpdateLanguageHandler(serverCtx),
-			},
-		},
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
+			[]rest.Route{
+				{
+					Method:  http.MethodPost,
+					Path:    "/create",
+					Handler: language.CreateLanguageHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/get",
+					Handler: language.GetLanguageHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/list",
+					Handler: language.ListLanguagesHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/list-all",
+					Handler: language.ListAllLanguagesHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/reorder",
+					Handler: language.ReorderLanguageHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/update",
+					Handler: language.UpdateLanguageHandler(serverCtx),
+				},
+			}...,
+		),
 		rest.WithPrefix("/language"),
 	)
 
@@ -100,74 +106,80 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	)
 
 	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodPost,
-				Path:    "/create",
-				Handler: region.CreateRegionHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/get",
-				Handler: region.GetRegionHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/list",
-				Handler: region.ListRegionsHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/list-all",
-				Handler: region.ListAllRegionsHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/reorder",
-				Handler: region.ReorderRegionHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/update",
-				Handler: region.UpdateRegionHandler(serverCtx),
-			},
-		},
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
+			[]rest.Route{
+				{
+					Method:  http.MethodPost,
+					Path:    "/create",
+					Handler: region.CreateRegionHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/get",
+					Handler: region.GetRegionHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/list",
+					Handler: region.ListRegionsHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/list-all",
+					Handler: region.ListAllRegionsHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/reorder",
+					Handler: region.ReorderRegionHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/update",
+					Handler: region.UpdateRegionHandler(serverCtx),
+				},
+			}...,
+		),
 		rest.WithPrefix("/region"),
 	)
 
 	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodPost,
-				Path:    "/create",
-				Handler: timezone.CreateTimezoneHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/get",
-				Handler: timezone.GetTimezoneHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/list",
-				Handler: timezone.ListTimezonesHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/list-all",
-				Handler: timezone.ListAllTimezonesHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/reorder",
-				Handler: timezone.ReorderTimezoneHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/update",
-				Handler: timezone.UpdateTimezoneHandler(serverCtx),
-			},
-		},
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
+			[]rest.Route{
+				{
+					Method:  http.MethodPost,
+					Path:    "/create",
+					Handler: timezone.CreateTimezoneHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/get",
+					Handler: timezone.GetTimezoneHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/list",
+					Handler: timezone.ListTimezonesHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/list-all",
+					Handler: timezone.ListAllTimezonesHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/reorder",
+					Handler: timezone.ReorderTimezoneHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/update",
+					Handler: timezone.UpdateTimezoneHandler(serverCtx),
+				},
+			}...,
+		),
 		rest.WithPrefix("/timezone"),
 	)
 }

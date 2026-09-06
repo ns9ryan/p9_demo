@@ -87,8 +87,9 @@ type (
 )
 
 @server (
-	group:  timezone
-	prefix: /timezone
+	group:      timezone
+	prefix:     /timezone
+	middleware: Jwt,ActionLog,Authority
 )
 service platform_base {
 	// 创建时区

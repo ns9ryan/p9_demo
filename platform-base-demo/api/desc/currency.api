@@ -101,8 +101,9 @@ type (
 )
 
 @server (
-	group:  currency
-	prefix: /currency
+	group:      currency
+	prefix:     /currency
+	middleware: Jwt,ActionLog,Authority
 )
 service platform_base {
 	// 创建货币

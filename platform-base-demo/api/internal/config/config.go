@@ -15,6 +15,9 @@ type Config struct {
 	// Platform Base RPC配置
 	PlatformBaseRpc zrpc.RpcClientConf
 
+	// Core RPC配置
+	CoreRpc zrpc.RpcClientConf
+
 	// 国际化配置
 	I18n i18n.Config
 }
