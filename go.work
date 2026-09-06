@@ -1,0 +1,11 @@
+go 1.26.7
+
+use (
+	./core
+	./integration
+	./node-dispatch
+	./platform-base
+	./platform-game
+	./platform-message
+	./platform-operator
+)
