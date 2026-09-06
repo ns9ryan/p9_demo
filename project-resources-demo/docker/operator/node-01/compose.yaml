@@ -1,0 +1,39 @@
+name: p9-operator-node-01
+
+services:
+  postgresql:
+    # 当前：18.6（2025-09 发布）；备选：17.x（2024-09 发布，成熟度更高）
+    image: postgres:18.6
+    restart: unless-stopped
+    ports:
+      - "15441:5432"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: p9_operator
+    volumes:
+      - postgresql-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root -d p9_operator"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
+  redis:
+    # 当前：8.8.0（2026-05 发布）；备选：8.2.x（2025-08 发布，成熟度更高）
+    image: redis:8.8.0
+    restart: unless-stopped
+    ports:
+      - "16381:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  postgresql-data:
+  redis-data:
