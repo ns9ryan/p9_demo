@@ -4,6 +4,9 @@ MODULE := oa.98ent.com/p9/platform-base
 RPC_PROTO := platform_base.proto
 BUILD_NAME := platform_base
 
+# 镜像版本
+VERSION ?= 1.0.0
+
 # ---- 下面的配置通常不需要修改 ----
 
 GO ?= go
@@ -14,6 +17,10 @@ STYLE := go_zero
 # 构建
 GOARCH ?= amd64
 LDFLAGS := -s -w
+
+# Docker
+DOCKER_PLATFORM ?= linux/$(GOARCH)
+DOCKER_REPO ?= 192.168.0.15:5000/p9
 
 # API
 API_FILE := api/desc/main.api
@@ -57,5 +64,10 @@ build-linux: # 编译 Linux 可执行文件
 
 .PHONY: docker
 docker: build-linux # 编译 Linux 可执行文件并构建 Docker 镜像
-	docker build -f Dockerfile-api -t platform-base-api:dev .
-	docker build -f Dockerfile-rpc -t platform-base-rpc:dev .
+	docker build --platform $(DOCKER_PLATFORM) -f Dockerfile-api -t $(DOCKER_REPO)/platform-base-api:$(VERSION) .
+	docker build --platform $(DOCKER_PLATFORM) -f Dockerfile-rpc -t $(DOCKER_REPO)/platform-base-rpc:$(VERSION) .
+
+.PHONY: publish-docker
+publish-docker: # 发布 Docker 镜像
+	docker push $(DOCKER_REPO)/platform-base-api:$(VERSION)
+	docker push $(DOCKER_REPO)/platform-base-rpc:$(VERSION)
