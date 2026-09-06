@@ -1,8 +1,8 @@
 # ---- 仓库独立配置，新建仓库时需要修改 ----
 
-# 仓库独立配置, 新建仓库时需要修改
 MODULE := oa.98ent.com/p9/platform-base
 RPC_PROTO := platform_base.proto
+BUILD_NAME := platform_base
 
 # ---- 下面的配置通常不需要修改 ----
 
@@ -10,6 +10,10 @@ GO ?= go
 GOCTL ?= goctl
 
 STYLE := go_zero
+
+# 构建
+GOARCH ?= amd64
+LDFLAGS := -s -w
 
 # API
 API_FILE := api/desc/main.api
@@ -42,3 +46,16 @@ ent: # 生成 Ent 代码
 
 .PHONY: gen
 gen: api rpc ent # 生成 API、RPC 和 Ent 代码
+
+.PHONY: build-linux
+build-linux: export CGO_ENABLED := 0
+build-linux: export GOOS := linux
+build-linux: export GOARCH := $(GOARCH)
+build-linux: # 编译 Linux 可执行文件
+	$(GO) build -trimpath -ldflags="$(LDFLAGS)" -o $(BUILD_NAME)_rpc ./rpc
+	$(GO) build -trimpath -ldflags="$(LDFLAGS)" -o $(BUILD_NAME)_api ./api
+
+.PHONY: docker
+docker: build-linux # 编译 Linux 可执行文件并构建 Docker 镜像
+	docker build -f Dockerfile-api -t platform-base-api:dev .
+	docker build -f Dockerfile-rpc -t platform-base-rpc:dev .

@@ -1,0 +1,30 @@
+name: p9-platform-base
+
+services:
+  platform-base-rpc:
+    image: platform-base-rpc:dev
+    container_name: p9-platform-base-rpc
+    restart: unless-stopped
+    ports:
+      - "19001:19001"
+    volumes:
+      - ./rpc.yaml:/app/etc/platform_base.yaml:ro
+    networks:
+      - p9-network
+
+  platform-base-api:
+    image: platform-base-api:dev
+    container_name: p9-platform-base-api
+    restart: unless-stopped
+    ports:
+      - "18001:18001"
+    volumes:
+      - ./api.yaml:/app/etc/platform_base.yaml:ro
+    depends_on:
+      - platform-base-rpc
+    networks:
+      - p9-network
+
+networks:
+  p9-network:
+    driver: bridge

@@ -1,0 +1,17 @@
+# Git
+.git
+.gitignore
+
+# Editor/IDE
+.idea
+.vscode
+
+# Go workspace
+go.work
+go.work.sum
+
+# Logs
+*.log
+
+# Documents
+*.md

@@ -1,0 +1,25 @@
+FROM alpine:3.22
+
+# 镜像作者
+ARG AUTHOR="p9.work@gmail.com"
+
+LABEL org.opencontainers.image.authors=${AUTHOR}
+
+WORKDIR /app
+
+# 设置容器时区并安装运行依赖
+ENV TZ=Asia/Shanghai
+RUN apk add --no-cache tzdata ca-certificates
+
+# 复制RPC可执行文件
+COPY ./platform_base_rpc ./
+RUN chmod +x ./platform_base_rpc
+
+# 复制RPC配置文件
+COPY ./rpc/etc/platform_base.yaml ./etc/
+
+# RPC服务端口
+EXPOSE 19001
+
+ENTRYPOINT ["./platform_base_rpc"]
+CMD ["-f", "etc/platform_base.yaml"]
