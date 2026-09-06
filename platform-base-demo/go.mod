@@ -4,6 +4,7 @@ go 1.26.0
 
 require (
 	entgo.io/ent v0.14.6
+	github.com/duke-git/lancet/v2 v2.3.9
 	github.com/jackc/pgx/v5 v5.8.0
 	github.com/nicksnyder/go-i18n/v2 v2.5.1
 	github.com/zeromicro/go-zero v1.10.3

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/duke-git/lancet/v2/retry"
 	"oa.98ent.com/p9/core/rpc/coreclient"
 )
 
@@ -12,21 +13,21 @@ import (
 func Register(cli coreclient.Core) error {
 	req := PlatformBaseReq()
 
-	var last error
-
 	// Core启动可能稍晚，失败时短暂重试
-	for range 20 {
-		ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	err := retry.Retry(
+		func() error {
+			ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+			defer cancel()
 
-		_, last = cli.RegisterCatalog(ctx, req)
-		cancel()
-
-		if last == nil {
-			return nil
-		}
-
-		time.Sleep(200 * time.Millisecond)
+			_, err := cli.RegisterCatalog(ctx, req)
+			return err
+		},
+		retry.RetryTimes(20),
+		retry.RetryWithLinearBackoff(200*time.Millisecond),
+	)
+	if err != nil {
+		return fmt.Errorf("注册Platform Base目录失败: %w", err)
 	}
 
-	return fmt.Errorf("注册Platform Base目录失败: %w", last)
+	return nil
 }
