@@ -7,6 +7,7 @@ import (
 	"flag"
 	"fmt"
 
+	"oa.98ent.com/p9/platform-base/api/internal/catalog"
 	"oa.98ent.com/p9/platform-base/api/internal/config"
 	"oa.98ent.com/p9/platform-base/api/internal/handler"
 	"oa.98ent.com/p9/platform-base/api/internal/svc"
@@ -42,6 +43,9 @@ func main() {
 
 	// 创建服务上下文
 	ctx := svc.NewServiceContext(c)
+
+	// 注册菜单和API目录
+	logx.Must(catalog.Register(ctx.Core))
 
 	// 开发和测试环境返回调试信息
 	debug := c.Mode == service.DevMode || c.Mode == service.TestMode
