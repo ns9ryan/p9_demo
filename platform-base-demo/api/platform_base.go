@@ -7,9 +7,6 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/core/service"
-	"github.com/zeromicro/go-zero/rest/httpx"
 	"oa.98ent.com/p9/platform-base/api/internal/config"
 	"oa.98ent.com/p9/platform-base/api/internal/handler"
 	"oa.98ent.com/p9/platform-base/api/internal/svc"
@@ -18,7 +15,10 @@ import (
 	"oa.98ent.com/p9/platform-base/pkg/api/validate"
 
 	"github.com/zeromicro/go-zero/core/conf"
+	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/rest"
+	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 var configFile = flag.String("f", "etc/platform_base.yaml", "the config file")
@@ -54,8 +54,14 @@ func main() {
 	// 注册全局成功响应处理器
 	httpx.SetOkHandler(response.Ok)
 
-	// 注册全局语言中间件
+	// 注册Core国际化中间件
+	server.Use(ctx.CoreI18n)
+
+	// 注册API语言中间件
 	server.Use(ctx.Language)
+
+	// 注册全局错误日志中间件
+	server.Use(ctx.ErrorLog)
 
 	// 注册API路由
 	handler.RegisterHandlers(server, ctx)
