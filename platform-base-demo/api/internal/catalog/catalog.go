@@ -7,9 +7,9 @@ import (
 )
 
 const (
-	menuTypeDir    int32 = 0
-	menuTypeMenu   int32 = 1
-	menuTypeButton int32 = 2
+	menuTypeDir    int32 = 0 // 目录
+	menuTypeMenu   int32 = 1 // 菜单
+	menuTypeButton int32 = 2 // 按钮
 )
 
 // PlatformBaseReq 返回Platform Base菜单和API目录
