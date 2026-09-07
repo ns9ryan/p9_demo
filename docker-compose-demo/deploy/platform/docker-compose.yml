@@ -90,6 +90,34 @@ services:
     networks:
       - p9-platform-network
 
+  base-rpc:
+    image: ${DOCKER_REPO:-192.168.0.15:5000/p9}/platform-base-rpc:${VERSION:-1.0.0}
+    container_name: platform-base-rpc
+    restart: always
+    ports:
+      - "19001:19001"
+    volumes:
+      - ./etc/base/rpc/platform_base.yaml:/app/etc/platform_base.yaml:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - p9-platform-network
+
+  base-api:
+    image: ${DOCKER_REPO:-192.168.0.15:5000/p9}/platform-base-api:${VERSION:-1.0.0}
+    container_name: platform-base-api
+    restart: always
+    ports:
+      - "18001:18001"
+    volumes:
+      - ./etc/base/api/platform_base.yaml:/app/etc/platform_base.yaml:ro
+    depends_on:
+      - base-rpc
+      - core-rpc
+    networks:
+      - p9-platform-network
+
 volumes:
   postgres_platform_data:
   redis_platform_data:
