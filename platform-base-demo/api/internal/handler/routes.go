@@ -53,7 +53,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				},
 			}...,
 		),
-		rest.WithPrefix("/currency"),
+		rest.WithPrefix("/admin/currency"),
 	)
 
 	server.AddRoutes(
@@ -92,7 +92,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				},
 			}...,
 		),
-		rest.WithPrefix("/language"),
+		rest.WithPrefix("/admin/language"),
 	)
 
 	server.AddRoutes(
@@ -141,7 +141,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				},
 			}...,
 		),
-		rest.WithPrefix("/region"),
+		rest.WithPrefix("/admin/region"),
 	)
 
 	server.AddRoutes(
@@ -180,6 +180,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				},
 			}...,
 		),
-		rest.WithPrefix("/timezone"),
+		rest.WithPrefix("/admin/timezone"),
 	)
 }

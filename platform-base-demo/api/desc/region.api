@@ -94,7 +94,7 @@ type (
 
 @server (
 	group:      region
-	prefix:     /region
+	prefix:     /admin/region
 	middleware: Jwt,ActionLog,Authority
 )
 service platform_base {
