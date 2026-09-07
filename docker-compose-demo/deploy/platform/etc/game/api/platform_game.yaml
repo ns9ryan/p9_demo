@@ -1,0 +1,22 @@
+# API 服务配置
+Name: platform-game-api
+Host: 0.0.0.0
+Port: 18003
+Timeout: 10000
+
+Kafka:
+  Brokers:
+    - ""
+
+CoreRpc:
+  Target: 192.168.0.15:19000
+  Timeout: 10000
+
+# gRPC 客户端配置（连接到 platform-game-rpc 服务）
+GrpcClient:
+  Target: platform-game-rpc:19003
+  Timeout: 10
+
+# Swagger 配置
+Swagger:
+  Protocol: https

@@ -1,0 +1,17 @@
+Name: operator.node01.core.api
+Host: 0.0.0.0
+Port: 38000
+
+Log:
+  Mode: console
+  Level: info
+
+CROSConf:
+  Address: '*'
+
+CoreRpc:
+  Endpoints:
+    - operator-node01-core-rpc:39000
+  NonBlock: true
+  Timeout: 10000
+

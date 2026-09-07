@@ -1,0 +1,100 @@
+name: p9-platform
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: platform-postgres
+    restart: always
+    ports:
+      - "15432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-app123}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      TZ: Asia/Shanghai
+    volumes:
+      - postgres_platform_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - p9-platform-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: platform-redis
+    restart: always
+    ports:
+      - "16379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_platform_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - p9-platform-network
+
+  core-rpc:
+    image: ${DOCKER_REPO:-192.168.0.15:5000/p9}/core-rpc:${VERSION:-1.0.0}
+    container_name: platform-core-rpc
+    restart: always
+    ports:
+      - "19000:19000"
+    volumes:
+      - ./etc/core/core-rpc.yaml:/app/etc/core.yaml:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - p9-platform-network
+
+  core-api:
+    image: ${DOCKER_REPO:-192.168.0.15:5000/p9}/core-api:${VERSION:-1.0.0}
+    container_name: platform-core-api
+    restart: always
+    ports:
+      - "18000:18000"
+    volumes:
+      - ./etc/core/core-api.yaml:/app/etc/core.yaml:ro
+    depends_on:
+      - core-rpc
+    networks:
+      - p9-platform-network
+
+  game-rpc:
+    image: ${DOCKER_REPO:-192.168.0.15:5000/p9}/platform-game-rpc:${VERSION:-1.0.0}
+    container_name: platform-game-rpc
+    restart: always
+    ports:
+      - "19003:19003"
+    volumes:
+      - ./etc/game/rpc/platform_game.yaml:/app/etc/platform_game.yaml:ro
+    networks:
+      - p9-platform-network
+
+  game-api:
+    image: ${DOCKER_REPO:-192.168.0.15:5000/p9}/platform-game-api:${VERSION:-1.0.0}
+    container_name: platform-game-api
+    restart: always
+    ports:
+      - "18003:18003"
+    volumes:
+      - ./etc/game/api/platform_game.yaml:/app/etc/platform_game.yaml:ro
+    networks:
+      - p9-platform-network
+
+volumes:
+  postgres_platform_data:
+  redis_platform_data:
+
+networks:
+  p9-platform-network:
+    driver: bridge
+

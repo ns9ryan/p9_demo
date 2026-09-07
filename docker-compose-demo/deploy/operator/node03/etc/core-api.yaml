@@ -1,0 +1,17 @@
+Name: operator.node03.core.api
+Host: 0.0.0.0
+Port: 38300
+
+Log:
+  Mode: console
+  Level: info
+
+CROSConf:
+  Address: '*'
+
+CoreRpc:
+  Endpoints:
+    - operator-node03-core-rpc:39300
+  NonBlock: true
+  Timeout: 10000
+

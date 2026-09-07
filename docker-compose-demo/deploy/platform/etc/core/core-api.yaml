@@ -1,0 +1,17 @@
+Name: platform.core.api
+Host: 0.0.0.0
+Port: 18000
+
+Log:
+  Mode: console
+  Level: info
+
+CROSConf:
+  Address: '*'
+
+CoreRpc:
+  Endpoints:
+    - platform-core-rpc:19000
+  NonBlock: true
+  Timeout: 10000
+

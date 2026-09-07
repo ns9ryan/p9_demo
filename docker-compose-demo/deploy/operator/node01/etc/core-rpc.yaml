@@ -1,0 +1,27 @@
+Name: operator.node01.core.rpc
+ListenOn: 0.0.0.0:39000
+Timeout: 10000
+
+Log:
+  Mode: console
+  Level: info
+
+DB:
+  Driver: postgres
+  DSN: "host=postgres user=root password=root dbname=p9_operator port=5432 sslmode=disable TimeZone=UTC"
+
+DataRedis:
+  Host: redis:6379
+  Pass: ""
+  DB: 0
+
+Jwt:
+  AccessSecret: rbacx-example-secret-node01
+  AccessExpire: 86400
+  RefreshSecret: rbacx-example-refresh-secret-node01
+  RefreshExpire: 604800
+
+PartnerMode: "on"
+APIPrefix: /admin
+InitToken: change-me-init-token
+

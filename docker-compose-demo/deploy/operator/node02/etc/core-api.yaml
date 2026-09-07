@@ -1,0 +1,17 @@
+Name: operator.node02.core.api
+Host: 0.0.0.0
+Port: 38200
+
+Log:
+  Mode: console
+  Level: info
+
+CROSConf:
+  Address: '*'
+
+CoreRpc:
+  Endpoints:
+    - operator-node02-core-rpc:39200
+  NonBlock: true
+  Timeout: 10000
+

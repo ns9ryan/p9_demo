@@ -1,0 +1,78 @@
+name: operator-node03
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: operator-node03-postgres
+    restart: always
+    ports:
+      - "15443:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-app123}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      TZ: Asia/Shanghai
+    volumes:
+      - postgres_operator_node03_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - p9-operator-node03-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: operator-node03-redis
+    restart: always
+    ports:
+      - "16383:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_operator_node03_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - p9-operator-node03-network
+
+  core-rpc:
+    image: ${DOCKER_REPO:-192.168.0.15:5000/p9}/core-rpc:${VERSION:-1.0.0}
+    container_name: operator-node03-core-rpc
+    restart: always
+    ports:
+      - "39300:39300"
+    volumes:
+      - ./etc/core-rpc.yaml:/app/etc/core.yaml:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - p9-operator-node03-network
+
+  core-api:
+    image: ${DOCKER_REPO:-192.168.0.15:5000/p9}/core-api:${VERSION:-1.0.0}
+    container_name: operator-node03-core-api
+    restart: always
+    ports:
+      - "38300:38300"
+    volumes:
+      - ./etc/core-api.yaml:/app/etc/core.yaml:ro
+    depends_on:
+      - core-rpc
+    networks:
+      - p9-operator-node03-network
+
+volumes:
+  postgres_operator_node03_data:
+  redis_operator_node03_data:
+
+networks:
+  p9-operator-node03-network:
+    driver: bridge
+
