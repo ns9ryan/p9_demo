@@ -864,6 +864,758 @@
         }
       }
     },
+    "/admin/i18n/create": {
+      "post": {
+        "description": "创建多语言",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "i18n"
+        ],
+        "summary": "创建多语言",
+        "operationId": "i18nCreateI18n",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "i18n_group",
+                "trans_key",
+                "lang",
+                "value"
+              ],
+              "properties": {
+                "i18n_group": {
+                  "description": "Group | 分组",
+                  "type": "string"
+                },
+                "lang": {
+                  "description": "Lang | 语言",
+                  "type": "string"
+                },
+                "trans_key": {
+                  "description": "Key | 词条key",
+                  "type": "string"
+                },
+                "value": {
+                  "description": "Value | 译文",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "created_at": {
+                  "description": "Created at unix | 创建时间",
+                  "type": "integer"
+                },
+                "i18n_group": {
+                  "description": "Group | 分组",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "ID | 词条ID",
+                  "type": "integer"
+                },
+                "lang": {
+                  "description": "Lang | 语言",
+                  "type": "string"
+                },
+                "trans_key": {
+                  "description": "Key | 词条key",
+                  "type": "string"
+                },
+                "updated_at": {
+                  "description": "Updated at unix | 更新时间",
+                  "type": "integer"
+                },
+                "value": {
+                  "description": "Value | 译文",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/i18n/delete": {
+      "post": {
+        "description": "删除多语言",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "i18n"
+        ],
+        "summary": "删除多语言",
+        "operationId": "i18nDeleteI18n",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "ID | 单个ID",
+                  "type": "integer"
+                },
+                "ids": {
+                  "description": "IDs | ID列表",
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/i18n/lang/create": {
+      "post": {
+        "description": "创建支持的语言",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "i18n"
+        ],
+        "summary": "创建支持的语言",
+        "operationId": "i18nCreateI18nLang",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "lang",
+                "name"
+              ],
+              "properties": {
+                "disabled": {
+                  "description": "Disabled | 是否停用",
+                  "type": "integer"
+                },
+                "is_default": {
+                  "description": "Default | 是否默认",
+                  "type": "integer"
+                },
+                "lang": {
+                  "description": "Lang | 语言码",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "Name | 显示名",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "created_at": {
+                  "description": "Created at unix | 创建时间",
+                  "type": "integer"
+                },
+                "disabled": {
+                  "description": "Disabled | 是否停用",
+                  "type": "integer"
+                },
+                "id": {
+                  "description": "ID | 语言ID",
+                  "type": "integer"
+                },
+                "is_default": {
+                  "description": "Default | 是否默认",
+                  "type": "integer"
+                },
+                "lang": {
+                  "description": "Lang | 语言码",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "Name | 显示名",
+                  "type": "string"
+                },
+                "updated_at": {
+                  "description": "Updated at unix | 更新时间",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/i18n/lang/delete": {
+      "post": {
+        "description": "删除支持的语言",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "i18n"
+        ],
+        "summary": "删除支持的语言",
+        "operationId": "i18nDeleteI18nLang",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "ID | 单个ID",
+                  "type": "integer"
+                },
+                "ids": {
+                  "description": "IDs | ID列表",
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/i18n/lang/enabled": {
+      "get": {
+        "description": "已开启的语言列表",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "i18n"
+        ],
+        "summary": "已开启的语言列表",
+        "operationId": "i18nGetEnabledI18nLangs",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "description": "List | 列表",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "lang",
+                      "name",
+                      "disabled",
+                      "is_default",
+                      "created_at",
+                      "updated_at"
+                    ],
+                    "properties": {
+                      "created_at": {
+                        "description": "Created at unix | 创建时间",
+                        "type": "integer"
+                      },
+                      "disabled": {
+                        "description": "Disabled | 是否停用",
+                        "type": "integer"
+                      },
+                      "id": {
+                        "description": "ID | 语言ID",
+                        "type": "integer"
+                      },
+                      "is_default": {
+                        "description": "Default | 是否默认",
+                        "type": "integer"
+                      },
+                      "lang": {
+                        "description": "Lang | 语言码",
+                        "type": "string"
+                      },
+                      "name": {
+                        "description": "Name | 显示名",
+                        "type": "string"
+                      },
+                      "updated_at": {
+                        "description": "Updated at unix | 更新时间",
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "description": "Total | 总数",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/i18n/lang/list": {
+      "post": {
+        "description": "支持的语言列表",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "i18n"
+        ],
+        "summary": "支持的语言列表",
+        "operationId": "i18nGetI18nLangList",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "disabled": {
+                  "description": "Disabled | 停用 0/1，不传不过滤",
+                  "type": "integer"
+                },
+                "lang": {
+                  "description": "Lang | 语言码",
+                  "type": "string"
+                },
+                "page": {
+                  "description": "Page | 页码",
+                  "type": "integer"
+                },
+                "page_size": {
+                  "description": "Page size | 每页条数",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "description": "List | 列表",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "lang",
+                      "name",
+                      "disabled",
+                      "is_default",
+                      "created_at",
+                      "updated_at"
+                    ],
+                    "properties": {
+                      "created_at": {
+                        "description": "Created at unix | 创建时间",
+                        "type": "integer"
+                      },
+                      "disabled": {
+                        "description": "Disabled | 是否停用",
+                        "type": "integer"
+                      },
+                      "id": {
+                        "description": "ID | 语言ID",
+                        "type": "integer"
+                      },
+                      "is_default": {
+                        "description": "Default | 是否默认",
+                        "type": "integer"
+                      },
+                      "lang": {
+                        "description": "Lang | 语言码",
+                        "type": "string"
+                      },
+                      "name": {
+                        "description": "Name | 显示名",
+                        "type": "string"
+                      },
+                      "updated_at": {
+                        "description": "Updated at unix | 更新时间",
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "description": "Total | 总数",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/i18n/lang/update": {
+      "post": {
+        "description": "更新支持的语言",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "i18n"
+        ],
+        "summary": "更新支持的语言",
+        "operationId": "i18nUpdateI18nLang",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "disabled": {
+                  "description": "Disabled | 是否停用",
+                  "type": "integer"
+                },
+                "id": {
+                  "description": "ID | 语言ID",
+                  "type": "integer"
+                },
+                "is_default": {
+                  "description": "Default | 是否默认",
+                  "type": "integer"
+                },
+                "lang": {
+                  "description": "Lang | 语言码",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "Name | 显示名",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/i18n/list": {
+      "post": {
+        "description": "多语言列表",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "i18n"
+        ],
+        "summary": "多语言列表",
+        "operationId": "i18nGetI18nList",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "i18n_group": {
+                  "description": "Group | 分组",
+                  "type": "string"
+                },
+                "lang": {
+                  "description": "Lang | 语言",
+                  "type": "string"
+                },
+                "page": {
+                  "description": "Page | 页码",
+                  "type": "integer"
+                },
+                "page_size": {
+                  "description": "Page size | 每页条数",
+                  "type": "integer"
+                },
+                "trans_key": {
+                  "description": "Key | 词条key",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list": {
+                  "description": "List | 列表",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "i18n_group",
+                      "trans_key",
+                      "lang",
+                      "value",
+                      "created_at",
+                      "updated_at"
+                    ],
+                    "properties": {
+                      "created_at": {
+                        "description": "Created at unix | 创建时间",
+                        "type": "integer"
+                      },
+                      "i18n_group": {
+                        "description": "Group | 分组",
+                        "type": "string"
+                      },
+                      "id": {
+                        "description": "ID | 词条ID",
+                        "type": "integer"
+                      },
+                      "lang": {
+                        "description": "Lang | 语言",
+                        "type": "string"
+                      },
+                      "trans_key": {
+                        "description": "Key | 词条key",
+                        "type": "string"
+                      },
+                      "updated_at": {
+                        "description": "Updated at unix | 更新时间",
+                        "type": "integer"
+                      },
+                      "value": {
+                        "description": "Value | 译文",
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "description": "Total | 总数",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/i18n/update": {
+      "post": {
+        "description": "更新多语言",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "i18n"
+        ],
+        "summary": "更新多语言",
+        "operationId": "i18nUpdateI18n",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "i18n_group": {
+                  "description": "Group | 分组",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "ID | 词条ID",
+                  "type": "integer"
+                },
+                "lang": {
+                  "description": "Lang | 语言",
+                  "type": "string"
+                },
+                "trans_key": {
+                  "description": "Key | 词条key",
+                  "type": "string"
+                },
+                "value": {
+                  "description": "Value | 译文",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/i18n/updateByKey": {
+      "post": {
+        "description": "按词条key更新多语言",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "i18n"
+        ],
+        "summary": "按词条key更新多语言",
+        "operationId": "i18nUpdateI18nByKey",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "trans_key",
+                "data"
+              ],
+              "properties": {
+                "data": {
+                  "description": "Data | 各语言译文",
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "trans_key": {
+                  "description": "Key | 词条key",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/admin/log/action/list": {
       "post": {
         "description": "操作日志列表",
@@ -3929,7 +4681,7 @@
       "Token": []
     }
   ],
-  "x-date": "2026-09-03 14:50:08",
+  "x-date": "2026-09-07 15:18:32",
   "x-description": "This is a goctls generated swagger file.",
   "x-github": "https://github.com/suyuan32/simple-admin-core",
   "x-goctl-version": "v1.14.8",

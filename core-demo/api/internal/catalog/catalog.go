@@ -12,23 +12,29 @@ const (
 	menuTypeButton int32 = 2
 )
 
+// AdminReq 管理员请求(菜单相关种子数据)
 func AdminReq() *coreclient.RegisterCatalogReq {
 	return &coreclient.RegisterCatalogReq{
 		Menus: []*coreclient.RegisterMenuReq{
-			{Name: "Dashboard", Title: "route.dashboard", Path: "/dashboard", MenuType: menuTypeMenu, Component: "dashboard/index", Sort: 1},
-			{Name: "System", Title: "route.system", Path: "/system", MenuType: menuTypeDir, Sort: 10},
-			{Name: "User", Title: "route.user", Path: "/system/user", MenuType: menuTypeMenu, Component: "system/user/index", ParentName: "System", Sort: 11},
-			{Name: "Role", Title: "route.role", Path: "/system/role", MenuType: menuTypeMenu, Component: "system/role/index", ParentName: "System", Sort: 12},
-			{Name: "Menu", Title: "route.menu", Path: "/system/menu", MenuType: menuTypeMenu, Component: "system/menu/index", ParentName: "System", Sort: 13},
-			{Name: "API", Title: "route.api", Path: "/system/api", MenuType: menuTypeMenu, Component: "system/api/index", ParentName: "System", Sort: 14},
-			{Name: "Log", Title: "route.log", Path: "/system/log", MenuType: menuTypeDir, ParentName: "System", Sort: 15},
-			{Name: "LoginLog", Title: "route.loginLog", Path: "/system/log/login", MenuType: menuTypeMenu, Component: "system/log/login/index", ParentName: "Log", Sort: 151},
-			{Name: "ActionLog", Title: "route.actionLog", Path: "/system/log/action", MenuType: menuTypeMenu, Component: "system/log/action/index", ParentName: "Log", Sort: 152},
-			{Name: "ErrorLog", Title: "route.errorLog", Path: "/system/log/error", MenuType: menuTypeMenu, Component: "system/log/error/index", ParentName: "Log", Sort: 153},
-			{Name: "UserCreate", Title: "route.userCreate", MenuType: menuTypeButton, Permission: "user:create", ParentName: "User", Sort: 111},
-			{Name: "RoleCreate", Title: "route.roleCreate", MenuType: menuTypeButton, Permission: "role:create", ParentName: "Role", Sort: 121},
-			{Name: "MenuCreate", Title: "route.menuCreate", MenuType: menuTypeButton, Permission: "menu:create", ParentName: "Menu", Sort: 131},
-			{Name: "APICreate", Title: "route.apiCreate", MenuType: menuTypeButton, Permission: "api:create", ParentName: "API", Sort: 141},
+			{Name: "Dashboard", Title: "menu.route.dashboard", Path: "/dashboard", MenuType: menuTypeMenu, Component: "dashboard/index", Sort: 1},
+			{Name: "System", Title: "menu.route.system", Path: "/system", MenuType: menuTypeDir, Sort: 10},
+			{Name: "User", Title: "menu.route.user", Path: "/system/user", MenuType: menuTypeMenu, Component: "system/user/index", ParentName: "System", Sort: 11},
+			{Name: "Role", Title: "menu.route.role", Path: "/system/role", MenuType: menuTypeMenu, Component: "system/role/index", ParentName: "System", Sort: 12},
+			{Name: "Menu", Title: "menu.route.menu", Path: "/system/menu", MenuType: menuTypeMenu, Component: "system/menu/index", ParentName: "System", Sort: 13},
+			{Name: "API", Title: "menu.route.api", Path: "/system/api", MenuType: menuTypeMenu, Component: "system/api/index", ParentName: "System", Sort: 14},
+			{Name: "I18n", Title: "menu.route.i18n", Path: "/system/i18n", MenuType: menuTypeDir, ParentName: "System", Sort: 16},
+			{Name: "I18nEntry", Title: "menu.route.i18nEntry", Path: "/system/i18n/entry", MenuType: menuTypeMenu, Component: "system/i18n/entry/index", ParentName: "I18n", Sort: 161},
+			{Name: "I18nLang", Title: "menu.route.i18nLang", Path: "/system/i18n/lang", MenuType: menuTypeMenu, Component: "system/i18n/lang/index", ParentName: "I18n", Sort: 162},
+			{Name: "Log", Title: "menu.route.log", Path: "/system/log", MenuType: menuTypeDir, ParentName: "System", Sort: 15},
+			{Name: "LoginLog", Title: "menu.route.loginLog", Path: "/system/log/login", MenuType: menuTypeMenu, Component: "system/log/login/index", ParentName: "Log", Sort: 151},
+			{Name: "ActionLog", Title: "menu.route.actionLog", Path: "/system/log/action", MenuType: menuTypeMenu, Component: "system/log/action/index", ParentName: "Log", Sort: 152},
+			{Name: "ErrorLog", Title: "menu.route.errorLog", Path: "/system/log/error", MenuType: menuTypeMenu, Component: "system/log/error/index", ParentName: "Log", Sort: 153},
+			{Name: "UserCreate", Title: "menu.route.userCreate", MenuType: menuTypeButton, Permission: "user:create", ParentName: "User", Sort: 111},
+			{Name: "RoleCreate", Title: "menu.route.roleCreate", MenuType: menuTypeButton, Permission: "role:create", ParentName: "Role", Sort: 121},
+			{Name: "MenuCreate", Title: "menu.route.menuCreate", MenuType: menuTypeButton, Permission: "menu:create", ParentName: "Menu", Sort: 131},
+			{Name: "APICreate", Title: "menu.route.apiCreate", MenuType: menuTypeButton, Permission: "api:create", ParentName: "API", Sort: 141},
+			{Name: "I18nCreate", Title: "menu.route.i18nCreate", MenuType: menuTypeButton, Permission: "i18n:create", ParentName: "I18nEntry", Sort: 1611},
+			{Name: "I18nLangCreate", Title: "menu.route.i18nLangCreate", MenuType: menuTypeButton, Permission: "i18nLang:create", ParentName: "I18nLang", Sort: 1621},
 		},
 		Apis: []*coreclient.CreateApiReq{
 			{Path: "/admin/operator/self", Method: http.MethodGet, Description: "api.operatorSelf", ApiGroup: "operator", ServiceName: "core-api"},
@@ -60,6 +66,17 @@ func AdminReq() *coreclient.RegisterCatalogReq {
 			{Path: "/admin/log/login/list", Method: http.MethodPost, Description: "api.loginLogList", ApiGroup: "log", ServiceName: "core-api"},
 			{Path: "/admin/log/action/list", Method: http.MethodPost, Description: "api.actionLogList", ApiGroup: "log", ServiceName: "core-api"},
 			{Path: "/admin/log/error/list", Method: http.MethodPost, Description: "api.errorLogList", ApiGroup: "log", ServiceName: "core-api"},
+			{Path: "/admin/i18n/create", Method: http.MethodPost, Description: "api.i18nCreate", ApiGroup: "i18n", ServiceName: "core-api"},
+			{Path: "/admin/i18n/update", Method: http.MethodPost, Description: "api.i18nUpdate", ApiGroup: "i18n", ServiceName: "core-api"},
+			{Path: "/admin/i18n/updateByKey", Method: http.MethodPost, Description: "api.i18nUpdateByKey", ApiGroup: "i18n", ServiceName: "core-api"},
+			{Path: "/admin/i18n/delete", Method: http.MethodPost, Description: "api.i18nDelete", ApiGroup: "i18n", ServiceName: "core-api"},
+			{Path: "/admin/i18n/list", Method: http.MethodPost, Description: "api.i18nList", ApiGroup: "i18n", ServiceName: "core-api"},
+			{Path: "/admin/i18n/lang/create", Method: http.MethodPost, Description: "api.i18nLangCreate", ApiGroup: "i18n", ServiceName: "core-api"},
+			{Path: "/admin/i18n/lang/update", Method: http.MethodPost, Description: "api.i18nLangUpdate", ApiGroup: "i18n", ServiceName: "core-api"},
+			{Path: "/admin/i18n/lang/delete", Method: http.MethodPost, Description: "api.i18nLangDelete", ApiGroup: "i18n", ServiceName: "core-api"},
+			{Path: "/admin/i18n/lang/list", Method: http.MethodPost, Description: "api.i18nLangList", ApiGroup: "i18n", ServiceName: "core-api"},
 		},
+		I18N:      append(menuI18n(), apiI18n()...),
+		I18NLangs: langSeeds(),
 	}
 }

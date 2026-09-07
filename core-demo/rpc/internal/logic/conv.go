@@ -98,6 +98,30 @@ func ToApiInfo(a model.API) *core.ApiInfo {
 	}
 }
 
+func ToI18nInfo(row model.I18n) *core.I18NInfo {
+	return &core.I18NInfo{
+		Id:        row.ID,
+		I18NGroup: row.I18nGroup,
+		TransKey:  row.TransKey,
+		Lang:      row.Lang,
+		Value:     row.Value,
+		CreatedAt: row.CreatedAt.Unix(),
+		UpdatedAt: row.UpdatedAt.Unix(),
+	}
+}
+
+func ToI18nLangInfo(row model.I18nLang) *core.I18NLangInfo {
+	return &core.I18NLangInfo{
+		Id:        row.ID,
+		Lang:      row.Lang,
+		Name:      row.Name,
+		Disabled:  int32(row.Disabled),
+		IsDefault: int32(row.IsDefault),
+		CreatedAt: row.CreatedAt.Unix(),
+		UpdatedAt: row.UpdatedAt.Unix(),
+	}
+}
+
 func ToOperatorInfo(op *model.Operator) *core.OperatorInfo {
 	out := &core.OperatorInfo{
 		Id:                     op.ID,

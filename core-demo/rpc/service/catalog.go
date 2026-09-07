@@ -168,7 +168,10 @@ type RegisterMenuReq struct {
 	ParentName string
 }
 
-func (d *Deps) RegisterCatalog(ctx context.Context, menus []RegisterMenuReq, apis []CreateAPIReq) error {
+func (d *Deps) RegisterCatalog(ctx context.Context, menus []RegisterMenuReq, apis []CreateAPIReq, items []I18nItem, langs []CreateI18nLangReq) error {
+	if err := d.EnsureI18nLangs(ctx, langs); err != nil {
+		return err
+	}
 	for _, m := range menus {
 		if _, err := d.upsertRegisterMenu(ctx, m); err != nil {
 			return err
@@ -179,6 +182,11 @@ func (d *Deps) RegisterCatalog(ctx context.Context, menus []RegisterMenuReq, api
 	}
 	for _, a := range apis {
 		if _, err := d.RegisterAPI(ctx, a); err != nil {
+			return err
+		}
+	}
+	for _, it := range items {
+		if err := d.UpsertI18n(ctx, it); err != nil {
 			return err
 		}
 	}

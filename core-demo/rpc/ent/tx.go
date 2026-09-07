@@ -22,6 +22,10 @@ type Tx struct {
 	CasbinRule *CasbinRuleClient
 	// ErrorLog is the client for interacting with the ErrorLog builders.
 	ErrorLog *ErrorLogClient
+	// I18n is the client for interacting with the I18n builders.
+	I18n *I18nClient
+	// I18nLang is the client for interacting with the I18nLang builders.
+	I18nLang *I18nLangClient
 	// LoginLog is the client for interacting with the LoginLog builders.
 	LoginLog *LoginLogClient
 	// Menu is the client for interacting with the Menu builders.
@@ -167,6 +171,8 @@ func (tx *Tx) init() {
 	tx.AdminActionLog = NewAdminActionLogClient(tx.config)
 	tx.CasbinRule = NewCasbinRuleClient(tx.config)
 	tx.ErrorLog = NewErrorLogClient(tx.config)
+	tx.I18n = NewI18nClient(tx.config)
+	tx.I18nLang = NewI18nLangClient(tx.config)
 	tx.LoginLog = NewLoginLogClient(tx.config)
 	tx.Menu = NewMenuClient(tx.config)
 	tx.Operator = NewOperatorClient(tx.config)

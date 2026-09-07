@@ -16,7 +16,7 @@ rpc/              Core 权限 RPC
   service/        业务实现
 api/              后台 HTTP（/admin/*），只转发 Core RPC
   desc/all.api    入口；desc/core/*.api 按资源拆分
-  internal/catalog  启动时 RegisterCatalog（系统菜单 + 后台 API）
+  internal/catalog  启动时 RegisterCatalog（系统菜单 + 后台 API + 默认语言）
 example/promo-api 业务示例：GET /admin/promo/list
 ```
 
@@ -74,7 +74,7 @@ curl -s localhost:8889/admin/login \
 2. 调 RPC 时传入 HTTP 的 `ctx` 即可，gRPC 会自动带上 metadata。不要挂 Unary Client/Server Interceptor。RPC logic / Ent mixin 用 `ctxdata.ClaimsFromCtx`（无 Value 时从 incoming metadata 还原）。
 3. 业务 Ent schema 嵌入 `entmixin.TimeMixin` + `entmixin.TenantMixin`（`operator_id` 可空）。`claims.OperatorID != 0` 且未 `ctxdata.SkipTenant` 时自动按厅过滤；创建时自动盖章。
 4. `import _ "your/module/ent/runtime"`，启动时 `Schema.Create`。
-5. 菜单和需鉴权的 HTTP path 不要写进 core-rpc。各 HTTP 服务启动时调 RPC `RegisterCatalog`（菜单按 `name` upsert，API 按 method+path upsert，并给各厅 `super_admin` 补授权）。`core-api` 注册系统管理菜单和 `/admin/user|role|menu|api|authority|operator/*`；`example/promo-api` 注册「优惠中心 / 活动列表」和 `GET /admin/promo/list`。若先 bootstrap 再启对应 HTTP 服务，重启一次即可写入。仍可单独调 `RegisterApi`。
+5. 菜单和需鉴权的 HTTP path 不要写进 core-rpc。各 HTTP 服务启动时调 RPC `RegisterCatalog`（菜单按 `name` upsert，API 按 method+path upsert，多语言按 group+key+lang upsert，支持的语言按 `lang` 幂等插入，并给各厅 `super_admin` 补授权）。`core-api` 注册系统管理菜单、`/admin/user|role|menu|api|i18n|authority|operator/*` 和默认语言 `zh-CN` / `zh-HK` / `en-US`；`example/promo-api` 注册「优惠中心 / 活动列表」和 `GET /admin/promo/list`。若先 bootstrap 再启对应 HTTP 服务，重启一次即可写入。仍可单独调 `RegisterApi`。
 
 
 

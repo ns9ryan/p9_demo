@@ -18,6 +18,8 @@ message RegisterMenuReq {
 message RegisterCatalogReq {
   repeated RegisterMenuReq menus = 1;
   repeated CreateApiReq apis = 2;
+  repeated I18nItem i18n = 3;
+  repeated CreateI18nLangReq i18n_langs = 4;
 }
 
 service Core {

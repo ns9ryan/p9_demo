@@ -57,6 +57,30 @@ func (f ErrorLogFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, er
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ErrorLogMutation", m)
 }
 
+// The I18nFunc type is an adapter to allow the use of ordinary
+// function as I18n mutator.
+type I18nFunc func(context.Context, *ent.I18nMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f I18nFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.I18nMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.I18nMutation", m)
+}
+
+// The I18nLangFunc type is an adapter to allow the use of ordinary
+// function as I18nLang mutator.
+type I18nLangFunc func(context.Context, *ent.I18nLangMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f I18nLangFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.I18nLangMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.I18nLangMutation", m)
+}
+
 // The LoginLogFunc type is an adapter to allow the use of ordinary
 // function as LoginLog mutator.
 type LoginLogFunc func(context.Context, *ent.LoginLogMutation) (ent.Value, error)

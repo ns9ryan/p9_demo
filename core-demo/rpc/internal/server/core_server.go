@@ -11,6 +11,7 @@ import (
 	"oa.98ent.com/p9/core/rpc/internal/logic/authority"
 	"oa.98ent.com/p9/core/rpc/internal/logic/base"
 	"oa.98ent.com/p9/core/rpc/internal/logic/catalog"
+	"oa.98ent.com/p9/core/rpc/internal/logic/i18n"
 	"oa.98ent.com/p9/core/rpc/internal/logic/log"
 	"oa.98ent.com/p9/core/rpc/internal/logic/menu"
 	"oa.98ent.com/p9/core/rpc/internal/logic/operator"
@@ -126,6 +127,62 @@ func (s *CoreServer) Ping(ctx context.Context, in *core.Empty) (*core.Empty, err
 func (s *CoreServer) RegisterCatalog(ctx context.Context, in *core.RegisterCatalogReq) (*core.Empty, error) {
 	l := catalog.NewRegisterCatalogLogic(ctx, s.svcCtx)
 	return l.RegisterCatalog(in)
+}
+
+// I18n management
+func (s *CoreServer) CreateI18N(ctx context.Context, in *core.CreateI18NReq) (*core.I18NInfo, error) {
+	l := i18n.NewCreateI18nLogic(ctx, s.svcCtx)
+	return l.CreateI18N(in)
+}
+
+func (s *CoreServer) UpdateI18N(ctx context.Context, in *core.UpdateI18NReq) (*core.Empty, error) {
+	l := i18n.NewUpdateI18nLogic(ctx, s.svcCtx)
+	return l.UpdateI18N(in)
+}
+
+func (s *CoreServer) UpdateI18NByKey(ctx context.Context, in *core.UpdateI18NByKeyReq) (*core.Empty, error) {
+	l := i18n.NewUpdateI18nByKeyLogic(ctx, s.svcCtx)
+	return l.UpdateI18NByKey(in)
+}
+
+func (s *CoreServer) DeleteI18N(ctx context.Context, in *core.IDsReq) (*core.Empty, error) {
+	l := i18n.NewDeleteI18nLogic(ctx, s.svcCtx)
+	return l.DeleteI18N(in)
+}
+
+func (s *CoreServer) GetI18NList(ctx context.Context, in *core.I18NListReq) (*core.I18NListResp, error) {
+	l := i18n.NewGetI18nListLogic(ctx, s.svcCtx)
+	return l.GetI18NList(in)
+}
+
+func (s *CoreServer) GetI18NDict(ctx context.Context, in *core.GetI18NDictReq) (*core.I18NDictResp, error) {
+	l := i18n.NewGetI18nDictLogic(ctx, s.svcCtx)
+	return l.GetI18NDict(in)
+}
+
+func (s *CoreServer) CreateI18NLang(ctx context.Context, in *core.CreateI18NLangReq) (*core.I18NLangInfo, error) {
+	l := i18n.NewCreateI18nLangLogic(ctx, s.svcCtx)
+	return l.CreateI18NLang(in)
+}
+
+func (s *CoreServer) UpdateI18NLang(ctx context.Context, in *core.UpdateI18NLangReq) (*core.Empty, error) {
+	l := i18n.NewUpdateI18nLangLogic(ctx, s.svcCtx)
+	return l.UpdateI18NLang(in)
+}
+
+func (s *CoreServer) DeleteI18NLang(ctx context.Context, in *core.IDsReq) (*core.Empty, error) {
+	l := i18n.NewDeleteI18nLangLogic(ctx, s.svcCtx)
+	return l.DeleteI18NLang(in)
+}
+
+func (s *CoreServer) GetI18NLangList(ctx context.Context, in *core.I18NLangListReq) (*core.I18NLangListResp, error) {
+	l := i18n.NewGetI18nLangListLogic(ctx, s.svcCtx)
+	return l.GetI18NLangList(in)
+}
+
+func (s *CoreServer) GetEnabledI18NLangs(ctx context.Context, in *core.Empty) (*core.I18NLangListResp, error) {
+	l := i18n.NewGetEnabledI18nLangsLogic(ctx, s.svcCtx)
+	return l.GetEnabledI18NLangs(in)
 }
 
 func (s *CoreServer) GetLoginLogList(ctx context.Context, in *core.LoginLogListReq) (*core.LoginLogListResp, error) {

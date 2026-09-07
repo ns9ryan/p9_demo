@@ -174,6 +174,57 @@ var (
 			},
 		},
 	}
+	// SysI18nColumns holds the columns for the "sys_i18n" table.
+	SysI18nColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Increment: true},
+		{Name: "created_at", Type: field.TypeTime, Default: schema.Expr("CURRENT_TIMESTAMP")},
+		{Name: "updated_at", Type: field.TypeTime, Default: schema.Expr("CURRENT_TIMESTAMP")},
+		{Name: "i18n_group", Type: field.TypeString, Size: 64},
+		{Name: "trans_key", Type: field.TypeString, Size: 192},
+		{Name: "lang", Type: field.TypeString, Size: 16},
+		{Name: "value", Type: field.TypeString, Size: 1024},
+	}
+	// SysI18nTable holds the schema information for the "sys_i18n" table.
+	SysI18nTable = &schema.Table{
+		Name:       "sys_i18n",
+		Columns:    SysI18nColumns,
+		PrimaryKey: []*schema.Column{SysI18nColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "uk_sys_i18n_trans_key_lang",
+				Unique:  true,
+				Columns: []*schema.Column{SysI18nColumns[4], SysI18nColumns[5]},
+			},
+			{
+				Name:    "idx_sys_i18n_group_lang",
+				Unique:  false,
+				Columns: []*schema.Column{SysI18nColumns[3], SysI18nColumns[5]},
+			},
+		},
+	}
+	// SysI18nLangColumns holds the columns for the "sys_i18n_lang" table.
+	SysI18nLangColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Increment: true},
+		{Name: "created_at", Type: field.TypeTime, Default: schema.Expr("CURRENT_TIMESTAMP")},
+		{Name: "updated_at", Type: field.TypeTime, Default: schema.Expr("CURRENT_TIMESTAMP")},
+		{Name: "lang", Type: field.TypeString, Size: 16},
+		{Name: "name", Type: field.TypeString, Size: 64, Default: ""},
+		{Name: "disabled", Type: field.TypeInt16, Default: 0},
+		{Name: "is_default", Type: field.TypeInt16, Default: 0},
+	}
+	// SysI18nLangTable holds the schema information for the "sys_i18n_lang" table.
+	SysI18nLangTable = &schema.Table{
+		Name:       "sys_i18n_lang",
+		Columns:    SysI18nLangColumns,
+		PrimaryKey: []*schema.Column{SysI18nLangColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "uk_sys_i18n_lang",
+				Unique:  true,
+				Columns: []*schema.Column{SysI18nLangColumns[3]},
+			},
+		},
+	}
 	// SysLoginLogColumns holds the columns for the "sys_login_log" table.
 	SysLoginLogColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true},
@@ -446,6 +497,8 @@ var (
 		SysAdminActionLogTable,
 		CasbinRuleTable,
 		SysErrorLogTable,
+		SysI18nTable,
+		SysI18nLangTable,
 		SysLoginLogTable,
 		SysMenuTable,
 		OperatorTable,
@@ -470,6 +523,12 @@ func init() {
 	SysErrorLogTable.ForeignKeys[0].RefTable = SysUserTable
 	SysErrorLogTable.Annotation = &entsql.Annotation{
 		Table: "sys_error_log",
+	}
+	SysI18nTable.Annotation = &entsql.Annotation{
+		Table: "sys_i18n",
+	}
+	SysI18nLangTable.Annotation = &entsql.Annotation{
+		Table: "sys_i18n_lang",
 	}
 	SysLoginLogTable.ForeignKeys[0].RefTable = SysUserTable
 	SysLoginLogTable.Annotation = &entsql.Annotation{

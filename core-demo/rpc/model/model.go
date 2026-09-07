@@ -109,6 +109,26 @@ type API struct {
 	UpdatedAt   time.Time `json:"updated_at"`
 }
 
+type I18n struct {
+	ID        int64     `json:"id"`
+	I18nGroup string    `json:"i18n_group"`
+	TransKey  string    `json:"trans_key"`
+	Lang      string    `json:"lang"`
+	Value     string    `json:"value"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+type I18nLang struct {
+	ID        int64     `json:"id"`
+	Lang      string    `json:"lang"`
+	Name      string    `json:"name"`
+	Disabled  int16     `json:"disabled"`
+	IsDefault int16     `json:"is_default"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
 type LoginLog struct {
 	ID            int64     `json:"id"`
 	UserID        *int64    `json:"user_id,omitempty"`

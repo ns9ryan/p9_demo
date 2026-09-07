@@ -15,6 +15,8 @@ import (
 	"oa.98ent.com/p9/core/rpc/ent/api"
 	"oa.98ent.com/p9/core/rpc/ent/casbinrule"
 	"oa.98ent.com/p9/core/rpc/ent/errorlog"
+	"oa.98ent.com/p9/core/rpc/ent/i18n"
+	"oa.98ent.com/p9/core/rpc/ent/i18nlang"
 	"oa.98ent.com/p9/core/rpc/ent/loginlog"
 	"oa.98ent.com/p9/core/rpc/ent/menu"
 	"oa.98ent.com/p9/core/rpc/ent/operator"
@@ -36,6 +38,8 @@ const (
 	TypeAdminActionLog = "AdminActionLog"
 	TypeCasbinRule     = "CasbinRule"
 	TypeErrorLog       = "ErrorLog"
+	TypeI18n           = "I18n"
+	TypeI18nLang       = "I18nLang"
 	TypeLoginLog       = "LoginLog"
 	TypeMenu           = "Menu"
 	TypeOperator       = "Operator"
@@ -4111,6 +4115,1279 @@ func (m *ErrorLogMutation) ResetEdge(name string) error {
 		return nil
 	}
 	return fmt.Errorf("unknown ErrorLog edge %s", name)
+}
+
+// I18nMutation represents an operation that mutates the I18n nodes in the graph.
+type I18nMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int64
+	created_at    *time.Time
+	updated_at    *time.Time
+	i18n_group    *string
+	trans_key     *string
+	lang          *string
+	value         *string
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*I18n, error)
+	predicates    []predicate.I18n
+}
+
+var _ ent.Mutation = (*I18nMutation)(nil)
+
+// i18nOption allows management of the mutation configuration using functional options.
+type i18nOption func(*I18nMutation)
+
+// newI18nMutation creates new mutation for the I18n entity.
+func newI18nMutation(c config, op Op, opts ...i18nOption) *I18nMutation {
+	m := &I18nMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeI18n,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withI18nID sets the ID field of the mutation.
+func withI18nID(id int64) i18nOption {
+	return func(m *I18nMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *I18n
+		)
+		m.oldValue = func(ctx context.Context) (*I18n, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().I18n.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withI18n sets the old I18n of the mutation.
+func withI18n(node *I18n) i18nOption {
+	return func(m *I18nMutation) {
+		m.oldValue = func(context.Context) (*I18n, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m I18nMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m I18nMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of I18n entities.
+func (m *I18nMutation) SetID(id int64) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *I18nMutation) ID() (id int64, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *I18nMutation) IDs(ctx context.Context) ([]int64, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int64{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().I18n.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *I18nMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *I18nMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the I18n entity.
+// If the I18n object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *I18nMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *I18nMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *I18nMutation) SetUpdatedAt(t time.Time) {
+	m.updated_at = &t
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *I18nMutation) UpdatedAt() (r time.Time, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the I18n entity.
+// If the I18n object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *I18nMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *I18nMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+}
+
+// SetI18nGroup sets the "i18n_group" field.
+func (m *I18nMutation) SetI18nGroup(s string) {
+	m.i18n_group = &s
+}
+
+// I18nGroup returns the value of the "i18n_group" field in the mutation.
+func (m *I18nMutation) I18nGroup() (r string, exists bool) {
+	v := m.i18n_group
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldI18nGroup returns the old "i18n_group" field's value of the I18n entity.
+// If the I18n object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *I18nMutation) OldI18nGroup(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldI18nGroup is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldI18nGroup requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldI18nGroup: %w", err)
+	}
+	return oldValue.I18nGroup, nil
+}
+
+// ResetI18nGroup resets all changes to the "i18n_group" field.
+func (m *I18nMutation) ResetI18nGroup() {
+	m.i18n_group = nil
+}
+
+// SetTransKey sets the "trans_key" field.
+func (m *I18nMutation) SetTransKey(s string) {
+	m.trans_key = &s
+}
+
+// TransKey returns the value of the "trans_key" field in the mutation.
+func (m *I18nMutation) TransKey() (r string, exists bool) {
+	v := m.trans_key
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTransKey returns the old "trans_key" field's value of the I18n entity.
+// If the I18n object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *I18nMutation) OldTransKey(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTransKey is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTransKey requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTransKey: %w", err)
+	}
+	return oldValue.TransKey, nil
+}
+
+// ResetTransKey resets all changes to the "trans_key" field.
+func (m *I18nMutation) ResetTransKey() {
+	m.trans_key = nil
+}
+
+// SetLang sets the "lang" field.
+func (m *I18nMutation) SetLang(s string) {
+	m.lang = &s
+}
+
+// Lang returns the value of the "lang" field in the mutation.
+func (m *I18nMutation) Lang() (r string, exists bool) {
+	v := m.lang
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLang returns the old "lang" field's value of the I18n entity.
+// If the I18n object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *I18nMutation) OldLang(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLang is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLang requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLang: %w", err)
+	}
+	return oldValue.Lang, nil
+}
+
+// ResetLang resets all changes to the "lang" field.
+func (m *I18nMutation) ResetLang() {
+	m.lang = nil
+}
+
+// SetValue sets the "value" field.
+func (m *I18nMutation) SetValue(s string) {
+	m.value = &s
+}
+
+// Value returns the value of the "value" field in the mutation.
+func (m *I18nMutation) Value() (r string, exists bool) {
+	v := m.value
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldValue returns the old "value" field's value of the I18n entity.
+// If the I18n object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *I18nMutation) OldValue(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldValue is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldValue requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldValue: %w", err)
+	}
+	return oldValue.Value, nil
+}
+
+// ResetValue resets all changes to the "value" field.
+func (m *I18nMutation) ResetValue() {
+	m.value = nil
+}
+
+// Where appends a list predicates to the I18nMutation builder.
+func (m *I18nMutation) Where(ps ...predicate.I18n) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the I18nMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *I18nMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.I18n, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *I18nMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *I18nMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (I18n).
+func (m *I18nMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *I18nMutation) Fields() []string {
+	fields := make([]string, 0, 6)
+	if m.created_at != nil {
+		fields = append(fields, i18n.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, i18n.FieldUpdatedAt)
+	}
+	if m.i18n_group != nil {
+		fields = append(fields, i18n.FieldI18nGroup)
+	}
+	if m.trans_key != nil {
+		fields = append(fields, i18n.FieldTransKey)
+	}
+	if m.lang != nil {
+		fields = append(fields, i18n.FieldLang)
+	}
+	if m.value != nil {
+		fields = append(fields, i18n.FieldValue)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *I18nMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case i18n.FieldCreatedAt:
+		return m.CreatedAt()
+	case i18n.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case i18n.FieldI18nGroup:
+		return m.I18nGroup()
+	case i18n.FieldTransKey:
+		return m.TransKey()
+	case i18n.FieldLang:
+		return m.Lang()
+	case i18n.FieldValue:
+		return m.Value()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *I18nMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case i18n.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case i18n.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case i18n.FieldI18nGroup:
+		return m.OldI18nGroup(ctx)
+	case i18n.FieldTransKey:
+		return m.OldTransKey(ctx)
+	case i18n.FieldLang:
+		return m.OldLang(ctx)
+	case i18n.FieldValue:
+		return m.OldValue(ctx)
+	}
+	return nil, fmt.Errorf("unknown I18n field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *I18nMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case i18n.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case i18n.FieldUpdatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case i18n.FieldI18nGroup:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetI18nGroup(v)
+		return nil
+	case i18n.FieldTransKey:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTransKey(v)
+		return nil
+	case i18n.FieldLang:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLang(v)
+		return nil
+	case i18n.FieldValue:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetValue(v)
+		return nil
+	}
+	return fmt.Errorf("unknown I18n field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *I18nMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *I18nMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *I18nMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown I18n numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *I18nMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *I18nMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *I18nMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown I18n nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *I18nMutation) ResetField(name string) error {
+	switch name {
+	case i18n.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case i18n.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case i18n.FieldI18nGroup:
+		m.ResetI18nGroup()
+		return nil
+	case i18n.FieldTransKey:
+		m.ResetTransKey()
+		return nil
+	case i18n.FieldLang:
+		m.ResetLang()
+		return nil
+	case i18n.FieldValue:
+		m.ResetValue()
+		return nil
+	}
+	return fmt.Errorf("unknown I18n field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *I18nMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *I18nMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *I18nMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *I18nMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *I18nMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *I18nMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *I18nMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown I18n unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *I18nMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown I18n edge %s", name)
+}
+
+// I18nLangMutation represents an operation that mutates the I18nLang nodes in the graph.
+type I18nLangMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int64
+	created_at    *time.Time
+	updated_at    *time.Time
+	lang          *string
+	name          *string
+	disabled      *int16
+	adddisabled   *int16
+	is_default    *int16
+	addis_default *int16
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*I18nLang, error)
+	predicates    []predicate.I18nLang
+}
+
+var _ ent.Mutation = (*I18nLangMutation)(nil)
+
+// i18nlangOption allows management of the mutation configuration using functional options.
+type i18nlangOption func(*I18nLangMutation)
+
+// newI18nLangMutation creates new mutation for the I18nLang entity.
+func newI18nLangMutation(c config, op Op, opts ...i18nlangOption) *I18nLangMutation {
+	m := &I18nLangMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeI18nLang,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withI18nLangID sets the ID field of the mutation.
+func withI18nLangID(id int64) i18nlangOption {
+	return func(m *I18nLangMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *I18nLang
+		)
+		m.oldValue = func(ctx context.Context) (*I18nLang, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().I18nLang.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withI18nLang sets the old I18nLang of the mutation.
+func withI18nLang(node *I18nLang) i18nlangOption {
+	return func(m *I18nLangMutation) {
+		m.oldValue = func(context.Context) (*I18nLang, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m I18nLangMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m I18nLangMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of I18nLang entities.
+func (m *I18nLangMutation) SetID(id int64) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *I18nLangMutation) ID() (id int64, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *I18nLangMutation) IDs(ctx context.Context) ([]int64, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int64{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().I18nLang.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *I18nLangMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *I18nLangMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the I18nLang entity.
+// If the I18nLang object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *I18nLangMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *I18nLangMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *I18nLangMutation) SetUpdatedAt(t time.Time) {
+	m.updated_at = &t
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *I18nLangMutation) UpdatedAt() (r time.Time, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the I18nLang entity.
+// If the I18nLang object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *I18nLangMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *I18nLangMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+}
+
+// SetLang sets the "lang" field.
+func (m *I18nLangMutation) SetLang(s string) {
+	m.lang = &s
+}
+
+// Lang returns the value of the "lang" field in the mutation.
+func (m *I18nLangMutation) Lang() (r string, exists bool) {
+	v := m.lang
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLang returns the old "lang" field's value of the I18nLang entity.
+// If the I18nLang object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *I18nLangMutation) OldLang(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLang is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLang requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLang: %w", err)
+	}
+	return oldValue.Lang, nil
+}
+
+// ResetLang resets all changes to the "lang" field.
+func (m *I18nLangMutation) ResetLang() {
+	m.lang = nil
+}
+
+// SetName sets the "name" field.
+func (m *I18nLangMutation) SetName(s string) {
+	m.name = &s
+}
+
+// Name returns the value of the "name" field in the mutation.
+func (m *I18nLangMutation) Name() (r string, exists bool) {
+	v := m.name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldName returns the old "name" field's value of the I18nLang entity.
+// If the I18nLang object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *I18nLangMutation) OldName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldName: %w", err)
+	}
+	return oldValue.Name, nil
+}
+
+// ResetName resets all changes to the "name" field.
+func (m *I18nLangMutation) ResetName() {
+	m.name = nil
+}
+
+// SetDisabled sets the "disabled" field.
+func (m *I18nLangMutation) SetDisabled(i int16) {
+	m.disabled = &i
+	m.adddisabled = nil
+}
+
+// Disabled returns the value of the "disabled" field in the mutation.
+func (m *I18nLangMutation) Disabled() (r int16, exists bool) {
+	v := m.disabled
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDisabled returns the old "disabled" field's value of the I18nLang entity.
+// If the I18nLang object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *I18nLangMutation) OldDisabled(ctx context.Context) (v int16, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDisabled is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDisabled requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDisabled: %w", err)
+	}
+	return oldValue.Disabled, nil
+}
+
+// AddDisabled adds i to the "disabled" field.
+func (m *I18nLangMutation) AddDisabled(i int16) {
+	if m.adddisabled != nil {
+		*m.adddisabled += i
+	} else {
+		m.adddisabled = &i
+	}
+}
+
+// AddedDisabled returns the value that was added to the "disabled" field in this mutation.
+func (m *I18nLangMutation) AddedDisabled() (r int16, exists bool) {
+	v := m.adddisabled
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDisabled resets all changes to the "disabled" field.
+func (m *I18nLangMutation) ResetDisabled() {
+	m.disabled = nil
+	m.adddisabled = nil
+}
+
+// SetIsDefault sets the "is_default" field.
+func (m *I18nLangMutation) SetIsDefault(i int16) {
+	m.is_default = &i
+	m.addis_default = nil
+}
+
+// IsDefault returns the value of the "is_default" field in the mutation.
+func (m *I18nLangMutation) IsDefault() (r int16, exists bool) {
+	v := m.is_default
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIsDefault returns the old "is_default" field's value of the I18nLang entity.
+// If the I18nLang object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *I18nLangMutation) OldIsDefault(ctx context.Context) (v int16, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIsDefault is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIsDefault requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIsDefault: %w", err)
+	}
+	return oldValue.IsDefault, nil
+}
+
+// AddIsDefault adds i to the "is_default" field.
+func (m *I18nLangMutation) AddIsDefault(i int16) {
+	if m.addis_default != nil {
+		*m.addis_default += i
+	} else {
+		m.addis_default = &i
+	}
+}
+
+// AddedIsDefault returns the value that was added to the "is_default" field in this mutation.
+func (m *I18nLangMutation) AddedIsDefault() (r int16, exists bool) {
+	v := m.addis_default
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetIsDefault resets all changes to the "is_default" field.
+func (m *I18nLangMutation) ResetIsDefault() {
+	m.is_default = nil
+	m.addis_default = nil
+}
+
+// Where appends a list predicates to the I18nLangMutation builder.
+func (m *I18nLangMutation) Where(ps ...predicate.I18nLang) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the I18nLangMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *I18nLangMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.I18nLang, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *I18nLangMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *I18nLangMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (I18nLang).
+func (m *I18nLangMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *I18nLangMutation) Fields() []string {
+	fields := make([]string, 0, 6)
+	if m.created_at != nil {
+		fields = append(fields, i18nlang.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, i18nlang.FieldUpdatedAt)
+	}
+	if m.lang != nil {
+		fields = append(fields, i18nlang.FieldLang)
+	}
+	if m.name != nil {
+		fields = append(fields, i18nlang.FieldName)
+	}
+	if m.disabled != nil {
+		fields = append(fields, i18nlang.FieldDisabled)
+	}
+	if m.is_default != nil {
+		fields = append(fields, i18nlang.FieldIsDefault)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *I18nLangMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case i18nlang.FieldCreatedAt:
+		return m.CreatedAt()
+	case i18nlang.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case i18nlang.FieldLang:
+		return m.Lang()
+	case i18nlang.FieldName:
+		return m.Name()
+	case i18nlang.FieldDisabled:
+		return m.Disabled()
+	case i18nlang.FieldIsDefault:
+		return m.IsDefault()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *I18nLangMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case i18nlang.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case i18nlang.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case i18nlang.FieldLang:
+		return m.OldLang(ctx)
+	case i18nlang.FieldName:
+		return m.OldName(ctx)
+	case i18nlang.FieldDisabled:
+		return m.OldDisabled(ctx)
+	case i18nlang.FieldIsDefault:
+		return m.OldIsDefault(ctx)
+	}
+	return nil, fmt.Errorf("unknown I18nLang field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *I18nLangMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case i18nlang.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case i18nlang.FieldUpdatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case i18nlang.FieldLang:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLang(v)
+		return nil
+	case i18nlang.FieldName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetName(v)
+		return nil
+	case i18nlang.FieldDisabled:
+		v, ok := value.(int16)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDisabled(v)
+		return nil
+	case i18nlang.FieldIsDefault:
+		v, ok := value.(int16)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsDefault(v)
+		return nil
+	}
+	return fmt.Errorf("unknown I18nLang field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *I18nLangMutation) AddedFields() []string {
+	var fields []string
+	if m.adddisabled != nil {
+		fields = append(fields, i18nlang.FieldDisabled)
+	}
+	if m.addis_default != nil {
+		fields = append(fields, i18nlang.FieldIsDefault)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *I18nLangMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case i18nlang.FieldDisabled:
+		return m.AddedDisabled()
+	case i18nlang.FieldIsDefault:
+		return m.AddedIsDefault()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *I18nLangMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case i18nlang.FieldDisabled:
+		v, ok := value.(int16)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDisabled(v)
+		return nil
+	case i18nlang.FieldIsDefault:
+		v, ok := value.(int16)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddIsDefault(v)
+		return nil
+	}
+	return fmt.Errorf("unknown I18nLang numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *I18nLangMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *I18nLangMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *I18nLangMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown I18nLang nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *I18nLangMutation) ResetField(name string) error {
+	switch name {
+	case i18nlang.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case i18nlang.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case i18nlang.FieldLang:
+		m.ResetLang()
+		return nil
+	case i18nlang.FieldName:
+		m.ResetName()
+		return nil
+	case i18nlang.FieldDisabled:
+		m.ResetDisabled()
+		return nil
+	case i18nlang.FieldIsDefault:
+		m.ResetIsDefault()
+		return nil
+	}
+	return fmt.Errorf("unknown I18nLang field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *I18nLangMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *I18nLangMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *I18nLangMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *I18nLangMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *I18nLangMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *I18nLangMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *I18nLangMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown I18nLang unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *I18nLangMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown I18nLang edge %s", name)
 }
 
 // LoginLogMutation represents an operation that mutates the LoginLog nodes in the graph.

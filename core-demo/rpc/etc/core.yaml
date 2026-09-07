@@ -8,10 +8,10 @@ Log:
 
 DB:
   Driver: postgres
-  DSN: "host=127.0.0.1 user=postgres password=app123 dbname=postgres port=5432 sslmode=disable TimeZone=UTC"
+  DSN: "host=127.0.0.1 user=root password=root dbname=p9_platform port=15432 sslmode=disable TimeZone=UTC"
 
 DataRedis:
-  Host: 127.0.0.1:6379
+  Host: 127.0.0.1:16379
   Pass: ""
   DB: 0
 

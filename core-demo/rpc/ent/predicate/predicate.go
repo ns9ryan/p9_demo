@@ -18,6 +18,12 @@ type CasbinRule func(*sql.Selector)
 // ErrorLog is the predicate function for errorlog builders.
 type ErrorLog func(*sql.Selector)
 
+// I18n is the predicate function for i18n builders.
+type I18n func(*sql.Selector)
+
+// I18nLang is the predicate function for i18nlang builders.
+type I18nLang func(*sql.Selector)
+
 // LoginLog is the predicate function for loginlog builders.
 type LoginLog func(*sql.Selector)
 

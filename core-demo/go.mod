@@ -14,6 +14,7 @@ require (
 	github.com/jackc/pgx/v5 v5.8.0
 	github.com/mattn/go-sqlite3 v1.14.28
 	github.com/nicksnyder/go-i18n/v2 v2.5.1
+	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/redis/go-redis/v9 v9.21.0
 	github.com/zeromicro/go-zero v1.10.3
 	golang.org/x/crypto v0.55.0

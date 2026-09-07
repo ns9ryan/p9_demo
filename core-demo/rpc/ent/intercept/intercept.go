@@ -12,6 +12,8 @@ import (
 	"oa.98ent.com/p9/core/rpc/ent/api"
 	"oa.98ent.com/p9/core/rpc/ent/casbinrule"
 	"oa.98ent.com/p9/core/rpc/ent/errorlog"
+	"oa.98ent.com/p9/core/rpc/ent/i18n"
+	"oa.98ent.com/p9/core/rpc/ent/i18nlang"
 	"oa.98ent.com/p9/core/rpc/ent/loginlog"
 	"oa.98ent.com/p9/core/rpc/ent/menu"
 	"oa.98ent.com/p9/core/rpc/ent/operator"
@@ -184,6 +186,60 @@ func (f TraverseErrorLog) Traverse(ctx context.Context, q ent.Query) error {
 	return fmt.Errorf("unexpected query type %T. expect *ent.ErrorLogQuery", q)
 }
 
+// The I18nFunc type is an adapter to allow the use of ordinary function as a Querier.
+type I18nFunc func(context.Context, *ent.I18nQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f I18nFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.I18nQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.I18nQuery", q)
+}
+
+// The TraverseI18n type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseI18n func(context.Context, *ent.I18nQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraverseI18n) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraverseI18n) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.I18nQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.I18nQuery", q)
+}
+
+// The I18nLangFunc type is an adapter to allow the use of ordinary function as a Querier.
+type I18nLangFunc func(context.Context, *ent.I18nLangQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f I18nLangFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.I18nLangQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.I18nLangQuery", q)
+}
+
+// The TraverseI18nLang type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseI18nLang func(context.Context, *ent.I18nLangQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraverseI18nLang) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraverseI18nLang) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.I18nLangQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.I18nLangQuery", q)
+}
+
 // The LoginLogFunc type is an adapter to allow the use of ordinary function as a Querier.
 type LoginLogFunc func(context.Context, *ent.LoginLogQuery) (ent.Value, error)
 
@@ -330,6 +386,10 @@ func NewQuery(q ent.Query) (Query, error) {
 		return &query[*ent.CasbinRuleQuery, predicate.CasbinRule, casbinrule.OrderOption]{typ: ent.TypeCasbinRule, tq: q}, nil
 	case *ent.ErrorLogQuery:
 		return &query[*ent.ErrorLogQuery, predicate.ErrorLog, errorlog.OrderOption]{typ: ent.TypeErrorLog, tq: q}, nil
+	case *ent.I18nQuery:
+		return &query[*ent.I18nQuery, predicate.I18n, i18n.OrderOption]{typ: ent.TypeI18n, tq: q}, nil
+	case *ent.I18nLangQuery:
+		return &query[*ent.I18nLangQuery, predicate.I18nLang, i18nlang.OrderOption]{typ: ent.TypeI18nLang, tq: q}, nil
 	case *ent.LoginLogQuery:
 		return &query[*ent.LoginLogQuery, predicate.LoginLog, loginlog.OrderOption]{typ: ent.TypeLoginLog, tq: q}, nil
 	case *ent.MenuQuery:

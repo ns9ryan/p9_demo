@@ -16,6 +16,8 @@ import (
 	"oa.98ent.com/p9/core/rpc/ent/api"
 	"oa.98ent.com/p9/core/rpc/ent/casbinrule"
 	"oa.98ent.com/p9/core/rpc/ent/errorlog"
+	"oa.98ent.com/p9/core/rpc/ent/i18n"
+	"oa.98ent.com/p9/core/rpc/ent/i18nlang"
 	"oa.98ent.com/p9/core/rpc/ent/loginlog"
 	"oa.98ent.com/p9/core/rpc/ent/menu"
 	"oa.98ent.com/p9/core/rpc/ent/operator"
@@ -85,6 +87,8 @@ func checkColumn(t, c string) error {
 			adminactionlog.Table: adminactionlog.ValidColumn,
 			casbinrule.Table:     casbinrule.ValidColumn,
 			errorlog.Table:       errorlog.ValidColumn,
+			i18n.Table:           i18n.ValidColumn,
+			i18nlang.Table:       i18nlang.ValidColumn,
 			loginlog.Table:       loginlog.ValidColumn,
 			menu.Table:           menu.ValidColumn,
 			operator.Table:       operator.ValidColumn,

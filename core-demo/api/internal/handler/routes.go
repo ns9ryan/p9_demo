@@ -8,6 +8,7 @@ import (
 
 	api "oa.98ent.com/p9/core/api/internal/handler/api"
 	authority "oa.98ent.com/p9/core/api/internal/handler/authority"
+	i18n "oa.98ent.com/p9/core/api/internal/handler/i18n"
 	log "oa.98ent.com/p9/core/api/internal/handler/log"
 	menu "oa.98ent.com/p9/core/api/internal/handler/menu"
 	operator "oa.98ent.com/p9/core/api/internal/handler/operator"
@@ -248,6 +249,84 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Method:  http.MethodPost,
 					Path:    "/menu/list",
 					Handler: menu.GetMenuListHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/admin"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog},
+			[]rest.Route{
+				{
+					// 已开启的语言列表
+					Method:  http.MethodGet,
+					Path:    "/i18n/lang/enabled",
+					Handler: i18n.GetEnabledI18nLangsHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/admin"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
+			[]rest.Route{
+				{
+					// 创建多语言
+					Method:  http.MethodPost,
+					Path:    "/i18n/create",
+					Handler: i18n.CreateI18nHandler(serverCtx),
+				},
+				{
+					// 更新多语言
+					Method:  http.MethodPost,
+					Path:    "/i18n/update",
+					Handler: i18n.UpdateI18nHandler(serverCtx),
+				},
+				{
+					// 按词条key更新多语言
+					Method:  http.MethodPost,
+					Path:    "/i18n/updateByKey",
+					Handler: i18n.UpdateI18nByKeyHandler(serverCtx),
+				},
+				{
+					// 删除多语言
+					Method:  http.MethodPost,
+					Path:    "/i18n/delete",
+					Handler: i18n.DeleteI18nHandler(serverCtx),
+				},
+				{
+					// 多语言列表
+					Method:  http.MethodPost,
+					Path:    "/i18n/list",
+					Handler: i18n.GetI18nListHandler(serverCtx),
+				},
+				{
+					// 创建支持的语言
+					Method:  http.MethodPost,
+					Path:    "/i18n/lang/create",
+					Handler: i18n.CreateI18nLangHandler(serverCtx),
+				},
+				{
+					// 更新支持的语言
+					Method:  http.MethodPost,
+					Path:    "/i18n/lang/update",
+					Handler: i18n.UpdateI18nLangHandler(serverCtx),
+				},
+				{
+					// 删除支持的语言
+					Method:  http.MethodPost,
+					Path:    "/i18n/lang/delete",
+					Handler: i18n.DeleteI18nLangHandler(serverCtx),
+				},
+				{
+					// 支持的语言列表
+					Method:  http.MethodPost,
+					Path:    "/i18n/lang/list",
+					Handler: i18n.GetI18nLangListHandler(serverCtx),
 				},
 			}...,
 		),

@@ -132,6 +132,46 @@ func apisFromEnt(list []*ent.API) []model.API {
 	return out
 }
 
+func i18nFromEnt(row *ent.I18n) model.I18n {
+	return model.I18n{
+		ID:        row.ID,
+		I18nGroup: row.I18nGroup,
+		TransKey:  row.TransKey,
+		Lang:      row.Lang,
+		Value:     row.Value,
+		CreatedAt: row.CreatedAt,
+		UpdatedAt: row.UpdatedAt,
+	}
+}
+
+func i18nsFromEnt(list []*ent.I18n) []model.I18n {
+	out := make([]model.I18n, 0, len(list))
+	for _, row := range list {
+		out = append(out, i18nFromEnt(row))
+	}
+	return out
+}
+
+func i18nLangFromEnt(row *ent.I18nLang) model.I18nLang {
+	return model.I18nLang{
+		ID:        row.ID,
+		Lang:      row.Lang,
+		Name:      row.Name,
+		Disabled:  row.Disabled,
+		IsDefault: row.IsDefault,
+		CreatedAt: row.CreatedAt,
+		UpdatedAt: row.UpdatedAt,
+	}
+}
+
+func i18nLangsFromEnt(list []*ent.I18nLang) []model.I18nLang {
+	out := make([]model.I18nLang, 0, len(list))
+	for _, row := range list {
+		out = append(out, i18nLangFromEnt(row))
+	}
+	return out
+}
+
 func loginLogFromEnt(row *ent.LoginLog) model.LoginLog {
 	return model.LoginLog{
 		ID:            row.ID,

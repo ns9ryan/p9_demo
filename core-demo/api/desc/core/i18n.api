@@ -1,0 +1,202 @@
+syntax = "v1"
+
+info (
+	title:   "i18n api"
+	desc:    "manage grouped translations"
+	author:  "p9"
+	version: "v1"
+)
+
+import "../base.api"
+
+// I18n info | 多语言词条
+type I18nInfo {
+	// ID | 词条ID
+	Id        int64  `json:"id"`
+	// Group | 分组
+	I18nGroup string `json:"i18n_group"`
+	// Key | 词条key
+	TransKey  string `json:"trans_key"`
+	// Lang | 语言
+	Lang      string `json:"lang"`
+	// Value | 译文
+	Value     string `json:"value"`
+	// Created at unix | 创建时间
+	CreatedAt int64  `json:"created_at"`
+	// Updated at unix | 更新时间
+	UpdatedAt int64  `json:"updated_at"`
+}
+
+// Create i18n request | 创建多语言
+type CreateI18nReq {
+	// Group | 分组
+	I18nGroup string `json:"i18n_group"`
+	// Key | 词条key
+	TransKey  string `json:"trans_key"`
+	// Lang | 语言
+	Lang      string `json:"lang"`
+	// Value | 译文
+	Value     string `json:"value"`
+}
+
+// Update i18n request | 更新多语言
+type UpdateI18nReq {
+	// ID | 词条ID
+	Id        int64  `json:"id"`
+	// Group | 分组
+	I18nGroup string `json:"i18n_group,optional"`
+	// Key | 词条key
+	TransKey  string `json:"trans_key,optional"`
+	// Lang | 语言
+	Lang      string `json:"lang,optional"`
+	// Value | 译文
+	Value     string `json:"value,optional"`
+}
+
+// I18n list request | 多语言列表
+type I18nListReq {
+	// Page | 页码
+	Page      int32  `json:"page,optional"`
+	// Page size | 每页条数
+	PageSize  int32  `json:"page_size,optional"`
+	// Group | 分组
+	I18nGroup string `json:"i18n_group,optional"`
+	// Key | 词条key
+	TransKey  string `json:"trans_key,optional"`
+	// Lang | 语言
+	Lang      string `json:"lang,optional"`
+}
+
+// I18n list response | 多语言列表
+type I18nListResp {
+	// List | 列表
+	List  []I18nInfo `json:"list"`
+	// Total | 总数
+	Total int64      `json:"total"`
+}
+
+// Update i18n by key request | 按词条key更新多语言
+type UpdateI18nByKeyReq {
+	// Key | 词条key
+	TransKey string            `json:"trans_key"`
+	// Data | 各语言译文
+	Data     map[string]string `json:"data"`
+}
+
+// I18n lang info | 支持的语言
+type I18nLangInfo {
+	// ID | 语言ID
+	Id        int64  `json:"id"`
+	// Lang | 语言码
+	Lang      string `json:"lang"`
+	// Name | 显示名
+	Name      string `json:"name"`
+	// Disabled | 是否停用
+	Disabled  int32  `json:"disabled"`
+	// Default | 是否默认
+	IsDefault int32  `json:"is_default"`
+	// Created at unix | 创建时间
+	CreatedAt int64  `json:"created_at"`
+	// Updated at unix | 更新时间
+	UpdatedAt int64  `json:"updated_at"`
+}
+
+// Create i18n lang request | 创建支持的语言
+type CreateI18nLangReq {
+	// Lang | 语言码
+	Lang      string `json:"lang"`
+	// Name | 显示名
+	Name      string `json:"name"`
+	// Disabled | 是否停用
+	Disabled  int32  `json:"disabled,optional"`
+	// Default | 是否默认
+	IsDefault int32  `json:"is_default,optional"`
+}
+
+// Update i18n lang request | 更新支持的语言
+type UpdateI18nLangReq {
+	// ID | 语言ID
+	Id        int64  `json:"id"`
+	// Lang | 语言码
+	Lang      string `json:"lang,optional"`
+	// Name | 显示名
+	Name      string `json:"name,optional"`
+	// Disabled | 是否停用
+	Disabled  *int32 `json:"disabled,optional"`
+	// Default | 是否默认
+	IsDefault *int32 `json:"is_default,optional"`
+}
+
+// I18n lang list request | 支持的语言列表
+type I18nLangListReq {
+	// Page | 页码
+	Page     int32  `json:"page,optional"`
+	// Page size | 每页条数
+	PageSize int32  `json:"page_size,optional"`
+	// Lang | 语言码
+	Lang     string `json:"lang,optional"`
+	// Disabled | 停用 0/1，不传不过滤
+	Disabled *int32 `json:"disabled,optional"`
+}
+
+// I18n lang list response | 支持的语言列表
+type I18nLangListResp {
+	// List | 列表
+	List  []I18nLangInfo `json:"list"`
+	// Total | 总数
+	Total int64          `json:"total"`
+}
+
+@server (
+	prefix:     /admin
+	group:      i18n
+	middleware: Jwt,ActionLog
+)
+service Core {
+	@doc "已开启的语言列表"
+	@handler getEnabledI18nLangs
+	get /i18n/lang/enabled returns (I18nLangListResp)
+}
+
+@server (
+	prefix:     /admin
+	group:      i18n
+	middleware: Jwt,ActionLog,Authority
+)
+service Core {
+	@doc "创建多语言"
+	@handler createI18n
+	post /i18n/create (CreateI18nReq) returns (I18nInfo)
+
+	@doc "更新多语言"
+	@handler updateI18n
+	post /i18n/update (UpdateI18nReq) returns (BaseMsgResp)
+
+	@doc "按词条key更新多语言"
+	@handler updateI18nByKey
+	post /i18n/updateByKey (UpdateI18nByKeyReq) returns (BaseMsgResp)
+
+	@doc "删除多语言"
+	@handler deleteI18n
+	post /i18n/delete (IDsReq) returns (BaseMsgResp)
+
+	@doc "多语言列表"
+	@handler getI18nList
+	post /i18n/list (I18nListReq) returns (I18nListResp)
+
+	@doc "创建支持的语言"
+	@handler createI18nLang
+	post /i18n/lang/create (CreateI18nLangReq) returns (I18nLangInfo)
+
+	@doc "更新支持的语言"
+	@handler updateI18nLang
+	post /i18n/lang/update (UpdateI18nLangReq) returns (BaseMsgResp)
+
+	@doc "删除支持的语言"
+	@handler deleteI18nLang
+	post /i18n/lang/delete (IDsReq) returns (BaseMsgResp)
+
+	@doc "支持的语言列表"
+	@handler getI18nLangList
+	post /i18n/lang/list (I18nLangListReq) returns (I18nLangListResp)
+}

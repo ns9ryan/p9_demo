@@ -66,6 +66,23 @@ const (
 	AuthorityCannotChangeSystemMenus = "authority.cannotChangeSystemMenus"
 	AuthorityCannotChangeSystemAPIs  = "authority.cannotChangeSystemApis"
 
+	I18nGroupKeyLangRequired        = "i18n.groupKeyLangRequired"
+	I18nTransKeyRequired            = "i18n.transKeyRequired"
+	I18nDataRequired                = "i18n.dataRequired"
+	I18nExists                      = "i18n.exists"
+	I18nCreateFailed                = "i18n.createFailed"
+	I18nNotFound                    = "i18n.notFound"
+	I18nLangRequired                = "i18n.langRequired"
+	I18nNameRequired                = "i18n.nameRequired"
+	I18nLangExists                  = "i18n.langExists"
+	I18nLangNotFound                = "i18n.langNotFound"
+	I18nLangNotSupported            = "i18n.langNotSupported"
+	I18nLangCreateFailed            = "i18n.langCreateFailed"
+	I18nCannotDisableDefault        = "i18n.cannotDisableDefault"
+	I18nCannotDeleteDefault         = "i18n.cannotDeleteDefault"
+	I18nCannotChangeLangWithEntries = "i18n.cannotChangeLangWithEntries"
+	I18nCannotDeleteLangWithEntries = "i18n.cannotDeleteLangWithEntries"
+
 	LoginLogResultSuccess = "loginLog.resultSuccess"
 	LoginLogResultFail    = "loginLog.resultFail"
 )

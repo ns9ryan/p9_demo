@@ -461,6 +461,144 @@ type UpdateMenuReq struct {
 	Disabled *int32 `json:"disabled,optional"`
 }
 
+// I18n info | 多语言词条
+type I18nInfo struct {
+	// ID | 词条ID
+	Id int64 `json:"id"`
+	// Group | 分组
+	I18nGroup string `json:"i18n_group"`
+	// Key | 词条key
+	TransKey string `json:"trans_key"`
+	// Lang | 语言
+	Lang string `json:"lang"`
+	// Value | 译文
+	Value string `json:"value"`
+	// Created at unix | 创建时间
+	CreatedAt int64 `json:"created_at"`
+	// Updated at unix | 更新时间
+	UpdatedAt int64 `json:"updated_at"`
+}
+
+// Create i18n request | 创建多语言
+type CreateI18nReq struct {
+	// Group | 分组
+	I18nGroup string `json:"i18n_group"`
+	// Key | 词条key
+	TransKey string `json:"trans_key"`
+	// Lang | 语言
+	Lang string `json:"lang"`
+	// Value | 译文
+	Value string `json:"value"`
+}
+
+// Update i18n request | 更新多语言
+type UpdateI18nReq struct {
+	// ID | 词条ID
+	Id int64 `json:"id"`
+	// Group | 分组
+	I18nGroup string `json:"i18n_group,optional"`
+	// Key | 词条key
+	TransKey string `json:"trans_key,optional"`
+	// Lang | 语言
+	Lang string `json:"lang,optional"`
+	// Value | 译文
+	Value string `json:"value,optional"`
+}
+
+// I18n list request | 多语言列表
+type I18nListReq struct {
+	// Page | 页码
+	Page int32 `json:"page,optional"`
+	// Page size | 每页条数
+	PageSize int32 `json:"page_size,optional"`
+	// Group | 分组
+	I18nGroup string `json:"i18n_group,optional"`
+	// Key | 词条key
+	TransKey string `json:"trans_key,optional"`
+	// Lang | 语言
+	Lang string `json:"lang,optional"`
+}
+
+// I18n list response | 多语言列表
+type I18nListResp struct {
+	// List | 列表
+	List []I18nInfo `json:"list"`
+	// Total | 总数
+	Total int64 `json:"total"`
+}
+
+// Update i18n by key request | 按词条key更新多语言
+type UpdateI18nByKeyReq struct {
+	// Key | 词条key
+	TransKey string `json:"trans_key"`
+	// Data | 各语言译文
+	Data map[string]string `json:"data"`
+}
+
+// I18n lang info | 支持的语言
+type I18nLangInfo struct {
+	// ID | 语言ID
+	Id int64 `json:"id"`
+	// Lang | 语言码
+	Lang string `json:"lang"`
+	// Name | 显示名
+	Name string `json:"name"`
+	// Disabled | 是否停用
+	Disabled int32 `json:"disabled"`
+	// Default | 是否默认
+	IsDefault int32 `json:"is_default"`
+	// Created at unix | 创建时间
+	CreatedAt int64 `json:"created_at"`
+	// Updated at unix | 更新时间
+	UpdatedAt int64 `json:"updated_at"`
+}
+
+// Create i18n lang request | 创建支持的语言
+type CreateI18nLangReq struct {
+	// Lang | 语言码
+	Lang string `json:"lang"`
+	// Name | 显示名
+	Name string `json:"name"`
+	// Disabled | 是否停用
+	Disabled int32 `json:"disabled,optional"`
+	// Default | 是否默认
+	IsDefault int32 `json:"is_default,optional"`
+}
+
+// Update i18n lang request | 更新支持的语言
+type UpdateI18nLangReq struct {
+	// ID | 语言ID
+	Id int64 `json:"id"`
+	// Lang | 语言码
+	Lang string `json:"lang,optional"`
+	// Name | 显示名
+	Name string `json:"name,optional"`
+	// Disabled | 是否停用
+	Disabled *int32 `json:"disabled,optional"`
+	// Default | 是否默认
+	IsDefault *int32 `json:"is_default,optional"`
+}
+
+// I18n lang list request | 支持的语言列表
+type I18nLangListReq struct {
+	// Page | 页码
+	Page int32 `json:"page,optional"`
+	// Page size | 每页条数
+	PageSize int32 `json:"page_size,optional"`
+	// Lang | 语言码
+	Lang string `json:"lang,optional"`
+	// Disabled | 停用 0/1，不传不过滤
+	Disabled *int32 `json:"disabled,optional"`
+}
+
+// I18n lang list response | 支持的语言列表
+type I18nLangListResp struct {
+	// List | 列表
+	List []I18nLangInfo `json:"list"`
+	// Total | 总数
+	Total int64 `json:"total"`
+}
+
 // Create API request | 创建接口
 type CreateApiReq struct {
 	// Description | 描述

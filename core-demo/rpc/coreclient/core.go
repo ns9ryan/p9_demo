@@ -30,6 +30,8 @@ type (
 	CreateAdminActionLogReq = core.CreateAdminActionLogReq
 	CreateApiReq            = core.CreateApiReq
 	CreateErrorLogReq       = core.CreateErrorLogReq
+	CreateI18NLangReq       = core.CreateI18NLangReq
+	CreateI18NReq           = core.CreateI18NReq
 	CreateMenuReq           = core.CreateMenuReq
 	CreateRoleReq           = core.CreateRoleReq
 	CreateUserReq           = core.CreateUserReq
@@ -39,6 +41,15 @@ type (
 	ErrorLogInfo            = core.ErrorLogInfo
 	ErrorLogListReq         = core.ErrorLogListReq
 	ErrorLogListResp        = core.ErrorLogListResp
+	GetI18NDictReq          = core.GetI18NDictReq
+	I18NDictResp            = core.I18NDictResp
+	I18NInfo                = core.I18NInfo
+	I18NItem                = core.I18NItem
+	I18NLangInfo            = core.I18NLangInfo
+	I18NLangListReq         = core.I18NLangListReq
+	I18NLangListResp        = core.I18NLangListResp
+	I18NListReq             = core.I18NListReq
+	I18NListResp            = core.I18NListResp
 	IDReq                   = core.IDReq
 	IDsReq                  = core.IDsReq
 	IssuePreviewTokenReq    = core.IssuePreviewTokenReq
@@ -69,6 +80,9 @@ type (
 	SelfPasswordReq         = core.SelfPasswordReq
 	TokenInfo               = core.TokenInfo
 	UpdateApiReq            = core.UpdateApiReq
+	UpdateI18NByKeyReq      = core.UpdateI18NByKeyReq
+	UpdateI18NLangReq       = core.UpdateI18NLangReq
+	UpdateI18NReq           = core.UpdateI18NReq
 	UpdateMenuReq           = core.UpdateMenuReq
 	UpdateOperatorReq       = core.UpdateOperatorReq
 	UpdateRoleReq           = core.UpdateRoleReq
@@ -99,6 +113,18 @@ type (
 		GetApiAuthority(ctx context.Context, in *RoleIdReq, opts ...grpc.CallOption) (*ApiAuthResp, error)
 		Ping(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
 		RegisterCatalog(ctx context.Context, in *RegisterCatalogReq, opts ...grpc.CallOption) (*Empty, error)
+		// I18n management
+		CreateI18N(ctx context.Context, in *CreateI18NReq, opts ...grpc.CallOption) (*I18NInfo, error)
+		UpdateI18N(ctx context.Context, in *UpdateI18NReq, opts ...grpc.CallOption) (*Empty, error)
+		UpdateI18NByKey(ctx context.Context, in *UpdateI18NByKeyReq, opts ...grpc.CallOption) (*Empty, error)
+		DeleteI18N(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*Empty, error)
+		GetI18NList(ctx context.Context, in *I18NListReq, opts ...grpc.CallOption) (*I18NListResp, error)
+		GetI18NDict(ctx context.Context, in *GetI18NDictReq, opts ...grpc.CallOption) (*I18NDictResp, error)
+		CreateI18NLang(ctx context.Context, in *CreateI18NLangReq, opts ...grpc.CallOption) (*I18NLangInfo, error)
+		UpdateI18NLang(ctx context.Context, in *UpdateI18NLangReq, opts ...grpc.CallOption) (*Empty, error)
+		DeleteI18NLang(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*Empty, error)
+		GetI18NLangList(ctx context.Context, in *I18NLangListReq, opts ...grpc.CallOption) (*I18NLangListResp, error)
+		GetEnabledI18NLangs(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*I18NLangListResp, error)
 		GetLoginLogList(ctx context.Context, in *LoginLogListReq, opts ...grpc.CallOption) (*LoginLogListResp, error)
 		CreateAdminActionLog(ctx context.Context, in *CreateAdminActionLogReq, opts ...grpc.CallOption) (*Empty, error)
 		GetAdminActionLogList(ctx context.Context, in *AdminActionLogListReq, opts ...grpc.CallOption) (*AdminActionLogListResp, error)
@@ -239,6 +265,62 @@ func (m *defaultCore) Ping(ctx context.Context, in *Empty, opts ...grpc.CallOpti
 func (m *defaultCore) RegisterCatalog(ctx context.Context, in *RegisterCatalogReq, opts ...grpc.CallOption) (*Empty, error) {
 	client := core.NewCoreClient(m.cli.Conn())
 	return client.RegisterCatalog(ctx, in, opts...)
+}
+
+// I18n management
+func (m *defaultCore) CreateI18N(ctx context.Context, in *CreateI18NReq, opts ...grpc.CallOption) (*I18NInfo, error) {
+	client := core.NewCoreClient(m.cli.Conn())
+	return client.CreateI18N(ctx, in, opts...)
+}
+
+func (m *defaultCore) UpdateI18N(ctx context.Context, in *UpdateI18NReq, opts ...grpc.CallOption) (*Empty, error) {
+	client := core.NewCoreClient(m.cli.Conn())
+	return client.UpdateI18N(ctx, in, opts...)
+}
+
+func (m *defaultCore) UpdateI18NByKey(ctx context.Context, in *UpdateI18NByKeyReq, opts ...grpc.CallOption) (*Empty, error) {
+	client := core.NewCoreClient(m.cli.Conn())
+	return client.UpdateI18NByKey(ctx, in, opts...)
+}
+
+func (m *defaultCore) DeleteI18N(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*Empty, error) {
+	client := core.NewCoreClient(m.cli.Conn())
+	return client.DeleteI18N(ctx, in, opts...)
+}
+
+func (m *defaultCore) GetI18NList(ctx context.Context, in *I18NListReq, opts ...grpc.CallOption) (*I18NListResp, error) {
+	client := core.NewCoreClient(m.cli.Conn())
+	return client.GetI18NList(ctx, in, opts...)
+}
+
+func (m *defaultCore) GetI18NDict(ctx context.Context, in *GetI18NDictReq, opts ...grpc.CallOption) (*I18NDictResp, error) {
+	client := core.NewCoreClient(m.cli.Conn())
+	return client.GetI18NDict(ctx, in, opts...)
+}
+
+func (m *defaultCore) CreateI18NLang(ctx context.Context, in *CreateI18NLangReq, opts ...grpc.CallOption) (*I18NLangInfo, error) {
+	client := core.NewCoreClient(m.cli.Conn())
+	return client.CreateI18NLang(ctx, in, opts...)
+}
+
+func (m *defaultCore) UpdateI18NLang(ctx context.Context, in *UpdateI18NLangReq, opts ...grpc.CallOption) (*Empty, error) {
+	client := core.NewCoreClient(m.cli.Conn())
+	return client.UpdateI18NLang(ctx, in, opts...)
+}
+
+func (m *defaultCore) DeleteI18NLang(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*Empty, error) {
+	client := core.NewCoreClient(m.cli.Conn())
+	return client.DeleteI18NLang(ctx, in, opts...)
+}
+
+func (m *defaultCore) GetI18NLangList(ctx context.Context, in *I18NLangListReq, opts ...grpc.CallOption) (*I18NLangListResp, error) {
+	client := core.NewCoreClient(m.cli.Conn())
+	return client.GetI18NLangList(ctx, in, opts...)
+}
+
+func (m *defaultCore) GetEnabledI18NLangs(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*I18NLangListResp, error) {
+	client := core.NewCoreClient(m.cli.Conn())
+	return client.GetEnabledI18NLangs(ctx, in, opts...)
 }
 
 func (m *defaultCore) GetLoginLogList(ctx context.Context, in *LoginLogListReq, opts ...grpc.CallOption) (*LoginLogListResp, error) {

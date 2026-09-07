@@ -38,6 +38,17 @@ const (
 	Core_GetApiAuthority_FullMethodName       = "/core.Core/getApiAuthority"
 	Core_Ping_FullMethodName                  = "/core.Core/ping"
 	Core_RegisterCatalog_FullMethodName       = "/core.Core/registerCatalog"
+	Core_CreateI18N_FullMethodName            = "/core.Core/createI18n"
+	Core_UpdateI18N_FullMethodName            = "/core.Core/updateI18n"
+	Core_UpdateI18NByKey_FullMethodName       = "/core.Core/updateI18nByKey"
+	Core_DeleteI18N_FullMethodName            = "/core.Core/deleteI18n"
+	Core_GetI18NList_FullMethodName           = "/core.Core/getI18nList"
+	Core_GetI18NDict_FullMethodName           = "/core.Core/getI18nDict"
+	Core_CreateI18NLang_FullMethodName        = "/core.Core/createI18nLang"
+	Core_UpdateI18NLang_FullMethodName        = "/core.Core/updateI18nLang"
+	Core_DeleteI18NLang_FullMethodName        = "/core.Core/deleteI18nLang"
+	Core_GetI18NLangList_FullMethodName       = "/core.Core/getI18nLangList"
+	Core_GetEnabledI18NLangs_FullMethodName   = "/core.Core/getEnabledI18nLangs"
 	Core_GetLoginLogList_FullMethodName       = "/core.Core/getLoginLogList"
 	Core_CreateAdminActionLog_FullMethodName  = "/core.Core/createAdminActionLog"
 	Core_GetAdminActionLogList_FullMethodName = "/core.Core/getAdminActionLogList"
@@ -112,6 +123,29 @@ type CoreClient interface {
 	Ping(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
 	// group: catalog
 	RegisterCatalog(ctx context.Context, in *RegisterCatalogReq, opts ...grpc.CallOption) (*Empty, error)
+	// I18n management
+	// group: i18n
+	CreateI18N(ctx context.Context, in *CreateI18NReq, opts ...grpc.CallOption) (*I18NInfo, error)
+	// group: i18n
+	UpdateI18N(ctx context.Context, in *UpdateI18NReq, opts ...grpc.CallOption) (*Empty, error)
+	// group: i18n
+	UpdateI18NByKey(ctx context.Context, in *UpdateI18NByKeyReq, opts ...grpc.CallOption) (*Empty, error)
+	// group: i18n
+	DeleteI18N(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*Empty, error)
+	// group: i18n
+	GetI18NList(ctx context.Context, in *I18NListReq, opts ...grpc.CallOption) (*I18NListResp, error)
+	// group: i18n
+	GetI18NDict(ctx context.Context, in *GetI18NDictReq, opts ...grpc.CallOption) (*I18NDictResp, error)
+	// group: i18n
+	CreateI18NLang(ctx context.Context, in *CreateI18NLangReq, opts ...grpc.CallOption) (*I18NLangInfo, error)
+	// group: i18n
+	UpdateI18NLang(ctx context.Context, in *UpdateI18NLangReq, opts ...grpc.CallOption) (*Empty, error)
+	// group: i18n
+	DeleteI18NLang(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*Empty, error)
+	// group: i18n
+	GetI18NLangList(ctx context.Context, in *I18NLangListReq, opts ...grpc.CallOption) (*I18NLangListResp, error)
+	// group: i18n
+	GetEnabledI18NLangs(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*I18NLangListResp, error)
 	// group: log
 	GetLoginLogList(ctx context.Context, in *LoginLogListReq, opts ...grpc.CallOption) (*LoginLogListResp, error)
 	// group: log
@@ -366,6 +400,116 @@ func (c *coreClient) RegisterCatalog(ctx context.Context, in *RegisterCatalogReq
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Empty)
 	err := c.cc.Invoke(ctx, Core_RegisterCatalog_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *coreClient) CreateI18N(ctx context.Context, in *CreateI18NReq, opts ...grpc.CallOption) (*I18NInfo, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(I18NInfo)
+	err := c.cc.Invoke(ctx, Core_CreateI18N_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *coreClient) UpdateI18N(ctx context.Context, in *UpdateI18NReq, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, Core_UpdateI18N_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *coreClient) UpdateI18NByKey(ctx context.Context, in *UpdateI18NByKeyReq, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, Core_UpdateI18NByKey_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *coreClient) DeleteI18N(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, Core_DeleteI18N_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *coreClient) GetI18NList(ctx context.Context, in *I18NListReq, opts ...grpc.CallOption) (*I18NListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(I18NListResp)
+	err := c.cc.Invoke(ctx, Core_GetI18NList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *coreClient) GetI18NDict(ctx context.Context, in *GetI18NDictReq, opts ...grpc.CallOption) (*I18NDictResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(I18NDictResp)
+	err := c.cc.Invoke(ctx, Core_GetI18NDict_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *coreClient) CreateI18NLang(ctx context.Context, in *CreateI18NLangReq, opts ...grpc.CallOption) (*I18NLangInfo, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(I18NLangInfo)
+	err := c.cc.Invoke(ctx, Core_CreateI18NLang_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *coreClient) UpdateI18NLang(ctx context.Context, in *UpdateI18NLangReq, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, Core_UpdateI18NLang_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *coreClient) DeleteI18NLang(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, Core_DeleteI18NLang_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *coreClient) GetI18NLangList(ctx context.Context, in *I18NLangListReq, opts ...grpc.CallOption) (*I18NLangListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(I18NLangListResp)
+	err := c.cc.Invoke(ctx, Core_GetI18NLangList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *coreClient) GetEnabledI18NLangs(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*I18NLangListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(I18NLangListResp)
+	err := c.cc.Invoke(ctx, Core_GetEnabledI18NLangs_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -696,6 +840,29 @@ type CoreServer interface {
 	Ping(context.Context, *Empty) (*Empty, error)
 	// group: catalog
 	RegisterCatalog(context.Context, *RegisterCatalogReq) (*Empty, error)
+	// I18n management
+	// group: i18n
+	CreateI18N(context.Context, *CreateI18NReq) (*I18NInfo, error)
+	// group: i18n
+	UpdateI18N(context.Context, *UpdateI18NReq) (*Empty, error)
+	// group: i18n
+	UpdateI18NByKey(context.Context, *UpdateI18NByKeyReq) (*Empty, error)
+	// group: i18n
+	DeleteI18N(context.Context, *IDsReq) (*Empty, error)
+	// group: i18n
+	GetI18NList(context.Context, *I18NListReq) (*I18NListResp, error)
+	// group: i18n
+	GetI18NDict(context.Context, *GetI18NDictReq) (*I18NDictResp, error)
+	// group: i18n
+	CreateI18NLang(context.Context, *CreateI18NLangReq) (*I18NLangInfo, error)
+	// group: i18n
+	UpdateI18NLang(context.Context, *UpdateI18NLangReq) (*Empty, error)
+	// group: i18n
+	DeleteI18NLang(context.Context, *IDsReq) (*Empty, error)
+	// group: i18n
+	GetI18NLangList(context.Context, *I18NLangListReq) (*I18NLangListResp, error)
+	// group: i18n
+	GetEnabledI18NLangs(context.Context, *Empty) (*I18NLangListResp, error)
 	// group: log
 	GetLoginLogList(context.Context, *LoginLogListReq) (*LoginLogListResp, error)
 	// group: log
@@ -822,6 +989,39 @@ func (UnimplementedCoreServer) Ping(context.Context, *Empty) (*Empty, error) {
 }
 func (UnimplementedCoreServer) RegisterCatalog(context.Context, *RegisterCatalogReq) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterCatalog not implemented")
+}
+func (UnimplementedCoreServer) CreateI18N(context.Context, *CreateI18NReq) (*I18NInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateI18N not implemented")
+}
+func (UnimplementedCoreServer) UpdateI18N(context.Context, *UpdateI18NReq) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateI18N not implemented")
+}
+func (UnimplementedCoreServer) UpdateI18NByKey(context.Context, *UpdateI18NByKeyReq) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateI18NByKey not implemented")
+}
+func (UnimplementedCoreServer) DeleteI18N(context.Context, *IDsReq) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteI18N not implemented")
+}
+func (UnimplementedCoreServer) GetI18NList(context.Context, *I18NListReq) (*I18NListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetI18NList not implemented")
+}
+func (UnimplementedCoreServer) GetI18NDict(context.Context, *GetI18NDictReq) (*I18NDictResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetI18NDict not implemented")
+}
+func (UnimplementedCoreServer) CreateI18NLang(context.Context, *CreateI18NLangReq) (*I18NLangInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateI18NLang not implemented")
+}
+func (UnimplementedCoreServer) UpdateI18NLang(context.Context, *UpdateI18NLangReq) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateI18NLang not implemented")
+}
+func (UnimplementedCoreServer) DeleteI18NLang(context.Context, *IDsReq) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteI18NLang not implemented")
+}
+func (UnimplementedCoreServer) GetI18NLangList(context.Context, *I18NLangListReq) (*I18NLangListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetI18NLangList not implemented")
+}
+func (UnimplementedCoreServer) GetEnabledI18NLangs(context.Context, *Empty) (*I18NLangListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetEnabledI18NLangs not implemented")
 }
 func (UnimplementedCoreServer) GetLoginLogList(context.Context, *LoginLogListReq) (*LoginLogListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLoginLogList not implemented")
@@ -1266,6 +1466,204 @@ func _Core_RegisterCatalog_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CoreServer).RegisterCatalog(ctx, req.(*RegisterCatalogReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Core_CreateI18N_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateI18NReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoreServer).CreateI18N(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Core_CreateI18N_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoreServer).CreateI18N(ctx, req.(*CreateI18NReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Core_UpdateI18N_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateI18NReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoreServer).UpdateI18N(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Core_UpdateI18N_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoreServer).UpdateI18N(ctx, req.(*UpdateI18NReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Core_UpdateI18NByKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateI18NByKeyReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoreServer).UpdateI18NByKey(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Core_UpdateI18NByKey_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoreServer).UpdateI18NByKey(ctx, req.(*UpdateI18NByKeyReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Core_DeleteI18N_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IDsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoreServer).DeleteI18N(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Core_DeleteI18N_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoreServer).DeleteI18N(ctx, req.(*IDsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Core_GetI18NList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(I18NListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoreServer).GetI18NList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Core_GetI18NList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoreServer).GetI18NList(ctx, req.(*I18NListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Core_GetI18NDict_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetI18NDictReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoreServer).GetI18NDict(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Core_GetI18NDict_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoreServer).GetI18NDict(ctx, req.(*GetI18NDictReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Core_CreateI18NLang_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateI18NLangReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoreServer).CreateI18NLang(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Core_CreateI18NLang_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoreServer).CreateI18NLang(ctx, req.(*CreateI18NLangReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Core_UpdateI18NLang_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateI18NLangReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoreServer).UpdateI18NLang(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Core_UpdateI18NLang_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoreServer).UpdateI18NLang(ctx, req.(*UpdateI18NLangReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Core_DeleteI18NLang_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IDsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoreServer).DeleteI18NLang(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Core_DeleteI18NLang_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoreServer).DeleteI18NLang(ctx, req.(*IDsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Core_GetI18NLangList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(I18NLangListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoreServer).GetI18NLangList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Core_GetI18NLangList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoreServer).GetI18NLangList(ctx, req.(*I18NLangListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Core_GetEnabledI18NLangs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoreServer).GetEnabledI18NLangs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Core_GetEnabledI18NLangs_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoreServer).GetEnabledI18NLangs(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1856,6 +2254,50 @@ var Core_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "registerCatalog",
 			Handler:    _Core_RegisterCatalog_Handler,
+		},
+		{
+			MethodName: "createI18n",
+			Handler:    _Core_CreateI18N_Handler,
+		},
+		{
+			MethodName: "updateI18n",
+			Handler:    _Core_UpdateI18N_Handler,
+		},
+		{
+			MethodName: "updateI18nByKey",
+			Handler:    _Core_UpdateI18NByKey_Handler,
+		},
+		{
+			MethodName: "deleteI18n",
+			Handler:    _Core_DeleteI18N_Handler,
+		},
+		{
+			MethodName: "getI18nList",
+			Handler:    _Core_GetI18NList_Handler,
+		},
+		{
+			MethodName: "getI18nDict",
+			Handler:    _Core_GetI18NDict_Handler,
+		},
+		{
+			MethodName: "createI18nLang",
+			Handler:    _Core_CreateI18NLang_Handler,
+		},
+		{
+			MethodName: "updateI18nLang",
+			Handler:    _Core_UpdateI18NLang_Handler,
+		},
+		{
+			MethodName: "deleteI18nLang",
+			Handler:    _Core_DeleteI18NLang_Handler,
+		},
+		{
+			MethodName: "getI18nLangList",
+			Handler:    _Core_GetI18NLangList_Handler,
+		},
+		{
+			MethodName: "getEnabledI18nLangs",
+			Handler:    _Core_GetEnabledI18NLangs_Handler,
 		},
 		{
 			MethodName: "getLoginLogList",

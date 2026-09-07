@@ -98,7 +98,7 @@ func menuNode(ctx context.Context, n *coreclient.MenuNode) types.MenuNode {
 	}
 	return types.MenuNode{
 		Id: n.Id, ParentId: n.ParentId, MenuType: n.MenuType, Path: n.Path, Name: n.Name,
-		Component: n.Component, Redirect: n.Redirect, Title: i18n.T(ctx, n.Title), Icon: n.Icon,
+		Component: n.Component, Redirect: n.Redirect, Title: i18n.TG(ctx, i18n.GroupMenu, n.Title), Icon: n.Icon,
 		Permission: n.Permission, HideMenu: n.HideMenu, Sort: n.Sort, Children: MenuNodes(ctx, n.Children),
 	}
 }
@@ -132,7 +132,7 @@ func MenuInfo(ctx context.Context, in *coreclient.MenuInfo) *types.MenuInfo {
 	}
 	return &types.MenuInfo{
 		Id: in.Id, ParentId: in.ParentId, MenuType: in.MenuType, Path: in.Path, Name: in.Name,
-		Component: in.Component, Redirect: in.Redirect, Title: i18n.T(ctx, in.Title), Icon: in.Icon,
+		Component: in.Component, Redirect: in.Redirect, Title: i18n.TG(ctx, i18n.GroupMenu, in.Title), Icon: in.Icon,
 		Permission: in.Permission, HideMenu: in.HideMenu, Sort: in.Sort, Disabled: in.Disabled,
 		CreatedAt: in.CreatedAt, UpdatedAt: in.UpdatedAt,
 	}
@@ -143,7 +143,7 @@ func ApiInfo(ctx context.Context, in *coreclient.ApiInfo) *types.ApiInfo {
 		return nil
 	}
 	return &types.ApiInfo{
-		Id: in.Id, Description: i18n.T(ctx, in.Description), ApiGroup: in.ApiGroup, Method: in.Method, Path: in.Path,
+		Id: in.Id, Description: i18n.TG(ctx, i18n.GroupAPI, in.Description), ApiGroup: in.ApiGroup, Method: in.Method, Path: in.Path,
 		IsRequired: in.IsRequired, ServiceName: in.ServiceName, CreatedAt: in.CreatedAt, UpdatedAt: in.UpdatedAt,
 	}
 }
@@ -434,6 +434,93 @@ func ErrorLogList(in *coreclient.ErrorLogListResp) *types.ErrorLogListResp {
 		list = append(list, errorLogInfo(row))
 	}
 	return &types.ErrorLogListResp{List: list, Total: in.GetTotal()}
+}
+
+func I18nInfo(in *coreclient.I18NInfo) *types.I18nInfo {
+	if in == nil {
+		return nil
+	}
+	return &types.I18nInfo{
+		Id: in.Id, I18nGroup: in.I18NGroup, TransKey: in.TransKey, Lang: in.Lang, Value: in.Value,
+		CreatedAt: in.CreatedAt, UpdatedAt: in.UpdatedAt,
+	}
+}
+
+func I18nInfos(in []*coreclient.I18NInfo) []types.I18nInfo {
+	out := make([]types.I18nInfo, 0, len(in))
+	for _, row := range in {
+		if p := I18nInfo(row); p != nil {
+			out = append(out, *p)
+		}
+	}
+	return out
+}
+
+func I18nList(in *coreclient.I18NListResp) *types.I18nListResp {
+	return &types.I18nListResp{List: I18nInfos(in.GetList()), Total: in.GetTotal()}
+}
+
+func CreateI18nReq(in *types.CreateI18nReq) *coreclient.CreateI18NReq {
+	return &coreclient.CreateI18NReq{
+		I18NGroup: in.I18nGroup, TransKey: in.TransKey, Lang: in.Lang, Value: in.Value,
+	}
+}
+
+func UpdateI18nReq(in *types.UpdateI18nReq) *coreclient.UpdateI18NReq {
+	return &coreclient.UpdateI18NReq{
+		Id: in.Id, I18NGroup: strPtr(in.I18nGroup), TransKey: strPtr(in.TransKey),
+		Lang: strPtr(in.Lang), Value: strPtr(in.Value),
+	}
+}
+
+func UpdateI18nByKeyReq(in *types.UpdateI18nByKeyReq) *coreclient.UpdateI18NByKeyReq {
+	return &coreclient.UpdateI18NByKeyReq{TransKey: in.TransKey, Data: in.Data}
+}
+
+func I18nListReq(in *types.I18nListReq) *coreclient.I18NListReq {
+	return &coreclient.I18NListReq{
+		Page: in.Page, PageSize: in.PageSize, I18NGroup: in.I18nGroup, TransKey: in.TransKey, Lang: in.Lang,
+	}
+}
+
+func I18nLangInfo(in *coreclient.I18NLangInfo) *types.I18nLangInfo {
+	if in == nil {
+		return nil
+	}
+	return &types.I18nLangInfo{
+		Id: in.Id, Lang: in.Lang, Name: in.Name, Disabled: in.Disabled, IsDefault: in.IsDefault,
+		CreatedAt: in.CreatedAt, UpdatedAt: in.UpdatedAt,
+	}
+}
+
+func I18nLangInfos(in []*coreclient.I18NLangInfo) []types.I18nLangInfo {
+	out := make([]types.I18nLangInfo, 0, len(in))
+	for _, row := range in {
+		if p := I18nLangInfo(row); p != nil {
+			out = append(out, *p)
+		}
+	}
+	return out
+}
+
+func I18nLangList(in *coreclient.I18NLangListResp) *types.I18nLangListResp {
+	return &types.I18nLangListResp{List: I18nLangInfos(in.GetList()), Total: in.GetTotal()}
+}
+
+func CreateI18nLangReq(in *types.CreateI18nLangReq) *coreclient.CreateI18NLangReq {
+	return &coreclient.CreateI18NLangReq{Lang: in.Lang, Name: in.Name, Disabled: in.Disabled, IsDefault: in.IsDefault}
+}
+
+func UpdateI18nLangReq(in *types.UpdateI18nLangReq) *coreclient.UpdateI18NLangReq {
+	return &coreclient.UpdateI18NLangReq{
+		Id: in.Id, Lang: strPtr(in.Lang), Name: strPtr(in.Name), Disabled: in.Disabled, IsDefault: in.IsDefault,
+	}
+}
+
+func I18nLangListReq(in *types.I18nLangListReq) *coreclient.I18NLangListReq {
+	return &coreclient.I18NLangListReq{
+		Page: in.Page, PageSize: in.PageSize, Lang: in.Lang, Disabled: in.Disabled,
+	}
 }
 
 func errorLogInfo(in *coreclient.ErrorLogInfo) types.ErrorLogInfo {

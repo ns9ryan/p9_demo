@@ -19,6 +19,8 @@ import (
 	"oa.98ent.com/p9/core/rpc/ent/api"
 	"oa.98ent.com/p9/core/rpc/ent/casbinrule"
 	"oa.98ent.com/p9/core/rpc/ent/errorlog"
+	"oa.98ent.com/p9/core/rpc/ent/i18n"
+	"oa.98ent.com/p9/core/rpc/ent/i18nlang"
 	"oa.98ent.com/p9/core/rpc/ent/loginlog"
 	"oa.98ent.com/p9/core/rpc/ent/menu"
 	"oa.98ent.com/p9/core/rpc/ent/operator"
@@ -41,6 +43,10 @@ type Client struct {
 	CasbinRule *CasbinRuleClient
 	// ErrorLog is the client for interacting with the ErrorLog builders.
 	ErrorLog *ErrorLogClient
+	// I18n is the client for interacting with the I18n builders.
+	I18n *I18nClient
+	// I18nLang is the client for interacting with the I18nLang builders.
+	I18nLang *I18nLangClient
 	// LoginLog is the client for interacting with the LoginLog builders.
 	LoginLog *LoginLogClient
 	// Menu is the client for interacting with the Menu builders.
@@ -66,6 +72,8 @@ func (c *Client) init() {
 	c.AdminActionLog = NewAdminActionLogClient(c.config)
 	c.CasbinRule = NewCasbinRuleClient(c.config)
 	c.ErrorLog = NewErrorLogClient(c.config)
+	c.I18n = NewI18nClient(c.config)
+	c.I18nLang = NewI18nLangClient(c.config)
 	c.LoginLog = NewLoginLogClient(c.config)
 	c.Menu = NewMenuClient(c.config)
 	c.Operator = NewOperatorClient(c.config)
@@ -167,6 +175,8 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		AdminActionLog: NewAdminActionLogClient(cfg),
 		CasbinRule:     NewCasbinRuleClient(cfg),
 		ErrorLog:       NewErrorLogClient(cfg),
+		I18n:           NewI18nClient(cfg),
+		I18nLang:       NewI18nLangClient(cfg),
 		LoginLog:       NewLoginLogClient(cfg),
 		Menu:           NewMenuClient(cfg),
 		Operator:       NewOperatorClient(cfg),
@@ -195,6 +205,8 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		AdminActionLog: NewAdminActionLogClient(cfg),
 		CasbinRule:     NewCasbinRuleClient(cfg),
 		ErrorLog:       NewErrorLogClient(cfg),
+		I18n:           NewI18nClient(cfg),
+		I18nLang:       NewI18nLangClient(cfg),
 		LoginLog:       NewLoginLogClient(cfg),
 		Menu:           NewMenuClient(cfg),
 		Operator:       NewOperatorClient(cfg),
@@ -229,8 +241,8 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.API, c.AdminActionLog, c.CasbinRule, c.ErrorLog, c.LoginLog, c.Menu,
-		c.Operator, c.Role, c.User,
+		c.API, c.AdminActionLog, c.CasbinRule, c.ErrorLog, c.I18n, c.I18nLang,
+		c.LoginLog, c.Menu, c.Operator, c.Role, c.User,
 	} {
 		n.Use(hooks...)
 	}
@@ -240,8 +252,8 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.API, c.AdminActionLog, c.CasbinRule, c.ErrorLog, c.LoginLog, c.Menu,
-		c.Operator, c.Role, c.User,
+		c.API, c.AdminActionLog, c.CasbinRule, c.ErrorLog, c.I18n, c.I18nLang,
+		c.LoginLog, c.Menu, c.Operator, c.Role, c.User,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -258,6 +270,10 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.CasbinRule.mutate(ctx, m)
 	case *ErrorLogMutation:
 		return c.ErrorLog.mutate(ctx, m)
+	case *I18nMutation:
+		return c.I18n.mutate(ctx, m)
+	case *I18nLangMutation:
+		return c.I18nLang.mutate(ctx, m)
 	case *LoginLogMutation:
 		return c.LoginLog.mutate(ctx, m)
 	case *MenuMutation:
@@ -838,6 +854,272 @@ func (c *ErrorLogClient) mutate(ctx context.Context, m *ErrorLogMutation) (Value
 		return (&ErrorLogDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown ErrorLog mutation op: %q", m.Op())
+	}
+}
+
+// I18nClient is a client for the I18n schema.
+type I18nClient struct {
+	config
+}
+
+// NewI18nClient returns a client for the I18n from the given config.
+func NewI18nClient(c config) *I18nClient {
+	return &I18nClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `i18n.Hooks(f(g(h())))`.
+func (c *I18nClient) Use(hooks ...Hook) {
+	c.hooks.I18n = append(c.hooks.I18n, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `i18n.Intercept(f(g(h())))`.
+func (c *I18nClient) Intercept(interceptors ...Interceptor) {
+	c.inters.I18n = append(c.inters.I18n, interceptors...)
+}
+
+// Create returns a builder for creating a I18n entity.
+func (c *I18nClient) Create() *I18nCreate {
+	mutation := newI18nMutation(c.config, OpCreate)
+	return &I18nCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of I18n entities.
+func (c *I18nClient) CreateBulk(builders ...*I18nCreate) *I18nCreateBulk {
+	return &I18nCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *I18nClient) MapCreateBulk(slice any, setFunc func(*I18nCreate, int)) *I18nCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &I18nCreateBulk{err: fmt.Errorf("calling to I18nClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*I18nCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &I18nCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for I18n.
+func (c *I18nClient) Update() *I18nUpdate {
+	mutation := newI18nMutation(c.config, OpUpdate)
+	return &I18nUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *I18nClient) UpdateOne(_m *I18n) *I18nUpdateOne {
+	mutation := newI18nMutation(c.config, OpUpdateOne, withI18n(_m))
+	return &I18nUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *I18nClient) UpdateOneID(id int64) *I18nUpdateOne {
+	mutation := newI18nMutation(c.config, OpUpdateOne, withI18nID(id))
+	return &I18nUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for I18n.
+func (c *I18nClient) Delete() *I18nDelete {
+	mutation := newI18nMutation(c.config, OpDelete)
+	return &I18nDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *I18nClient) DeleteOne(_m *I18n) *I18nDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *I18nClient) DeleteOneID(id int64) *I18nDeleteOne {
+	builder := c.Delete().Where(i18n.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &I18nDeleteOne{builder}
+}
+
+// Query returns a query builder for I18n.
+func (c *I18nClient) Query() *I18nQuery {
+	return &I18nQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeI18n},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a I18n entity by its id.
+func (c *I18nClient) Get(ctx context.Context, id int64) (*I18n, error) {
+	return c.Query().Where(i18n.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *I18nClient) GetX(ctx context.Context, id int64) *I18n {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *I18nClient) Hooks() []Hook {
+	return c.hooks.I18n
+}
+
+// Interceptors returns the client interceptors.
+func (c *I18nClient) Interceptors() []Interceptor {
+	return c.inters.I18n
+}
+
+func (c *I18nClient) mutate(ctx context.Context, m *I18nMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&I18nCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&I18nUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&I18nUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&I18nDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown I18n mutation op: %q", m.Op())
+	}
+}
+
+// I18nLangClient is a client for the I18nLang schema.
+type I18nLangClient struct {
+	config
+}
+
+// NewI18nLangClient returns a client for the I18nLang from the given config.
+func NewI18nLangClient(c config) *I18nLangClient {
+	return &I18nLangClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `i18nlang.Hooks(f(g(h())))`.
+func (c *I18nLangClient) Use(hooks ...Hook) {
+	c.hooks.I18nLang = append(c.hooks.I18nLang, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `i18nlang.Intercept(f(g(h())))`.
+func (c *I18nLangClient) Intercept(interceptors ...Interceptor) {
+	c.inters.I18nLang = append(c.inters.I18nLang, interceptors...)
+}
+
+// Create returns a builder for creating a I18nLang entity.
+func (c *I18nLangClient) Create() *I18nLangCreate {
+	mutation := newI18nLangMutation(c.config, OpCreate)
+	return &I18nLangCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of I18nLang entities.
+func (c *I18nLangClient) CreateBulk(builders ...*I18nLangCreate) *I18nLangCreateBulk {
+	return &I18nLangCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *I18nLangClient) MapCreateBulk(slice any, setFunc func(*I18nLangCreate, int)) *I18nLangCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &I18nLangCreateBulk{err: fmt.Errorf("calling to I18nLangClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*I18nLangCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &I18nLangCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for I18nLang.
+func (c *I18nLangClient) Update() *I18nLangUpdate {
+	mutation := newI18nLangMutation(c.config, OpUpdate)
+	return &I18nLangUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *I18nLangClient) UpdateOne(_m *I18nLang) *I18nLangUpdateOne {
+	mutation := newI18nLangMutation(c.config, OpUpdateOne, withI18nLang(_m))
+	return &I18nLangUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *I18nLangClient) UpdateOneID(id int64) *I18nLangUpdateOne {
+	mutation := newI18nLangMutation(c.config, OpUpdateOne, withI18nLangID(id))
+	return &I18nLangUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for I18nLang.
+func (c *I18nLangClient) Delete() *I18nLangDelete {
+	mutation := newI18nLangMutation(c.config, OpDelete)
+	return &I18nLangDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *I18nLangClient) DeleteOne(_m *I18nLang) *I18nLangDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *I18nLangClient) DeleteOneID(id int64) *I18nLangDeleteOne {
+	builder := c.Delete().Where(i18nlang.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &I18nLangDeleteOne{builder}
+}
+
+// Query returns a query builder for I18nLang.
+func (c *I18nLangClient) Query() *I18nLangQuery {
+	return &I18nLangQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeI18nLang},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a I18nLang entity by its id.
+func (c *I18nLangClient) Get(ctx context.Context, id int64) (*I18nLang, error) {
+	return c.Query().Where(i18nlang.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *I18nLangClient) GetX(ctx context.Context, id int64) *I18nLang {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *I18nLangClient) Hooks() []Hook {
+	return c.hooks.I18nLang
+}
+
+// Interceptors returns the client interceptors.
+func (c *I18nLangClient) Interceptors() []Interceptor {
+	return c.inters.I18nLang
+}
+
+func (c *I18nLangClient) mutate(ctx context.Context, m *I18nLangMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&I18nLangCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&I18nLangUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&I18nLangUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&I18nLangDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown I18nLang mutation op: %q", m.Op())
 	}
 }
 
@@ -1643,12 +1925,12 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		API, AdminActionLog, CasbinRule, ErrorLog, LoginLog, Menu, Operator, Role,
-		User []ent.Hook
+		API, AdminActionLog, CasbinRule, ErrorLog, I18n, I18nLang, LoginLog, Menu,
+		Operator, Role, User []ent.Hook
 	}
 	inters struct {
-		API, AdminActionLog, CasbinRule, ErrorLog, LoginLog, Menu, Operator, Role,
-		User []ent.Interceptor
+		API, AdminActionLog, CasbinRule, ErrorLog, I18n, I18nLang, LoginLog, Menu,
+		Operator, Role, User []ent.Interceptor
 	}
 )
 

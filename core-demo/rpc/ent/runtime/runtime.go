@@ -9,6 +9,8 @@ import (
 	"oa.98ent.com/p9/core/rpc/ent/api"
 	"oa.98ent.com/p9/core/rpc/ent/casbinrule"
 	"oa.98ent.com/p9/core/rpc/ent/errorlog"
+	"oa.98ent.com/p9/core/rpc/ent/i18n"
+	"oa.98ent.com/p9/core/rpc/ent/i18nlang"
 	"oa.98ent.com/p9/core/rpc/ent/loginlog"
 	"oa.98ent.com/p9/core/rpc/ent/menu"
 	"oa.98ent.com/p9/core/rpc/ent/operator"
@@ -162,6 +164,70 @@ func init() {
 	errorlogDescCreatedAt := errorlogFields[14].Descriptor()
 	// errorlog.DefaultCreatedAt holds the default value on creation for the created_at field.
 	errorlog.DefaultCreatedAt = errorlogDescCreatedAt.Default.(func() time.Time)
+	i18nMixin := schema.I18n{}.Mixin()
+	i18nMixinFields0 := i18nMixin[0].Fields()
+	_ = i18nMixinFields0
+	i18nFields := schema.I18n{}.Fields()
+	_ = i18nFields
+	// i18nDescCreatedAt is the schema descriptor for created_at field.
+	i18nDescCreatedAt := i18nMixinFields0[0].Descriptor()
+	// i18n.DefaultCreatedAt holds the default value on creation for the created_at field.
+	i18n.DefaultCreatedAt = i18nDescCreatedAt.Default.(func() time.Time)
+	// i18nDescUpdatedAt is the schema descriptor for updated_at field.
+	i18nDescUpdatedAt := i18nMixinFields0[1].Descriptor()
+	// i18n.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	i18n.DefaultUpdatedAt = i18nDescUpdatedAt.Default.(func() time.Time)
+	// i18n.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	i18n.UpdateDefaultUpdatedAt = i18nDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// i18nDescI18nGroup is the schema descriptor for i18n_group field.
+	i18nDescI18nGroup := i18nFields[1].Descriptor()
+	// i18n.I18nGroupValidator is a validator for the "i18n_group" field. It is called by the builders before save.
+	i18n.I18nGroupValidator = i18nDescI18nGroup.Validators[0].(func(string) error)
+	// i18nDescTransKey is the schema descriptor for trans_key field.
+	i18nDescTransKey := i18nFields[2].Descriptor()
+	// i18n.TransKeyValidator is a validator for the "trans_key" field. It is called by the builders before save.
+	i18n.TransKeyValidator = i18nDescTransKey.Validators[0].(func(string) error)
+	// i18nDescLang is the schema descriptor for lang field.
+	i18nDescLang := i18nFields[3].Descriptor()
+	// i18n.LangValidator is a validator for the "lang" field. It is called by the builders before save.
+	i18n.LangValidator = i18nDescLang.Validators[0].(func(string) error)
+	// i18nDescValue is the schema descriptor for value field.
+	i18nDescValue := i18nFields[4].Descriptor()
+	// i18n.ValueValidator is a validator for the "value" field. It is called by the builders before save.
+	i18n.ValueValidator = i18nDescValue.Validators[0].(func(string) error)
+	i18nlangMixin := schema.I18nLang{}.Mixin()
+	i18nlangMixinFields0 := i18nlangMixin[0].Fields()
+	_ = i18nlangMixinFields0
+	i18nlangFields := schema.I18nLang{}.Fields()
+	_ = i18nlangFields
+	// i18nlangDescCreatedAt is the schema descriptor for created_at field.
+	i18nlangDescCreatedAt := i18nlangMixinFields0[0].Descriptor()
+	// i18nlang.DefaultCreatedAt holds the default value on creation for the created_at field.
+	i18nlang.DefaultCreatedAt = i18nlangDescCreatedAt.Default.(func() time.Time)
+	// i18nlangDescUpdatedAt is the schema descriptor for updated_at field.
+	i18nlangDescUpdatedAt := i18nlangMixinFields0[1].Descriptor()
+	// i18nlang.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	i18nlang.DefaultUpdatedAt = i18nlangDescUpdatedAt.Default.(func() time.Time)
+	// i18nlang.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	i18nlang.UpdateDefaultUpdatedAt = i18nlangDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// i18nlangDescLang is the schema descriptor for lang field.
+	i18nlangDescLang := i18nlangFields[1].Descriptor()
+	// i18nlang.LangValidator is a validator for the "lang" field. It is called by the builders before save.
+	i18nlang.LangValidator = i18nlangDescLang.Validators[0].(func(string) error)
+	// i18nlangDescName is the schema descriptor for name field.
+	i18nlangDescName := i18nlangFields[2].Descriptor()
+	// i18nlang.DefaultName holds the default value on creation for the name field.
+	i18nlang.DefaultName = i18nlangDescName.Default.(string)
+	// i18nlang.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	i18nlang.NameValidator = i18nlangDescName.Validators[0].(func(string) error)
+	// i18nlangDescDisabled is the schema descriptor for disabled field.
+	i18nlangDescDisabled := i18nlangFields[3].Descriptor()
+	// i18nlang.DefaultDisabled holds the default value on creation for the disabled field.
+	i18nlang.DefaultDisabled = i18nlangDescDisabled.Default.(int16)
+	// i18nlangDescIsDefault is the schema descriptor for is_default field.
+	i18nlangDescIsDefault := i18nlangFields[4].Descriptor()
+	// i18nlang.DefaultIsDefault holds the default value on creation for the is_default field.
+	i18nlang.DefaultIsDefault = i18nlangDescIsDefault.Default.(int16)
 	loginlogMixin := schema.LoginLog{}.Mixin()
 	loginlogMixinHooks0 := loginlogMixin[0].Hooks()
 	loginlog.Hooks[0] = loginlogMixinHooks0[0]

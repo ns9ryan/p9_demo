@@ -42,7 +42,19 @@ func (l *RegisterCatalogLogic) RegisterCatalog(in *core.RegisterCatalogReq) (*co
 			IsRequired: int16(a.IsRequired), ServiceName: a.ServiceName,
 		})
 	}
-	if err := l.svcCtx.Deps.RegisterCatalog(l.ctx, menus, apis); err != nil {
+	items := make([]service.I18nItem, 0, len(in.GetI18N()))
+	for _, it := range in.GetI18N() {
+		items = append(items, service.I18nItem{
+			I18nGroup: it.GetI18NGroup(), TransKey: it.GetTransKey(), Lang: it.GetLang(), Value: it.GetValue(),
+		})
+	}
+	langs := make([]service.CreateI18nLangReq, 0, len(in.GetI18NLangs()))
+	for _, it := range in.GetI18NLangs() {
+		langs = append(langs, service.CreateI18nLangReq{
+			Lang: it.GetLang(), Name: it.GetName(), Disabled: int16(it.GetDisabled()), IsDefault: int16(it.GetIsDefault()),
+		})
+	}
+	if err := l.svcCtx.Deps.RegisterCatalog(l.ctx, menus, apis, items, langs); err != nil {
 		return nil, xerr.RpcErr(err)
 	}
 	return &core.Empty{}, nil

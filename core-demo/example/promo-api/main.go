@@ -112,11 +112,20 @@ const (
 func registerPromoCatalog(cli coreclient.Core) error {
 	req := &coreclient.RegisterCatalogReq{
 		Menus: []*coreclient.RegisterMenuReq{
-			{Name: "PromoCenter", Title: "route.promoCenter", MenuType: menuTypeDir, Path: "/promo", Sort: 20},
-			{Name: "PromoActivityList", Title: "route.promoActivityList", MenuType: menuTypeMenu, Path: "/promo/activity/list", Component: "promo/activity/list", ParentName: "PromoCenter", Sort: 21},
+			{Name: "PromoCenter", Title: "menu.route.promoCenter", MenuType: menuTypeDir, Path: "/promo", Sort: 20},
+			{Name: "PromoActivityList", Title: "menu.route.promoActivityList", MenuType: menuTypeMenu, Path: "/promo/activity/list", Component: "promo/activity/list", ParentName: "PromoCenter", Sort: 21},
 		},
 		Apis: []*coreclient.CreateApiReq{
 			{Description: "api.promoList", ApiGroup: "promo", Method: http.MethodGet, Path: "/admin/promo/list", ServiceName: "promo-api"},
+		},
+		I18N: []*coreclient.I18NItem{
+			{I18NGroup: "menu", TransKey: "menu.route.promoCenter", Lang: "zh-CN", Value: "优惠中心"},
+			{I18NGroup: "menu", TransKey: "menu.route.promoCenter", Lang: "en-US", Value: "Promotions"},
+			{I18NGroup: "menu", TransKey: "menu.route.promoActivityList", Lang: "zh-CN", Value: "活动列表"},
+			{I18NGroup: "menu", TransKey: "menu.route.promoActivityList", Lang: "en-US", Value: "Activities"},
+			{I18NGroup: "api", TransKey: "api.promoList", Lang: "zh-CN", Value: "活动列表"},
+			{I18NGroup: "api", TransKey: "api.promoList", Lang: "zh-HK", Value: "活動列表"},
+			{I18NGroup: "api", TransKey: "api.promoList", Lang: "en-US", Value: "Promotion list"},
 		},
 	}
 	var last error

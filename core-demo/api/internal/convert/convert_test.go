@@ -42,6 +42,24 @@ func TestUpdateMenuReqOmitsUnset(t *testing.T) {
 	}
 }
 
+func TestUpdateI18nLangReqKeepsZeroFlags(t *testing.T) {
+	zero := int32(0)
+	got := UpdateI18nLangReq(&types.UpdateI18nLangReq{Id: 1, Disabled: &zero, IsDefault: &zero})
+	if got.Disabled == nil || *got.Disabled != 0 {
+		t.Fatalf("Disabled=%v", got.Disabled)
+	}
+	if got.IsDefault == nil || *got.IsDefault != 0 {
+		t.Fatalf("IsDefault=%v", got.IsDefault)
+	}
+}
+
+func TestUpdateI18nLangReqOmitsUnset(t *testing.T) {
+	got := UpdateI18nLangReq(&types.UpdateI18nLangReq{Id: 1})
+	if got.Lang != nil || got.Name != nil || got.Disabled != nil || got.IsDefault != nil {
+		t.Fatalf("expected omitted fields to stay nil, got %+v", got)
+	}
+}
+
 func TestLoginLogListTranslatesResult(t *testing.T) {
 	reason := i18n.AuthPasswordIncorrect
 	in := &coreclient.LoginLogListResp{
@@ -82,5 +100,57 @@ func TestAdminActionLogListTranslatesResult(t *testing.T) {
 	en := AdminActionLogList(i18n.WithLang(context.Background(), i18n.LangEN), in)
 	if en.List[0].ActionResult != "Success" || en.List[1].ActionResult != "Failed" {
 		t.Fatalf("en %q %q", en.List[0].ActionResult, en.List[1].ActionResult)
+	}
+}
+
+func TestMenuInfoTranslatesTitleFromDict(t *testing.T) {
+	i18n.InvalidateAll()
+	t.Cleanup(func() {
+		i18n.SetDictLoader(nil)
+		i18n.InvalidateAll()
+	})
+	i18n.SetDictLoader(func(_ context.Context, group, lang string) (map[string]string, error) {
+		if group != i18n.GroupMenu || lang != i18n.LangZH {
+			return map[string]string{}, nil
+		}
+		return map[string]string{"menu.route.dashboard": "工作台"}, nil
+	})
+	got := MenuInfo(i18n.WithLang(context.Background(), i18n.LangZH), &coreclient.MenuInfo{
+		Id: 1, Title: "menu.route.dashboard", Name: "Dashboard",
+	})
+	if got.Title != "工作台" {
+		t.Fatalf("title=%q", got.Title)
+	}
+	miss := MenuInfo(i18n.WithLang(context.Background(), i18n.LangZH), &coreclient.MenuInfo{
+		Id: 2, Title: "custom", Name: "Custom",
+	})
+	if miss.Title != "custom" {
+		t.Fatalf("passthrough=%q", miss.Title)
+	}
+}
+
+func TestApiInfoTranslatesDescriptionFromDict(t *testing.T) {
+	i18n.InvalidateAll()
+	t.Cleanup(func() {
+		i18n.SetDictLoader(nil)
+		i18n.InvalidateAll()
+	})
+	i18n.SetDictLoader(func(_ context.Context, group, lang string) (map[string]string, error) {
+		if group != i18n.GroupAPI || lang != i18n.LangZH {
+			return map[string]string{}, nil
+		}
+		return map[string]string{"api.userCreate": "创建后台用户"}, nil
+	})
+	got := ApiInfo(i18n.WithLang(context.Background(), i18n.LangZH), &coreclient.ApiInfo{
+		Id: 1, Description: "api.userCreate", Path: "/admin/user/create", Method: "POST",
+	})
+	if got.Description != "创建后台用户" {
+		t.Fatalf("description=%q", got.Description)
+	}
+	miss := ApiInfo(i18n.WithLang(context.Background(), i18n.LangZH), &coreclient.ApiInfo{
+		Id: 2, Description: "custom", Path: "/admin/custom", Method: "GET",
+	})
+	if miss.Description != "custom" {
+		t.Fatalf("passthrough=%q", miss.Description)
 	}
 }

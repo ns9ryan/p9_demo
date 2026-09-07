@@ -12,6 +12,7 @@ import (
 
 const (
 	LangZH = "zh-CN"
+	LangHK = "zh-HK"
 	LangEN = "en-US"
 )
 
@@ -64,10 +65,12 @@ func flatten(prefix string, raw map[string]any, out map[string]string) {
 	}
 }
 
+// WithLang 设置语言到上下文
 func WithLang(ctx context.Context, lang string) context.Context {
 	return context.WithValue(ctx, langKey{}, lang)
 }
 
+// Lang 获取语言
 func Lang(ctx context.Context) string {
 	if ctx == nil {
 		return LangZH
@@ -78,19 +81,30 @@ func Lang(ctx context.Context) string {
 	return LangZH
 }
 
+// ParseLang 解析语言
 func ParseLang(header string) string {
 	if header == "" {
 		return LangZH
 	}
 	first := strings.TrimSpace(strings.Split(header, ",")[0])
 	first = strings.TrimSpace(strings.Split(first, ";")[0])
+	if first == "" {
+		return LangZH
+	}
 	lower := strings.ToLower(first)
 	if strings.HasPrefix(lower, "en") {
 		return LangEN
 	}
-	return LangZH
+	if strings.HasPrefix(lower, "zh") {
+		if strings.HasPrefix(lower, "zh-hk") {
+			return LangHK
+		}
+		return LangZH
+	}
+	return first
 }
 
+// T 获取翻译(本地)
 func T(ctx context.Context, id string) string {
 	return Tf(ctx, id, nil)
 }

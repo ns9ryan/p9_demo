@@ -14,6 +14,9 @@ func TestParseLang(t *testing.T) {
 		"en":             LangEN,
 		"en-US":          LangEN,
 		"en-GB":          LangEN,
+		"ja-JP":          "ja-JP",
+		"ja":             "ja",
+		"ko-KR":          "ko-KR",
 	}
 	for in, want := range cases {
 		if got := ParseLang(in); got != want {
@@ -25,32 +28,48 @@ func TestParseLang(t *testing.T) {
 func TestT(t *testing.T) {
 	zh := WithLang(context.Background(), LangZH)
 	en := WithLang(context.Background(), LangEN)
-	if got := T(zh, "route.dashboard"); got != "工作台" {
-		t.Fatalf("zh route.dashboard=%q", got)
-	}
-	if got := T(zh, "route.log"); got != "日志管理" {
-		t.Fatalf("zh route.log=%q", got)
-	}
-	if got := T(zh, "route.loginLog"); got != "登录日志" {
-		t.Fatalf("zh route.loginLog=%q", got)
-	}
-	if got := T(zh, "route.actionLog"); got != "操作日志" {
-		t.Fatalf("zh route.actionLog=%q", got)
-	}
-	if got := T(zh, "route.errorLog"); got != "错误日志" {
-		t.Fatalf("zh route.errorLog=%q", got)
-	}
 	if got := T(zh, LoginLogResultSuccess); got != "成功" {
 		t.Fatalf("zh loginLog.resultSuccess=%q", got)
 	}
 	if got := T(en, LoginLogResultFail); got != "Failed" {
 		t.Fatalf("en loginLog.resultFail=%q", got)
 	}
-	if got := T(en, "route.dashboard"); got != "Dashboard" {
-		t.Fatalf("en route.dashboard=%q", got)
-	}
 	if got := T(zh, "运营"); got != "运营" {
 		t.Fatalf("passthrough=%q", got)
+	}
+}
+
+func TestTG(t *testing.T) {
+	InvalidateAll()
+	t.Cleanup(func() {
+		SetDictLoader(nil)
+		InvalidateAll()
+	})
+	SetDictLoader(func(_ context.Context, group, lang string) (map[string]string, error) {
+		if group != GroupMenu {
+			return map[string]string{}, nil
+		}
+		if lang == LangZH {
+			return map[string]string{
+				"menu.route.dashboard": "工作台",
+				"legacy":               "旧",
+			}, nil
+		}
+		return map[string]string{"menu.route.dashboard": "Dashboard"}, nil
+	})
+	zh := WithLang(context.Background(), LangZH)
+	en := WithLang(context.Background(), LangEN)
+	if got := TG(zh, GroupMenu, "route.dashboard"); got != "工作台" {
+		t.Fatalf("zh=%q", got)
+	}
+	if got := TG(en, GroupMenu, "route.dashboard"); got != "Dashboard" {
+		t.Fatalf("en=%q", got)
+	}
+	if got := TG(zh, GroupMenu, "legacy"); got != "旧" {
+		t.Fatalf("short key=%q", got)
+	}
+	if got := TG(zh, GroupMenu, "missing"); got != "missing" {
+		t.Fatalf("missing=%q", got)
 	}
 }
 
