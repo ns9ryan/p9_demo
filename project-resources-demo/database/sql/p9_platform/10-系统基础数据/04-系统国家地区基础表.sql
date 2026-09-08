@@ -8,7 +8,7 @@ BEGIN;
     -- ISO 3166-1 Alpha-2 国家或地区全局唯一业务编码，例如 JP
     code VARCHAR (2) NOT NULL,
     -- 国际电话区号，不包含加号
-    calling_code VARCHAR (4),
+    calling_code VARCHAR (3),
     -- 国家或地区的多语言名称
     name_i18n JSONB NOT NULL,
     -- 状态: 1启用，2停用
