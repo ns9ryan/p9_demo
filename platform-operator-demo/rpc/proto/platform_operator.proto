@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package platform_operator;
+
+option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/operator";
+
+import "types/pinga.proto";
+
+// Ping 服务
+service PingService {
+  // Ping
+  rpc Ping(ping.PingRequesta) returns (ping.PingResponse);
+}
