@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package operator;
+
+option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/operator/operator";
+
+// 创建分站请求
+message CreateOperatorRequest {}
+
+// 创建分站响应
+message CreateOperatorResponse {}
+
+// 修改分站请求
+message UpdateOperatorRequest {}
+
+// 修改分站响应
+message UpdateOperatorResponse {}
+
+// 获取分站请求
+message GetOperatorRequest {}
+
+// 获取分站响应
+message GetOperatorResponse {}
+
+// 获取分站管理列表请求
+message ListOperatorsRequest {}
+
+// 获取分站管理列表响应
+message ListOperatorsResponse {}
+
+// 完成分站创建请求
+message CompleteOperatorRequest {}
+
+// 完成分站创建响应
+message CompleteOperatorResponse {}
+
+// 发布分站请求
+message PublishOperatorRequest {}
+
+// 发布分站响应
+message PublishOperatorResponse {}

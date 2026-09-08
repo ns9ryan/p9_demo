@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package domain;
+
+option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/operator/domain";
+
+// 创建域名请求
+message CreateDomainRequest {}
+
+// 创建域名响应
+message CreateDomainResponse {}
+
+// 修改域名请求
+message UpdateDomainRequest {}
+
+// 修改域名响应
+message UpdateDomainResponse {}
+
+// 获取域名请求
+message GetDomainRequest {}
+
+// 获取域名响应
+message GetDomainResponse {}
+
+// 获取域名管理列表请求
+message ListDomainsRequest {}
+
+// 获取域名管理列表响应
+message ListDomainsResponse {}

@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package regionallocation;
+
+option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/operator/regionallocation";
+
+// 获取经营地区分配列表请求
+message ListRegionAllocationsRequest {}
+
+// 获取经营地区分配列表响应
+message ListRegionAllocationsResponse {}
+
+// 分配经营地区请求
+message AssignRegionRequest {}
+
+// 分配经营地区响应
+message AssignRegionResponse {}
+
+// 回收经营地区请求
+message ReclaimRegionRequest {}
+
+// 回收经营地区响应
+message ReclaimRegionResponse {}

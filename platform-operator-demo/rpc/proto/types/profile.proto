@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package profile;
+
+option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/operator/profile";
+
+// 创建分站档案请求
+message CreateOperatorProfileRequest {}
+
+// 创建分站档案响应
+message CreateOperatorProfileResponse {}
+
+// 修改分站档案请求
+message UpdateOperatorProfileRequest {}
+
+// 修改分站档案响应
+message UpdateOperatorProfileResponse {}
+
+// 获取分站档案请求
+message GetOperatorProfileRequest {}
+
+// 获取分站档案响应
+message GetOperatorProfileResponse {}

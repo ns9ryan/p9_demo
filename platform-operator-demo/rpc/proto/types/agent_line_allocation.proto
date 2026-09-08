@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package agentlineallocation;
+
+option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/operator/agentlineallocation";
+
+// 获取代理子线路分配列表请求
+message ListAgentLineAllocationsRequest {}
+
+// 获取代理子线路分配列表响应
+message ListAgentLineAllocationsResponse {}
+
+// 分配代理子线路请求
+message AssignAgentLineRequest {}
+
+// 分配代理子线路响应
+message AssignAgentLineResponse {}
+
+// 回收代理子线路请求
+message ReclaimAgentLineRequest {}
+
+// 回收代理子线路响应
+message ReclaimAgentLineResponse {}

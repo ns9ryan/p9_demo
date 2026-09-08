@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package languageallocation;
+
+option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/operator/languageallocation";
+
+// 获取语言分配列表请求
+message ListLanguageAllocationsRequest {}
+
+// 获取语言分配列表响应
+message ListLanguageAllocationsResponse {}
+
+// 分配语言请求
+message AssignLanguageRequest {}
+
+// 分配语言响应
+message AssignLanguageResponse {}
+
+// 回收语言请求
+message ReclaimLanguageRequest {}
+
+// 回收语言响应
+message ReclaimLanguageResponse {}
