@@ -13,6 +13,7 @@ P9 项目公共资源仓库，用于存放数据库设计、Ent Schema、Docker 
 
 * [Git SSH 配置](docs/git-ssh.md)
 * [服务端口](docs/service-ports.md)
+* [platform-base API 文档](docs/platform-base-api.md)
 
 ## 说明
 
