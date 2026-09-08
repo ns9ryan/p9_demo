@@ -7,6 +7,7 @@ import (
 	"oa.98ent.com/p9/platform-base/rpc/ent"
 	"oa.98ent.com/p9/platform-base/rpc/ent/currency"
 	"oa.98ent.com/p9/platform-base/rpc/ent/language"
+	"oa.98ent.com/p9/platform-base/rpc/ent/migrate"
 	"oa.98ent.com/p9/platform-base/rpc/ent/region"
 	"oa.98ent.com/p9/platform-base/rpc/ent/timezone"
 )
@@ -16,7 +17,13 @@ func (s *ServiceContext) MustMigrate() {
 	ctx := context.Background()
 
 	// 根据 Ent Schema 自动创建或更新数据库结构
-	logx.Must(s.DB.Schema.Create(ctx))
+	logx.Must(
+		s.DB.Schema.Create(
+			ctx,
+			migrate.WithForeignKeys(false), // 不创建数据库外键
+			migrate.WithDropIndex(true),    // 允许删除废弃索引
+		),
+	)
 
 	// 初始化系统默认数据
 	s.mustInitLanguage(ctx)
