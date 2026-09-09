@@ -8,6 +8,7 @@ import (
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
 	"oa.98ent.com/p9/core/common/coreadapt"
+	corei18n "oa.98ent.com/p9/core/common/i18n"
 	coremiddleware "oa.98ent.com/p9/core/common/middleware"
 	"oa.98ent.com/p9/core/rpc/coreclient"
 	"oa.98ent.com/p9/platform-base/api/internal/config"
@@ -56,6 +57,9 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	// 创建Core RPC客户端
 	coreClient := zrpc.MustNewClient(c.CoreRpc)
 	coreCli := coreclient.NewCore(coreClient)
+
+	// 注册Core多语言词典加载器
+	corei18n.SetDictLoader(coreadapt.DictLoader(coreCli))
 
 	// 创建Core认证适配器
 	auth := coreadapt.Auth(coreCli)

@@ -33,10 +33,9 @@ func (l *UpdateCurrencyLogic) UpdateCurrency(req *types.UpdateCurrencyRequest) (
 	_, err = l.svcCtx.CurrencyRpc.Update(
 		l.ctx,
 		&currency.UpdateCurrencyRequest{
-			Id:       req.Id,       // 货币ID
-			NameI18N: req.NameI18n, // 多语言名称
-			Symbol:   req.Symbol,   // 货币符号
-			Status:   req.Status,   // 状态: 1启用, 2停用
+			Id:     req.Id,     // 货币ID
+			Symbol: req.Symbol, // 货币符号
+			Status: req.Status, // 状态: 1启用, 2停用
 		},
 	)
 	if err != nil {

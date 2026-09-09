@@ -3,49 +3,16 @@
 
 package types
 
-type CreateCurrencyRequest struct {
-	Code         string            `json:"code" validate:"required,max=16"`
-	NameI18n     map[string]string `json:"name_i18n" validate:"required"`
-	CurrencyType int64             `json:"currency_type" validate:"required,oneof=1 2"`
-	Symbol       string            `json:"symbol" validate:"required,max=16"`
-	AmountFactor int64             `json:"amount_factor" validate:"required,gt=0"`
-	Status       *int64            `json:"status,optional" validate:"omitempty,oneof=1 2"`
-}
-
-type CreateCurrencyResponse struct {
-	Id int64 `json:"id"`
-}
-
-type CreateRegionRequest struct {
-	Code        string            `json:"code" validate:"required,len=2"`
-	CallingCode string            `json:"calling_code" validate:"required,max=3"`
-	NameI18n    map[string]string `json:"name_i18n" validate:"required"`
-	Status      *int64            `json:"status,optional" validate:"omitempty,oneof=1 2"`
-}
-
-type CreateRegionResponse struct {
-	Id int64 `json:"id"`
-}
-
-type CreateTimezoneRequest struct {
-	Code     string            `json:"code" validate:"required,max=64"`
-	NameI18n map[string]string `json:"name_i18n" validate:"required"`
-	Status   *int64            `json:"status,optional" validate:"omitempty,oneof=1 2"`
-}
-
-type CreateTimezoneResponse struct {
-	Id int64 `json:"id"`
-}
-
 type CurrencyInfo struct {
-	Id           int64             `json:"id"`
-	Code         string            `json:"code"`
-	NameI18n     map[string]string `json:"name_i18n"`
-	CurrencyType int64             `json:"currency_type"`
-	Symbol       string            `json:"symbol"`
-	AmountFactor int64             `json:"amount_factor"`
-	Status       int64             `json:"status"`
-	SortNo       int64             `json:"sort_no"`
+	Id           int64  `json:"id"`
+	Code         string `json:"code"`
+	NameKey      string `json:"name_key"`
+	Name         string `json:"name"`
+	CurrencyType int64  `json:"currency_type"`
+	Symbol       string `json:"symbol"`
+	AmountFactor int64  `json:"amount_factor"`
+	Status       int64  `json:"status"`
+	SortNo       int64  `json:"sort_no"`
 }
 
 type GetCurrencyRequest struct {
@@ -135,12 +102,13 @@ type PingResponse struct {
 }
 
 type RegionInfo struct {
-	Id          int64             `json:"id"`
-	Code        string            `json:"code"`
-	CallingCode string            `json:"calling_code"`
-	NameI18n    map[string]string `json:"name_i18n"`
-	Status      int64             `json:"status"`
-	SortNo      int64             `json:"sort_no"`
+	Id          int64  `json:"id"`
+	Code        string `json:"code"`
+	CallingCode string `json:"calling_code"`
+	NameKey     string `json:"name_key"`
+	Name        string `json:"name"`
+	Status      int64  `json:"status"`
+	SortNo      int64  `json:"sort_no"`
 }
 
 type ReorderCurrencyRequest struct {
@@ -168,37 +136,35 @@ type ReorderTimezoneResponse struct {
 }
 
 type TimezoneInfo struct {
-	Id       int64             `json:"id"`
-	Code     string            `json:"code"`
-	NameI18n map[string]string `json:"name_i18n"`
-	Status   int64             `json:"status"`
-	SortNo   int64             `json:"sort_no"`
+	Id      int64  `json:"id"`
+	Code    string `json:"code"`
+	NameKey string `json:"name_key"`
+	Name    string `json:"name"`
+	Status  int64  `json:"status"`
+	SortNo  int64  `json:"sort_no"`
 }
 
 type UpdateCurrencyRequest struct {
-	Id       int64             `json:"id" validate:"required,gt=0"`
-	NameI18n map[string]string `json:"name_i18n,optional"`
-	Symbol   *string           `json:"symbol,optional" validate:"omitempty,max=16"`
-	Status   *int64            `json:"status,optional" validate:"omitempty,oneof=1 2"`
+	Id     int64   `json:"id" validate:"required,gt=0"`
+	Symbol *string `json:"symbol,optional" validate:"omitempty,max=16"`
+	Status *int64  `json:"status,optional" validate:"omitempty,oneof=1 2"`
 }
 
 type UpdateCurrencyResponse struct {
 }
 
 type UpdateRegionRequest struct {
-	Id          int64             `json:"id" validate:"required,gt=0"`
-	CallingCode *string           `json:"calling_code,optional" validate:"omitempty,max=3"`
-	NameI18n    map[string]string `json:"name_i18n,optional"`
-	Status      *int64            `json:"status,optional" validate:"omitempty,oneof=1 2"`
+	Id          int64   `json:"id" validate:"required,gt=0"`
+	CallingCode *string `json:"calling_code,optional" validate:"omitempty,max=3,number"`
+	Status      *int64  `json:"status,optional" validate:"omitempty,oneof=1 2"`
 }
 
 type UpdateRegionResponse struct {
 }
 
 type UpdateTimezoneRequest struct {
-	Id       int64             `json:"id" validate:"required,gt=0"`
-	NameI18n map[string]string `json:"name_i18n,optional"`
-	Status   *int64            `json:"status,optional" validate:"omitempty,oneof=1 2"`
+	Id     int64  `json:"id" validate:"required,gt=0"`
+	Status *int64 `json:"status,optional" validate:"omitempty,oneof=1 2"`
 }
 
 type UpdateTimezoneResponse struct {

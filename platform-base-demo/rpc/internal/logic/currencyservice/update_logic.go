@@ -6,7 +6,6 @@ import (
 
 	"oa.98ent.com/p9/platform-base/pkg/i18nkey"
 	"oa.98ent.com/p9/platform-base/pkg/rpc/grpcerror"
-	entlanguage "oa.98ent.com/p9/platform-base/rpc/ent/language"
 	"oa.98ent.com/p9/platform-base/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-base/rpc/internal/svc"
 	"oa.98ent.com/p9/platform-base/rpc/pb/base/currency"
@@ -36,9 +35,7 @@ func (l *UpdateLogic) Update(in *currency.UpdateCurrencyRequest) (*currency.Upda
 	}
 
 	// 至少需要修改一个字段
-	if len(in.NameI18N) == 0 &&
-		in.Symbol == nil &&
-		in.Status == nil {
+	if in.Symbol == nil && in.Status == nil {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
 	}
 
@@ -54,38 +51,6 @@ func (l *UpdateLogic) Update(in *currency.UpdateCurrencyRequest) (*currency.Upda
 		symbol = &value
 	}
 
-	var nameI18N map[string]string
-
-	// 传入多语言名称时进行校验和整理
-	if len(in.NameI18N) > 0 {
-		nameI18N = make(map[string]string, len(in.NameI18N))
-		codes := make([]string, 0, len(in.NameI18N))
-
-		for code, name := range in.NameI18N {
-			name = strings.TrimSpace(name)
-			if code == "" || name == "" {
-				return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
-			}
-
-			nameI18N[code] = name
-			codes = append(codes, code)
-		}
-
-		// 校验多语言名称中的语言编码是否已经存在
-		count, err := l.svcCtx.DB.Language.
-			Query().
-			Where(entlanguage.CodeIn(codes...)).
-			Count(l.ctx)
-		if err != nil {
-			// 转换Ent错误为gRPC错误
-			return nil, enterror.Handle(l.Logger, err)
-		}
-
-		if count != len(codes) {
-			return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
-		}
-	}
-
 	// 修改货币
 	update := l.svcCtx.DB.Currency.
 		UpdateOneID(in.Id).
@@ -94,11 +59,6 @@ func (l *UpdateLogic) Update(in *currency.UpdateCurrencyRequest) (*currency.Upda
 	// 传入货币符号时进行修改
 	if symbol != nil {
 		update.SetSymbol(*symbol) // 货币符号
-	}
-
-	// 传入多语言名称时进行修改
-	if nameI18N != nil {
-		update.SetNameI18n(nameI18N) // 多语言名称
 	}
 
 	if err := update.Exec(l.ctx); err != nil {

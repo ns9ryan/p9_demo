@@ -10,7 +10,7 @@ func toCurrencyInfo(data *ent.Currency) *currency.CurrencyInfo {
 	return &currency.CurrencyInfo{
 		Id:           data.ID,           // 货币ID
 		Code:         data.Code,         // 货币编码
-		NameI18N:     data.NameI18n,     // 多语言名称
+		NameKey:      data.NameKey,      // 名称翻译Key
 		CurrencyType: data.CurrencyType, // 货币类型: 1法定货币, 2虚拟货币
 		Symbol:       data.Symbol,       // 货币符号
 		AmountFactor: data.AmountFactor, // 金额换算倍率

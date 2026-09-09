@@ -6,6 +6,7 @@ package currency
 import (
 	"context"
 
+	corei18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/platform-base/api/internal/svc"
 	"oa.98ent.com/p9/platform-base/api/internal/types"
 	"oa.98ent.com/p9/platform-base/rpc/pb/base/currency"
@@ -45,10 +46,14 @@ func (l *ListCurrenciesLogic) ListCurrencies(req *types.ListCurrenciesRequest) (
 	// 转换货币列表
 	list := make([]types.CurrencyInfo, 0, len(result.List))
 	for _, item := range result.List {
+		// 获取当前语言的货币名称
+		name := corei18n.TG(l.ctx, "base", item.NameKey)
+
 		list = append(list, types.CurrencyInfo{
 			Id:           item.Id,           // 货币ID
 			Code:         item.Code,         // 货币编码
-			NameI18n:     item.NameI18N,     // 多语言名称
+			NameKey:      item.NameKey,      // 名称翻译Key
+			Name:         name,              // 当前语言名称
 			CurrencyType: item.CurrencyType, // 货币类型: 1法定货币, 2虚拟货币
 			Symbol:       item.Symbol,       // 货币符号
 			AmountFactor: item.AmountFactor, // 金额换算倍率

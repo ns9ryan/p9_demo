@@ -9,33 +9,19 @@ type (
 		Id int64 `json:"id"`
 		// IANA 时区编码
 		Code string `json:"code"`
-		// 多语言名称
-		NameI18n map[string]string `json:"name_i18n"`
+		// 名称翻译Key
+		NameKey string `json:"name_key"`
+		// 当前语言名称, 开发阶段用于调试
+		Name string `json:"name"`
 		// 状态: 1启用, 2停用
 		Status int64 `json:"status"`
 		// 排序值, 数值越小越靠前
 		SortNo int64 `json:"sort_no"`
 	}
-	// 创建时区请求
-	CreateTimezoneRequest {
-		// IANA 时区编码
-		Code string `json:"code" validate:"required,max=64"`
-		// 多语言名称
-		NameI18n map[string]string `json:"name_i18n" validate:"required"`
-		// 状态: 1启用, 2停用
-		Status *int64 `json:"status,optional" validate:"omitempty,oneof=1 2"`
-	}
-	// 创建时区响应
-	CreateTimezoneResponse {
-		// 时区ID
-		Id int64 `json:"id"`
-	}
 	// 修改时区请求
 	UpdateTimezoneRequest {
 		// 时区ID
 		Id int64 `json:"id" validate:"required,gt=0"`
-		// 多语言名称, 为空时不修改
-		NameI18n map[string]string `json:"name_i18n,optional"`
 		// 状态: 1启用, 2停用
 		Status *int64 `json:"status,optional" validate:"omitempty,oneof=1 2"`
 	}
@@ -92,10 +78,6 @@ type (
 	middleware: Jwt,ActionLog,Authority
 )
 service platform_base {
-	// 创建时区
-	@handler CreateTimezone
-	post /create (CreateTimezoneRequest) returns (CreateTimezoneResponse)
-
 	// 修改时区
 	@handler UpdateTimezone
 	post /update (UpdateTimezoneRequest) returns (UpdateTimezoneResponse)

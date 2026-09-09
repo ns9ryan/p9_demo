@@ -6,6 +6,7 @@ package timezone
 import (
 	"context"
 
+	corei18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/platform-base/api/internal/svc"
 	"oa.98ent.com/p9/platform-base/api/internal/types"
 	"oa.98ent.com/p9/platform-base/rpc/pb/base/timezone"
@@ -45,12 +46,16 @@ func (l *ListTimezonesLogic) ListTimezones(req *types.ListTimezonesRequest) (res
 	// 转换时区列表
 	list := make([]types.TimezoneInfo, 0, len(result.List))
 	for _, item := range result.List {
+		// 获取当前语言的时区名称
+		name := corei18n.TG(l.ctx, "base", item.NameKey)
+
 		list = append(list, types.TimezoneInfo{
-			Id:       item.Id,       // 时区ID
-			Code:     item.Code,     // IANA时区编码
-			NameI18n: item.NameI18N, // 多语言名称
-			Status:   item.Status,   // 状态: 1启用, 2停用
-			SortNo:   item.SortNo,   // 排序值
+			Id:      item.Id,      // 时区ID
+			Code:    item.Code,    // IANA时区编码
+			NameKey: item.NameKey, // 名称翻译Key
+			Name:    name,         // 当前语言名称
+			Status:  item.Status,  // 状态: 1启用, 2停用
+			SortNo:  item.SortNo,  // 排序值
 		})
 	}
 

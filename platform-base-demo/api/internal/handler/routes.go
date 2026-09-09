@@ -21,11 +21,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
 			[]rest.Route{
 				{
-					Method:  http.MethodPost,
-					Path:    "/create",
-					Handler: currency.CreateCurrencyHandler(serverCtx),
-				},
-				{
 					Method:  http.MethodGet,
 					Path:    "/get",
 					Handler: currency.GetCurrencyHandler(serverCtx),
@@ -70,11 +65,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
 			[]rest.Route{
 				{
-					Method:  http.MethodPost,
-					Path:    "/create",
-					Handler: region.CreateRegionHandler(serverCtx),
-				},
-				{
 					Method:  http.MethodGet,
 					Path:    "/get",
 					Handler: region.GetRegionHandler(serverCtx),
@@ -108,11 +98,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		rest.WithMiddlewares(
 			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
 			[]rest.Route{
-				{
-					Method:  http.MethodPost,
-					Path:    "/create",
-					Handler: timezone.CreateTimezoneHandler(serverCtx),
-				},
 				{
 					Method:  http.MethodGet,
 					Path:    "/get",

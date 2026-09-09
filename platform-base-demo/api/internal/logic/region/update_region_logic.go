@@ -35,7 +35,6 @@ func (l *UpdateRegionLogic) UpdateRegion(req *types.UpdateRegionRequest) (resp *
 		&region.UpdateRegionRequest{
 			Id:          req.Id,          // 国家或地区ID
 			CallingCode: req.CallingCode, // 国际电话区号, 不包含加号
-			NameI18N:    req.NameI18n,    // 多语言名称
 			Status:      req.Status,      // 状态: 1启用, 2停用
 		},
 	)

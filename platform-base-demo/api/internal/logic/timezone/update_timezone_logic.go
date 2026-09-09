@@ -33,9 +33,8 @@ func (l *UpdateTimezoneLogic) UpdateTimezone(req *types.UpdateTimezoneRequest) (
 	_, err = l.svcCtx.TimezoneRpc.Update(
 		l.ctx,
 		&timezone.UpdateTimezoneRequest{
-			Id:       req.Id,       // 时区ID
-			NameI18N: req.NameI18n, // 多语言名称
-			Status:   req.Status,   // 状态: 1启用, 2停用
+			Id:     req.Id,     // 时区ID
+			Status: req.Status, // 状态: 1启用, 2停用
 		},
 	)
 	if err != nil {

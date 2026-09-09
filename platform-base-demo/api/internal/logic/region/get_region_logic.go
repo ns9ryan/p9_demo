@@ -6,6 +6,7 @@ package region
 import (
 	"context"
 
+	corei18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/platform-base/api/internal/svc"
 	"oa.98ent.com/p9/platform-base/api/internal/types"
 	"oa.98ent.com/p9/platform-base/rpc/pb/base/region"
@@ -40,13 +41,17 @@ func (l *GetRegionLogic) GetRegion(req *types.GetRegionRequest) (resp *types.Get
 		return nil, err
 	}
 
+	// 获取当前语言的国家地区名称
+	name := corei18n.TG(l.ctx, "base", result.Region.NameKey)
+
 	// 返回国家地区信息
 	return &types.GetRegionResponse{
 		Region: types.RegionInfo{
 			Id:          result.Region.Id,          // 国家或地区ID
 			Code:        result.Region.Code,        // 国家或地区编码
 			CallingCode: result.Region.CallingCode, // 国际电话区号, 不包含加号
-			NameI18n:    result.Region.NameI18N,    // 多语言名称
+			NameKey:     result.Region.NameKey,     // 名称翻译Key
+			Name:        name,                      // 当前语言名称
 			Status:      result.Region.Status,      // 状态: 1启用, 2停用
 			SortNo:      result.Region.SortNo,      // 排序值
 		},
