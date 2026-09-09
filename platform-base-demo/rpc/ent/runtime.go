@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"oa.98ent.com/p9/platform-base/rpc/ent/currency"
-	"oa.98ent.com/p9/platform-base/rpc/ent/language"
 	"oa.98ent.com/p9/platform-base/rpc/ent/region"
 	"oa.98ent.com/p9/platform-base/rpc/ent/schema"
 	"oa.98ent.com/p9/platform-base/rpc/ent/timezone"
@@ -57,6 +56,24 @@ func init() {
 			return nil
 		}
 	}()
+	// currencyDescNameKey is the schema descriptor for name_key field.
+	currencyDescNameKey := currencyFields[1].Descriptor()
+	// currency.NameKeyValidator is a validator for the "name_key" field. It is called by the builders before save.
+	currency.NameKeyValidator = func() func(string) error {
+		validators := currencyDescNameKey.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(name_key string) error {
+			for _, fn := range fns {
+				if err := fn(name_key); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	// currencyDescCurrencyType is the schema descriptor for currency_type field.
 	currencyDescCurrencyType := currencyFields[2].Descriptor()
 	// currency.CurrencyTypeValidator is a validator for the "currency_type" field. It is called by the builders before save.
@@ -83,47 +100,6 @@ func init() {
 	currencyDescAmountFactor := currencyFields[4].Descriptor()
 	// currency.AmountFactorValidator is a validator for the "amount_factor" field. It is called by the builders before save.
 	currency.AmountFactorValidator = currencyDescAmountFactor.Validators[0].(func(int64) error)
-	languageMixin := schema.Language{}.Mixin()
-	languageMixinFields1 := languageMixin[1].Fields()
-	_ = languageMixinFields1
-	languageMixinFields3 := languageMixin[3].Fields()
-	_ = languageMixinFields3
-	languageFields := schema.Language{}.Fields()
-	_ = languageFields
-	// languageDescStatus is the schema descriptor for status field.
-	languageDescStatus := languageMixinFields1[0].Descriptor()
-	// language.DefaultStatus holds the default value on creation for the status field.
-	language.DefaultStatus = languageDescStatus.Default.(int64)
-	// language.StatusValidator is a validator for the "status" field. It is called by the builders before save.
-	language.StatusValidator = languageDescStatus.Validators[0].(func(int64) error)
-	// languageDescCreatedAt is the schema descriptor for created_at field.
-	languageDescCreatedAt := languageMixinFields3[0].Descriptor()
-	// language.DefaultCreatedAt holds the default value on creation for the created_at field.
-	language.DefaultCreatedAt = languageDescCreatedAt.Default.(func() time.Time)
-	// languageDescUpdatedAt is the schema descriptor for updated_at field.
-	languageDescUpdatedAt := languageMixinFields3[1].Descriptor()
-	// language.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	language.DefaultUpdatedAt = languageDescUpdatedAt.Default.(func() time.Time)
-	// language.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	language.UpdateDefaultUpdatedAt = languageDescUpdatedAt.UpdateDefault.(func() time.Time)
-	// languageDescCode is the schema descriptor for code field.
-	languageDescCode := languageFields[0].Descriptor()
-	// language.CodeValidator is a validator for the "code" field. It is called by the builders before save.
-	language.CodeValidator = func() func(string) error {
-		validators := languageDescCode.Validators
-		fns := [...]func(string) error{
-			validators[0].(func(string) error),
-			validators[1].(func(string) error),
-		}
-		return func(code string) error {
-			for _, fn := range fns {
-				if err := fn(code); err != nil {
-					return err
-				}
-			}
-			return nil
-		}
-	}()
 	regionMixin := schema.Region{}.Mixin()
 	regionMixinFields1 := regionMixin[1].Fields()
 	_ = regionMixinFields1
@@ -186,6 +162,24 @@ func init() {
 			return nil
 		}
 	}()
+	// regionDescNameKey is the schema descriptor for name_key field.
+	regionDescNameKey := regionFields[2].Descriptor()
+	// region.NameKeyValidator is a validator for the "name_key" field. It is called by the builders before save.
+	region.NameKeyValidator = func() func(string) error {
+		validators := regionDescNameKey.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(name_key string) error {
+			for _, fn := range fns {
+				if err := fn(name_key); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	timezoneMixin := schema.Timezone{}.Mixin()
 	timezoneMixinFields1 := timezoneMixin[1].Fields()
 	_ = timezoneMixinFields1
@@ -221,6 +215,24 @@ func init() {
 		return func(code string) error {
 			for _, fn := range fns {
 				if err := fn(code); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// timezoneDescNameKey is the schema descriptor for name_key field.
+	timezoneDescNameKey := timezoneFields[1].Descriptor()
+	// timezone.NameKeyValidator is a validator for the "name_key" field. It is called by the builders before save.
+	timezone.NameKeyValidator = func() func(string) error {
+		validators := timezoneDescNameKey.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(name_key string) error {
+			for _, fn := range fns {
+				if err := fn(name_key); err != nil {
 					return err
 				}
 			}

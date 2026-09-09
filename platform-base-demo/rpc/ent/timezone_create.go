@@ -76,9 +76,9 @@ func (_c *TimezoneCreate) SetCode(v string) *TimezoneCreate {
 	return _c
 }
 
-// SetNameI18n sets the "name_i18n" field.
-func (_c *TimezoneCreate) SetNameI18n(v map[string]string) *TimezoneCreate {
-	_c.mutation.SetNameI18n(v)
+// SetNameKey sets the "name_key" field.
+func (_c *TimezoneCreate) SetNameKey(v string) *TimezoneCreate {
+	_c.mutation.SetNameKey(v)
 	return _c
 }
 
@@ -164,8 +164,13 @@ func (_c *TimezoneCreate) check() error {
 			return &ValidationError{Name: "code", err: fmt.Errorf(`ent: validator failed for field "Timezone.code": %w`, err)}
 		}
 	}
-	if _, ok := _c.mutation.NameI18n(); !ok {
-		return &ValidationError{Name: "name_i18n", err: errors.New(`ent: missing required field "Timezone.name_i18n"`)}
+	if _, ok := _c.mutation.NameKey(); !ok {
+		return &ValidationError{Name: "name_key", err: errors.New(`ent: missing required field "Timezone.name_key"`)}
+	}
+	if v, ok := _c.mutation.NameKey(); ok {
+		if err := timezone.NameKeyValidator(v); err != nil {
+			return &ValidationError{Name: "name_key", err: fmt.Errorf(`ent: validator failed for field "Timezone.name_key": %w`, err)}
+		}
 	}
 	return nil
 }
@@ -220,9 +225,9 @@ func (_c *TimezoneCreate) createSpec() (*Timezone, *sqlgraph.CreateSpec) {
 		_spec.SetField(timezone.FieldCode, field.TypeString, value)
 		_node.Code = value
 	}
-	if value, ok := _c.mutation.NameI18n(); ok {
-		_spec.SetField(timezone.FieldNameI18n, field.TypeJSON, value)
-		_node.NameI18n = value
+	if value, ok := _c.mutation.NameKey(); ok {
+		_spec.SetField(timezone.FieldNameKey, field.TypeString, value)
+		_node.NameKey = value
 	}
 	return _node, _spec
 }
@@ -324,18 +329,6 @@ func (u *TimezoneUpsert) UpdateUpdatedAt() *TimezoneUpsert {
 	return u
 }
 
-// SetNameI18n sets the "name_i18n" field.
-func (u *TimezoneUpsert) SetNameI18n(v map[string]string) *TimezoneUpsert {
-	u.Set(timezone.FieldNameI18n, v)
-	return u
-}
-
-// UpdateNameI18n sets the "name_i18n" field to the value that was provided on create.
-func (u *TimezoneUpsert) UpdateNameI18n() *TimezoneUpsert {
-	u.SetExcluded(timezone.FieldNameI18n)
-	return u
-}
-
 // UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
@@ -358,6 +351,9 @@ func (u *TimezoneUpsertOne) UpdateNewValues() *TimezoneUpsertOne {
 		}
 		if _, exists := u.create.mutation.Code(); exists {
 			s.SetIgnore(timezone.FieldCode)
+		}
+		if _, exists := u.create.mutation.NameKey(); exists {
+			s.SetIgnore(timezone.FieldNameKey)
 		}
 	}))
 	return u
@@ -443,20 +439,6 @@ func (u *TimezoneUpsertOne) SetUpdatedAt(v time.Time) *TimezoneUpsertOne {
 func (u *TimezoneUpsertOne) UpdateUpdatedAt() *TimezoneUpsertOne {
 	return u.Update(func(s *TimezoneUpsert) {
 		s.UpdateUpdatedAt()
-	})
-}
-
-// SetNameI18n sets the "name_i18n" field.
-func (u *TimezoneUpsertOne) SetNameI18n(v map[string]string) *TimezoneUpsertOne {
-	return u.Update(func(s *TimezoneUpsert) {
-		s.SetNameI18n(v)
-	})
-}
-
-// UpdateNameI18n sets the "name_i18n" field to the value that was provided on create.
-func (u *TimezoneUpsertOne) UpdateNameI18n() *TimezoneUpsertOne {
-	return u.Update(func(s *TimezoneUpsert) {
-		s.UpdateNameI18n()
 	})
 }
 
@@ -648,6 +630,9 @@ func (u *TimezoneUpsertBulk) UpdateNewValues() *TimezoneUpsertBulk {
 			if _, exists := b.mutation.Code(); exists {
 				s.SetIgnore(timezone.FieldCode)
 			}
+			if _, exists := b.mutation.NameKey(); exists {
+				s.SetIgnore(timezone.FieldNameKey)
+			}
 		}
 	}))
 	return u
@@ -733,20 +718,6 @@ func (u *TimezoneUpsertBulk) SetUpdatedAt(v time.Time) *TimezoneUpsertBulk {
 func (u *TimezoneUpsertBulk) UpdateUpdatedAt() *TimezoneUpsertBulk {
 	return u.Update(func(s *TimezoneUpsert) {
 		s.UpdateUpdatedAt()
-	})
-}
-
-// SetNameI18n sets the "name_i18n" field.
-func (u *TimezoneUpsertBulk) SetNameI18n(v map[string]string) *TimezoneUpsertBulk {
-	return u.Update(func(s *TimezoneUpsert) {
-		s.SetNameI18n(v)
-	})
-}
-
-// UpdateNameI18n sets the "name_i18n" field to the value that was provided on create.
-func (u *TimezoneUpsertBulk) UpdateNameI18n() *TimezoneUpsertBulk {
-	return u.Update(func(s *TimezoneUpsert) {
-		s.UpdateNameI18n()
 	})
 }
 

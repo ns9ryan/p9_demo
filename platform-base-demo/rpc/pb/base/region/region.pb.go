@@ -30,8 +30,8 @@ type RegionInfo struct {
 	Code string `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
 	// 国际电话区号, 不包含加号
 	CallingCode string `protobuf:"bytes,3,opt,name=calling_code,json=callingCode,proto3" json:"calling_code,omitempty"`
-	// 多语言名称
-	NameI18N map[string]string `protobuf:"bytes,4,rep,name=name_i18n,json=nameI18n,proto3" json:"name_i18n,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	// 名称翻译Key
+	NameKey string `protobuf:"bytes,4,opt,name=name_key,json=nameKey,proto3" json:"name_key,omitempty"`
 	// 状态: 1启用, 2停用
 	Status int64 `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`
 	// 排序值, 数值越小越靠前
@@ -91,11 +91,11 @@ func (x *RegionInfo) GetCallingCode() string {
 	return ""
 }
 
-func (x *RegionInfo) GetNameI18N() map[string]string {
+func (x *RegionInfo) GetNameKey() string {
 	if x != nil {
-		return x.NameI18N
+		return x.NameKey
 	}
-	return nil
+	return ""
 }
 
 func (x *RegionInfo) GetStatus() int64 {
@@ -119,8 +119,8 @@ type CreateRegionRequest struct {
 	Code string `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
 	// 国际电话区号, 不包含加号
 	CallingCode string `protobuf:"bytes,2,opt,name=calling_code,json=callingCode,proto3" json:"calling_code,omitempty"`
-	// 多语言名称
-	NameI18N map[string]string `protobuf:"bytes,3,rep,name=name_i18n,json=nameI18n,proto3" json:"name_i18n,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	// 名称翻译Key
+	NameKey string `protobuf:"bytes,3,opt,name=name_key,json=nameKey,proto3" json:"name_key,omitempty"`
 	// 状态: 1启用, 2停用
 	Status        *int64 `protobuf:"varint,4,opt,name=status,proto3,oneof" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -171,11 +171,11 @@ func (x *CreateRegionRequest) GetCallingCode() string {
 	return ""
 }
 
-func (x *CreateRegionRequest) GetNameI18N() map[string]string {
+func (x *CreateRegionRequest) GetNameKey() string {
 	if x != nil {
-		return x.NameI18N
+		return x.NameKey
 	}
-	return nil
+	return ""
 }
 
 func (x *CreateRegionRequest) GetStatus() int64 {
@@ -238,10 +238,8 @@ type UpdateRegionRequest struct {
 	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// 国际电话区号, 不传时不修改
 	CallingCode *string `protobuf:"bytes,2,opt,name=calling_code,json=callingCode,proto3,oneof" json:"calling_code,omitempty"`
-	// 多语言名称, 为空时不修改
-	NameI18N map[string]string `protobuf:"bytes,3,rep,name=name_i18n,json=nameI18n,proto3" json:"name_i18n,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// 状态: 1启用, 2停用
-	Status        *int64 `protobuf:"varint,4,opt,name=status,proto3,oneof" json:"status,omitempty"`
+	Status        *int64 `protobuf:"varint,3,opt,name=status,proto3,oneof" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -288,13 +286,6 @@ func (x *UpdateRegionRequest) GetCallingCode() string {
 		return *x.CallingCode
 	}
 	return ""
-}
-
-func (x *UpdateRegionRequest) GetNameI18N() map[string]string {
-	if x != nil {
-		return x.NameI18N
-	}
-	return nil
 }
 
 func (x *UpdateRegionRequest) GetStatus() int64 {
@@ -740,37 +731,27 @@ var File_types_region_proto protoreflect.FileDescriptor
 
 const file_types_region_proto_rawDesc = "" +
 	"\n" +
-	"\x12types/region.proto\x12\x06region\"\x80\x02\n" +
+	"\x12types/region.proto\x12\x06region\"\x9f\x01\n" +
 	"\n" +
 	"RegionInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04code\x18\x02 \x01(\tR\x04code\x12!\n" +
-	"\fcalling_code\x18\x03 \x01(\tR\vcallingCode\x12=\n" +
-	"\tname_i18n\x18\x04 \x03(\v2 .region.RegionInfo.NameI18nEntryR\bnameI18n\x12\x16\n" +
+	"\fcalling_code\x18\x03 \x01(\tR\vcallingCode\x12\x19\n" +
+	"\bname_key\x18\x04 \x01(\tR\anameKey\x12\x16\n" +
 	"\x06status\x18\x05 \x01(\x03R\x06status\x12\x17\n" +
-	"\asort_no\x18\x06 \x01(\x03R\x06sortNo\x1a;\n" +
-	"\rNameI18nEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xf9\x01\n" +
+	"\asort_no\x18\x06 \x01(\x03R\x06sortNo\"\x8f\x01\n" +
 	"\x13CreateRegionRequest\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12!\n" +
-	"\fcalling_code\x18\x02 \x01(\tR\vcallingCode\x12F\n" +
-	"\tname_i18n\x18\x03 \x03(\v2).region.CreateRegionRequest.NameI18nEntryR\bnameI18n\x12\x1b\n" +
-	"\x06status\x18\x04 \x01(\x03H\x00R\x06status\x88\x01\x01\x1a;\n" +
-	"\rNameI18nEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\t\n" +
+	"\fcalling_code\x18\x02 \x01(\tR\vcallingCode\x12\x19\n" +
+	"\bname_key\x18\x03 \x01(\tR\anameKey\x12\x1b\n" +
+	"\x06status\x18\x04 \x01(\x03H\x00R\x06status\x88\x01\x01B\t\n" +
 	"\a_status\"&\n" +
 	"\x14CreateRegionResponse\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"\x8b\x02\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"\x86\x01\n" +
 	"\x13UpdateRegionRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12&\n" +
-	"\fcalling_code\x18\x02 \x01(\tH\x00R\vcallingCode\x88\x01\x01\x12F\n" +
-	"\tname_i18n\x18\x03 \x03(\v2).region.UpdateRegionRequest.NameI18nEntryR\bnameI18n\x12\x1b\n" +
-	"\x06status\x18\x04 \x01(\x03H\x01R\x06status\x88\x01\x01\x1a;\n" +
-	"\rNameI18nEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\x0f\n" +
+	"\fcalling_code\x18\x02 \x01(\tH\x00R\vcallingCode\x88\x01\x01\x12\x1b\n" +
+	"\x06status\x18\x03 \x01(\x03H\x01R\x06status\x88\x01\x01B\x0f\n" +
 	"\r_calling_codeB\t\n" +
 	"\a_status\"\x16\n" +
 	"\x14UpdateRegionResponse\"\"\n" +
@@ -808,7 +789,7 @@ func file_types_region_proto_rawDescGZIP() []byte {
 	return file_types_region_proto_rawDescData
 }
 
-var file_types_region_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_types_region_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_types_region_proto_goTypes = []any{
 	(*RegionInfo)(nil),             // 0: region.RegionInfo
 	(*CreateRegionRequest)(nil),    // 1: region.CreateRegionRequest
@@ -823,22 +804,16 @@ var file_types_region_proto_goTypes = []any{
 	(*ListAllRegionsResponse)(nil), // 10: region.ListAllRegionsResponse
 	(*ReorderRegionRequest)(nil),   // 11: region.ReorderRegionRequest
 	(*ReorderRegionResponse)(nil),  // 12: region.ReorderRegionResponse
-	nil,                            // 13: region.RegionInfo.NameI18nEntry
-	nil,                            // 14: region.CreateRegionRequest.NameI18nEntry
-	nil,                            // 15: region.UpdateRegionRequest.NameI18nEntry
 }
 var file_types_region_proto_depIdxs = []int32{
-	13, // 0: region.RegionInfo.name_i18n:type_name -> region.RegionInfo.NameI18nEntry
-	14, // 1: region.CreateRegionRequest.name_i18n:type_name -> region.CreateRegionRequest.NameI18nEntry
-	15, // 2: region.UpdateRegionRequest.name_i18n:type_name -> region.UpdateRegionRequest.NameI18nEntry
-	0,  // 3: region.GetRegionResponse.region:type_name -> region.RegionInfo
-	0,  // 4: region.ListRegionsResponse.list:type_name -> region.RegionInfo
-	0,  // 5: region.ListAllRegionsResponse.list:type_name -> region.RegionInfo
-	6,  // [6:6] is the sub-list for method output_type
-	6,  // [6:6] is the sub-list for method input_type
-	6,  // [6:6] is the sub-list for extension type_name
-	6,  // [6:6] is the sub-list for extension extendee
-	0,  // [0:6] is the sub-list for field type_name
+	0, // 0: region.GetRegionResponse.region:type_name -> region.RegionInfo
+	0, // 1: region.ListRegionsResponse.list:type_name -> region.RegionInfo
+	0, // 2: region.ListAllRegionsResponse.list:type_name -> region.RegionInfo
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_types_region_proto_init() }
@@ -856,7 +831,7 @@ func file_types_region_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_region_proto_rawDesc), len(file_types_region_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   16,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

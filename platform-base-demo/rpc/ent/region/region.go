@@ -25,8 +25,8 @@ const (
 	FieldCode = "code"
 	// FieldCallingCode holds the string denoting the calling_code field in the database.
 	FieldCallingCode = "calling_code"
-	// FieldNameI18n holds the string denoting the name_i18n field in the database.
-	FieldNameI18n = "name_i18n"
+	// FieldNameKey holds the string denoting the name_key field in the database.
+	FieldNameKey = "name_key"
 	// Table holds the table name of the region in the database.
 	Table = "region"
 )
@@ -40,7 +40,7 @@ var Columns = []string{
 	FieldUpdatedAt,
 	FieldCode,
 	FieldCallingCode,
-	FieldNameI18n,
+	FieldNameKey,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -68,6 +68,8 @@ var (
 	CodeValidator func(string) error
 	// CallingCodeValidator is a validator for the "calling_code" field. It is called by the builders before save.
 	CallingCodeValidator func(string) error
+	// NameKeyValidator is a validator for the "name_key" field. It is called by the builders before save.
+	NameKeyValidator func(string) error
 )
 
 // OrderOption defines the ordering options for the Region queries.
@@ -106,4 +108,9 @@ func ByCode(opts ...sql.OrderTermOption) OrderOption {
 // ByCallingCode orders the results by the calling_code field.
 func ByCallingCode(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCallingCode, opts...).ToFunc()
+}
+
+// ByNameKey orders the results by the name_key field.
+func ByNameKey(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldNameKey, opts...).ToFunc()
 }

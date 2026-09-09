@@ -15,7 +15,6 @@ import (
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"oa.98ent.com/p9/platform-base/rpc/ent/currency"
-	"oa.98ent.com/p9/platform-base/rpc/ent/language"
 	"oa.98ent.com/p9/platform-base/rpc/ent/region"
 	"oa.98ent.com/p9/platform-base/rpc/ent/timezone"
 )
@@ -27,8 +26,6 @@ type Client struct {
 	Schema *migrate.Schema
 	// Currency is the client for interacting with the Currency builders.
 	Currency *CurrencyClient
-	// Language is the client for interacting with the Language builders.
-	Language *LanguageClient
 	// Region is the client for interacting with the Region builders.
 	Region *RegionClient
 	// Timezone is the client for interacting with the Timezone builders.
@@ -45,7 +42,6 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Currency = NewCurrencyClient(c.config)
-	c.Language = NewLanguageClient(c.config)
 	c.Region = NewRegionClient(c.config)
 	c.Timezone = NewTimezoneClient(c.config)
 }
@@ -141,7 +137,6 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		ctx:      ctx,
 		config:   cfg,
 		Currency: NewCurrencyClient(cfg),
-		Language: NewLanguageClient(cfg),
 		Region:   NewRegionClient(cfg),
 		Timezone: NewTimezoneClient(cfg),
 	}, nil
@@ -164,7 +159,6 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		ctx:      ctx,
 		config:   cfg,
 		Currency: NewCurrencyClient(cfg),
-		Language: NewLanguageClient(cfg),
 		Region:   NewRegionClient(cfg),
 		Timezone: NewTimezoneClient(cfg),
 	}, nil
@@ -196,7 +190,6 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	c.Currency.Use(hooks...)
-	c.Language.Use(hooks...)
 	c.Region.Use(hooks...)
 	c.Timezone.Use(hooks...)
 }
@@ -205,7 +198,6 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	c.Currency.Intercept(interceptors...)
-	c.Language.Intercept(interceptors...)
 	c.Region.Intercept(interceptors...)
 	c.Timezone.Intercept(interceptors...)
 }
@@ -215,8 +207,6 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
 	case *CurrencyMutation:
 		return c.Currency.mutate(ctx, m)
-	case *LanguageMutation:
-		return c.Language.mutate(ctx, m)
 	case *RegionMutation:
 		return c.Region.mutate(ctx, m)
 	case *TimezoneMutation:
@@ -356,139 +346,6 @@ func (c *CurrencyClient) mutate(ctx context.Context, m *CurrencyMutation) (Value
 		return (&CurrencyDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown Currency mutation op: %q", m.Op())
-	}
-}
-
-// LanguageClient is a client for the Language schema.
-type LanguageClient struct {
-	config
-}
-
-// NewLanguageClient returns a client for the Language from the given config.
-func NewLanguageClient(c config) *LanguageClient {
-	return &LanguageClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `language.Hooks(f(g(h())))`.
-func (c *LanguageClient) Use(hooks ...Hook) {
-	c.hooks.Language = append(c.hooks.Language, hooks...)
-}
-
-// Intercept adds a list of query interceptors to the interceptors stack.
-// A call to `Intercept(f, g, h)` equals to `language.Intercept(f(g(h())))`.
-func (c *LanguageClient) Intercept(interceptors ...Interceptor) {
-	c.inters.Language = append(c.inters.Language, interceptors...)
-}
-
-// Create returns a builder for creating a Language entity.
-func (c *LanguageClient) Create() *LanguageCreate {
-	mutation := newLanguageMutation(c.config, OpCreate)
-	return &LanguageCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// CreateBulk returns a builder for creating a bulk of Language entities.
-func (c *LanguageClient) CreateBulk(builders ...*LanguageCreate) *LanguageCreateBulk {
-	return &LanguageCreateBulk{config: c.config, builders: builders}
-}
-
-// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
-// a builder and applies setFunc on it.
-func (c *LanguageClient) MapCreateBulk(slice any, setFunc func(*LanguageCreate, int)) *LanguageCreateBulk {
-	rv := reflect.ValueOf(slice)
-	if rv.Kind() != reflect.Slice {
-		return &LanguageCreateBulk{err: fmt.Errorf("calling to LanguageClient.MapCreateBulk with wrong type %T, need slice", slice)}
-	}
-	builders := make([]*LanguageCreate, rv.Len())
-	for i := 0; i < rv.Len(); i++ {
-		builders[i] = c.Create()
-		setFunc(builders[i], i)
-	}
-	return &LanguageCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for Language.
-func (c *LanguageClient) Update() *LanguageUpdate {
-	mutation := newLanguageMutation(c.config, OpUpdate)
-	return &LanguageUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *LanguageClient) UpdateOne(_m *Language) *LanguageUpdateOne {
-	mutation := newLanguageMutation(c.config, OpUpdateOne, withLanguage(_m))
-	return &LanguageUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *LanguageClient) UpdateOneID(id int64) *LanguageUpdateOne {
-	mutation := newLanguageMutation(c.config, OpUpdateOne, withLanguageID(id))
-	return &LanguageUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for Language.
-func (c *LanguageClient) Delete() *LanguageDelete {
-	mutation := newLanguageMutation(c.config, OpDelete)
-	return &LanguageDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a builder for deleting the given entity.
-func (c *LanguageClient) DeleteOne(_m *Language) *LanguageDeleteOne {
-	return c.DeleteOneID(_m.ID)
-}
-
-// DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *LanguageClient) DeleteOneID(id int64) *LanguageDeleteOne {
-	builder := c.Delete().Where(language.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &LanguageDeleteOne{builder}
-}
-
-// Query returns a query builder for Language.
-func (c *LanguageClient) Query() *LanguageQuery {
-	return &LanguageQuery{
-		config: c.config,
-		ctx:    &QueryContext{Type: TypeLanguage},
-		inters: c.Interceptors(),
-	}
-}
-
-// Get returns a Language entity by its id.
-func (c *LanguageClient) Get(ctx context.Context, id int64) (*Language, error) {
-	return c.Query().Where(language.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *LanguageClient) GetX(ctx context.Context, id int64) *Language {
-	obj, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return obj
-}
-
-// Hooks returns the client hooks.
-func (c *LanguageClient) Hooks() []Hook {
-	return c.hooks.Language
-}
-
-// Interceptors returns the client interceptors.
-func (c *LanguageClient) Interceptors() []Interceptor {
-	return c.inters.Language
-}
-
-func (c *LanguageClient) mutate(ctx context.Context, m *LanguageMutation) (Value, error) {
-	switch m.Op() {
-	case OpCreate:
-		return (&LanguageCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpUpdate:
-		return (&LanguageUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpUpdateOne:
-		return (&LanguageUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpDelete, OpDeleteOne:
-		return (&LanguageDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
-	default:
-		return nil, fmt.Errorf("ent: unknown Language mutation op: %q", m.Op())
 	}
 }
 
@@ -761,9 +618,9 @@ func (c *TimezoneClient) mutate(ctx context.Context, m *TimezoneMutation) (Value
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Currency, Language, Region, Timezone []ent.Hook
+		Currency, Region, Timezone []ent.Hook
 	}
 	inters struct {
-		Currency, Language, Region, Timezone []ent.Interceptor
+		Currency, Region, Timezone []ent.Interceptor
 	}
 )

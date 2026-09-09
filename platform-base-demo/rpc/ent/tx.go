@@ -14,8 +14,6 @@ type Tx struct {
 	config
 	// Currency is the client for interacting with the Currency builders.
 	Currency *CurrencyClient
-	// Language is the client for interacting with the Language builders.
-	Language *LanguageClient
 	// Region is the client for interacting with the Region builders.
 	Region *RegionClient
 	// Timezone is the client for interacting with the Timezone builders.
@@ -152,7 +150,6 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Currency = NewCurrencyClient(tx.config)
-	tx.Language = NewLanguageClient(tx.config)
 	tx.Region = NewRegionClient(tx.config)
 	tx.Timezone = NewTimezoneClient(tx.config)
 }

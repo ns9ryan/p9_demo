@@ -82,9 +82,9 @@ func (_c *RegionCreate) SetCallingCode(v string) *RegionCreate {
 	return _c
 }
 
-// SetNameI18n sets the "name_i18n" field.
-func (_c *RegionCreate) SetNameI18n(v map[string]string) *RegionCreate {
-	_c.mutation.SetNameI18n(v)
+// SetNameKey sets the "name_key" field.
+func (_c *RegionCreate) SetNameKey(v string) *RegionCreate {
+	_c.mutation.SetNameKey(v)
 	return _c
 }
 
@@ -178,8 +178,13 @@ func (_c *RegionCreate) check() error {
 			return &ValidationError{Name: "calling_code", err: fmt.Errorf(`ent: validator failed for field "Region.calling_code": %w`, err)}
 		}
 	}
-	if _, ok := _c.mutation.NameI18n(); !ok {
-		return &ValidationError{Name: "name_i18n", err: errors.New(`ent: missing required field "Region.name_i18n"`)}
+	if _, ok := _c.mutation.NameKey(); !ok {
+		return &ValidationError{Name: "name_key", err: errors.New(`ent: missing required field "Region.name_key"`)}
+	}
+	if v, ok := _c.mutation.NameKey(); ok {
+		if err := region.NameKeyValidator(v); err != nil {
+			return &ValidationError{Name: "name_key", err: fmt.Errorf(`ent: validator failed for field "Region.name_key": %w`, err)}
+		}
 	}
 	return nil
 }
@@ -238,9 +243,9 @@ func (_c *RegionCreate) createSpec() (*Region, *sqlgraph.CreateSpec) {
 		_spec.SetField(region.FieldCallingCode, field.TypeString, value)
 		_node.CallingCode = value
 	}
-	if value, ok := _c.mutation.NameI18n(); ok {
-		_spec.SetField(region.FieldNameI18n, field.TypeJSON, value)
-		_node.NameI18n = value
+	if value, ok := _c.mutation.NameKey(); ok {
+		_spec.SetField(region.FieldNameKey, field.TypeString, value)
+		_node.NameKey = value
 	}
 	return _node, _spec
 }
@@ -354,18 +359,6 @@ func (u *RegionUpsert) UpdateCallingCode() *RegionUpsert {
 	return u
 }
 
-// SetNameI18n sets the "name_i18n" field.
-func (u *RegionUpsert) SetNameI18n(v map[string]string) *RegionUpsert {
-	u.Set(region.FieldNameI18n, v)
-	return u
-}
-
-// UpdateNameI18n sets the "name_i18n" field to the value that was provided on create.
-func (u *RegionUpsert) UpdateNameI18n() *RegionUpsert {
-	u.SetExcluded(region.FieldNameI18n)
-	return u
-}
-
 // UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
@@ -388,6 +381,9 @@ func (u *RegionUpsertOne) UpdateNewValues() *RegionUpsertOne {
 		}
 		if _, exists := u.create.mutation.Code(); exists {
 			s.SetIgnore(region.FieldCode)
+		}
+		if _, exists := u.create.mutation.NameKey(); exists {
+			s.SetIgnore(region.FieldNameKey)
 		}
 	}))
 	return u
@@ -487,20 +483,6 @@ func (u *RegionUpsertOne) SetCallingCode(v string) *RegionUpsertOne {
 func (u *RegionUpsertOne) UpdateCallingCode() *RegionUpsertOne {
 	return u.Update(func(s *RegionUpsert) {
 		s.UpdateCallingCode()
-	})
-}
-
-// SetNameI18n sets the "name_i18n" field.
-func (u *RegionUpsertOne) SetNameI18n(v map[string]string) *RegionUpsertOne {
-	return u.Update(func(s *RegionUpsert) {
-		s.SetNameI18n(v)
-	})
-}
-
-// UpdateNameI18n sets the "name_i18n" field to the value that was provided on create.
-func (u *RegionUpsertOne) UpdateNameI18n() *RegionUpsertOne {
-	return u.Update(func(s *RegionUpsert) {
-		s.UpdateNameI18n()
 	})
 }
 
@@ -692,6 +674,9 @@ func (u *RegionUpsertBulk) UpdateNewValues() *RegionUpsertBulk {
 			if _, exists := b.mutation.Code(); exists {
 				s.SetIgnore(region.FieldCode)
 			}
+			if _, exists := b.mutation.NameKey(); exists {
+				s.SetIgnore(region.FieldNameKey)
+			}
 		}
 	}))
 	return u
@@ -791,20 +776,6 @@ func (u *RegionUpsertBulk) SetCallingCode(v string) *RegionUpsertBulk {
 func (u *RegionUpsertBulk) UpdateCallingCode() *RegionUpsertBulk {
 	return u.Update(func(s *RegionUpsert) {
 		s.UpdateCallingCode()
-	})
-}
-
-// SetNameI18n sets the "name_i18n" field.
-func (u *RegionUpsertBulk) SetNameI18n(v map[string]string) *RegionUpsertBulk {
-	return u.Update(func(s *RegionUpsert) {
-		s.SetNameI18n(v)
-	})
-}
-
-// UpdateNameI18n sets the "name_i18n" field to the value that was provided on create.
-func (u *RegionUpsertBulk) UpdateNameI18n() *RegionUpsertBulk {
-	return u.Update(func(s *RegionUpsert) {
-		s.UpdateNameI18n()
 	})
 }
 

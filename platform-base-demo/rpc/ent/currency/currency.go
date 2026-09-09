@@ -23,8 +23,8 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldCode holds the string denoting the code field in the database.
 	FieldCode = "code"
-	// FieldNameI18n holds the string denoting the name_i18n field in the database.
-	FieldNameI18n = "name_i18n"
+	// FieldNameKey holds the string denoting the name_key field in the database.
+	FieldNameKey = "name_key"
 	// FieldCurrencyType holds the string denoting the currency_type field in the database.
 	FieldCurrencyType = "currency_type"
 	// FieldSymbol holds the string denoting the symbol field in the database.
@@ -43,7 +43,7 @@ var Columns = []string{
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldCode,
-	FieldNameI18n,
+	FieldNameKey,
 	FieldCurrencyType,
 	FieldSymbol,
 	FieldAmountFactor,
@@ -72,6 +72,8 @@ var (
 	UpdateDefaultUpdatedAt func() time.Time
 	// CodeValidator is a validator for the "code" field. It is called by the builders before save.
 	CodeValidator func(string) error
+	// NameKeyValidator is a validator for the "name_key" field. It is called by the builders before save.
+	NameKeyValidator func(string) error
 	// CurrencyTypeValidator is a validator for the "currency_type" field. It is called by the builders before save.
 	CurrencyTypeValidator func(int64) error
 	// SymbolValidator is a validator for the "symbol" field. It is called by the builders before save.
@@ -111,6 +113,11 @@ func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
 // ByCode orders the results by the code field.
 func ByCode(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCode, opts...).ToFunc()
+}
+
+// ByNameKey orders the results by the name_key field.
+func ByNameKey(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldNameKey, opts...).ToFunc()
 }
 
 // ByCurrencyType orders the results by the currency_type field.

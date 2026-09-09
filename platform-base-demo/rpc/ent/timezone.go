@@ -3,7 +3,6 @@
 package ent
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -29,8 +28,8 @@ type Timezone struct {
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
 	// IANA 时区编码
 	Code string `json:"code,omitempty"`
-	// 多语言名称
-	NameI18n     map[string]string `json:"name_i18n,omitempty"`
+	// 名称翻译 Key
+	NameKey      string `json:"name_key,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -39,11 +38,9 @@ func (*Timezone) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case timezone.FieldNameI18n:
-			values[i] = new([]byte)
 		case timezone.FieldID, timezone.FieldStatus, timezone.FieldSortNo:
 			values[i] = new(sql.NullInt64)
-		case timezone.FieldCode:
+		case timezone.FieldCode, timezone.FieldNameKey:
 			values[i] = new(sql.NullString)
 		case timezone.FieldCreatedAt, timezone.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -98,13 +95,11 @@ func (_m *Timezone) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.Code = value.String
 			}
-		case timezone.FieldNameI18n:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field name_i18n", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &_m.NameI18n); err != nil {
-					return fmt.Errorf("unmarshal field name_i18n: %w", err)
-				}
+		case timezone.FieldNameKey:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field name_key", values[i])
+			} else if value.Valid {
+				_m.NameKey = value.String
 			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
@@ -157,8 +152,8 @@ func (_m *Timezone) String() string {
 	builder.WriteString("code=")
 	builder.WriteString(_m.Code)
 	builder.WriteString(", ")
-	builder.WriteString("name_i18n=")
-	builder.WriteString(fmt.Sprintf("%v", _m.NameI18n))
+	builder.WriteString("name_key=")
+	builder.WriteString(_m.NameKey)
 	builder.WriteByte(')')
 	return builder.String()
 }

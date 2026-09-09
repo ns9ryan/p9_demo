@@ -17,7 +17,7 @@ var (
 		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间", SchemaType: map[string]string{"postgres": "timestamptz(3)"}},
 		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间", SchemaType: map[string]string{"postgres": "timestamptz(3)"}},
 		{Name: "code", Type: field.TypeString, Unique: true, Size: 16, Comment: "货币编码"},
-		{Name: "name_i18n", Type: field.TypeJSON, Comment: "多语言名称", SchemaType: map[string]string{"postgres": "jsonb"}},
+		{Name: "name_key", Type: field.TypeString, Size: 128, Comment: "名称翻译 Key"},
 		{Name: "currency_type", Type: field.TypeInt64, Comment: "货币类型: 1法定货币, 2虚拟货币", SchemaType: map[string]string{"postgres": "smallint"}},
 		{Name: "symbol", Type: field.TypeString, Size: 16, Comment: "货币符号"},
 		{Name: "amount_factor", Type: field.TypeInt64, Comment: "金额换算倍率, 例如 USD 为100, VND为1", SchemaType: map[string]string{"postgres": "bigint"}},
@@ -29,23 +29,6 @@ var (
 		Columns:    CurrencyColumns,
 		PrimaryKey: []*schema.Column{CurrencyColumns[0]},
 	}
-	// LanguageColumns holds the columns for the "language" table.
-	LanguageColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "主键ID", SchemaType: map[string]string{"postgres": "bigint"}},
-		{Name: "status", Type: field.TypeInt64, Comment: "状态: 1启用, 2停用", Default: 1, SchemaType: map[string]string{"postgres": "smallint"}},
-		{Name: "sort_no", Type: field.TypeInt64, Comment: "排序值, 数值越小越靠前", SchemaType: map[string]string{"postgres": "integer"}},
-		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间", SchemaType: map[string]string{"postgres": "timestamptz(3)"}},
-		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间", SchemaType: map[string]string{"postgres": "timestamptz(3)"}},
-		{Name: "code", Type: field.TypeString, Unique: true, Size: 35, Comment: "语言编码"},
-		{Name: "name_i18n", Type: field.TypeJSON, Comment: "多语言名称", SchemaType: map[string]string{"postgres": "jsonb"}},
-	}
-	// LanguageTable holds the schema information for the "language" table.
-	LanguageTable = &schema.Table{
-		Name:       "language",
-		Comment:    "系统语言表",
-		Columns:    LanguageColumns,
-		PrimaryKey: []*schema.Column{LanguageColumns[0]},
-	}
 	// RegionColumns holds the columns for the "region" table.
 	RegionColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "主键ID", SchemaType: map[string]string{"postgres": "bigint"}},
@@ -55,7 +38,7 @@ var (
 		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间", SchemaType: map[string]string{"postgres": "timestamptz(3)"}},
 		{Name: "code", Type: field.TypeString, Unique: true, Size: 2, Comment: "国家或地区编码"},
 		{Name: "calling_code", Type: field.TypeString, Size: 3, Comment: "国际电话区号, 不包含加号"},
-		{Name: "name_i18n", Type: field.TypeJSON, Comment: "多语言名称", SchemaType: map[string]string{"postgres": "jsonb"}},
+		{Name: "name_key", Type: field.TypeString, Size: 128, Comment: "名称翻译 Key"},
 	}
 	// RegionTable holds the schema information for the "region" table.
 	RegionTable = &schema.Table{
@@ -72,7 +55,7 @@ var (
 		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间", SchemaType: map[string]string{"postgres": "timestamptz(3)"}},
 		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间", SchemaType: map[string]string{"postgres": "timestamptz(3)"}},
 		{Name: "code", Type: field.TypeString, Unique: true, Size: 64, Comment: "IANA 时区编码"},
-		{Name: "name_i18n", Type: field.TypeJSON, Comment: "多语言名称", SchemaType: map[string]string{"postgres": "jsonb"}},
+		{Name: "name_key", Type: field.TypeString, Size: 128, Comment: "名称翻译 Key"},
 	}
 	// TimezoneTable holds the schema information for the "timezone" table.
 	TimezoneTable = &schema.Table{
@@ -84,7 +67,6 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		CurrencyTable,
-		LanguageTable,
 		RegionTable,
 		TimezoneTable,
 	}
@@ -93,9 +75,6 @@ var (
 func init() {
 	CurrencyTable.Annotation = &entsql.Annotation{
 		Table: "currency",
-	}
-	LanguageTable.Annotation = &entsql.Annotation{
-		Table: "language",
 	}
 	RegionTable.Annotation = &entsql.Annotation{
 		Table: "region",

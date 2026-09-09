@@ -79,6 +79,11 @@ func Code(v string) predicate.Timezone {
 	return predicate.Timezone(sql.FieldEQ(FieldCode, v))
 }
 
+// NameKey applies equality check predicate on the "name_key" field. It's identical to NameKeyEQ.
+func NameKey(v string) predicate.Timezone {
+	return predicate.Timezone(sql.FieldEQ(FieldNameKey, v))
+}
+
 // StatusEQ applies the EQ predicate on the "status" field.
 func StatusEQ(v int64) predicate.Timezone {
 	return predicate.Timezone(sql.FieldEQ(FieldStatus, v))
@@ -302,6 +307,71 @@ func CodeEqualFold(v string) predicate.Timezone {
 // CodeContainsFold applies the ContainsFold predicate on the "code" field.
 func CodeContainsFold(v string) predicate.Timezone {
 	return predicate.Timezone(sql.FieldContainsFold(FieldCode, v))
+}
+
+// NameKeyEQ applies the EQ predicate on the "name_key" field.
+func NameKeyEQ(v string) predicate.Timezone {
+	return predicate.Timezone(sql.FieldEQ(FieldNameKey, v))
+}
+
+// NameKeyNEQ applies the NEQ predicate on the "name_key" field.
+func NameKeyNEQ(v string) predicate.Timezone {
+	return predicate.Timezone(sql.FieldNEQ(FieldNameKey, v))
+}
+
+// NameKeyIn applies the In predicate on the "name_key" field.
+func NameKeyIn(vs ...string) predicate.Timezone {
+	return predicate.Timezone(sql.FieldIn(FieldNameKey, vs...))
+}
+
+// NameKeyNotIn applies the NotIn predicate on the "name_key" field.
+func NameKeyNotIn(vs ...string) predicate.Timezone {
+	return predicate.Timezone(sql.FieldNotIn(FieldNameKey, vs...))
+}
+
+// NameKeyGT applies the GT predicate on the "name_key" field.
+func NameKeyGT(v string) predicate.Timezone {
+	return predicate.Timezone(sql.FieldGT(FieldNameKey, v))
+}
+
+// NameKeyGTE applies the GTE predicate on the "name_key" field.
+func NameKeyGTE(v string) predicate.Timezone {
+	return predicate.Timezone(sql.FieldGTE(FieldNameKey, v))
+}
+
+// NameKeyLT applies the LT predicate on the "name_key" field.
+func NameKeyLT(v string) predicate.Timezone {
+	return predicate.Timezone(sql.FieldLT(FieldNameKey, v))
+}
+
+// NameKeyLTE applies the LTE predicate on the "name_key" field.
+func NameKeyLTE(v string) predicate.Timezone {
+	return predicate.Timezone(sql.FieldLTE(FieldNameKey, v))
+}
+
+// NameKeyContains applies the Contains predicate on the "name_key" field.
+func NameKeyContains(v string) predicate.Timezone {
+	return predicate.Timezone(sql.FieldContains(FieldNameKey, v))
+}
+
+// NameKeyHasPrefix applies the HasPrefix predicate on the "name_key" field.
+func NameKeyHasPrefix(v string) predicate.Timezone {
+	return predicate.Timezone(sql.FieldHasPrefix(FieldNameKey, v))
+}
+
+// NameKeyHasSuffix applies the HasSuffix predicate on the "name_key" field.
+func NameKeyHasSuffix(v string) predicate.Timezone {
+	return predicate.Timezone(sql.FieldHasSuffix(FieldNameKey, v))
+}
+
+// NameKeyEqualFold applies the EqualFold predicate on the "name_key" field.
+func NameKeyEqualFold(v string) predicate.Timezone {
+	return predicate.Timezone(sql.FieldEqualFold(FieldNameKey, v))
+}
+
+// NameKeyContainsFold applies the ContainsFold predicate on the "name_key" field.
+func NameKeyContainsFold(v string) predicate.Timezone {
+	return predicate.Timezone(sql.FieldContainsFold(FieldNameKey, v))
 }
 
 // And groups predicates with the AND operator between them.

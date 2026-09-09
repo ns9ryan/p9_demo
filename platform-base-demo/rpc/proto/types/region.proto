@@ -12,8 +12,8 @@ message RegionInfo {
   string code = 2;
   // 国际电话区号, 不包含加号
   string calling_code = 3;
-  // 多语言名称
-  map<string, string> name_i18n = 4;
+  // 名称翻译Key
+  string name_key = 4;
   // 状态: 1启用, 2停用
   int64 status = 5;
   // 排序值, 数值越小越靠前
@@ -26,8 +26,8 @@ message CreateRegionRequest {
   string code = 1;
   // 国际电话区号, 不包含加号
   string calling_code = 2;
-  // 多语言名称
-  map<string, string> name_i18n = 3;
+  // 名称翻译Key
+  string name_key = 3;
   // 状态: 1启用, 2停用
   optional int64 status = 4;
 }
@@ -45,10 +45,8 @@ message UpdateRegionRequest {
 
   // 国际电话区号, 不传时不修改
   optional string calling_code = 2;
-  // 多语言名称, 为空时不修改
-  map<string, string> name_i18n = 3;
   // 状态: 1启用, 2停用
-  optional int64 status = 4;
+  optional int64 status = 3;
 }
 
 // 修改国家地区响应

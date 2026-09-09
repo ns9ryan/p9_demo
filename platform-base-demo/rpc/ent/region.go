@@ -3,7 +3,6 @@
 package ent
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -31,8 +30,8 @@ type Region struct {
 	Code string `json:"code,omitempty"`
 	// 国际电话区号, 不包含加号
 	CallingCode string `json:"calling_code,omitempty"`
-	// 多语言名称
-	NameI18n     map[string]string `json:"name_i18n,omitempty"`
+	// 名称翻译 Key
+	NameKey      string `json:"name_key,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -41,11 +40,9 @@ func (*Region) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case region.FieldNameI18n:
-			values[i] = new([]byte)
 		case region.FieldID, region.FieldStatus, region.FieldSortNo:
 			values[i] = new(sql.NullInt64)
-		case region.FieldCode, region.FieldCallingCode:
+		case region.FieldCode, region.FieldCallingCode, region.FieldNameKey:
 			values[i] = new(sql.NullString)
 		case region.FieldCreatedAt, region.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -106,13 +103,11 @@ func (_m *Region) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.CallingCode = value.String
 			}
-		case region.FieldNameI18n:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field name_i18n", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &_m.NameI18n); err != nil {
-					return fmt.Errorf("unmarshal field name_i18n: %w", err)
-				}
+		case region.FieldNameKey:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field name_key", values[i])
+			} else if value.Valid {
+				_m.NameKey = value.String
 			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
@@ -168,8 +163,8 @@ func (_m *Region) String() string {
 	builder.WriteString("calling_code=")
 	builder.WriteString(_m.CallingCode)
 	builder.WriteString(", ")
-	builder.WriteString("name_i18n=")
-	builder.WriteString(fmt.Sprintf("%v", _m.NameI18n))
+	builder.WriteString("name_key=")
+	builder.WriteString(_m.NameKey)
 	builder.WriteByte(')')
 	return builder.String()
 }

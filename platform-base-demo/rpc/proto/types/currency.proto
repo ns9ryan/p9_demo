@@ -10,14 +10,16 @@ message CurrencyInfo {
   int64 id = 1;
   // 货币编码
   string code = 2;
-  // 多语言名称
-  map<string, string> name_i18n = 3;
+  // 名称翻译Key
+  string name_key = 3;
+
   // 货币类型: 1法定货币, 2虚拟货币
   int64 currency_type = 4;
   // 货币符号
   string symbol = 5;
   // 金额换算倍率, 如 USD=100, VND=1
   int64 amount_factor = 6;
+
   // 状态: 1启用, 2停用
   int64 status = 7;
   // 排序值, 数值越小越靠前
@@ -28,8 +30,8 @@ message CurrencyInfo {
 message CreateCurrencyRequest {
   // 货币编码
   string code = 1;
-  // 多语言名称
-  map<string, string> name_i18n = 2;
+  // 名称翻译Key
+  string name_key = 2;
   // 货币类型: 1法定货币, 2虚拟货币
   int64 currency_type = 3;
   // 货币符号
@@ -51,12 +53,10 @@ message UpdateCurrencyRequest {
   // 货币ID
   int64 id = 1;
 
-  // 多语言名称, 为空时不修改
-  map<string, string> name_i18n = 2;
   // 货币符号
-  optional string symbol = 3;
+  optional string symbol = 2;
   // 状态: 1启用, 2停用
-  optional int64 status = 4;
+  optional int64 status = 3;
 }
 
 // 修改货币响应

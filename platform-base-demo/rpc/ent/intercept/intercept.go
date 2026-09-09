@@ -9,7 +9,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"oa.98ent.com/p9/platform-base/rpc/ent"
 	"oa.98ent.com/p9/platform-base/rpc/ent/currency"
-	"oa.98ent.com/p9/platform-base/rpc/ent/language"
 	"oa.98ent.com/p9/platform-base/rpc/ent/predicate"
 	"oa.98ent.com/p9/platform-base/rpc/ent/region"
 	"oa.98ent.com/p9/platform-base/rpc/ent/timezone"
@@ -98,33 +97,6 @@ func (f TraverseCurrency) Traverse(ctx context.Context, q ent.Query) error {
 	return fmt.Errorf("unexpected query type %T. expect *ent.CurrencyQuery", q)
 }
 
-// The LanguageFunc type is an adapter to allow the use of ordinary function as a Querier.
-type LanguageFunc func(context.Context, *ent.LanguageQuery) (ent.Value, error)
-
-// Query calls f(ctx, q).
-func (f LanguageFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
-	if q, ok := q.(*ent.LanguageQuery); ok {
-		return f(ctx, q)
-	}
-	return nil, fmt.Errorf("unexpected query type %T. expect *ent.LanguageQuery", q)
-}
-
-// The TraverseLanguage type is an adapter to allow the use of ordinary function as Traverser.
-type TraverseLanguage func(context.Context, *ent.LanguageQuery) error
-
-// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
-func (f TraverseLanguage) Intercept(next ent.Querier) ent.Querier {
-	return next
-}
-
-// Traverse calls f(ctx, q).
-func (f TraverseLanguage) Traverse(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.LanguageQuery); ok {
-		return f(ctx, q)
-	}
-	return fmt.Errorf("unexpected query type %T. expect *ent.LanguageQuery", q)
-}
-
 // The RegionFunc type is an adapter to allow the use of ordinary function as a Querier.
 type RegionFunc func(context.Context, *ent.RegionQuery) (ent.Value, error)
 
@@ -184,8 +156,6 @@ func NewQuery(q ent.Query) (Query, error) {
 	switch q := q.(type) {
 	case *ent.CurrencyQuery:
 		return &query[*ent.CurrencyQuery, predicate.Currency, currency.OrderOption]{typ: ent.TypeCurrency, tq: q}, nil
-	case *ent.LanguageQuery:
-		return &query[*ent.LanguageQuery, predicate.Language, language.OrderOption]{typ: ent.TypeLanguage, tq: q}, nil
 	case *ent.RegionQuery:
 		return &query[*ent.RegionQuery, predicate.Region, region.OrderOption]{typ: ent.TypeRegion, tq: q}, nil
 	case *ent.TimezoneQuery:

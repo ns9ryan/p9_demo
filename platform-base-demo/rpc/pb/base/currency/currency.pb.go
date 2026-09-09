@@ -28,8 +28,8 @@ type CurrencyInfo struct {
 	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// 货币编码
 	Code string `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
-	// 多语言名称
-	NameI18N map[string]string `protobuf:"bytes,3,rep,name=name_i18n,json=nameI18n,proto3" json:"name_i18n,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	// 名称翻译Key
+	NameKey string `protobuf:"bytes,3,opt,name=name_key,json=nameKey,proto3" json:"name_key,omitempty"`
 	// 货币类型: 1法定货币, 2虚拟货币
 	CurrencyType int64 `protobuf:"varint,4,opt,name=currency_type,json=currencyType,proto3" json:"currency_type,omitempty"`
 	// 货币符号
@@ -88,11 +88,11 @@ func (x *CurrencyInfo) GetCode() string {
 	return ""
 }
 
-func (x *CurrencyInfo) GetNameI18N() map[string]string {
+func (x *CurrencyInfo) GetNameKey() string {
 	if x != nil {
-		return x.NameI18N
+		return x.NameKey
 	}
-	return nil
+	return ""
 }
 
 func (x *CurrencyInfo) GetCurrencyType() int64 {
@@ -135,8 +135,8 @@ type CreateCurrencyRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 货币编码
 	Code string `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
-	// 多语言名称
-	NameI18N map[string]string `protobuf:"bytes,2,rep,name=name_i18n,json=nameI18n,proto3" json:"name_i18n,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	// 名称翻译Key
+	NameKey string `protobuf:"bytes,2,opt,name=name_key,json=nameKey,proto3" json:"name_key,omitempty"`
 	// 货币类型: 1法定货币, 2虚拟货币
 	CurrencyType int64 `protobuf:"varint,3,opt,name=currency_type,json=currencyType,proto3" json:"currency_type,omitempty"`
 	// 货币符号
@@ -186,11 +186,11 @@ func (x *CreateCurrencyRequest) GetCode() string {
 	return ""
 }
 
-func (x *CreateCurrencyRequest) GetNameI18N() map[string]string {
+func (x *CreateCurrencyRequest) GetNameKey() string {
 	if x != nil {
-		return x.NameI18N
+		return x.NameKey
 	}
-	return nil
+	return ""
 }
 
 func (x *CreateCurrencyRequest) GetCurrencyType() int64 {
@@ -272,12 +272,10 @@ type UpdateCurrencyRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 货币ID
 	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// 多语言名称, 为空时不修改
-	NameI18N map[string]string `protobuf:"bytes,2,rep,name=name_i18n,json=nameI18n,proto3" json:"name_i18n,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// 货币符号
-	Symbol *string `protobuf:"bytes,3,opt,name=symbol,proto3,oneof" json:"symbol,omitempty"`
+	Symbol *string `protobuf:"bytes,2,opt,name=symbol,proto3,oneof" json:"symbol,omitempty"`
 	// 状态: 1启用, 2停用
-	Status        *int64 `protobuf:"varint,4,opt,name=status,proto3,oneof" json:"status,omitempty"`
+	Status        *int64 `protobuf:"varint,3,opt,name=status,proto3,oneof" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -317,13 +315,6 @@ func (x *UpdateCurrencyRequest) GetId() int64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *UpdateCurrencyRequest) GetNameI18N() map[string]string {
-	if x != nil {
-		return x.NameI18N
-	}
-	return nil
 }
 
 func (x *UpdateCurrencyRequest) GetSymbol() string {
@@ -776,40 +767,30 @@ var File_types_currency_proto protoreflect.FileDescriptor
 
 const file_types_currency_proto_rawDesc = "" +
 	"\n" +
-	"\x14types/currency.proto\x12\bcurrency\"\xc5\x02\n" +
+	"\x14types/currency.proto\x12\bcurrency\"\xe0\x01\n" +
 	"\fCurrencyInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
-	"\x04code\x18\x02 \x01(\tR\x04code\x12A\n" +
-	"\tname_i18n\x18\x03 \x03(\v2$.currency.CurrencyInfo.NameI18nEntryR\bnameI18n\x12#\n" +
+	"\x04code\x18\x02 \x01(\tR\x04code\x12\x19\n" +
+	"\bname_key\x18\x03 \x01(\tR\anameKey\x12#\n" +
 	"\rcurrency_type\x18\x04 \x01(\x03R\fcurrencyType\x12\x16\n" +
 	"\x06symbol\x18\x05 \x01(\tR\x06symbol\x12#\n" +
 	"\ramount_factor\x18\x06 \x01(\x03R\famountFactor\x12\x16\n" +
 	"\x06status\x18\a \x01(\x03R\x06status\x12\x17\n" +
-	"\asort_no\x18\b \x01(\x03R\x06sortNo\x1a;\n" +
-	"\rNameI18nEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xbe\x02\n" +
+	"\asort_no\x18\b \x01(\x03R\x06sortNo\"\xd0\x01\n" +
 	"\x15CreateCurrencyRequest\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\x12J\n" +
-	"\tname_i18n\x18\x02 \x03(\v2-.currency.CreateCurrencyRequest.NameI18nEntryR\bnameI18n\x12#\n" +
+	"\x04code\x18\x01 \x01(\tR\x04code\x12\x19\n" +
+	"\bname_key\x18\x02 \x01(\tR\anameKey\x12#\n" +
 	"\rcurrency_type\x18\x03 \x01(\x03R\fcurrencyType\x12\x16\n" +
 	"\x06symbol\x18\x04 \x01(\tR\x06symbol\x12#\n" +
 	"\ramount_factor\x18\x05 \x01(\x03R\famountFactor\x12\x1b\n" +
-	"\x06status\x18\x06 \x01(\x03H\x00R\x06status\x88\x01\x01\x1a;\n" +
-	"\rNameI18nEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\t\n" +
+	"\x06status\x18\x06 \x01(\x03H\x00R\x06status\x88\x01\x01B\t\n" +
 	"\a_status\"(\n" +
 	"\x16CreateCurrencyResponse\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"\x80\x02\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"w\n" +
 	"\x15UpdateCurrencyRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12J\n" +
-	"\tname_i18n\x18\x02 \x03(\v2-.currency.UpdateCurrencyRequest.NameI18nEntryR\bnameI18n\x12\x1b\n" +
-	"\x06symbol\x18\x03 \x01(\tH\x00R\x06symbol\x88\x01\x01\x12\x1b\n" +
-	"\x06status\x18\x04 \x01(\x03H\x01R\x06status\x88\x01\x01\x1a;\n" +
-	"\rNameI18nEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\t\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1b\n" +
+	"\x06symbol\x18\x02 \x01(\tH\x00R\x06symbol\x88\x01\x01\x12\x1b\n" +
+	"\x06status\x18\x03 \x01(\x03H\x01R\x06status\x88\x01\x01B\t\n" +
 	"\a_symbolB\t\n" +
 	"\a_status\"\x18\n" +
 	"\x16UpdateCurrencyResponse\"$\n" +
@@ -847,7 +828,7 @@ func file_types_currency_proto_rawDescGZIP() []byte {
 	return file_types_currency_proto_rawDescData
 }
 
-var file_types_currency_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_types_currency_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_types_currency_proto_goTypes = []any{
 	(*CurrencyInfo)(nil),              // 0: currency.CurrencyInfo
 	(*CreateCurrencyRequest)(nil),     // 1: currency.CreateCurrencyRequest
@@ -862,22 +843,16 @@ var file_types_currency_proto_goTypes = []any{
 	(*ListAllCurrenciesResponse)(nil), // 10: currency.ListAllCurrenciesResponse
 	(*ReorderCurrencyRequest)(nil),    // 11: currency.ReorderCurrencyRequest
 	(*ReorderCurrencyResponse)(nil),   // 12: currency.ReorderCurrencyResponse
-	nil,                               // 13: currency.CurrencyInfo.NameI18nEntry
-	nil,                               // 14: currency.CreateCurrencyRequest.NameI18nEntry
-	nil,                               // 15: currency.UpdateCurrencyRequest.NameI18nEntry
 }
 var file_types_currency_proto_depIdxs = []int32{
-	13, // 0: currency.CurrencyInfo.name_i18n:type_name -> currency.CurrencyInfo.NameI18nEntry
-	14, // 1: currency.CreateCurrencyRequest.name_i18n:type_name -> currency.CreateCurrencyRequest.NameI18nEntry
-	15, // 2: currency.UpdateCurrencyRequest.name_i18n:type_name -> currency.UpdateCurrencyRequest.NameI18nEntry
-	0,  // 3: currency.GetCurrencyResponse.currency:type_name -> currency.CurrencyInfo
-	0,  // 4: currency.ListCurrenciesResponse.list:type_name -> currency.CurrencyInfo
-	0,  // 5: currency.ListAllCurrenciesResponse.list:type_name -> currency.CurrencyInfo
-	6,  // [6:6] is the sub-list for method output_type
-	6,  // [6:6] is the sub-list for method input_type
-	6,  // [6:6] is the sub-list for extension type_name
-	6,  // [6:6] is the sub-list for extension extendee
-	0,  // [0:6] is the sub-list for field type_name
+	0, // 0: currency.GetCurrencyResponse.currency:type_name -> currency.CurrencyInfo
+	0, // 1: currency.ListCurrenciesResponse.list:type_name -> currency.CurrencyInfo
+	0, // 2: currency.ListAllCurrenciesResponse.list:type_name -> currency.CurrencyInfo
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_types_currency_proto_init() }
@@ -895,7 +870,7 @@ func file_types_currency_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_currency_proto_rawDesc), len(file_types_currency_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   16,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

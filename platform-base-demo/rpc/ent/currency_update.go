@@ -76,12 +76,6 @@ func (_u *CurrencyUpdate) SetUpdatedAt(v time.Time) *CurrencyUpdate {
 	return _u
 }
 
-// SetNameI18n sets the "name_i18n" field.
-func (_u *CurrencyUpdate) SetNameI18n(v map[string]string) *CurrencyUpdate {
-	_u.mutation.SetNameI18n(v)
-	return _u
-}
-
 // SetSymbol sets the "symbol" field.
 func (_u *CurrencyUpdate) SetSymbol(v string) *CurrencyUpdate {
 	_u.mutation.SetSymbol(v)
@@ -179,9 +173,6 @@ func (_u *CurrencyUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(currency.FieldUpdatedAt, field.TypeTime, value)
 	}
-	if value, ok := _u.mutation.NameI18n(); ok {
-		_spec.SetField(currency.FieldNameI18n, field.TypeJSON, value)
-	}
 	if value, ok := _u.mutation.Symbol(); ok {
 		_spec.SetField(currency.FieldSymbol, field.TypeString, value)
 	}
@@ -250,12 +241,6 @@ func (_u *CurrencyUpdateOne) AddSortNo(v int64) *CurrencyUpdateOne {
 // SetUpdatedAt sets the "updated_at" field.
 func (_u *CurrencyUpdateOne) SetUpdatedAt(v time.Time) *CurrencyUpdateOne {
 	_u.mutation.SetUpdatedAt(v)
-	return _u
-}
-
-// SetNameI18n sets the "name_i18n" field.
-func (_u *CurrencyUpdateOne) SetNameI18n(v map[string]string) *CurrencyUpdateOne {
-	_u.mutation.SetNameI18n(v)
 	return _u
 }
 
@@ -385,9 +370,6 @@ func (_u *CurrencyUpdateOne) sqlSave(ctx context.Context) (_node *Currency, err 
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(currency.FieldUpdatedAt, field.TypeTime, value)
-	}
-	if value, ok := _u.mutation.NameI18n(); ok {
-		_spec.SetField(currency.FieldNameI18n, field.TypeJSON, value)
 	}
 	if value, ok := _u.mutation.Symbol(); ok {
 		_spec.SetField(currency.FieldSymbol, field.TypeString, value)

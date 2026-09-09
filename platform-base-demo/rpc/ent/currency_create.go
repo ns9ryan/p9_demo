@@ -76,9 +76,9 @@ func (_c *CurrencyCreate) SetCode(v string) *CurrencyCreate {
 	return _c
 }
 
-// SetNameI18n sets the "name_i18n" field.
-func (_c *CurrencyCreate) SetNameI18n(v map[string]string) *CurrencyCreate {
-	_c.mutation.SetNameI18n(v)
+// SetNameKey sets the "name_key" field.
+func (_c *CurrencyCreate) SetNameKey(v string) *CurrencyCreate {
+	_c.mutation.SetNameKey(v)
 	return _c
 }
 
@@ -182,8 +182,13 @@ func (_c *CurrencyCreate) check() error {
 			return &ValidationError{Name: "code", err: fmt.Errorf(`ent: validator failed for field "Currency.code": %w`, err)}
 		}
 	}
-	if _, ok := _c.mutation.NameI18n(); !ok {
-		return &ValidationError{Name: "name_i18n", err: errors.New(`ent: missing required field "Currency.name_i18n"`)}
+	if _, ok := _c.mutation.NameKey(); !ok {
+		return &ValidationError{Name: "name_key", err: errors.New(`ent: missing required field "Currency.name_key"`)}
+	}
+	if v, ok := _c.mutation.NameKey(); ok {
+		if err := currency.NameKeyValidator(v); err != nil {
+			return &ValidationError{Name: "name_key", err: fmt.Errorf(`ent: validator failed for field "Currency.name_key": %w`, err)}
+		}
 	}
 	if _, ok := _c.mutation.CurrencyType(); !ok {
 		return &ValidationError{Name: "currency_type", err: errors.New(`ent: missing required field "Currency.currency_type"`)}
@@ -262,9 +267,9 @@ func (_c *CurrencyCreate) createSpec() (*Currency, *sqlgraph.CreateSpec) {
 		_spec.SetField(currency.FieldCode, field.TypeString, value)
 		_node.Code = value
 	}
-	if value, ok := _c.mutation.NameI18n(); ok {
-		_spec.SetField(currency.FieldNameI18n, field.TypeJSON, value)
-		_node.NameI18n = value
+	if value, ok := _c.mutation.NameKey(); ok {
+		_spec.SetField(currency.FieldNameKey, field.TypeString, value)
+		_node.NameKey = value
 	}
 	if value, ok := _c.mutation.CurrencyType(); ok {
 		_spec.SetField(currency.FieldCurrencyType, field.TypeInt64, value)
@@ -378,18 +383,6 @@ func (u *CurrencyUpsert) UpdateUpdatedAt() *CurrencyUpsert {
 	return u
 }
 
-// SetNameI18n sets the "name_i18n" field.
-func (u *CurrencyUpsert) SetNameI18n(v map[string]string) *CurrencyUpsert {
-	u.Set(currency.FieldNameI18n, v)
-	return u
-}
-
-// UpdateNameI18n sets the "name_i18n" field to the value that was provided on create.
-func (u *CurrencyUpsert) UpdateNameI18n() *CurrencyUpsert {
-	u.SetExcluded(currency.FieldNameI18n)
-	return u
-}
-
 // SetSymbol sets the "symbol" field.
 func (u *CurrencyUpsert) SetSymbol(v string) *CurrencyUpsert {
 	u.Set(currency.FieldSymbol, v)
@@ -424,6 +417,9 @@ func (u *CurrencyUpsertOne) UpdateNewValues() *CurrencyUpsertOne {
 		}
 		if _, exists := u.create.mutation.Code(); exists {
 			s.SetIgnore(currency.FieldCode)
+		}
+		if _, exists := u.create.mutation.NameKey(); exists {
+			s.SetIgnore(currency.FieldNameKey)
 		}
 		if _, exists := u.create.mutation.CurrencyType(); exists {
 			s.SetIgnore(currency.FieldCurrencyType)
@@ -515,20 +511,6 @@ func (u *CurrencyUpsertOne) SetUpdatedAt(v time.Time) *CurrencyUpsertOne {
 func (u *CurrencyUpsertOne) UpdateUpdatedAt() *CurrencyUpsertOne {
 	return u.Update(func(s *CurrencyUpsert) {
 		s.UpdateUpdatedAt()
-	})
-}
-
-// SetNameI18n sets the "name_i18n" field.
-func (u *CurrencyUpsertOne) SetNameI18n(v map[string]string) *CurrencyUpsertOne {
-	return u.Update(func(s *CurrencyUpsert) {
-		s.SetNameI18n(v)
-	})
-}
-
-// UpdateNameI18n sets the "name_i18n" field to the value that was provided on create.
-func (u *CurrencyUpsertOne) UpdateNameI18n() *CurrencyUpsertOne {
-	return u.Update(func(s *CurrencyUpsert) {
-		s.UpdateNameI18n()
 	})
 }
 
@@ -734,6 +716,9 @@ func (u *CurrencyUpsertBulk) UpdateNewValues() *CurrencyUpsertBulk {
 			if _, exists := b.mutation.Code(); exists {
 				s.SetIgnore(currency.FieldCode)
 			}
+			if _, exists := b.mutation.NameKey(); exists {
+				s.SetIgnore(currency.FieldNameKey)
+			}
 			if _, exists := b.mutation.CurrencyType(); exists {
 				s.SetIgnore(currency.FieldCurrencyType)
 			}
@@ -825,20 +810,6 @@ func (u *CurrencyUpsertBulk) SetUpdatedAt(v time.Time) *CurrencyUpsertBulk {
 func (u *CurrencyUpsertBulk) UpdateUpdatedAt() *CurrencyUpsertBulk {
 	return u.Update(func(s *CurrencyUpsert) {
 		s.UpdateUpdatedAt()
-	})
-}
-
-// SetNameI18n sets the "name_i18n" field.
-func (u *CurrencyUpsertBulk) SetNameI18n(v map[string]string) *CurrencyUpsertBulk {
-	return u.Update(func(s *CurrencyUpsert) {
-		s.SetNameI18n(v)
-	})
-}
-
-// UpdateNameI18n sets the "name_i18n" field to the value that was provided on create.
-func (u *CurrencyUpsertBulk) UpdateNameI18n() *CurrencyUpsertBulk {
-	return u.Update(func(s *CurrencyUpsert) {
-		s.UpdateNameI18n()
 	})
 }
 

@@ -10,8 +10,8 @@ message TimezoneInfo {
   int64 id = 1;
   // IANA 时区编码
   string code = 2;
-  // 多语言名称
-  map<string, string> name_i18n = 3;
+  // 名称翻译Key
+  string name_key = 3;
   // 状态: 1启用, 2停用
   int64 status = 4;
   // 排序值, 数值越小越靠前
@@ -22,8 +22,8 @@ message TimezoneInfo {
 message CreateTimezoneRequest {
   // IANA 时区编码
   string code = 1;
-  // 多语言名称
-  map<string, string> name_i18n = 2;
+  // 名称翻译Key
+  string name_key = 2;
   // 状态: 1启用, 2停用
   optional int64 status = 3;
 }
@@ -38,11 +38,8 @@ message CreateTimezoneResponse {
 message UpdateTimezoneRequest {
   // 时区ID
   int64 id = 1;
-
-  // 多语言名称, 为空时不修改
-  map<string, string> name_i18n = 2;
   // 状态: 1启用, 2停用
-  optional int64 status = 3;
+  optional int64 status = 2;
 }
 
 // 修改时区响应

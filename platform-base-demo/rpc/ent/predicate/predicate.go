@@ -9,9 +9,6 @@ import (
 // Currency is the predicate function for currency builders.
 type Currency func(*sql.Selector)
 
-// Language is the predicate function for language builders.
-type Language func(*sql.Selector)
-
 // Region is the predicate function for region builders.
 type Region func(*sql.Selector)
 

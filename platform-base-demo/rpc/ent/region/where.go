@@ -84,6 +84,11 @@ func CallingCode(v string) predicate.Region {
 	return predicate.Region(sql.FieldEQ(FieldCallingCode, v))
 }
 
+// NameKey applies equality check predicate on the "name_key" field. It's identical to NameKeyEQ.
+func NameKey(v string) predicate.Region {
+	return predicate.Region(sql.FieldEQ(FieldNameKey, v))
+}
+
 // StatusEQ applies the EQ predicate on the "status" field.
 func StatusEQ(v int64) predicate.Region {
 	return predicate.Region(sql.FieldEQ(FieldStatus, v))
@@ -372,6 +377,71 @@ func CallingCodeEqualFold(v string) predicate.Region {
 // CallingCodeContainsFold applies the ContainsFold predicate on the "calling_code" field.
 func CallingCodeContainsFold(v string) predicate.Region {
 	return predicate.Region(sql.FieldContainsFold(FieldCallingCode, v))
+}
+
+// NameKeyEQ applies the EQ predicate on the "name_key" field.
+func NameKeyEQ(v string) predicate.Region {
+	return predicate.Region(sql.FieldEQ(FieldNameKey, v))
+}
+
+// NameKeyNEQ applies the NEQ predicate on the "name_key" field.
+func NameKeyNEQ(v string) predicate.Region {
+	return predicate.Region(sql.FieldNEQ(FieldNameKey, v))
+}
+
+// NameKeyIn applies the In predicate on the "name_key" field.
+func NameKeyIn(vs ...string) predicate.Region {
+	return predicate.Region(sql.FieldIn(FieldNameKey, vs...))
+}
+
+// NameKeyNotIn applies the NotIn predicate on the "name_key" field.
+func NameKeyNotIn(vs ...string) predicate.Region {
+	return predicate.Region(sql.FieldNotIn(FieldNameKey, vs...))
+}
+
+// NameKeyGT applies the GT predicate on the "name_key" field.
+func NameKeyGT(v string) predicate.Region {
+	return predicate.Region(sql.FieldGT(FieldNameKey, v))
+}
+
+// NameKeyGTE applies the GTE predicate on the "name_key" field.
+func NameKeyGTE(v string) predicate.Region {
+	return predicate.Region(sql.FieldGTE(FieldNameKey, v))
+}
+
+// NameKeyLT applies the LT predicate on the "name_key" field.
+func NameKeyLT(v string) predicate.Region {
+	return predicate.Region(sql.FieldLT(FieldNameKey, v))
+}
+
+// NameKeyLTE applies the LTE predicate on the "name_key" field.
+func NameKeyLTE(v string) predicate.Region {
+	return predicate.Region(sql.FieldLTE(FieldNameKey, v))
+}
+
+// NameKeyContains applies the Contains predicate on the "name_key" field.
+func NameKeyContains(v string) predicate.Region {
+	return predicate.Region(sql.FieldContains(FieldNameKey, v))
+}
+
+// NameKeyHasPrefix applies the HasPrefix predicate on the "name_key" field.
+func NameKeyHasPrefix(v string) predicate.Region {
+	return predicate.Region(sql.FieldHasPrefix(FieldNameKey, v))
+}
+
+// NameKeyHasSuffix applies the HasSuffix predicate on the "name_key" field.
+func NameKeyHasSuffix(v string) predicate.Region {
+	return predicate.Region(sql.FieldHasSuffix(FieldNameKey, v))
+}
+
+// NameKeyEqualFold applies the EqualFold predicate on the "name_key" field.
+func NameKeyEqualFold(v string) predicate.Region {
+	return predicate.Region(sql.FieldEqualFold(FieldNameKey, v))
+}
+
+// NameKeyContainsFold applies the ContainsFold predicate on the "name_key" field.
+func NameKeyContainsFold(v string) predicate.Region {
+	return predicate.Region(sql.FieldContainsFold(FieldNameKey, v))
 }
 
 // And groups predicates with the AND operator between them.

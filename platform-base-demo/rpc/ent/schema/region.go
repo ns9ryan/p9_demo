@@ -36,6 +36,7 @@ func (Region) Fields() []ent.Field {
 		field.String("name_key").
 			NotEmpty().
 			MaxLen(128).
+			Immutable().
 			Comment("名称翻译 Key"),
 	}
 }

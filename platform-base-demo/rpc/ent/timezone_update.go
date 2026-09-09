@@ -76,12 +76,6 @@ func (_u *TimezoneUpdate) SetUpdatedAt(v time.Time) *TimezoneUpdate {
 	return _u
 }
 
-// SetNameI18n sets the "name_i18n" field.
-func (_u *TimezoneUpdate) SetNameI18n(v map[string]string) *TimezoneUpdate {
-	_u.mutation.SetNameI18n(v)
-	return _u
-}
-
 // Mutation returns the TimezoneMutation object of the builder.
 func (_u *TimezoneUpdate) Mutation() *TimezoneMutation {
 	return _u.mutation
@@ -160,9 +154,6 @@ func (_u *TimezoneUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(timezone.FieldUpdatedAt, field.TypeTime, value)
 	}
-	if value, ok := _u.mutation.NameI18n(); ok {
-		_spec.SetField(timezone.FieldNameI18n, field.TypeJSON, value)
-	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{timezone.Label}
@@ -228,12 +219,6 @@ func (_u *TimezoneUpdateOne) AddSortNo(v int64) *TimezoneUpdateOne {
 // SetUpdatedAt sets the "updated_at" field.
 func (_u *TimezoneUpdateOne) SetUpdatedAt(v time.Time) *TimezoneUpdateOne {
 	_u.mutation.SetUpdatedAt(v)
-	return _u
-}
-
-// SetNameI18n sets the "name_i18n" field.
-func (_u *TimezoneUpdateOne) SetNameI18n(v map[string]string) *TimezoneUpdateOne {
-	_u.mutation.SetNameI18n(v)
 	return _u
 }
 
@@ -344,9 +329,6 @@ func (_u *TimezoneUpdateOne) sqlSave(ctx context.Context) (_node *Timezone, err 
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(timezone.FieldUpdatedAt, field.TypeTime, value)
-	}
-	if value, ok := _u.mutation.NameI18n(); ok {
-		_spec.SetField(timezone.FieldNameI18n, field.TypeJSON, value)
 	}
 	_node = &Timezone{config: _u.config}
 	_spec.Assign = _node.assignValues

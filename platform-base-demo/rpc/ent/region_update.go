@@ -90,12 +90,6 @@ func (_u *RegionUpdate) SetNillableCallingCode(v *string) *RegionUpdate {
 	return _u
 }
 
-// SetNameI18n sets the "name_i18n" field.
-func (_u *RegionUpdate) SetNameI18n(v map[string]string) *RegionUpdate {
-	_u.mutation.SetNameI18n(v)
-	return _u
-}
-
 // Mutation returns the RegionMutation object of the builder.
 func (_u *RegionUpdate) Mutation() *RegionMutation {
 	return _u.mutation
@@ -182,9 +176,6 @@ func (_u *RegionUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.CallingCode(); ok {
 		_spec.SetField(region.FieldCallingCode, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.NameI18n(); ok {
-		_spec.SetField(region.FieldNameI18n, field.TypeJSON, value)
-	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{region.Label}
@@ -264,12 +255,6 @@ func (_u *RegionUpdateOne) SetNillableCallingCode(v *string) *RegionUpdateOne {
 	if v != nil {
 		_u.SetCallingCode(*v)
 	}
-	return _u
-}
-
-// SetNameI18n sets the "name_i18n" field.
-func (_u *RegionUpdateOne) SetNameI18n(v map[string]string) *RegionUpdateOne {
-	_u.mutation.SetNameI18n(v)
 	return _u
 }
 
@@ -388,9 +373,6 @@ func (_u *RegionUpdateOne) sqlSave(ctx context.Context) (_node *Region, err erro
 	}
 	if value, ok := _u.mutation.CallingCode(); ok {
 		_spec.SetField(region.FieldCallingCode, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.NameI18n(); ok {
-		_spec.SetField(region.FieldNameI18n, field.TypeJSON, value)
 	}
 	_node = &Region{config: _u.config}
 	_spec.Assign = _node.assignValues
