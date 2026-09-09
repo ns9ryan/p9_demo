@@ -16,7 +16,6 @@ import (
 	"oa.98ent.com/p9/platform-base/pkg/api/rpcerror"
 	"oa.98ent.com/p9/platform-base/pkg/i18n"
 	"oa.98ent.com/p9/platform-base/rpc/client/currencyservice"
-	"oa.98ent.com/p9/platform-base/rpc/client/languageservice"
 	"oa.98ent.com/p9/platform-base/rpc/client/pingservice"
 	"oa.98ent.com/p9/platform-base/rpc/client/regionservice"
 	"oa.98ent.com/p9/platform-base/rpc/client/timezoneservice"
@@ -29,7 +28,6 @@ type ServiceContext struct {
 	Core coreclient.Core // Core RPC
 
 	PingRpc     pingservice.PingService         // Ping RPC
-	LanguageRpc languageservice.LanguageService // 语言 RPC
 	TimezoneRpc timezoneservice.TimezoneService // 时区 RPC
 	CurrencyRpc currencyservice.CurrencyService // 货币 RPC
 	RegionRpc   regionservice.RegionService     // 国家地区 RPC
@@ -68,7 +66,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Core: coreCli,
 
 		PingRpc:     pingservice.NewPingService(platformBaseClient),
-		LanguageRpc: languageservice.NewLanguageService(platformBaseClient),
 		TimezoneRpc: timezoneservice.NewTimezoneService(platformBaseClient),
 		CurrencyRpc: currencyservice.NewCurrencyService(platformBaseClient),
 		RegionRpc:   regionservice.NewRegionService(platformBaseClient),

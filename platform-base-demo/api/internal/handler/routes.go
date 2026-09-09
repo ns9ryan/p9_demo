@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	currency "oa.98ent.com/p9/platform-base/api/internal/handler/currency"
-	language "oa.98ent.com/p9/platform-base/api/internal/handler/language"
 	ping "oa.98ent.com/p9/platform-base/api/internal/handler/ping"
 	region "oa.98ent.com/p9/platform-base/api/internal/handler/region"
 	timezone "oa.98ent.com/p9/platform-base/api/internal/handler/timezone"
@@ -54,45 +53,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			}...,
 		),
 		rest.WithPrefix("/admin/currency"),
-	)
-
-	server.AddRoutes(
-		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
-			[]rest.Route{
-				{
-					Method:  http.MethodPost,
-					Path:    "/create",
-					Handler: language.CreateLanguageHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/get",
-					Handler: language.GetLanguageHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/list",
-					Handler: language.ListLanguagesHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/list-all",
-					Handler: language.ListAllLanguagesHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/reorder",
-					Handler: language.ReorderLanguageHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/update",
-					Handler: language.UpdateLanguageHandler(serverCtx),
-				},
-			}...,
-		),
-		rest.WithPrefix("/admin/language"),
 	)
 
 	server.AddRoutes(

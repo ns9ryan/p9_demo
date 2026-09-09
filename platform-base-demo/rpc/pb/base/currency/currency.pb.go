@@ -130,143 +130,6 @@ func (x *CurrencyInfo) GetSortNo() int64 {
 	return 0
 }
 
-// 创建货币请求
-type CreateCurrencyRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// 货币编码
-	Code string `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
-	// 名称翻译Key
-	NameKey string `protobuf:"bytes,2,opt,name=name_key,json=nameKey,proto3" json:"name_key,omitempty"`
-	// 货币类型: 1法定货币, 2虚拟货币
-	CurrencyType int64 `protobuf:"varint,3,opt,name=currency_type,json=currencyType,proto3" json:"currency_type,omitempty"`
-	// 货币符号
-	Symbol string `protobuf:"bytes,4,opt,name=symbol,proto3" json:"symbol,omitempty"`
-	// 金额换算倍率, 如 USD=100, VND=1
-	AmountFactor int64 `protobuf:"varint,5,opt,name=amount_factor,json=amountFactor,proto3" json:"amount_factor,omitempty"`
-	// 状态: 1启用, 2停用
-	Status        *int64 `protobuf:"varint,6,opt,name=status,proto3,oneof" json:"status,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CreateCurrencyRequest) Reset() {
-	*x = CreateCurrencyRequest{}
-	mi := &file_types_currency_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreateCurrencyRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreateCurrencyRequest) ProtoMessage() {}
-
-func (x *CreateCurrencyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_currency_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreateCurrencyRequest.ProtoReflect.Descriptor instead.
-func (*CreateCurrencyRequest) Descriptor() ([]byte, []int) {
-	return file_types_currency_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *CreateCurrencyRequest) GetCode() string {
-	if x != nil {
-		return x.Code
-	}
-	return ""
-}
-
-func (x *CreateCurrencyRequest) GetNameKey() string {
-	if x != nil {
-		return x.NameKey
-	}
-	return ""
-}
-
-func (x *CreateCurrencyRequest) GetCurrencyType() int64 {
-	if x != nil {
-		return x.CurrencyType
-	}
-	return 0
-}
-
-func (x *CreateCurrencyRequest) GetSymbol() string {
-	if x != nil {
-		return x.Symbol
-	}
-	return ""
-}
-
-func (x *CreateCurrencyRequest) GetAmountFactor() int64 {
-	if x != nil {
-		return x.AmountFactor
-	}
-	return 0
-}
-
-func (x *CreateCurrencyRequest) GetStatus() int64 {
-	if x != nil && x.Status != nil {
-		return *x.Status
-	}
-	return 0
-}
-
-// 创建货币响应
-type CreateCurrencyResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// 货币ID
-	Id            int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CreateCurrencyResponse) Reset() {
-	*x = CreateCurrencyResponse{}
-	mi := &file_types_currency_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreateCurrencyResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreateCurrencyResponse) ProtoMessage() {}
-
-func (x *CreateCurrencyResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_currency_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreateCurrencyResponse.ProtoReflect.Descriptor instead.
-func (*CreateCurrencyResponse) Descriptor() ([]byte, []int) {
-	return file_types_currency_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *CreateCurrencyResponse) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
 // 修改货币请求
 type UpdateCurrencyRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -282,7 +145,7 @@ type UpdateCurrencyRequest struct {
 
 func (x *UpdateCurrencyRequest) Reset() {
 	*x = UpdateCurrencyRequest{}
-	mi := &file_types_currency_proto_msgTypes[3]
+	mi := &file_types_currency_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -294,7 +157,7 @@ func (x *UpdateCurrencyRequest) String() string {
 func (*UpdateCurrencyRequest) ProtoMessage() {}
 
 func (x *UpdateCurrencyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_currency_proto_msgTypes[3]
+	mi := &file_types_currency_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -307,7 +170,7 @@ func (x *UpdateCurrencyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateCurrencyRequest.ProtoReflect.Descriptor instead.
 func (*UpdateCurrencyRequest) Descriptor() ([]byte, []int) {
-	return file_types_currency_proto_rawDescGZIP(), []int{3}
+	return file_types_currency_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *UpdateCurrencyRequest) GetId() int64 {
@@ -340,7 +203,7 @@ type UpdateCurrencyResponse struct {
 
 func (x *UpdateCurrencyResponse) Reset() {
 	*x = UpdateCurrencyResponse{}
-	mi := &file_types_currency_proto_msgTypes[4]
+	mi := &file_types_currency_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -352,7 +215,7 @@ func (x *UpdateCurrencyResponse) String() string {
 func (*UpdateCurrencyResponse) ProtoMessage() {}
 
 func (x *UpdateCurrencyResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_currency_proto_msgTypes[4]
+	mi := &file_types_currency_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -365,7 +228,7 @@ func (x *UpdateCurrencyResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateCurrencyResponse.ProtoReflect.Descriptor instead.
 func (*UpdateCurrencyResponse) Descriptor() ([]byte, []int) {
-	return file_types_currency_proto_rawDescGZIP(), []int{4}
+	return file_types_currency_proto_rawDescGZIP(), []int{2}
 }
 
 // 获取货币请求
@@ -379,7 +242,7 @@ type GetCurrencyRequest struct {
 
 func (x *GetCurrencyRequest) Reset() {
 	*x = GetCurrencyRequest{}
-	mi := &file_types_currency_proto_msgTypes[5]
+	mi := &file_types_currency_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -391,7 +254,7 @@ func (x *GetCurrencyRequest) String() string {
 func (*GetCurrencyRequest) ProtoMessage() {}
 
 func (x *GetCurrencyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_currency_proto_msgTypes[5]
+	mi := &file_types_currency_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -404,7 +267,7 @@ func (x *GetCurrencyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCurrencyRequest.ProtoReflect.Descriptor instead.
 func (*GetCurrencyRequest) Descriptor() ([]byte, []int) {
-	return file_types_currency_proto_rawDescGZIP(), []int{5}
+	return file_types_currency_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetCurrencyRequest) GetId() int64 {
@@ -425,7 +288,7 @@ type GetCurrencyResponse struct {
 
 func (x *GetCurrencyResponse) Reset() {
 	*x = GetCurrencyResponse{}
-	mi := &file_types_currency_proto_msgTypes[6]
+	mi := &file_types_currency_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -437,7 +300,7 @@ func (x *GetCurrencyResponse) String() string {
 func (*GetCurrencyResponse) ProtoMessage() {}
 
 func (x *GetCurrencyResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_currency_proto_msgTypes[6]
+	mi := &file_types_currency_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -450,7 +313,7 @@ func (x *GetCurrencyResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCurrencyResponse.ProtoReflect.Descriptor instead.
 func (*GetCurrencyResponse) Descriptor() ([]byte, []int) {
-	return file_types_currency_proto_rawDescGZIP(), []int{6}
+	return file_types_currency_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetCurrencyResponse) GetCurrency() *CurrencyInfo {
@@ -475,7 +338,7 @@ type ListCurrenciesRequest struct {
 
 func (x *ListCurrenciesRequest) Reset() {
 	*x = ListCurrenciesRequest{}
-	mi := &file_types_currency_proto_msgTypes[7]
+	mi := &file_types_currency_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -487,7 +350,7 @@ func (x *ListCurrenciesRequest) String() string {
 func (*ListCurrenciesRequest) ProtoMessage() {}
 
 func (x *ListCurrenciesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_currency_proto_msgTypes[7]
+	mi := &file_types_currency_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -500,7 +363,7 @@ func (x *ListCurrenciesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCurrenciesRequest.ProtoReflect.Descriptor instead.
 func (*ListCurrenciesRequest) Descriptor() ([]byte, []int) {
-	return file_types_currency_proto_rawDescGZIP(), []int{7}
+	return file_types_currency_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ListCurrenciesRequest) GetPage() int64 {
@@ -537,7 +400,7 @@ type ListCurrenciesResponse struct {
 
 func (x *ListCurrenciesResponse) Reset() {
 	*x = ListCurrenciesResponse{}
-	mi := &file_types_currency_proto_msgTypes[8]
+	mi := &file_types_currency_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -549,7 +412,7 @@ func (x *ListCurrenciesResponse) String() string {
 func (*ListCurrenciesResponse) ProtoMessage() {}
 
 func (x *ListCurrenciesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_currency_proto_msgTypes[8]
+	mi := &file_types_currency_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -562,7 +425,7 @@ func (x *ListCurrenciesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCurrenciesResponse.ProtoReflect.Descriptor instead.
 func (*ListCurrenciesResponse) Descriptor() ([]byte, []int) {
-	return file_types_currency_proto_rawDescGZIP(), []int{8}
+	return file_types_currency_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ListCurrenciesResponse) GetTotal() int64 {
@@ -590,7 +453,7 @@ type ListAllCurrenciesRequest struct {
 
 func (x *ListAllCurrenciesRequest) Reset() {
 	*x = ListAllCurrenciesRequest{}
-	mi := &file_types_currency_proto_msgTypes[9]
+	mi := &file_types_currency_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -602,7 +465,7 @@ func (x *ListAllCurrenciesRequest) String() string {
 func (*ListAllCurrenciesRequest) ProtoMessage() {}
 
 func (x *ListAllCurrenciesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_currency_proto_msgTypes[9]
+	mi := &file_types_currency_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -615,7 +478,7 @@ func (x *ListAllCurrenciesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAllCurrenciesRequest.ProtoReflect.Descriptor instead.
 func (*ListAllCurrenciesRequest) Descriptor() ([]byte, []int) {
-	return file_types_currency_proto_rawDescGZIP(), []int{9}
+	return file_types_currency_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ListAllCurrenciesRequest) GetStatus() int64 {
@@ -636,7 +499,7 @@ type ListAllCurrenciesResponse struct {
 
 func (x *ListAllCurrenciesResponse) Reset() {
 	*x = ListAllCurrenciesResponse{}
-	mi := &file_types_currency_proto_msgTypes[10]
+	mi := &file_types_currency_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -648,7 +511,7 @@ func (x *ListAllCurrenciesResponse) String() string {
 func (*ListAllCurrenciesResponse) ProtoMessage() {}
 
 func (x *ListAllCurrenciesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_currency_proto_msgTypes[10]
+	mi := &file_types_currency_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -661,7 +524,7 @@ func (x *ListAllCurrenciesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAllCurrenciesResponse.ProtoReflect.Descriptor instead.
 func (*ListAllCurrenciesResponse) Descriptor() ([]byte, []int) {
-	return file_types_currency_proto_rawDescGZIP(), []int{10}
+	return file_types_currency_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ListAllCurrenciesResponse) GetList() []*CurrencyInfo {
@@ -684,7 +547,7 @@ type ReorderCurrencyRequest struct {
 
 func (x *ReorderCurrencyRequest) Reset() {
 	*x = ReorderCurrencyRequest{}
-	mi := &file_types_currency_proto_msgTypes[11]
+	mi := &file_types_currency_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -696,7 +559,7 @@ func (x *ReorderCurrencyRequest) String() string {
 func (*ReorderCurrencyRequest) ProtoMessage() {}
 
 func (x *ReorderCurrencyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_currency_proto_msgTypes[11]
+	mi := &file_types_currency_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -709,7 +572,7 @@ func (x *ReorderCurrencyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReorderCurrencyRequest.ProtoReflect.Descriptor instead.
 func (*ReorderCurrencyRequest) Descriptor() ([]byte, []int) {
-	return file_types_currency_proto_rawDescGZIP(), []int{11}
+	return file_types_currency_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ReorderCurrencyRequest) GetId() int64 {
@@ -735,7 +598,7 @@ type ReorderCurrencyResponse struct {
 
 func (x *ReorderCurrencyResponse) Reset() {
 	*x = ReorderCurrencyResponse{}
-	mi := &file_types_currency_proto_msgTypes[12]
+	mi := &file_types_currency_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -747,7 +610,7 @@ func (x *ReorderCurrencyResponse) String() string {
 func (*ReorderCurrencyResponse) ProtoMessage() {}
 
 func (x *ReorderCurrencyResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_currency_proto_msgTypes[12]
+	mi := &file_types_currency_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -760,7 +623,7 @@ func (x *ReorderCurrencyResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReorderCurrencyResponse.ProtoReflect.Descriptor instead.
 func (*ReorderCurrencyResponse) Descriptor() ([]byte, []int) {
-	return file_types_currency_proto_rawDescGZIP(), []int{12}
+	return file_types_currency_proto_rawDescGZIP(), []int{10}
 }
 
 var File_types_currency_proto protoreflect.FileDescriptor
@@ -776,17 +639,7 @@ const file_types_currency_proto_rawDesc = "" +
 	"\x06symbol\x18\x05 \x01(\tR\x06symbol\x12#\n" +
 	"\ramount_factor\x18\x06 \x01(\x03R\famountFactor\x12\x16\n" +
 	"\x06status\x18\a \x01(\x03R\x06status\x12\x17\n" +
-	"\asort_no\x18\b \x01(\x03R\x06sortNo\"\xd0\x01\n" +
-	"\x15CreateCurrencyRequest\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\x12\x19\n" +
-	"\bname_key\x18\x02 \x01(\tR\anameKey\x12#\n" +
-	"\rcurrency_type\x18\x03 \x01(\x03R\fcurrencyType\x12\x16\n" +
-	"\x06symbol\x18\x04 \x01(\tR\x06symbol\x12#\n" +
-	"\ramount_factor\x18\x05 \x01(\x03R\famountFactor\x12\x1b\n" +
-	"\x06status\x18\x06 \x01(\x03H\x00R\x06status\x88\x01\x01B\t\n" +
-	"\a_status\"(\n" +
-	"\x16CreateCurrencyResponse\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"w\n" +
+	"\asort_no\x18\b \x01(\x03R\x06sortNo\"w\n" +
 	"\x15UpdateCurrencyRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1b\n" +
 	"\x06symbol\x18\x02 \x01(\tH\x00R\x06symbol\x88\x01\x01\x12\x1b\n" +
@@ -828,21 +681,19 @@ func file_types_currency_proto_rawDescGZIP() []byte {
 	return file_types_currency_proto_rawDescData
 }
 
-var file_types_currency_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_types_currency_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_types_currency_proto_goTypes = []any{
 	(*CurrencyInfo)(nil),              // 0: currency.CurrencyInfo
-	(*CreateCurrencyRequest)(nil),     // 1: currency.CreateCurrencyRequest
-	(*CreateCurrencyResponse)(nil),    // 2: currency.CreateCurrencyResponse
-	(*UpdateCurrencyRequest)(nil),     // 3: currency.UpdateCurrencyRequest
-	(*UpdateCurrencyResponse)(nil),    // 4: currency.UpdateCurrencyResponse
-	(*GetCurrencyRequest)(nil),        // 5: currency.GetCurrencyRequest
-	(*GetCurrencyResponse)(nil),       // 6: currency.GetCurrencyResponse
-	(*ListCurrenciesRequest)(nil),     // 7: currency.ListCurrenciesRequest
-	(*ListCurrenciesResponse)(nil),    // 8: currency.ListCurrenciesResponse
-	(*ListAllCurrenciesRequest)(nil),  // 9: currency.ListAllCurrenciesRequest
-	(*ListAllCurrenciesResponse)(nil), // 10: currency.ListAllCurrenciesResponse
-	(*ReorderCurrencyRequest)(nil),    // 11: currency.ReorderCurrencyRequest
-	(*ReorderCurrencyResponse)(nil),   // 12: currency.ReorderCurrencyResponse
+	(*UpdateCurrencyRequest)(nil),     // 1: currency.UpdateCurrencyRequest
+	(*UpdateCurrencyResponse)(nil),    // 2: currency.UpdateCurrencyResponse
+	(*GetCurrencyRequest)(nil),        // 3: currency.GetCurrencyRequest
+	(*GetCurrencyResponse)(nil),       // 4: currency.GetCurrencyResponse
+	(*ListCurrenciesRequest)(nil),     // 5: currency.ListCurrenciesRequest
+	(*ListCurrenciesResponse)(nil),    // 6: currency.ListCurrenciesResponse
+	(*ListAllCurrenciesRequest)(nil),  // 7: currency.ListAllCurrenciesRequest
+	(*ListAllCurrenciesResponse)(nil), // 8: currency.ListAllCurrenciesResponse
+	(*ReorderCurrencyRequest)(nil),    // 9: currency.ReorderCurrencyRequest
+	(*ReorderCurrencyResponse)(nil),   // 10: currency.ReorderCurrencyResponse
 }
 var file_types_currency_proto_depIdxs = []int32{
 	0, // 0: currency.GetCurrencyResponse.currency:type_name -> currency.CurrencyInfo
@@ -861,16 +712,15 @@ func file_types_currency_proto_init() {
 		return
 	}
 	file_types_currency_proto_msgTypes[1].OneofWrappers = []any{}
-	file_types_currency_proto_msgTypes[3].OneofWrappers = []any{}
+	file_types_currency_proto_msgTypes[5].OneofWrappers = []any{}
 	file_types_currency_proto_msgTypes[7].OneofWrappers = []any{}
-	file_types_currency_proto_msgTypes[9].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_currency_proto_rawDesc), len(file_types_currency_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   13,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

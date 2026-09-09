@@ -103,116 +103,6 @@ func (x *TimezoneInfo) GetSortNo() int64 {
 	return 0
 }
 
-// 创建时区请求
-type CreateTimezoneRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// IANA 时区编码
-	Code string `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
-	// 名称翻译Key
-	NameKey string `protobuf:"bytes,2,opt,name=name_key,json=nameKey,proto3" json:"name_key,omitempty"`
-	// 状态: 1启用, 2停用
-	Status        *int64 `protobuf:"varint,3,opt,name=status,proto3,oneof" json:"status,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CreateTimezoneRequest) Reset() {
-	*x = CreateTimezoneRequest{}
-	mi := &file_types_timezone_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreateTimezoneRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreateTimezoneRequest) ProtoMessage() {}
-
-func (x *CreateTimezoneRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_timezone_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreateTimezoneRequest.ProtoReflect.Descriptor instead.
-func (*CreateTimezoneRequest) Descriptor() ([]byte, []int) {
-	return file_types_timezone_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *CreateTimezoneRequest) GetCode() string {
-	if x != nil {
-		return x.Code
-	}
-	return ""
-}
-
-func (x *CreateTimezoneRequest) GetNameKey() string {
-	if x != nil {
-		return x.NameKey
-	}
-	return ""
-}
-
-func (x *CreateTimezoneRequest) GetStatus() int64 {
-	if x != nil && x.Status != nil {
-		return *x.Status
-	}
-	return 0
-}
-
-// 创建时区响应
-type CreateTimezoneResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// 时区ID
-	Id            int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CreateTimezoneResponse) Reset() {
-	*x = CreateTimezoneResponse{}
-	mi := &file_types_timezone_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreateTimezoneResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreateTimezoneResponse) ProtoMessage() {}
-
-func (x *CreateTimezoneResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_timezone_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreateTimezoneResponse.ProtoReflect.Descriptor instead.
-func (*CreateTimezoneResponse) Descriptor() ([]byte, []int) {
-	return file_types_timezone_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *CreateTimezoneResponse) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
 // 修改时区请求
 type UpdateTimezoneRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -226,7 +116,7 @@ type UpdateTimezoneRequest struct {
 
 func (x *UpdateTimezoneRequest) Reset() {
 	*x = UpdateTimezoneRequest{}
-	mi := &file_types_timezone_proto_msgTypes[3]
+	mi := &file_types_timezone_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -238,7 +128,7 @@ func (x *UpdateTimezoneRequest) String() string {
 func (*UpdateTimezoneRequest) ProtoMessage() {}
 
 func (x *UpdateTimezoneRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_timezone_proto_msgTypes[3]
+	mi := &file_types_timezone_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -251,7 +141,7 @@ func (x *UpdateTimezoneRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateTimezoneRequest.ProtoReflect.Descriptor instead.
 func (*UpdateTimezoneRequest) Descriptor() ([]byte, []int) {
-	return file_types_timezone_proto_rawDescGZIP(), []int{3}
+	return file_types_timezone_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *UpdateTimezoneRequest) GetId() int64 {
@@ -277,7 +167,7 @@ type UpdateTimezoneResponse struct {
 
 func (x *UpdateTimezoneResponse) Reset() {
 	*x = UpdateTimezoneResponse{}
-	mi := &file_types_timezone_proto_msgTypes[4]
+	mi := &file_types_timezone_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -289,7 +179,7 @@ func (x *UpdateTimezoneResponse) String() string {
 func (*UpdateTimezoneResponse) ProtoMessage() {}
 
 func (x *UpdateTimezoneResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_timezone_proto_msgTypes[4]
+	mi := &file_types_timezone_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -302,7 +192,7 @@ func (x *UpdateTimezoneResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateTimezoneResponse.ProtoReflect.Descriptor instead.
 func (*UpdateTimezoneResponse) Descriptor() ([]byte, []int) {
-	return file_types_timezone_proto_rawDescGZIP(), []int{4}
+	return file_types_timezone_proto_rawDescGZIP(), []int{2}
 }
 
 // 获取时区请求
@@ -316,7 +206,7 @@ type GetTimezoneRequest struct {
 
 func (x *GetTimezoneRequest) Reset() {
 	*x = GetTimezoneRequest{}
-	mi := &file_types_timezone_proto_msgTypes[5]
+	mi := &file_types_timezone_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -328,7 +218,7 @@ func (x *GetTimezoneRequest) String() string {
 func (*GetTimezoneRequest) ProtoMessage() {}
 
 func (x *GetTimezoneRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_timezone_proto_msgTypes[5]
+	mi := &file_types_timezone_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -341,7 +231,7 @@ func (x *GetTimezoneRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTimezoneRequest.ProtoReflect.Descriptor instead.
 func (*GetTimezoneRequest) Descriptor() ([]byte, []int) {
-	return file_types_timezone_proto_rawDescGZIP(), []int{5}
+	return file_types_timezone_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetTimezoneRequest) GetId() int64 {
@@ -362,7 +252,7 @@ type GetTimezoneResponse struct {
 
 func (x *GetTimezoneResponse) Reset() {
 	*x = GetTimezoneResponse{}
-	mi := &file_types_timezone_proto_msgTypes[6]
+	mi := &file_types_timezone_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -374,7 +264,7 @@ func (x *GetTimezoneResponse) String() string {
 func (*GetTimezoneResponse) ProtoMessage() {}
 
 func (x *GetTimezoneResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_timezone_proto_msgTypes[6]
+	mi := &file_types_timezone_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -387,7 +277,7 @@ func (x *GetTimezoneResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTimezoneResponse.ProtoReflect.Descriptor instead.
 func (*GetTimezoneResponse) Descriptor() ([]byte, []int) {
-	return file_types_timezone_proto_rawDescGZIP(), []int{6}
+	return file_types_timezone_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetTimezoneResponse) GetTimezone() *TimezoneInfo {
@@ -412,7 +302,7 @@ type ListTimezonesRequest struct {
 
 func (x *ListTimezonesRequest) Reset() {
 	*x = ListTimezonesRequest{}
-	mi := &file_types_timezone_proto_msgTypes[7]
+	mi := &file_types_timezone_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -424,7 +314,7 @@ func (x *ListTimezonesRequest) String() string {
 func (*ListTimezonesRequest) ProtoMessage() {}
 
 func (x *ListTimezonesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_timezone_proto_msgTypes[7]
+	mi := &file_types_timezone_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -437,7 +327,7 @@ func (x *ListTimezonesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTimezonesRequest.ProtoReflect.Descriptor instead.
 func (*ListTimezonesRequest) Descriptor() ([]byte, []int) {
-	return file_types_timezone_proto_rawDescGZIP(), []int{7}
+	return file_types_timezone_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ListTimezonesRequest) GetPage() int64 {
@@ -474,7 +364,7 @@ type ListTimezonesResponse struct {
 
 func (x *ListTimezonesResponse) Reset() {
 	*x = ListTimezonesResponse{}
-	mi := &file_types_timezone_proto_msgTypes[8]
+	mi := &file_types_timezone_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -486,7 +376,7 @@ func (x *ListTimezonesResponse) String() string {
 func (*ListTimezonesResponse) ProtoMessage() {}
 
 func (x *ListTimezonesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_timezone_proto_msgTypes[8]
+	mi := &file_types_timezone_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -499,7 +389,7 @@ func (x *ListTimezonesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTimezonesResponse.ProtoReflect.Descriptor instead.
 func (*ListTimezonesResponse) Descriptor() ([]byte, []int) {
-	return file_types_timezone_proto_rawDescGZIP(), []int{8}
+	return file_types_timezone_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ListTimezonesResponse) GetTotal() int64 {
@@ -527,7 +417,7 @@ type ListAllTimezonesRequest struct {
 
 func (x *ListAllTimezonesRequest) Reset() {
 	*x = ListAllTimezonesRequest{}
-	mi := &file_types_timezone_proto_msgTypes[9]
+	mi := &file_types_timezone_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -539,7 +429,7 @@ func (x *ListAllTimezonesRequest) String() string {
 func (*ListAllTimezonesRequest) ProtoMessage() {}
 
 func (x *ListAllTimezonesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_timezone_proto_msgTypes[9]
+	mi := &file_types_timezone_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -552,7 +442,7 @@ func (x *ListAllTimezonesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAllTimezonesRequest.ProtoReflect.Descriptor instead.
 func (*ListAllTimezonesRequest) Descriptor() ([]byte, []int) {
-	return file_types_timezone_proto_rawDescGZIP(), []int{9}
+	return file_types_timezone_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ListAllTimezonesRequest) GetStatus() int64 {
@@ -573,7 +463,7 @@ type ListAllTimezonesResponse struct {
 
 func (x *ListAllTimezonesResponse) Reset() {
 	*x = ListAllTimezonesResponse{}
-	mi := &file_types_timezone_proto_msgTypes[10]
+	mi := &file_types_timezone_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -585,7 +475,7 @@ func (x *ListAllTimezonesResponse) String() string {
 func (*ListAllTimezonesResponse) ProtoMessage() {}
 
 func (x *ListAllTimezonesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_timezone_proto_msgTypes[10]
+	mi := &file_types_timezone_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -598,7 +488,7 @@ func (x *ListAllTimezonesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAllTimezonesResponse.ProtoReflect.Descriptor instead.
 func (*ListAllTimezonesResponse) Descriptor() ([]byte, []int) {
-	return file_types_timezone_proto_rawDescGZIP(), []int{10}
+	return file_types_timezone_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ListAllTimezonesResponse) GetList() []*TimezoneInfo {
@@ -621,7 +511,7 @@ type ReorderTimezoneRequest struct {
 
 func (x *ReorderTimezoneRequest) Reset() {
 	*x = ReorderTimezoneRequest{}
-	mi := &file_types_timezone_proto_msgTypes[11]
+	mi := &file_types_timezone_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -633,7 +523,7 @@ func (x *ReorderTimezoneRequest) String() string {
 func (*ReorderTimezoneRequest) ProtoMessage() {}
 
 func (x *ReorderTimezoneRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_timezone_proto_msgTypes[11]
+	mi := &file_types_timezone_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -646,7 +536,7 @@ func (x *ReorderTimezoneRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReorderTimezoneRequest.ProtoReflect.Descriptor instead.
 func (*ReorderTimezoneRequest) Descriptor() ([]byte, []int) {
-	return file_types_timezone_proto_rawDescGZIP(), []int{11}
+	return file_types_timezone_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ReorderTimezoneRequest) GetId() int64 {
@@ -672,7 +562,7 @@ type ReorderTimezoneResponse struct {
 
 func (x *ReorderTimezoneResponse) Reset() {
 	*x = ReorderTimezoneResponse{}
-	mi := &file_types_timezone_proto_msgTypes[12]
+	mi := &file_types_timezone_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -684,7 +574,7 @@ func (x *ReorderTimezoneResponse) String() string {
 func (*ReorderTimezoneResponse) ProtoMessage() {}
 
 func (x *ReorderTimezoneResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_timezone_proto_msgTypes[12]
+	mi := &file_types_timezone_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -697,7 +587,7 @@ func (x *ReorderTimezoneResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReorderTimezoneResponse.ProtoReflect.Descriptor instead.
 func (*ReorderTimezoneResponse) Descriptor() ([]byte, []int) {
-	return file_types_timezone_proto_rawDescGZIP(), []int{12}
+	return file_types_timezone_proto_rawDescGZIP(), []int{10}
 }
 
 var File_types_timezone_proto protoreflect.FileDescriptor
@@ -710,14 +600,7 @@ const file_types_timezone_proto_rawDesc = "" +
 	"\x04code\x18\x02 \x01(\tR\x04code\x12\x19\n" +
 	"\bname_key\x18\x03 \x01(\tR\anameKey\x12\x16\n" +
 	"\x06status\x18\x04 \x01(\x03R\x06status\x12\x17\n" +
-	"\asort_no\x18\x05 \x01(\x03R\x06sortNo\"n\n" +
-	"\x15CreateTimezoneRequest\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\x12\x19\n" +
-	"\bname_key\x18\x02 \x01(\tR\anameKey\x12\x1b\n" +
-	"\x06status\x18\x03 \x01(\x03H\x00R\x06status\x88\x01\x01B\t\n" +
-	"\a_status\"(\n" +
-	"\x16CreateTimezoneResponse\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"O\n" +
+	"\asort_no\x18\x05 \x01(\x03R\x06sortNo\"O\n" +
 	"\x15UpdateTimezoneRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1b\n" +
 	"\x06status\x18\x02 \x01(\x03H\x00R\x06status\x88\x01\x01B\t\n" +
@@ -757,21 +640,19 @@ func file_types_timezone_proto_rawDescGZIP() []byte {
 	return file_types_timezone_proto_rawDescData
 }
 
-var file_types_timezone_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_types_timezone_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_types_timezone_proto_goTypes = []any{
 	(*TimezoneInfo)(nil),             // 0: timezone.TimezoneInfo
-	(*CreateTimezoneRequest)(nil),    // 1: timezone.CreateTimezoneRequest
-	(*CreateTimezoneResponse)(nil),   // 2: timezone.CreateTimezoneResponse
-	(*UpdateTimezoneRequest)(nil),    // 3: timezone.UpdateTimezoneRequest
-	(*UpdateTimezoneResponse)(nil),   // 4: timezone.UpdateTimezoneResponse
-	(*GetTimezoneRequest)(nil),       // 5: timezone.GetTimezoneRequest
-	(*GetTimezoneResponse)(nil),      // 6: timezone.GetTimezoneResponse
-	(*ListTimezonesRequest)(nil),     // 7: timezone.ListTimezonesRequest
-	(*ListTimezonesResponse)(nil),    // 8: timezone.ListTimezonesResponse
-	(*ListAllTimezonesRequest)(nil),  // 9: timezone.ListAllTimezonesRequest
-	(*ListAllTimezonesResponse)(nil), // 10: timezone.ListAllTimezonesResponse
-	(*ReorderTimezoneRequest)(nil),   // 11: timezone.ReorderTimezoneRequest
-	(*ReorderTimezoneResponse)(nil),  // 12: timezone.ReorderTimezoneResponse
+	(*UpdateTimezoneRequest)(nil),    // 1: timezone.UpdateTimezoneRequest
+	(*UpdateTimezoneResponse)(nil),   // 2: timezone.UpdateTimezoneResponse
+	(*GetTimezoneRequest)(nil),       // 3: timezone.GetTimezoneRequest
+	(*GetTimezoneResponse)(nil),      // 4: timezone.GetTimezoneResponse
+	(*ListTimezonesRequest)(nil),     // 5: timezone.ListTimezonesRequest
+	(*ListTimezonesResponse)(nil),    // 6: timezone.ListTimezonesResponse
+	(*ListAllTimezonesRequest)(nil),  // 7: timezone.ListAllTimezonesRequest
+	(*ListAllTimezonesResponse)(nil), // 8: timezone.ListAllTimezonesResponse
+	(*ReorderTimezoneRequest)(nil),   // 9: timezone.ReorderTimezoneRequest
+	(*ReorderTimezoneResponse)(nil),  // 10: timezone.ReorderTimezoneResponse
 }
 var file_types_timezone_proto_depIdxs = []int32{
 	0, // 0: timezone.GetTimezoneResponse.timezone:type_name -> timezone.TimezoneInfo
@@ -790,16 +671,15 @@ func file_types_timezone_proto_init() {
 		return
 	}
 	file_types_timezone_proto_msgTypes[1].OneofWrappers = []any{}
-	file_types_timezone_proto_msgTypes[3].OneofWrappers = []any{}
+	file_types_timezone_proto_msgTypes[5].OneofWrappers = []any{}
 	file_types_timezone_proto_msgTypes[7].OneofWrappers = []any{}
-	file_types_timezone_proto_msgTypes[9].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_timezone_proto_rawDesc), len(file_types_timezone_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   13,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

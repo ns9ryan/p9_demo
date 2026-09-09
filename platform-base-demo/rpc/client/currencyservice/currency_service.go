@@ -17,8 +17,6 @@ import (
 
 type (
 	CurrencyService interface {
-		// 创建货币
-		Create(ctx context.Context, in *currency.CreateCurrencyRequest, opts ...grpc.CallOption) (*currency.CreateCurrencyResponse, error)
 		// 修改货币
 		Update(ctx context.Context, in *currency.UpdateCurrencyRequest, opts ...grpc.CallOption) (*currency.UpdateCurrencyResponse, error)
 		// 获取货币
@@ -40,12 +38,6 @@ func NewCurrencyService(cli zrpc.Client) CurrencyService {
 	return &defaultCurrencyService{
 		cli: cli,
 	}
-}
-
-// 创建货币
-func (m *defaultCurrencyService) Create(ctx context.Context, in *currency.CreateCurrencyRequest, opts ...grpc.CallOption) (*currency.CreateCurrencyResponse, error) {
-	client := base.NewCurrencyServiceClient(m.cli.Conn())
-	return client.Create(ctx, in, opts...)
 }
 
 // 修改货币

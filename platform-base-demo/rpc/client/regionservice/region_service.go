@@ -17,8 +17,6 @@ import (
 
 type (
 	RegionService interface {
-		// 创建国家地区
-		Create(ctx context.Context, in *region.CreateRegionRequest, opts ...grpc.CallOption) (*region.CreateRegionResponse, error)
 		// 修改国家地区
 		Update(ctx context.Context, in *region.UpdateRegionRequest, opts ...grpc.CallOption) (*region.UpdateRegionResponse, error)
 		// 获取国家地区
@@ -40,12 +38,6 @@ func NewRegionService(cli zrpc.Client) RegionService {
 	return &defaultRegionService{
 		cli: cli,
 	}
-}
-
-// 创建国家地区
-func (m *defaultRegionService) Create(ctx context.Context, in *region.CreateRegionRequest, opts ...grpc.CallOption) (*region.CreateRegionResponse, error) {
-	client := base.NewRegionServiceClient(m.cli.Conn())
-	return client.Create(ctx, in, opts...)
 }
 
 // 修改国家地区

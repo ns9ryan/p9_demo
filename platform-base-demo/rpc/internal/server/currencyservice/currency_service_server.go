@@ -24,12 +24,6 @@ func NewCurrencyServiceServer(svcCtx *svc.ServiceContext) *CurrencyServiceServer
 	}
 }
 
-// 创建货币
-func (s *CurrencyServiceServer) Create(ctx context.Context, in *currency.CreateCurrencyRequest) (*currency.CreateCurrencyResponse, error) {
-	l := currencyservicelogic.NewCreateLogic(ctx, s.svcCtx)
-	return l.Create(in)
-}
-
 // 修改货币
 func (s *CurrencyServiceServer) Update(ctx context.Context, in *currency.UpdateCurrencyRequest) (*currency.UpdateCurrencyResponse, error) {
 	l := currencyservicelogic.NewUpdateLogic(ctx, s.svcCtx)

@@ -24,12 +24,6 @@ func NewRegionServiceServer(svcCtx *svc.ServiceContext) *RegionServiceServer {
 	}
 }
 
-// 创建国家地区
-func (s *RegionServiceServer) Create(ctx context.Context, in *region.CreateRegionRequest) (*region.CreateRegionResponse, error) {
-	l := regionservicelogic.NewCreateLogic(ctx, s.svcCtx)
-	return l.Create(in)
-}
-
 // 修改国家地区
 func (s *RegionServiceServer) Update(ctx context.Context, in *region.UpdateRegionRequest) (*region.UpdateRegionResponse, error) {
 	l := regionservicelogic.NewUpdateLogic(ctx, s.svcCtx)

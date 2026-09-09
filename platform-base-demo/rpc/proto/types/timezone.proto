@@ -18,22 +18,6 @@ message TimezoneInfo {
   int64 sort_no = 5;
 }
 
-// 创建时区请求
-message CreateTimezoneRequest {
-  // IANA 时区编码
-  string code = 1;
-  // 名称翻译Key
-  string name_key = 2;
-  // 状态: 1启用, 2停用
-  optional int64 status = 3;
-}
-
-// 创建时区响应
-message CreateTimezoneResponse {
-  // 时区ID
-  int64 id = 1;
-}
-
 // 修改时区请求
 message UpdateTimezoneRequest {
   // 时区ID

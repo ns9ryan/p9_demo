@@ -17,9 +17,6 @@ service PingService {
 
 // 时区服务
 service TimezoneService {
-  // 创建时区
-  rpc Create(timezone.CreateTimezoneRequest) returns (timezone.CreateTimezoneResponse);
-
   // 修改时区
   rpc Update(timezone.UpdateTimezoneRequest) returns (timezone.UpdateTimezoneResponse);
 
@@ -38,9 +35,6 @@ service TimezoneService {
 
 // 货币服务
 service CurrencyService {
-  // 创建货币
-  rpc Create(currency.CreateCurrencyRequest) returns (currency.CreateCurrencyResponse);
-
   // 修改货币
   rpc Update(currency.UpdateCurrencyRequest) returns (currency.UpdateCurrencyResponse);
 
@@ -59,9 +53,6 @@ service CurrencyService {
 
 // 国家地区服务
 service RegionService {
-  // 创建国家地区
-  rpc Create(region.CreateRegionRequest) returns (region.CreateRegionResponse);
-
   // 修改国家地区
   rpc Update(region.UpdateRegionRequest) returns (region.UpdateRegionResponse);
 

@@ -16,16 +16,6 @@ type CreateCurrencyResponse struct {
 	Id int64 `json:"id"`
 }
 
-type CreateLanguageRequest struct {
-	Code     string            `json:"code" validate:"required,max=35"`
-	NameI18n map[string]string `json:"name_i18n" validate:"required"`
-	Status   *int64            `json:"status,optional" validate:"omitempty,oneof=1 2"`
-}
-
-type CreateLanguageResponse struct {
-	Id int64 `json:"id"`
-}
-
 type CreateRegionRequest struct {
 	Code        string            `json:"code" validate:"required,len=2"`
 	CallingCode string            `json:"calling_code" validate:"required,max=3"`
@@ -66,14 +56,6 @@ type GetCurrencyResponse struct {
 	Currency CurrencyInfo `json:"currency"`
 }
 
-type GetLanguageRequest struct {
-	Id int64 `form:"id" validate:"required,gt=0"`
-}
-
-type GetLanguageResponse struct {
-	Language LanguageInfo `json:"language"`
-}
-
 type GetRegionRequest struct {
 	Id int64 `form:"id" validate:"required,gt=0"`
 }
@@ -90,28 +72,12 @@ type GetTimezoneResponse struct {
 	Timezone TimezoneInfo `json:"timezone"`
 }
 
-type LanguageInfo struct {
-	Id       int64             `json:"id"`
-	Code     string            `json:"code"`
-	NameI18n map[string]string `json:"name_i18n"`
-	Status   int64             `json:"status"`
-	SortNo   int64             `json:"sort_no"`
-}
-
 type ListAllCurrenciesRequest struct {
 	Status *int64 `form:"status,optional" validate:"omitempty,oneof=1 2"`
 }
 
 type ListAllCurrenciesResponse struct {
 	List []CurrencyInfo `json:"list"`
-}
-
-type ListAllLanguagesRequest struct {
-	Status *int64 `form:"status,optional" validate:"omitempty,oneof=1 2"`
-}
-
-type ListAllLanguagesResponse struct {
-	List []LanguageInfo `json:"list"`
 }
 
 type ListAllRegionsRequest struct {
@@ -138,16 +104,6 @@ type ListCurrenciesRequest struct {
 type ListCurrenciesResponse struct {
 	Total int64          `json:"total"`
 	List  []CurrencyInfo `json:"list"`
-}
-
-type ListLanguagesRequest struct {
-	PageRequest
-	Status *int64 `form:"status,optional" validate:"omitempty,oneof=1 2"`
-}
-
-type ListLanguagesResponse struct {
-	Total int64          `json:"total"`
-	List  []LanguageInfo `json:"list"`
 }
 
 type ListRegionsRequest struct {
@@ -195,14 +151,6 @@ type ReorderCurrencyRequest struct {
 type ReorderCurrencyResponse struct {
 }
 
-type ReorderLanguageRequest struct {
-	Id       int64 `json:"id" validate:"required,gt=0"`
-	TargetId int64 `json:"target_id" validate:"required,gt=0"`
-}
-
-type ReorderLanguageResponse struct {
-}
-
 type ReorderRegionRequest struct {
 	Id       int64 `json:"id" validate:"required,gt=0"`
 	TargetId int64 `json:"target_id" validate:"required,gt=0"`
@@ -235,15 +183,6 @@ type UpdateCurrencyRequest struct {
 }
 
 type UpdateCurrencyResponse struct {
-}
-
-type UpdateLanguageRequest struct {
-	Id       int64             `json:"id" validate:"required,gt=0"`
-	NameI18n map[string]string `json:"name_i18n,optional"`
-	Status   *int64            `json:"status,optional" validate:"omitempty,oneof=1 2"`
-}
-
-type UpdateLanguageResponse struct {
 }
 
 type UpdateRegionRequest struct {

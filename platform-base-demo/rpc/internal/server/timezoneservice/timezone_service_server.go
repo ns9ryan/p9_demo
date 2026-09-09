@@ -24,12 +24,6 @@ func NewTimezoneServiceServer(svcCtx *svc.ServiceContext) *TimezoneServiceServer
 	}
 }
 
-// 创建时区
-func (s *TimezoneServiceServer) Create(ctx context.Context, in *timezone.CreateTimezoneRequest) (*timezone.CreateTimezoneResponse, error) {
-	l := timezoneservicelogic.NewCreateLogic(ctx, s.svcCtx)
-	return l.Create(in)
-}
-
 // 修改时区
 func (s *TimezoneServiceServer) Update(ctx context.Context, in *timezone.UpdateTimezoneRequest) (*timezone.UpdateTimezoneResponse, error) {
 	l := timezoneservicelogic.NewUpdateLogic(ctx, s.svcCtx)

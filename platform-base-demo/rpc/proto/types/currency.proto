@@ -26,28 +26,6 @@ message CurrencyInfo {
   int64 sort_no = 8;
 }
 
-// 创建货币请求
-message CreateCurrencyRequest {
-  // 货币编码
-  string code = 1;
-  // 名称翻译Key
-  string name_key = 2;
-  // 货币类型: 1法定货币, 2虚拟货币
-  int64 currency_type = 3;
-  // 货币符号
-  string symbol = 4;
-  // 金额换算倍率, 如 USD=100, VND=1
-  int64 amount_factor = 5;
-  // 状态: 1启用, 2停用
-  optional int64 status = 6;
-}
-
-// 创建货币响应
-message CreateCurrencyResponse {
-  // 货币ID
-  int64 id = 1;
-}
-
 // 修改货币请求
 message UpdateCurrencyRequest {
   // 货币ID

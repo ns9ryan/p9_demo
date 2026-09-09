@@ -131,7 +131,6 @@ var PingService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	TimezoneService_Create_FullMethodName  = "/platform_base.TimezoneService/Create"
 	TimezoneService_Update_FullMethodName  = "/platform_base.TimezoneService/Update"
 	TimezoneService_Get_FullMethodName     = "/platform_base.TimezoneService/Get"
 	TimezoneService_List_FullMethodName    = "/platform_base.TimezoneService/List"
@@ -145,8 +144,6 @@ const (
 //
 // 时区服务
 type TimezoneServiceClient interface {
-	// 创建时区
-	Create(ctx context.Context, in *timezone.CreateTimezoneRequest, opts ...grpc.CallOption) (*timezone.CreateTimezoneResponse, error)
 	// 修改时区
 	Update(ctx context.Context, in *timezone.UpdateTimezoneRequest, opts ...grpc.CallOption) (*timezone.UpdateTimezoneResponse, error)
 	// 获取时区
@@ -165,16 +162,6 @@ type timezoneServiceClient struct {
 
 func NewTimezoneServiceClient(cc grpc.ClientConnInterface) TimezoneServiceClient {
 	return &timezoneServiceClient{cc}
-}
-
-func (c *timezoneServiceClient) Create(ctx context.Context, in *timezone.CreateTimezoneRequest, opts ...grpc.CallOption) (*timezone.CreateTimezoneResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(timezone.CreateTimezoneResponse)
-	err := c.cc.Invoke(ctx, TimezoneService_Create_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *timezoneServiceClient) Update(ctx context.Context, in *timezone.UpdateTimezoneRequest, opts ...grpc.CallOption) (*timezone.UpdateTimezoneResponse, error) {
@@ -233,8 +220,6 @@ func (c *timezoneServiceClient) Reorder(ctx context.Context, in *timezone.Reorde
 //
 // 时区服务
 type TimezoneServiceServer interface {
-	// 创建时区
-	Create(context.Context, *timezone.CreateTimezoneRequest) (*timezone.CreateTimezoneResponse, error)
 	// 修改时区
 	Update(context.Context, *timezone.UpdateTimezoneRequest) (*timezone.UpdateTimezoneResponse, error)
 	// 获取时区
@@ -255,9 +240,6 @@ type TimezoneServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedTimezoneServiceServer struct{}
 
-func (UnimplementedTimezoneServiceServer) Create(context.Context, *timezone.CreateTimezoneRequest) (*timezone.CreateTimezoneResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
-}
 func (UnimplementedTimezoneServiceServer) Update(context.Context, *timezone.UpdateTimezoneRequest) (*timezone.UpdateTimezoneResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
@@ -292,24 +274,6 @@ func RegisterTimezoneServiceServer(s grpc.ServiceRegistrar, srv TimezoneServiceS
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&TimezoneService_ServiceDesc, srv)
-}
-
-func _TimezoneService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(timezone.CreateTimezoneRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TimezoneServiceServer).Create(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: TimezoneService_Create_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TimezoneServiceServer).Create(ctx, req.(*timezone.CreateTimezoneRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _TimezoneService_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -410,10 +374,6 @@ var TimezoneService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*TimezoneServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Create",
-			Handler:    _TimezoneService_Create_Handler,
-		},
-		{
 			MethodName: "Update",
 			Handler:    _TimezoneService_Update_Handler,
 		},
@@ -439,7 +399,6 @@ var TimezoneService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	CurrencyService_Create_FullMethodName  = "/platform_base.CurrencyService/Create"
 	CurrencyService_Update_FullMethodName  = "/platform_base.CurrencyService/Update"
 	CurrencyService_Get_FullMethodName     = "/platform_base.CurrencyService/Get"
 	CurrencyService_List_FullMethodName    = "/platform_base.CurrencyService/List"
@@ -453,8 +412,6 @@ const (
 //
 // 货币服务
 type CurrencyServiceClient interface {
-	// 创建货币
-	Create(ctx context.Context, in *currency.CreateCurrencyRequest, opts ...grpc.CallOption) (*currency.CreateCurrencyResponse, error)
 	// 修改货币
 	Update(ctx context.Context, in *currency.UpdateCurrencyRequest, opts ...grpc.CallOption) (*currency.UpdateCurrencyResponse, error)
 	// 获取货币
@@ -473,16 +430,6 @@ type currencyServiceClient struct {
 
 func NewCurrencyServiceClient(cc grpc.ClientConnInterface) CurrencyServiceClient {
 	return &currencyServiceClient{cc}
-}
-
-func (c *currencyServiceClient) Create(ctx context.Context, in *currency.CreateCurrencyRequest, opts ...grpc.CallOption) (*currency.CreateCurrencyResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(currency.CreateCurrencyResponse)
-	err := c.cc.Invoke(ctx, CurrencyService_Create_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *currencyServiceClient) Update(ctx context.Context, in *currency.UpdateCurrencyRequest, opts ...grpc.CallOption) (*currency.UpdateCurrencyResponse, error) {
@@ -541,8 +488,6 @@ func (c *currencyServiceClient) Reorder(ctx context.Context, in *currency.Reorde
 //
 // 货币服务
 type CurrencyServiceServer interface {
-	// 创建货币
-	Create(context.Context, *currency.CreateCurrencyRequest) (*currency.CreateCurrencyResponse, error)
 	// 修改货币
 	Update(context.Context, *currency.UpdateCurrencyRequest) (*currency.UpdateCurrencyResponse, error)
 	// 获取货币
@@ -563,9 +508,6 @@ type CurrencyServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedCurrencyServiceServer struct{}
 
-func (UnimplementedCurrencyServiceServer) Create(context.Context, *currency.CreateCurrencyRequest) (*currency.CreateCurrencyResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
-}
 func (UnimplementedCurrencyServiceServer) Update(context.Context, *currency.UpdateCurrencyRequest) (*currency.UpdateCurrencyResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
@@ -600,24 +542,6 @@ func RegisterCurrencyServiceServer(s grpc.ServiceRegistrar, srv CurrencyServiceS
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&CurrencyService_ServiceDesc, srv)
-}
-
-func _CurrencyService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(currency.CreateCurrencyRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(CurrencyServiceServer).Create(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: CurrencyService_Create_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CurrencyServiceServer).Create(ctx, req.(*currency.CreateCurrencyRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _CurrencyService_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -718,10 +642,6 @@ var CurrencyService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*CurrencyServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Create",
-			Handler:    _CurrencyService_Create_Handler,
-		},
-		{
 			MethodName: "Update",
 			Handler:    _CurrencyService_Update_Handler,
 		},
@@ -747,7 +667,6 @@ var CurrencyService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	RegionService_Create_FullMethodName  = "/platform_base.RegionService/Create"
 	RegionService_Update_FullMethodName  = "/platform_base.RegionService/Update"
 	RegionService_Get_FullMethodName     = "/platform_base.RegionService/Get"
 	RegionService_List_FullMethodName    = "/platform_base.RegionService/List"
@@ -761,8 +680,6 @@ const (
 //
 // 国家地区服务
 type RegionServiceClient interface {
-	// 创建国家地区
-	Create(ctx context.Context, in *region.CreateRegionRequest, opts ...grpc.CallOption) (*region.CreateRegionResponse, error)
 	// 修改国家地区
 	Update(ctx context.Context, in *region.UpdateRegionRequest, opts ...grpc.CallOption) (*region.UpdateRegionResponse, error)
 	// 获取国家地区
@@ -781,16 +698,6 @@ type regionServiceClient struct {
 
 func NewRegionServiceClient(cc grpc.ClientConnInterface) RegionServiceClient {
 	return &regionServiceClient{cc}
-}
-
-func (c *regionServiceClient) Create(ctx context.Context, in *region.CreateRegionRequest, opts ...grpc.CallOption) (*region.CreateRegionResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(region.CreateRegionResponse)
-	err := c.cc.Invoke(ctx, RegionService_Create_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *regionServiceClient) Update(ctx context.Context, in *region.UpdateRegionRequest, opts ...grpc.CallOption) (*region.UpdateRegionResponse, error) {
@@ -849,8 +756,6 @@ func (c *regionServiceClient) Reorder(ctx context.Context, in *region.ReorderReg
 //
 // 国家地区服务
 type RegionServiceServer interface {
-	// 创建国家地区
-	Create(context.Context, *region.CreateRegionRequest) (*region.CreateRegionResponse, error)
 	// 修改国家地区
 	Update(context.Context, *region.UpdateRegionRequest) (*region.UpdateRegionResponse, error)
 	// 获取国家地区
@@ -871,9 +776,6 @@ type RegionServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedRegionServiceServer struct{}
 
-func (UnimplementedRegionServiceServer) Create(context.Context, *region.CreateRegionRequest) (*region.CreateRegionResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
-}
 func (UnimplementedRegionServiceServer) Update(context.Context, *region.UpdateRegionRequest) (*region.UpdateRegionResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
@@ -908,24 +810,6 @@ func RegisterRegionServiceServer(s grpc.ServiceRegistrar, srv RegionServiceServe
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&RegionService_ServiceDesc, srv)
-}
-
-func _RegionService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(region.CreateRegionRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RegionServiceServer).Create(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: RegionService_Create_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RegionServiceServer).Create(ctx, req.(*region.CreateRegionRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _RegionService_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -1025,10 +909,6 @@ var RegionService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "platform_base.RegionService",
 	HandlerType: (*RegionServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "Create",
-			Handler:    _RegionService_Create_Handler,
-		},
 		{
 			MethodName: "Update",
 			Handler:    _RegionService_Update_Handler,

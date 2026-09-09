@@ -20,24 +20,6 @@ message RegionInfo {
   int64 sort_no = 6;
 }
 
-// 创建国家地区请求
-message CreateRegionRequest {
-  // 国家或地区编码
-  string code = 1;
-  // 国际电话区号, 不包含加号
-  string calling_code = 2;
-  // 名称翻译Key
-  string name_key = 3;
-  // 状态: 1启用, 2停用
-  optional int64 status = 4;
-}
-
-// 创建国家地区响应
-message CreateRegionResponse {
-  // 国家或地区ID
-  int64 id = 1;
-}
-
 // 修改国家地区请求
 message UpdateRegionRequest {
   // 国家或地区ID

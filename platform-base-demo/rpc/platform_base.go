@@ -6,7 +6,6 @@ import (
 
 	"oa.98ent.com/p9/platform-base/rpc/internal/config"
 	currencyserviceServer "oa.98ent.com/p9/platform-base/rpc/internal/server/currencyservice"
-	languageserviceServer "oa.98ent.com/p9/platform-base/rpc/internal/server/languageservice"
 	pingserviceServer "oa.98ent.com/p9/platform-base/rpc/internal/server/pingservice"
 	regionserviceServer "oa.98ent.com/p9/platform-base/rpc/internal/server/regionservice"
 	timezoneserviceServer "oa.98ent.com/p9/platform-base/rpc/internal/server/timezoneservice"
@@ -36,7 +35,6 @@ func main() {
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
 		base.RegisterPingServiceServer(grpcServer, pingserviceServer.NewPingServiceServer(ctx))
-		base.RegisterLanguageServiceServer(grpcServer, languageserviceServer.NewLanguageServiceServer(ctx))
 		base.RegisterTimezoneServiceServer(grpcServer, timezoneserviceServer.NewTimezoneServiceServer(ctx))
 		base.RegisterCurrencyServiceServer(grpcServer, currencyserviceServer.NewCurrencyServiceServer(ctx))
 		base.RegisterRegionServiceServer(grpcServer, regionserviceServer.NewRegionServiceServer(ctx))

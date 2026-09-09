@@ -17,8 +17,6 @@ import (
 
 type (
 	TimezoneService interface {
-		// 创建时区
-		Create(ctx context.Context, in *timezone.CreateTimezoneRequest, opts ...grpc.CallOption) (*timezone.CreateTimezoneResponse, error)
 		// 修改时区
 		Update(ctx context.Context, in *timezone.UpdateTimezoneRequest, opts ...grpc.CallOption) (*timezone.UpdateTimezoneResponse, error)
 		// 获取时区
@@ -40,12 +38,6 @@ func NewTimezoneService(cli zrpc.Client) TimezoneService {
 	return &defaultTimezoneService{
 		cli: cli,
 	}
-}
-
-// 创建时区
-func (m *defaultTimezoneService) Create(ctx context.Context, in *timezone.CreateTimezoneRequest, opts ...grpc.CallOption) (*timezone.CreateTimezoneResponse, error) {
-	client := base.NewTimezoneServiceClient(m.cli.Conn())
-	return client.Create(ctx, in, opts...)
 }
 
 // 修改时区
