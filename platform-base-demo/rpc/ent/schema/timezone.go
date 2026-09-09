@@ -2,7 +2,6 @@ package schema
 
 import (
 	"entgo.io/ent"
-	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
@@ -24,11 +23,10 @@ func (Timezone) Fields() []ent.Field {
 			Immutable().
 			Comment("IANA 时区编码"),
 
-		field.JSON("name_i18n", map[string]string{}).
-			SchemaType(map[string]string{
-				dialect.Postgres: "jsonb",
-			}).
-			Comment("多语言名称"),
+		field.String("name_key").
+			NotEmpty().
+			MaxLen(128).
+			Comment("名称翻译 Key"),
 	}
 }
 

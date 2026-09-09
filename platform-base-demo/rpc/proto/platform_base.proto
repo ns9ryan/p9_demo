@@ -5,7 +5,6 @@ package platform_base;
 option go_package = "oa.98ent.com/p9/platform-base/rpc/pb/base";
 
 import "types/ping.proto";
-import "types/language.proto";
 import "types/timezone.proto";
 import "types/currency.proto";
 import "types/region.proto";
@@ -14,27 +13,6 @@ import "types/region.proto";
 service PingService {
   // Ping
   rpc Ping(ping.PingRequest) returns (ping.PingResponse);
-}
-
-// 语言服务
-service LanguageService {
-  // 创建语言
-  rpc Create(language.CreateLanguageRequest) returns (language.CreateLanguageResponse);
-
-  // 修改语言
-  rpc Update(language.UpdateLanguageRequest) returns (language.UpdateLanguageResponse);
-
-  // 获取语言
-  rpc Get(language.GetLanguageRequest) returns (language.GetLanguageResponse);
-
-  // 获取语言管理列表
-  rpc List(language.ListLanguagesRequest) returns (language.ListLanguagesResponse);
-
-  // 获取全部语言
-  rpc ListAll(language.ListAllLanguagesRequest) returns (language.ListAllLanguagesResponse);
-
-  // 调整语言排序
-  rpc Reorder(language.ReorderLanguageRequest) returns (language.ReorderLanguageResponse);
 }
 
 // 时区服务

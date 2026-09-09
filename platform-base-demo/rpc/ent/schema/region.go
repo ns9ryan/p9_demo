@@ -4,7 +4,6 @@ import (
 	"regexp"
 
 	"entgo.io/ent"
-	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
@@ -34,11 +33,10 @@ func (Region) Fields() []ent.Field {
 			Match(regexp.MustCompile(`^[0-9]{1,3}$`)).
 			Comment("国际电话区号, 不包含加号"),
 
-		field.JSON("name_i18n", map[string]string{}).
-			SchemaType(map[string]string{
-				dialect.Postgres: "jsonb",
-			}).
-			Comment("多语言名称"),
+		field.String("name_key").
+			NotEmpty().
+			MaxLen(128).
+			Comment("名称翻译 Key"),
 	}
 }
 

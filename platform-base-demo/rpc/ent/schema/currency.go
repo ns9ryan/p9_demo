@@ -24,11 +24,10 @@ func (Currency) Fields() []ent.Field {
 			Immutable().
 			Comment("货币编码"),
 
-		field.JSON("name_i18n", map[string]string{}).
-			SchemaType(map[string]string{
-				dialect.Postgres: "jsonb",
-			}).
-			Comment("多语言名称"),
+		field.String("name_key").
+			NotEmpty().
+			MaxLen(128).
+			Comment("名称翻译 Key"),
 
 		field.Int64("currency_type").
 			Range(1, 2).
