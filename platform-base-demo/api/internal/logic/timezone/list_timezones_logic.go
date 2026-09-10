@@ -47,7 +47,7 @@ func (l *ListTimezonesLogic) ListTimezones(req *types.ListTimezonesRequest) (res
 	list := make([]types.TimezoneInfo, 0, len(result.List))
 	for _, item := range result.List {
 		// 获取当前语言的时区名称
-		name := corei18n.TG(l.ctx, "base", item.NameKey)
+		name := corei18n.TG(l.ctx, corei18n.CodePlatform, "base", item.NameKey)
 
 		list = append(list, types.TimezoneInfo{
 			Id:      item.Id,      // 时区ID

@@ -7,8 +7,8 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
+
 	"oa.98ent.com/p9/core/common/coreadapt"
-	corei18n "oa.98ent.com/p9/core/common/i18n"
 	coremiddleware "oa.98ent.com/p9/core/common/middleware"
 	"oa.98ent.com/p9/core/rpc/coreclient"
 	"oa.98ent.com/p9/platform-base/api/internal/config"
@@ -24,27 +24,35 @@ import (
 
 // ServiceContext 服务上下文
 type ServiceContext struct {
-	Config config.Config
+	// 服务配置
+	Config config.Config // 服务配置
 
-	Core coreclient.Core // Core RPC
+	// Core
+	Core coreclient.Core // Core RPC客户端
 
+	// Platform Base RPC
 	PingRpc     pingservice.PingService         // Ping RPC
-	TimezoneRpc timezoneservice.TimezoneService // 时区 RPC
-	CurrencyRpc currencyservice.CurrencyService // 货币 RPC
-	RegionRpc   regionservice.RegionService     // 国家地区 RPC
+	TimezoneRpc timezoneservice.TimezoneService // 时区RPC
+	CurrencyRpc currencyservice.CurrencyService // 货币RPC
+	RegionRpc   regionservice.RegionService     // 国家地区RPC
 
-	Trans     *i18n.Translator // 翻译器
-	Language  rest.Middleware  // API语言中间件
-	CoreI18n  rest.Middleware  // Core语言中间件
-	Jwt       rest.Middleware  // JWT认证中间件
-	Authority rest.Middleware  // 权限校验中间件
-	ActionLog rest.Middleware  // 操作日志中间件
-	ErrorLog  rest.Middleware  // 错误日志中间件
+	// 多语言
+	Trans    *i18n.Translator // API翻译器
+	Language rest.Middleware  // API语言中间件
+	CoreI18n rest.Middleware  // Core多语言中间件
+
+	// 认证权限
+	Jwt       rest.Middleware // JWT认证中间件
+	Authority rest.Middleware // 权限校验中间件
+
+	// 日志
+	ActionLog rest.Middleware // 操作日志中间件
+	ErrorLog  rest.Middleware // 错误日志中间件
 }
 
 // NewServiceContext 创建服务上下文
 func NewServiceContext(c config.Config) *ServiceContext {
-	// 创建翻译器
+	// 创建API翻译器
 	trans, err := i18n.New(c.I18n, locales.FS)
 	logx.Must(err)
 
@@ -58,29 +66,36 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	coreClient := zrpc.MustNewClient(c.CoreRpc)
 	coreCli := coreclient.NewCore(coreClient)
 
-	// 注册Core多语言词典加载器
-	corei18n.SetDictLoader(coreadapt.DictLoader(coreCli))
+	// 设置Core多语言词典加载器
+	coreadapt.SetDictLoader(coreCli)
 
 	// 创建Core认证适配器
 	auth := coreadapt.Auth(coreCli)
 
 	return &ServiceContext{
-		Config: c,
+		// 服务配置
+		Config: c, // 服务配置
 
-		Core: coreCli,
+		// Core
+		Core: coreCli, // Core RPC客户端
 
-		PingRpc:     pingservice.NewPingService(platformBaseClient),
-		TimezoneRpc: timezoneservice.NewTimezoneService(platformBaseClient),
-		CurrencyRpc: currencyservice.NewCurrencyService(platformBaseClient),
-		RegionRpc:   regionservice.NewRegionService(platformBaseClient),
+		// Platform Base RPC
+		PingRpc:     pingservice.NewPingService(platformBaseClient),         // Ping RPC
+		TimezoneRpc: timezoneservice.NewTimezoneService(platformBaseClient), // 时区RPC
+		CurrencyRpc: currencyservice.NewCurrencyService(platformBaseClient), // 货币RPC
+		RegionRpc:   regionservice.NewRegionService(platformBaseClient),     // 国家地区RPC
 
-		Trans:    trans,
-		Language: apimiddleware.NewLanguageMiddleware().Handle,
+		// 多语言
+		Trans:    trans,                                        // API翻译器
+		Language: apimiddleware.NewLanguageMiddleware().Handle, // API语言中间件
+		CoreI18n: coremiddleware.I18n,                          // Core多语言中间件
 
-		CoreI18n:  coremiddleware.I18n,
-		Jwt:       coremiddleware.JWT(auth),
-		Authority: coremiddleware.Authority(auth),
-		ActionLog: coremiddleware.ActionLog(coreadapt.ActionRecorder(coreCli)),
-		ErrorLog:  coremiddleware.ErrorLog(c.Name, coreadapt.ErrorRecorder(coreCli)),
+		// 认证权限
+		Jwt:       coremiddleware.JWT(auth),       // JWT认证中间件
+		Authority: coremiddleware.Authority(auth), // 权限校验中间件
+
+		// 日志
+		ActionLog: coremiddleware.ActionLog(coreadapt.ActionRecorder(coreCli)),       // 操作日志中间件
+		ErrorLog:  coremiddleware.ErrorLog(c.Name, coreadapt.ErrorRecorder(coreCli)), // 错误日志中间件
 	}
 }

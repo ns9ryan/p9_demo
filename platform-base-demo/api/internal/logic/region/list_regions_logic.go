@@ -47,7 +47,7 @@ func (l *ListRegionsLogic) ListRegions(req *types.ListRegionsRequest) (resp *typ
 	list := make([]types.RegionInfo, 0, len(result.List))
 	for _, item := range result.List {
 		// 获取当前语言的国家地区名称
-		name := corei18n.TG(l.ctx, "base", item.NameKey)
+		name := corei18n.TG(l.ctx, corei18n.CodePlatform, "base", item.NameKey)
 
 		list = append(list, types.RegionInfo{
 			Id:          item.Id,          // 国家或地区ID

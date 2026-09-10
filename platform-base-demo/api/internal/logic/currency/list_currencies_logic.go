@@ -47,7 +47,7 @@ func (l *ListCurrenciesLogic) ListCurrencies(req *types.ListCurrenciesRequest) (
 	list := make([]types.CurrencyInfo, 0, len(result.List))
 	for _, item := range result.List {
 		// 获取当前语言的货币名称
-		name := corei18n.TG(l.ctx, "base", item.NameKey)
+		name := corei18n.TG(l.ctx, corei18n.CodePlatform, "base", item.NameKey)
 
 		list = append(list, types.CurrencyInfo{
 			Id:           item.Id,           // 货币ID

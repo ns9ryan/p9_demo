@@ -42,7 +42,7 @@ func (l *GetTimezoneLogic) GetTimezone(req *types.GetTimezoneRequest) (resp *typ
 	}
 
 	// 获取当前语言的时区名称
-	name := corei18n.TG(l.ctx, "base", result.Timezone.NameKey)
+	name := corei18n.TG(l.ctx, corei18n.CodePlatform, "base", result.Timezone.NameKey)
 
 	// 返回时区信息
 	return &types.GetTimezoneResponse{

@@ -42,7 +42,7 @@ func (l *GetCurrencyLogic) GetCurrency(req *types.GetCurrencyRequest) (resp *typ
 	}
 
 	// 获取当前语言的货币名称
-	name := corei18n.TG(l.ctx, "base", result.Currency.NameKey)
+	name := corei18n.TG(l.ctx, corei18n.CodePlatform, "base", result.Currency.NameKey)
 
 	// 返回货币信息
 	return &types.GetCurrencyResponse{

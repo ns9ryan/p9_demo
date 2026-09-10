@@ -115,11 +115,11 @@ func baseDataI18n() []*coreclient.I18NItem {
 	return out
 }
 
-// addI18n 添加简体中文、繁体中文和英文翻译
+// addI18n 添加Platform站点的简体中文、繁体中文和英文翻译
 func addI18n(out *[]*coreclient.I18NItem, group, key, zh, hk, en string) {
 	*out = append(*out,
-		&coreclient.I18NItem{I18NGroup: group, TransKey: key, Lang: i18n.LangZH, Value: zh},
-		&coreclient.I18NItem{I18NGroup: group, TransKey: key, Lang: i18n.LangHK, Value: hk},
-		&coreclient.I18NItem{I18NGroup: group, TransKey: key, Lang: i18n.LangEN, Value: en},
+		&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: group, TransKey: key, Lang: i18n.LangZH, Value: zh},
+		&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: group, TransKey: key, Lang: i18n.LangHK, Value: hk},
+		&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: group, TransKey: key, Lang: i18n.LangEN, Value: en},
 	)
 }

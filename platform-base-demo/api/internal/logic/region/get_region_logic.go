@@ -42,7 +42,7 @@ func (l *GetRegionLogic) GetRegion(req *types.GetRegionRequest) (resp *types.Get
 	}
 
 	// 获取当前语言的国家地区名称
-	name := corei18n.TG(l.ctx, "base", result.Region.NameKey)
+	name := corei18n.TG(l.ctx, corei18n.CodePlatform, "base", result.Region.NameKey)
 
 	// 返回国家地区信息
 	return &types.GetRegionResponse{
