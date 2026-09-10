@@ -4,20 +4,59 @@ package regionallocation;
 
 option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/operator/regionallocation";
 
+// 分站经营地区分配信息
+message RegionAllocationInfo {
+  // 分配记录ID
+  int64 id = 1;
+  // 分站ID
+  int64 operator_id = 2;
+  // 国家地区编码
+  string region_code = 3;
+  // 分配时间, Unix毫秒时间戳
+  int64 created_at = 4;
+}
+
 // 获取经营地区分配列表请求
-message ListRegionAllocationsRequest {}
+message ListRegionAllocationsRequest {
+  // 页码, 从1开始
+  int64 page = 1;
+  // 每页数量
+  int64 page_size = 2;
+  // 分站ID
+  optional int64 operator_id = 3;
+  // 国家地区编码
+  optional string region_code = 4;
+}
 
 // 获取经营地区分配列表响应
-message ListRegionAllocationsResponse {}
+message ListRegionAllocationsResponse {
+  // 数据总数
+  int64 total = 1;
+  // 经营地区分配列表
+  repeated RegionAllocationInfo list = 2;
+}
 
 // 分配经营地区请求
-message AssignRegionRequest {}
+message AssignRegionRequest {
+  // 分站ID
+  int64 operator_id = 1;
+  // 国家地区编码
+  string region_code = 2;
+}
 
 // 分配经营地区响应
-message AssignRegionResponse {}
+message AssignRegionResponse {
+  // 分配记录ID
+  int64 id = 1;
+}
 
-// 回收经营地区请求
-message ReclaimRegionRequest {}
+// 取消经营地区分配请求
+message UnassignRegionRequest {
+  // 分站ID
+  int64 operator_id = 1;
+  // 国家地区编码
+  string region_code = 2;
+}
 
-// 回收经营地区响应
-message ReclaimRegionResponse {}
+// 取消经营地区分配响应
+message UnassignRegionResponse {}
