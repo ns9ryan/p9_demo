@@ -35,7 +35,7 @@ type (
 	// 获取时区响应
 	GetTimezoneResponse {
 		// 时区信息
-		Timezone TimezoneInfo `json:"timezone"`
+		TimezoneInfo
 	}
 	// 获取时区管理列表请求
 	ListTimezonesRequest {

@@ -4,26 +4,104 @@ package domain;
 
 option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/operator/domain";
 
-// 创建域名请求
-message CreateDomainRequest {}
+// 分站域名信息
+message DomainInfo {
+  // 域名ID
+  int64 id = 1;
+  // 分站ID
+  int64 operator_id = 2;
+  // 域名, 不包含协议和端口
+  string domain_name = 3;
+  // 域名类型: 1分站后台, 2代理后台, 3H5
+  int64 domain_type = 4;
+  // 域名状态: 1启用, 2停用
+  int64 status = 5;
+  // 总网内部备注
+  optional string remark = 6;
+  // 创建时间, Unix毫秒时间戳
+  int64 created_at = 7;
+  // 更新时间, Unix毫秒时间戳
+  int64 updated_at = 8;
+}
 
-// 创建域名响应
-message CreateDomainResponse {}
+// 创建分站域名请求
+message CreateDomainRequest {
+  // 分站ID
+  int64 operator_id = 1;
+  // 域名, 不包含协议和端口
+  string domain_name = 2;
+  // 域名类型: 1分站后台, 2代理后台, 3H5
+  int64 domain_type = 3;
+  // 域名状态: 1启用, 2停用
+  optional int64 status = 4;
+  // 总网内部备注
+  optional string remark = 5;
+}
 
-// 修改域名请求
-message UpdateDomainRequest {}
+// 创建分站域名响应
+message CreateDomainResponse {
+  // 域名ID
+  int64 id = 1;
+}
 
-// 修改域名响应
+// 修改分站域名请求
+message UpdateDomainRequest {
+  // 域名ID
+  int64 id = 1;
+  // 域名, 不包含协议和端口
+  optional string domain_name = 2;
+  // 域名类型: 1分站后台, 2代理后台, 3H5
+  optional int64 domain_type = 3;
+  // 域名状态: 1启用, 2停用
+  optional int64 status = 4;
+  // 总网内部备注
+  optional string remark = 5;
+}
+
+// 修改分站域名响应
 message UpdateDomainResponse {}
 
-// 获取域名请求
-message GetDomainRequest {}
+// 获取分站域名请求
+message GetDomainRequest {
+  // 域名ID
+  int64 id = 1;
+}
 
-// 获取域名响应
-message GetDomainResponse {}
+// 获取分站域名响应
+message GetDomainResponse {
+  // 分站域名信息
+  DomainInfo domain = 1;
+}
 
-// 获取域名管理列表请求
-message ListDomainsRequest {}
+// 获取分站域名列表请求
+message ListDomainsRequest {
+  // 页码, 从1开始
+  int64 page = 1;
+  // 每页数量
+  int64 page_size = 2;
+  // 分站ID
+  optional int64 operator_id = 3;
+  // 搜索关键字, 匹配域名
+  optional string keyword = 4;
+  // 域名类型: 1分站后台, 2代理后台, 3H5
+  optional int64 domain_type = 5;
+  // 域名状态: 1启用, 2停用
+  optional int64 status = 6;
+}
 
-// 获取域名管理列表响应
-message ListDomainsResponse {}
+// 获取分站域名列表响应
+message ListDomainsResponse {
+  // 数据总数
+  int64 total = 1;
+  // 域名列表
+  repeated DomainInfo list = 2;
+}
+
+// 删除分站域名请求
+message DeleteDomainRequest {
+  // 域名ID
+  int64 id = 1;
+}
+
+// 删除分站域名响应
+message DeleteDomainResponse {}

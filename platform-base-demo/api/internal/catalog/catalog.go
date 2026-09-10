@@ -12,194 +12,60 @@ const (
 	menuTypeButton int32 = 2 // 按钮
 )
 
-// PlatformBaseReq 返回Platform Base菜单和API目录
-func PlatformBaseReq() *coreclient.RegisterCatalogReq {
+// registerRequest 创建Platform Base目录注册请求
+func registerRequest() *coreclient.RegisterCatalogReq {
 	return &coreclient.RegisterCatalogReq{
-		Menus: []*coreclient.RegisterMenuReq{
-			// 基础数据
-			{
-				Name:     "BaseData",
-				Title:    "menu.route.baseData",
-				Path:     "/base-data",
-				MenuType: menuTypeDir,
-				Sort:     20,
-			},
+		Menus: menus(),
+		Apis:  apis(),
+		I18N:  platformBaseI18n(),
+	}
+}
 
-			// 语言管理
-			{
-				Name:       "Language",
-				Title:      "menu.route.language",
-				Path:       "/base-data/language",
-				MenuType:   menuTypeMenu,
-				Component:  "base-data/language/index",
-				ParentName: "BaseData",
-				Sort:       21,
-			},
-			{
-				Name:       "LanguageCreate",
-				Title:      "menu.route.languageCreate",
-				MenuType:   menuTypeButton,
-				Permission: "language:create",
-				ParentName: "Language",
-				Sort:       211,
-			},
-			{
-				Name:       "LanguageUpdate",
-				Title:      "menu.route.languageUpdate",
-				MenuType:   menuTypeButton,
-				Permission: "language:update",
-				ParentName: "Language",
-				Sort:       212,
-			},
-			{
-				Name:       "LanguageReorder",
-				Title:      "menu.route.languageReorder",
-				MenuType:   menuTypeButton,
-				Permission: "language:reorder",
-				ParentName: "Language",
-				Sort:       213,
-			},
+// menus 返回Platform Base菜单目录
+func menus() []*coreclient.RegisterMenuReq {
+	return []*coreclient.RegisterMenuReq{
+		// 基础数据
+		{Name: "BaseData", Title: "menu.route.baseData", Path: "/base-data", MenuType: menuTypeDir, Sort: 20},
 
-			// 时区管理
-			{
-				Name:       "Timezone",
-				Title:      "menu.route.timezone",
-				Path:       "/base-data/timezone",
-				MenuType:   menuTypeMenu,
-				Component:  "base-data/timezone/index",
-				ParentName: "BaseData",
-				Sort:       22,
-			},
-			{
-				Name:       "TimezoneCreate",
-				Title:      "menu.route.timezoneCreate",
-				MenuType:   menuTypeButton,
-				Permission: "timezone:create",
-				ParentName: "Timezone",
-				Sort:       221,
-			},
-			{
-				Name:       "TimezoneUpdate",
-				Title:      "menu.route.timezoneUpdate",
-				MenuType:   menuTypeButton,
-				Permission: "timezone:update",
-				ParentName: "Timezone",
-				Sort:       222,
-			},
-			{
-				Name:       "TimezoneReorder",
-				Title:      "menu.route.timezoneReorder",
-				MenuType:   menuTypeButton,
-				Permission: "timezone:reorder",
-				ParentName: "Timezone",
-				Sort:       223,
-			},
+		// 时区管理
+		{Name: "Timezone", Title: "menu.route.timezone", Path: "/base-data/timezone", MenuType: menuTypeMenu, Component: "base-data/timezone/index", ParentName: "BaseData", Sort: 21},
+		{Name: "TimezoneUpdate", Title: "menu.route.timezoneUpdate", MenuType: menuTypeButton, Permission: "timezone:update", ParentName: "Timezone", Sort: 211},
+		{Name: "TimezoneReorder", Title: "menu.route.timezoneReorder", MenuType: menuTypeButton, Permission: "timezone:reorder", ParentName: "Timezone", Sort: 212},
 
-			// 货币管理
-			{
-				Name:       "Currency",
-				Title:      "menu.route.currency",
-				Path:       "/base-data/currency",
-				MenuType:   menuTypeMenu,
-				Component:  "base-data/currency/index",
-				ParentName: "BaseData",
-				Sort:       23,
-			},
-			{
-				Name:       "CurrencyCreate",
-				Title:      "route.currencyCreate",
-				MenuType:   menuTypeButton,
-				Permission: "currency:create",
-				ParentName: "Currency",
-				Sort:       231,
-			},
-			{
-				Name:       "CurrencyUpdate",
-				Title:      "menu.route.currencyUpdate",
-				MenuType:   menuTypeButton,
-				Permission: "currency:update",
-				ParentName: "Currency",
-				Sort:       232,
-			},
-			{
-				Name:       "CurrencyReorder",
-				Title:      "menu.route.currencyReorder",
-				MenuType:   menuTypeButton,
-				Permission: "currency:reorder",
-				ParentName: "Currency",
-				Sort:       233,
-			},
+		// 货币管理
+		{Name: "Currency", Title: "menu.route.currency", Path: "/base-data/currency", MenuType: menuTypeMenu, Component: "base-data/currency/index", ParentName: "BaseData", Sort: 22},
+		{Name: "CurrencyUpdate", Title: "menu.route.currencyUpdate", MenuType: menuTypeButton, Permission: "currency:update", ParentName: "Currency", Sort: 221},
+		{Name: "CurrencyReorder", Title: "menu.route.currencyReorder", MenuType: menuTypeButton, Permission: "currency:reorder", ParentName: "Currency", Sort: 222},
 
-			// 国家地区管理
-			{
-				Name:       "Region",
-				Title:      "menu.route.region",
-				Path:       "/base-data/region",
-				MenuType:   menuTypeMenu,
-				Component:  "base-data/region/index",
-				ParentName: "BaseData",
-				Sort:       24,
-			},
-			{
-				Name:       "RegionCreate",
-				Title:      "menu.route.regionCreate",
-				MenuType:   menuTypeButton,
-				Permission: "region:create",
-				ParentName: "Region",
-				Sort:       241,
-			},
-			{
-				Name:       "RegionUpdate",
-				Title:      "menu.route.regionUpdate",
-				MenuType:   menuTypeButton,
-				Permission: "region:update",
-				ParentName: "Region",
-				Sort:       242,
-			},
-			{
-				Name:       "RegionReorder",
-				Title:      "menu.route.regionReorder",
-				MenuType:   menuTypeButton,
-				Permission: "region:reorder",
-				ParentName: "Region",
-				Sort:       243,
-			},
-		},
+		// 国家地区管理
+		{Name: "Region", Title: "menu.route.region", Path: "/base-data/region", MenuType: menuTypeMenu, Component: "base-data/region/index", ParentName: "BaseData", Sort: 23},
+		{Name: "RegionUpdate", Title: "menu.route.regionUpdate", MenuType: menuTypeButton, Permission: "region:update", ParentName: "Region", Sort: 231},
+		{Name: "RegionReorder", Title: "menu.route.regionReorder", MenuType: menuTypeButton, Permission: "region:reorder", ParentName: "Region", Sort: 232},
+	}
+}
 
-		Apis: []*coreclient.CreateApiReq{
-			// 语言
-			{Path: "/admin/language/create", Method: http.MethodPost, Description: "api.languageCreate", ApiGroup: "language", ServiceName: "platform-base-api"},
-			{Path: "/admin/language/update", Method: http.MethodPost, Description: "api.languageUpdate", ApiGroup: "language", ServiceName: "platform-base-api"},
-			{Path: "/admin/language/get", Method: http.MethodGet, Description: "api.languageGet", ApiGroup: "language", ServiceName: "platform-base-api"},
-			{Path: "/admin/language/list", Method: http.MethodGet, Description: "api.languageList", ApiGroup: "language", ServiceName: "platform-base-api"},
-			{Path: "/admin/language/list-all", Method: http.MethodGet, Description: "api.languageListAll", ApiGroup: "language", ServiceName: "platform-base-api"},
-			{Path: "/admin/language/reorder", Method: http.MethodPost, Description: "api.languageReorder", ApiGroup: "language", ServiceName: "platform-base-api"},
+// apis 返回Platform Base API目录
+func apis() []*coreclient.CreateApiReq {
+	return []*coreclient.CreateApiReq{
+		// 时区
+		{Path: "/admin/timezone/update", Method: http.MethodPost, Description: "api.timezoneUpdate", ApiGroup: "timezone", ServiceName: "platform-base-api"},
+		{Path: "/admin/timezone/get", Method: http.MethodGet, Description: "api.timezoneGet", ApiGroup: "timezone", ServiceName: "platform-base-api"},
+		{Path: "/admin/timezone/list", Method: http.MethodGet, Description: "api.timezoneList", ApiGroup: "timezone", ServiceName: "platform-base-api"},
+		{Path: "/admin/timezone/list-all", Method: http.MethodGet, Description: "api.timezoneListAll", ApiGroup: "timezone", ServiceName: "platform-base-api"},
+		{Path: "/admin/timezone/reorder", Method: http.MethodPost, Description: "api.timezoneReorder", ApiGroup: "timezone", ServiceName: "platform-base-api"},
 
-			// 时区
-			{Path: "/admin/timezone/create", Method: http.MethodPost, Description: "api.timezoneCreate", ApiGroup: "timezone", ServiceName: "platform-base-api"},
-			{Path: "/admin/timezone/update", Method: http.MethodPost, Description: "api.timezoneUpdate", ApiGroup: "timezone", ServiceName: "platform-base-api"},
-			{Path: "/admin/timezone/get", Method: http.MethodGet, Description: "api.timezoneGet", ApiGroup: "timezone", ServiceName: "platform-base-api"},
-			{Path: "/admin/timezone/list", Method: http.MethodGet, Description: "api.timezoneList", ApiGroup: "timezone", ServiceName: "platform-base-api"},
-			{Path: "/admin/timezone/list-all", Method: http.MethodGet, Description: "api.timezoneListAll", ApiGroup: "timezone", ServiceName: "platform-base-api"},
-			{Path: "/admin/timezone/reorder", Method: http.MethodPost, Description: "api.timezoneReorder", ApiGroup: "timezone", ServiceName: "platform-base-api"},
+		// 货币
+		{Path: "/admin/currency/update", Method: http.MethodPost, Description: "api.currencyUpdate", ApiGroup: "currency", ServiceName: "platform-base-api"},
+		{Path: "/admin/currency/get", Method: http.MethodGet, Description: "api.currencyGet", ApiGroup: "currency", ServiceName: "platform-base-api"},
+		{Path: "/admin/currency/list", Method: http.MethodGet, Description: "api.currencyList", ApiGroup: "currency", ServiceName: "platform-base-api"},
+		{Path: "/admin/currency/list-all", Method: http.MethodGet, Description: "api.currencyListAll", ApiGroup: "currency", ServiceName: "platform-base-api"},
+		{Path: "/admin/currency/reorder", Method: http.MethodPost, Description: "api.currencyReorder", ApiGroup: "currency", ServiceName: "platform-base-api"},
 
-			// 货币
-			{Path: "/admin/currency/create", Method: http.MethodPost, Description: "api.currencyCreate", ApiGroup: "currency", ServiceName: "platform-base-api"},
-			{Path: "/admin/currency/update", Method: http.MethodPost, Description: "api.currencyUpdate", ApiGroup: "currency", ServiceName: "platform-base-api"},
-			{Path: "/admin/currency/get", Method: http.MethodGet, Description: "api.currencyGet", ApiGroup: "currency", ServiceName: "platform-base-api"},
-			{Path: "/admin/currency/list", Method: http.MethodGet, Description: "api.currencyList", ApiGroup: "currency", ServiceName: "platform-base-api"},
-			{Path: "/admin/currency/list-all", Method: http.MethodGet, Description: "api.currencyListAll", ApiGroup: "currency", ServiceName: "platform-base-api"},
-			{Path: "/admin/currency/reorder", Method: http.MethodPost, Description: "api.currencyReorder", ApiGroup: "currency", ServiceName: "platform-base-api"},
-
-			// 国家地区
-			{Path: "/admin/region/create", Method: http.MethodPost, Description: "api.regionCreate", ApiGroup: "region", ServiceName: "platform-base-api"},
-			{Path: "/admin/region/update", Method: http.MethodPost, Description: "api.regionUpdate", ApiGroup: "region", ServiceName: "platform-base-api"},
-			{Path: "/admin/region/get", Method: http.MethodGet, Description: "api.regionGet", ApiGroup: "region", ServiceName: "platform-base-api"},
-			{Path: "/admin/region/list", Method: http.MethodGet, Description: "api.regionList", ApiGroup: "region", ServiceName: "platform-base-api"},
-			{Path: "/admin/region/list-all", Method: http.MethodGet, Description: "api.regionListAll", ApiGroup: "region", ServiceName: "platform-base-api"},
-			{Path: "/admin/region/reorder", Method: http.MethodPost, Description: "api.regionReorder", ApiGroup: "region", ServiceName: "platform-base-api"},
-		},
-
-		I18N: append(menuI18n(), apiI18n()...),
+		// 国家地区
+		{Path: "/admin/region/update", Method: http.MethodPost, Description: "api.regionUpdate", ApiGroup: "region", ServiceName: "platform-base-api"},
+		{Path: "/admin/region/get", Method: http.MethodGet, Description: "api.regionGet", ApiGroup: "region", ServiceName: "platform-base-api"},
+		{Path: "/admin/region/list", Method: http.MethodGet, Description: "api.regionList", ApiGroup: "region", ServiceName: "platform-base-api"},
+		{Path: "/admin/region/list-all", Method: http.MethodGet, Description: "api.regionListAll", ApiGroup: "region", ServiceName: "platform-base-api"},
+		{Path: "/admin/region/reorder", Method: http.MethodPost, Description: "api.regionReorder", ApiGroup: "region", ServiceName: "platform-base-api"},
 	}
 }

@@ -46,7 +46,7 @@ func (l *GetTimezoneLogic) GetTimezone(req *types.GetTimezoneRequest) (resp *typ
 
 	// 返回时区信息
 	return &types.GetTimezoneResponse{
-		Timezone: types.TimezoneInfo{
+		TimezoneInfo: types.TimezoneInfo{
 			Id:      result.Timezone.Id,      // 时区ID
 			Code:    result.Timezone.Code,    // IANA时区编码
 			NameKey: result.Timezone.NameKey, // 名称翻译Key

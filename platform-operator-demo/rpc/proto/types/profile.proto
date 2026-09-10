@@ -4,20 +4,71 @@ package profile;
 
 option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/operator/profile";
 
+// 分站档案信息
+message OperatorProfileInfo {
+  // 档案ID
+  int64 id = 1;
+  // 分站ID
+  int64 operator_id = 2;
+  // 公司名称
+  optional string company_name = 3;
+  // 主要联系人名称
+  optional string contact_name = 4;
+  // 主要联系人邮箱
+  optional string contact_email = 5;
+  // 总网内部档案备注
+  optional string remark = 6;
+  // 创建时间, Unix毫秒时间戳
+  int64 created_at = 7;
+  // 更新时间, Unix毫秒时间戳
+  int64 updated_at = 8;
+}
+
 // 创建分站档案请求
-message CreateOperatorProfileRequest {}
+message CreateOperatorProfileRequest {
+  // 分站ID
+  int64 operator_id = 1;
+  // 公司名称
+  optional string company_name = 2;
+  // 主要联系人名称
+  optional string contact_name = 3;
+  // 主要联系人邮箱
+  optional string contact_email = 4;
+  // 总网内部档案备注
+  optional string remark = 5;
+}
 
 // 创建分站档案响应
-message CreateOperatorProfileResponse {}
+message CreateOperatorProfileResponse {
+  // 档案ID
+  int64 id = 1;
+}
 
 // 修改分站档案请求
-message UpdateOperatorProfileRequest {}
+message UpdateOperatorProfileRequest {
+  // 分站ID
+  int64 operator_id = 1;
+  // 公司名称
+  optional string company_name = 2;
+  // 主要联系人名称
+  optional string contact_name = 3;
+  // 主要联系人邮箱
+  optional string contact_email = 4;
+  // 总网内部档案备注
+  optional string remark = 5;
+}
 
 // 修改分站档案响应
 message UpdateOperatorProfileResponse {}
 
 // 获取分站档案请求
-message GetOperatorProfileRequest {}
+message GetOperatorProfileRequest {
+  // 分站ID
+  int64 operator_id = 1;
+}
 
 // 获取分站档案响应
-message GetOperatorProfileResponse {}
+message GetOperatorProfileResponse {
+  // 分站档案信息
+  OperatorProfileInfo profile = 1;
+}

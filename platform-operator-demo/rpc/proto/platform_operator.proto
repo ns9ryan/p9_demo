@@ -64,6 +64,9 @@ service DomainService {
 
   // 获取域名管理列表
   rpc List(domain.ListDomainsRequest) returns (domain.ListDomainsResponse);
+
+  // 删除域名
+  rpc Delete(domain.DeleteDomainRequest) returns (domain.DeleteDomainResponse);
 }
 
 // 分站语言分配服务

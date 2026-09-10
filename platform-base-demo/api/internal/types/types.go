@@ -20,7 +20,7 @@ type GetCurrencyRequest struct {
 }
 
 type GetCurrencyResponse struct {
-	Currency CurrencyInfo `json:"currency"`
+	CurrencyInfo
 }
 
 type GetRegionRequest struct {
@@ -28,7 +28,7 @@ type GetRegionRequest struct {
 }
 
 type GetRegionResponse struct {
-	Region RegionInfo `json:"region"`
+	RegionInfo
 }
 
 type GetTimezoneRequest struct {
@@ -36,7 +36,7 @@ type GetTimezoneRequest struct {
 }
 
 type GetTimezoneResponse struct {
-	Timezone TimezoneInfo `json:"timezone"`
+	TimezoneInfo
 }
 
 type ListAllCurrenciesRequest struct {

@@ -2,8 +2,10 @@ package schema
 
 import (
 	"regexp"
+	"time"
 
 	"entgo.io/ent"
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
@@ -30,6 +32,14 @@ func (OperatorRegionAllocation) Fields() []ent.Field {
 			MaxLen(2).
 			Match(regexp.MustCompile(`^[A-Z]{2}$`)).
 			Comment("国家或地区唯一业务编码"),
+
+		field.Time("created_at").
+			Immutable().
+			Default(time.Now).
+			SchemaType(map[string]string{
+				dialect.Postgres: "timestamptz(3)",
+			}).
+			Comment("创建时间"),
 	}
 }
 
@@ -58,8 +68,6 @@ func (OperatorRegionAllocation) Indexes() []ent.Index {
 func (OperatorRegionAllocation) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixins.IDMixin{},
-		mixins.AllocationStatusMixin{},
-		mixins.TimeMixin{},
 	}
 }
 

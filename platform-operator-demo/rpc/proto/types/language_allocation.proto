@@ -4,6 +4,22 @@ package languageallocation;
 
 option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/operator/languageallocation";
 
+// 分站语言分配信息
+message LanguageAllocationInfo {
+  // 分配记录ID
+  int64 id = 1;
+  // 分站ID
+  int64 operator_id = 2;
+  // 语言编码
+  string language_code = 3;
+  // 分配状态: 1已分配, 2已回收
+  int64 allocation_status = 4;
+  // 创建时间, Unix毫秒时间戳
+  int64 created_at = 5;
+  // 更新时间, Unix毫秒时间戳
+  int64 updated_at = 6;
+}
+
 // 获取语言分配列表请求
 message ListLanguageAllocationsRequest {}
 

@@ -39,7 +39,7 @@ type (
 	// 获取国家地区响应
 	GetRegionResponse {
 		// 国家地区信息
-		Region RegionInfo `json:"region"`
+		RegionInfo
 	}
 	// 获取国家地区管理列表请求
 	ListRegionsRequest {

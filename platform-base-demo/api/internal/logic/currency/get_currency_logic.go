@@ -46,7 +46,7 @@ func (l *GetCurrencyLogic) GetCurrency(req *types.GetCurrencyRequest) (resp *typ
 
 	// 返回货币信息
 	return &types.GetCurrencyResponse{
-		Currency: types.CurrencyInfo{
+		CurrencyInfo: types.CurrencyInfo{
 			Id:           result.Currency.Id,           // 货币ID
 			Code:         result.Currency.Code,         // 货币编码
 			NameKey:      result.Currency.NameKey,      // 名称翻译Key

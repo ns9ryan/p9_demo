@@ -43,7 +43,7 @@ type (
 	// 获取货币响应
 	GetCurrencyResponse {
 		// 货币信息
-		Currency CurrencyInfo `json:"currency"`
+		CurrencyInfo
 	}
 	// 获取货币管理列表请求
 	ListCurrenciesRequest {

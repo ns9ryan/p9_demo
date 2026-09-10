@@ -11,7 +11,7 @@ import (
 
 // Register 注册Platform Base菜单和API目录
 func Register(cli coreclient.Core) error {
-	req := PlatformBaseReq()
+	req := registerRequest()
 
 	// Core启动可能稍晚，失败时短暂重试
 	err := retry.Retry(

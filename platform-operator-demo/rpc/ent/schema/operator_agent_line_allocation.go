@@ -1,7 +1,10 @@
 package schema
 
 import (
+	"time"
+
 	"entgo.io/ent"
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
@@ -26,6 +29,14 @@ func (OperatorAgentLineAllocation) Fields() []ent.Field {
 			NotEmpty().
 			MaxLen(32).
 			Comment("代理子线路编码"),
+
+		field.Time("created_at").
+			Immutable().
+			Default(time.Now).
+			SchemaType(map[string]string{
+				dialect.Postgres: "timestamptz(3)",
+			}).
+			Comment("创建时间"),
 	}
 }
 
@@ -54,8 +65,6 @@ func (OperatorAgentLineAllocation) Indexes() []ent.Index {
 func (OperatorAgentLineAllocation) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixins.IDMixin{},
-		mixins.AllocationStatusMixin{},
-		mixins.TimeMixin{},
 	}
 }
 
