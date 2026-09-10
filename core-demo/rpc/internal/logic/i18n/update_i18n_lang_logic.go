@@ -28,11 +28,11 @@ func NewUpdateI18nLangLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Up
 
 func (l *UpdateI18nLangLogic) UpdateI18NLang(in *core.UpdateI18NLangReq) (*core.Empty, error) {
 	err := l.svcCtx.Deps.UpdateI18nLang(l.ctx, service.UpdateI18nLangReq{
-		ID:        in.GetId(),
-		Lang:      in.Lang,
-		Name:      in.Name,
-		Disabled:  logic.ToInt16Ptr(in.Disabled),
-		IsDefault: logic.ToInt16Ptr(in.IsDefault),
+		ID:       in.GetId(),
+		Lang:     in.Lang,
+		Name:     in.Name,
+		Disabled: logic.ToInt16Ptr(in.Disabled),
+		SortNo:   logic.ToIntPtr(in.SortNo),
 	})
 	if err != nil {
 		return nil, xerr.RpcErr(err)

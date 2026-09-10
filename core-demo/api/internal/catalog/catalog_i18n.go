@@ -7,9 +7,9 @@ import (
 
 func langSeeds() []*coreclient.CreateI18NLangReq {
 	return []*coreclient.CreateI18NLangReq{
-		{Lang: i18n.LangZH, Name: "简体中文", IsDefault: 1},
-		{Lang: i18n.LangHK, Name: "繁體中文"},
-		{Lang: i18n.LangEN, Name: "English"},
+		{Lang: i18n.LangZH, Name: "简体中文", SortNo: 1},
+		{Lang: i18n.LangHK, Name: "繁體中文", SortNo: 2},
+		{Lang: i18n.LangEN, Name: "English", SortNo: 3},
 	}
 }
 
@@ -17,9 +17,9 @@ func menuI18n() []*coreclient.I18NItem {
 	var out []*coreclient.I18NItem
 	add := func(key, zh, hk, en string) {
 		out = append(out,
-			&coreclient.I18NItem{I18NGroup: i18n.GroupMenu, TransKey: key, Lang: i18n.LangZH, Value: zh},
-			&coreclient.I18NItem{I18NGroup: i18n.GroupMenu, TransKey: key, Lang: i18n.LangHK, Value: hk},
-			&coreclient.I18NItem{I18NGroup: i18n.GroupMenu, TransKey: key, Lang: i18n.LangEN, Value: en},
+			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupMenu, TransKey: key, Lang: i18n.LangZH, Value: zh},
+			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupMenu, TransKey: key, Lang: i18n.LangHK, Value: hk},
+			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupMenu, TransKey: key, Lang: i18n.LangEN, Value: en},
 		)
 	}
 	add("menu.route.dashboard", "工作台", "工作台", "Dashboard")
@@ -48,9 +48,9 @@ func apiI18n() []*coreclient.I18NItem {
 	var out []*coreclient.I18NItem
 	add := func(key, zh, hk, en string) {
 		out = append(out,
-			&coreclient.I18NItem{I18NGroup: i18n.GroupAPI, TransKey: key, Lang: i18n.LangZH, Value: zh},
-			&coreclient.I18NItem{I18NGroup: i18n.GroupAPI, TransKey: key, Lang: i18n.LangHK, Value: hk},
-			&coreclient.I18NItem{I18NGroup: i18n.GroupAPI, TransKey: key, Lang: i18n.LangEN, Value: en},
+			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupAPI, TransKey: key, Lang: i18n.LangZH, Value: zh},
+			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupAPI, TransKey: key, Lang: i18n.LangHK, Value: hk},
+			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupAPI, TransKey: key, Lang: i18n.LangEN, Value: en},
 		)
 	}
 	add("api.operatorSelf", "当前厅", "當前廳", "Current operator")
@@ -89,7 +89,73 @@ func apiI18n() []*coreclient.I18NItem {
 	add("api.i18nList", "多语言列表", "多語言列表", "I18n list")
 	add("api.i18nLangCreate", "创建支持的语言", "創建支持的語言", "Create language")
 	add("api.i18nLangUpdate", "更新支持的语言", "更新支持的語言", "Update language")
+	add("api.i18nLangReorder", "调整语言排序", "調整語言排序", "Reorder languages")
 	add("api.i18nLangDelete", "删除支持的语言", "刪除支持的語言", "Delete language")
 	add("api.i18nLangList", "支持的语言列表", "支持的語言列表", "Language list")
+	return out
+}
+
+func frontI18n() []*coreclient.I18NItem {
+	var out []*coreclient.I18NItem
+	add := func(key, zh, hk, en string) {
+		out = append(out,
+			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupFront, TransKey: key, Lang: i18n.LangZH, Value: zh},
+			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupFront, TransKey: key, Lang: i18n.LangHK, Value: hk},
+			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupFront, TransKey: key, Lang: i18n.LangEN, Value: en},
+		)
+	}
+	addLogin := func(key, zh, hk, en string) {
+		out = append(out,
+			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupLogin, TransKey: key, Lang: i18n.LangZH, Value: zh},
+			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupLogin, TransKey: key, Lang: i18n.LangHK, Value: hk},
+			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupLogin, TransKey: key, Lang: i18n.LangEN, Value: en},
+		)
+	}
+	add("common.column.operations", "操作", "操作", "Operations")
+	add("common.search.reset", "重置", "重置", "Reset")
+	add("common.search.search", "搜索", "搜尋", "Search")
+	add("common.placeholder.select", "请选择", "請選擇", "Please select")
+	add("common.action.delete", "删除", "刪除", "Delete")
+	add("common.column.createdAt", "创建时间", "建立時間", "Created At")
+	add("common.column.index", "序号", "序號", "No.")
+	add("common.okText.save", "保存", "儲存", "Save")
+	add("common.message.saveSuccess", "保存成功", "儲存成功", "Saved successfully")
+	add("common.action.edit", "编辑", "編輯", "Edit")
+	add("common.message.deleteSuccess", "删除成功", "刪除成功", "Deleted successfully")
+	add("common.delete.title", "确认删除", "確認刪除", "Confirm Delete")
+	add("common.okText.create", "创建", "建立", "Create")
+	add("common.message.createSuccess", "创建成功", "建立成功", "Created successfully")
+	add("common.column.status", "状态", "狀態", "Status")
+	add("common.toolbar.refresh", "刷新", "重新整理", "Refresh")
+	add("common.toolbar.add", "添加", "新增", "Add")
+	add("common.action.back", "返回", "返回", "Back")
+	add("common.status.enabled", "启用", "啟用", "Enabled")
+	add("common.message.enabled", "已启用", "已啟用", "Enabled")
+	add("common.placeholder.input", "请输入", "請輸入", "Please input")
+	add("common.search.statusDisabled", "关闭", "關閉", "Close")
+	add("common.all", "全部", "全部", "All")
+	add("common.action.view", "查看", "檢視", "View")
+	add("common.column.updatedAt", "更新时间", "更新時間", "Updated At")
+	add("common.message.submitSuccess", "提交成功", "提交成功", "Submitted successfully")
+	add("common.status.disabled", "停用", "停用", "Disabled")
+	add("common.delete.okText", "删除", "刪除", "Delete")
+	add("common.message.updateSuccess", "更新成功", "更新成功", "Updated successfully")
+	add("common.switch.on", "开", "開", "On")
+	add("common.switch.off", "关", "關", "Off")
+	add("common.yes", "是", "是", "Yes")
+	add("common.no", "否", "否", "No")
+	addLogin("login.brand.title", "智能科技平台", "智能科技平台", "Intelligent Technology Platform")
+	addLogin("login.brand.subtitle", "ZHINENGKEJIPINGTAI", "ZHINENGKEJIPINGTAI", "ZHINENGKEJIPINGTAI")
+	addLogin("login.form.title", "用户登录", "用戶登錄", "Sign in")
+	addLogin("login.form.userName", "用户名", "用戶名", "Username")
+	addLogin("login.form.userName.placeholder", "请输入用户名", "請輸入用戶名", "Enter username")
+	addLogin("login.form.userName.errMsg", "请输入用户名", "請輸入用戶名", "Please enter username")
+	addLogin("login.form.password", "密码", "密碼", "Password")
+	addLogin("login.form.password.placeholder", "请输入密码", "請輸入密碼", "Enter password")
+	addLogin("login.form.password.errMsg", "请输入密码", "請輸入密碼", "Please enter password")
+	addLogin("login.form.rememberPassword", "记住我", "記住我", "Remember me")
+	addLogin("login.form.forgetPassword", "忘记密码?", "忘記密碼?", "Forgot password?")
+	addLogin("login.form.login", "登录", "登錄", "Sign in")
+	addLogin("login.form.login.success", "登录成功", "登錄成功", "Signed in successfully")
 	return out
 }

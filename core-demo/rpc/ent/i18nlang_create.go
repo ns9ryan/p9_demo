@@ -82,16 +82,16 @@ func (_c *I18nLangCreate) SetNillableDisabled(v *int16) *I18nLangCreate {
 	return _c
 }
 
-// SetIsDefault sets the "is_default" field.
-func (_c *I18nLangCreate) SetIsDefault(v int16) *I18nLangCreate {
-	_c.mutation.SetIsDefault(v)
+// SetSortNo sets the "sort_no" field.
+func (_c *I18nLangCreate) SetSortNo(v int) *I18nLangCreate {
+	_c.mutation.SetSortNo(v)
 	return _c
 }
 
-// SetNillableIsDefault sets the "is_default" field if the given value is not nil.
-func (_c *I18nLangCreate) SetNillableIsDefault(v *int16) *I18nLangCreate {
+// SetNillableSortNo sets the "sort_no" field if the given value is not nil.
+func (_c *I18nLangCreate) SetNillableSortNo(v *int) *I18nLangCreate {
 	if v != nil {
-		_c.SetIsDefault(*v)
+		_c.SetSortNo(*v)
 	}
 	return _c
 }
@@ -153,9 +153,9 @@ func (_c *I18nLangCreate) defaults() {
 		v := i18nlang.DefaultDisabled
 		_c.mutation.SetDisabled(v)
 	}
-	if _, ok := _c.mutation.IsDefault(); !ok {
-		v := i18nlang.DefaultIsDefault
-		_c.mutation.SetIsDefault(v)
+	if _, ok := _c.mutation.SortNo(); !ok {
+		v := i18nlang.DefaultSortNo
+		_c.mutation.SetSortNo(v)
 	}
 }
 
@@ -180,8 +180,8 @@ func (_c *I18nLangCreate) check() error {
 	if _, ok := _c.mutation.Disabled(); !ok {
 		return &ValidationError{Name: "disabled", err: errors.New(`ent: missing required field "I18nLang.disabled"`)}
 	}
-	if _, ok := _c.mutation.IsDefault(); !ok {
-		return &ValidationError{Name: "is_default", err: errors.New(`ent: missing required field "I18nLang.is_default"`)}
+	if _, ok := _c.mutation.SortNo(); !ok {
+		return &ValidationError{Name: "sort_no", err: errors.New(`ent: missing required field "I18nLang.sort_no"`)}
 	}
 	return nil
 }
@@ -235,9 +235,9 @@ func (_c *I18nLangCreate) createSpec() (*I18nLang, *sqlgraph.CreateSpec) {
 		_spec.SetField(i18nlang.FieldDisabled, field.TypeInt16, value)
 		_node.Disabled = value
 	}
-	if value, ok := _c.mutation.IsDefault(); ok {
-		_spec.SetField(i18nlang.FieldIsDefault, field.TypeInt16, value)
-		_node.IsDefault = value
+	if value, ok := _c.mutation.SortNo(); ok {
+		_spec.SetField(i18nlang.FieldSortNo, field.TypeInt, value)
+		_node.SortNo = value
 	}
 	return _node, _spec
 }

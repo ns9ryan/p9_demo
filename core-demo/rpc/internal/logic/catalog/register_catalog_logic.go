@@ -25,6 +25,7 @@ func NewRegisterCatalogLogic(ctx context.Context, svcCtx *svc.ServiceContext) *R
 	}
 }
 
+// RegisterCatalog 注册菜单、API目录、多语言数据 RPC
 func (l *RegisterCatalogLogic) RegisterCatalog(in *core.RegisterCatalogReq) (*core.Empty, error) {
 	menus := make([]service.RegisterMenuReq, 0, len(in.Menus))
 	for _, m := range in.Menus {
@@ -45,13 +46,13 @@ func (l *RegisterCatalogLogic) RegisterCatalog(in *core.RegisterCatalogReq) (*co
 	items := make([]service.I18nItem, 0, len(in.GetI18N()))
 	for _, it := range in.GetI18N() {
 		items = append(items, service.I18nItem{
-			I18nGroup: it.GetI18NGroup(), TransKey: it.GetTransKey(), Lang: it.GetLang(), Value: it.GetValue(),
+			I18nCode: it.GetI18NCode(), I18nGroup: it.GetI18NGroup(), TransKey: it.GetTransKey(), Lang: it.GetLang(), Value: it.GetValue(),
 		})
 	}
 	langs := make([]service.CreateI18nLangReq, 0, len(in.GetI18NLangs()))
 	for _, it := range in.GetI18NLangs() {
 		langs = append(langs, service.CreateI18nLangReq{
-			Lang: it.GetLang(), Name: it.GetName(), Disabled: int16(it.GetDisabled()), IsDefault: int16(it.GetIsDefault()),
+			Lang: it.GetLang(), Name: it.GetName(), Disabled: int16(it.GetDisabled()), SortNo: int(it.GetSortNo()),
 		})
 	}
 	if err := l.svcCtx.Deps.RegisterCatalog(l.ctx, menus, apis, items, langs); err != nil {

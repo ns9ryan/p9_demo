@@ -29,6 +29,7 @@ func NewGetI18nListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetI1
 func (l *GetI18nListLogic) GetI18NList(in *core.I18NListReq) (*core.I18NListResp, error) {
 	list, total, err := l.svcCtx.Deps.ListI18ns(l.ctx, service.I18nListReq{
 		PageReq:   service.PageReq{Page: int(in.GetPage()), PageSize: int(in.GetPageSize())},
+		I18nCode:  in.GetI18NCode(),
 		I18nGroup: in.GetI18NGroup(),
 		TransKey:  in.GetTransKey(),
 		Lang:      in.GetLang(),

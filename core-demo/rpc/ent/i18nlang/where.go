@@ -79,9 +79,9 @@ func Disabled(v int16) predicate.I18nLang {
 	return predicate.I18nLang(sql.FieldEQ(FieldDisabled, v))
 }
 
-// IsDefault applies equality check predicate on the "is_default" field. It's identical to IsDefaultEQ.
-func IsDefault(v int16) predicate.I18nLang {
-	return predicate.I18nLang(sql.FieldEQ(FieldIsDefault, v))
+// SortNo applies equality check predicate on the "sort_no" field. It's identical to SortNoEQ.
+func SortNo(v int) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldEQ(FieldSortNo, v))
 }
 
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
@@ -334,44 +334,44 @@ func DisabledLTE(v int16) predicate.I18nLang {
 	return predicate.I18nLang(sql.FieldLTE(FieldDisabled, v))
 }
 
-// IsDefaultEQ applies the EQ predicate on the "is_default" field.
-func IsDefaultEQ(v int16) predicate.I18nLang {
-	return predicate.I18nLang(sql.FieldEQ(FieldIsDefault, v))
+// SortNoEQ applies the EQ predicate on the "sort_no" field.
+func SortNoEQ(v int) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldEQ(FieldSortNo, v))
 }
 
-// IsDefaultNEQ applies the NEQ predicate on the "is_default" field.
-func IsDefaultNEQ(v int16) predicate.I18nLang {
-	return predicate.I18nLang(sql.FieldNEQ(FieldIsDefault, v))
+// SortNoNEQ applies the NEQ predicate on the "sort_no" field.
+func SortNoNEQ(v int) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldNEQ(FieldSortNo, v))
 }
 
-// IsDefaultIn applies the In predicate on the "is_default" field.
-func IsDefaultIn(vs ...int16) predicate.I18nLang {
-	return predicate.I18nLang(sql.FieldIn(FieldIsDefault, vs...))
+// SortNoIn applies the In predicate on the "sort_no" field.
+func SortNoIn(vs ...int) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldIn(FieldSortNo, vs...))
 }
 
-// IsDefaultNotIn applies the NotIn predicate on the "is_default" field.
-func IsDefaultNotIn(vs ...int16) predicate.I18nLang {
-	return predicate.I18nLang(sql.FieldNotIn(FieldIsDefault, vs...))
+// SortNoNotIn applies the NotIn predicate on the "sort_no" field.
+func SortNoNotIn(vs ...int) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldNotIn(FieldSortNo, vs...))
 }
 
-// IsDefaultGT applies the GT predicate on the "is_default" field.
-func IsDefaultGT(v int16) predicate.I18nLang {
-	return predicate.I18nLang(sql.FieldGT(FieldIsDefault, v))
+// SortNoGT applies the GT predicate on the "sort_no" field.
+func SortNoGT(v int) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldGT(FieldSortNo, v))
 }
 
-// IsDefaultGTE applies the GTE predicate on the "is_default" field.
-func IsDefaultGTE(v int16) predicate.I18nLang {
-	return predicate.I18nLang(sql.FieldGTE(FieldIsDefault, v))
+// SortNoGTE applies the GTE predicate on the "sort_no" field.
+func SortNoGTE(v int) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldGTE(FieldSortNo, v))
 }
 
-// IsDefaultLT applies the LT predicate on the "is_default" field.
-func IsDefaultLT(v int16) predicate.I18nLang {
-	return predicate.I18nLang(sql.FieldLT(FieldIsDefault, v))
+// SortNoLT applies the LT predicate on the "sort_no" field.
+func SortNoLT(v int) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldLT(FieldSortNo, v))
 }
 
-// IsDefaultLTE applies the LTE predicate on the "is_default" field.
-func IsDefaultLTE(v int16) predicate.I18nLang {
-	return predicate.I18nLang(sql.FieldLTE(FieldIsDefault, v))
+// SortNoLTE applies the LTE predicate on the "sort_no" field.
+func SortNoLTE(v int) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldLTE(FieldSortNo, v))
 }
 
 // And groups predicates with the AND operator between them.

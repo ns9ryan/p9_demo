@@ -180,6 +180,11 @@ func (s *CoreServer) GetI18NLangList(ctx context.Context, in *core.I18NLangListR
 	return l.GetI18NLangList(in)
 }
 
+func (s *CoreServer) ReorderI18NLang(ctx context.Context, in *core.ReorderI18NLangReq) (*core.Empty, error) {
+	l := i18n.NewReorderI18nLangLogic(ctx, s.svcCtx)
+	return l.ReorderI18NLang(in)
+}
+
 func (s *CoreServer) GetEnabledI18NLangs(ctx context.Context, in *core.Empty) (*core.I18NLangListResp, error) {
 	l := i18n.NewGetEnabledI18nLangsLogic(ctx, s.svcCtx)
 	return l.GetEnabledI18NLangs(in)

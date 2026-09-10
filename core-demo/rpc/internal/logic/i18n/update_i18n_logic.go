@@ -27,7 +27,7 @@ func NewUpdateI18nLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Update
 
 func (l *UpdateI18nLogic) UpdateI18N(in *core.UpdateI18NReq) (*core.Empty, error) {
 	err := l.svcCtx.Deps.UpdateI18n(l.ctx, service.UpdateI18nReq{
-		ID: in.Id, I18nGroup: in.I18NGroup, TransKey: in.TransKey, Lang: in.Lang, Value: in.Value,
+		ID: in.Id, I18nCode: in.I18NCode, I18nGroup: in.I18NGroup, TransKey: in.TransKey, Lang: in.Lang, Value: in.Value,
 	})
 	if err != nil {
 		return nil, xerr.RpcErr(err)

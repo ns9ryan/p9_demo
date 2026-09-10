@@ -31,6 +31,7 @@ type CreateOperatorAdminReq struct {
 	DisplayName            string `json:"display_name"`
 }
 
+// CreatePlatformAdmin 创建总网超级管理员
 func CreatePlatformAdmin(ctx context.Context, d *service.Deps, req CreateAdminReq) (*model.User, error) {
 	if err := d.RequireMode(service.ModeOff); err != nil {
 		return nil, err
@@ -40,6 +41,7 @@ func CreatePlatformAdmin(ctx context.Context, d *service.Deps, req CreateAdminRe
 	})
 }
 
+// CreateOperatorAdmin 创建分站超级管理员
 func CreateOperatorAdmin(ctx context.Context, d *service.Deps, req CreateOperatorAdminReq) (*model.User, error) {
 	if err := d.RequireMode(service.ModeOn); err != nil {
 		return nil, err

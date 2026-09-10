@@ -257,13 +257,19 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 
 	server.AddRoutes(
 		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog},
+			[]rest.Middleware{serverCtx.ActionLog},
 			[]rest.Route{
 				{
 					// 已开启的语言列表
 					Method:  http.MethodGet,
 					Path:    "/i18n/lang/enabled",
 					Handler: i18n.GetEnabledI18nLangsHandler(serverCtx),
+				},
+				{
+					// 词条下发
+					Method:  http.MethodGet,
+					Path:    "/i18n/dict",
+					Handler: i18n.GetI18nDictHandler(serverCtx),
 				},
 			}...,
 		),
@@ -315,6 +321,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Method:  http.MethodPost,
 					Path:    "/i18n/lang/update",
 					Handler: i18n.UpdateI18nLangHandler(serverCtx),
+				},
+				{
+					// 调整语言排序
+					Method:  http.MethodPost,
+					Path:    "/i18n/lang/reorder",
+					Handler: i18n.ReorderI18nLangHandler(serverCtx),
 				},
 				{
 					// 删除支持的语言

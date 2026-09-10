@@ -21,6 +21,8 @@ type I18n struct {
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Updated At | 更新时间
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	// I18nCode holds the value of the "i18n_code" field.
+	I18nCode string `json:"i18n_code,omitempty"`
 	// I18nGroup holds the value of the "i18n_group" field.
 	I18nGroup string `json:"i18n_group,omitempty"`
 	// TransKey holds the value of the "trans_key" field.
@@ -39,7 +41,7 @@ func (*I18n) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case i18n.FieldID:
 			values[i] = new(sql.NullInt64)
-		case i18n.FieldI18nGroup, i18n.FieldTransKey, i18n.FieldLang, i18n.FieldValue:
+		case i18n.FieldI18nCode, i18n.FieldI18nGroup, i18n.FieldTransKey, i18n.FieldLang, i18n.FieldValue:
 			values[i] = new(sql.NullString)
 		case i18n.FieldCreatedAt, i18n.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -75,6 +77,12 @@ func (_m *I18n) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
 				_m.UpdatedAt = value.Time
+			}
+		case i18n.FieldI18nCode:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field i18n_code", values[i])
+			} else if value.Valid {
+				_m.I18nCode = value.String
 			}
 		case i18n.FieldI18nGroup:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -141,6 +149,9 @@ func (_m *I18n) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("updated_at=")
 	builder.WriteString(_m.UpdatedAt.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("i18n_code=")
+	builder.WriteString(_m.I18nCode)
 	builder.WriteString(", ")
 	builder.WriteString("i18n_group=")
 	builder.WriteString(_m.I18nGroup)

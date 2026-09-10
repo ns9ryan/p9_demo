@@ -18,6 +18,7 @@ import (
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/rest"
 )
 
@@ -34,12 +35,19 @@ func main() {
 	defer server.Stop()
 
 	ctx := svc.NewServiceContext(c)
+	// 注册I18n中间件
 	server.Use(middleware.I18n)
+	// 注册错误日志中间件
 	server.Use(ctx.ErrorLog)
 
+	// 注册菜单、API目录、多语言数据
 	logx.Must(catalog.Register(ctx.Core))
+	// 注册API路由
 	handler.RegisterHandlers(server, ctx)
-	registerSwagger(server)
+	// 开发环境或测试环境注册swagger接口文档路由
+	if c.Mode == service.DevMode || c.Mode == service.TestMode {
+		registerSwagger(server)
+	}
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
 	server.Start()
@@ -70,6 +78,7 @@ const swaggerUIHTML = `<!DOCTYPE html>
 </html>
 `
 
+// registerSwagger 注册swagger接口文档路由
 func registerSwagger(server *rest.Server) {
 	server.AddRoutes([]rest.Route{
 		{

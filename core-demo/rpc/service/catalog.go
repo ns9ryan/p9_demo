@@ -168,8 +168,9 @@ type RegisterMenuReq struct {
 	ParentName string
 }
 
+// 注册目录。menus: 菜单，apis: API，items: 多语言词条，langs: 语言列表
 func (d *Deps) RegisterCatalog(ctx context.Context, menus []RegisterMenuReq, apis []CreateAPIReq, items []I18nItem, langs []CreateI18nLangReq) error {
-	if err := d.EnsureI18nLangs(ctx, langs); err != nil {
+	if err := d.UpsertI18nLangs(ctx, langs); err != nil {
 		return err
 	}
 	for _, m := range menus {

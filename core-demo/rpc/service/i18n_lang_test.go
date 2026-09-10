@@ -10,23 +10,23 @@ import (
 
 func testLangSeeds() []CreateI18nLangReq {
 	return []CreateI18nLangReq{
-		{Lang: i18n.LangZH, Name: "简体中文", IsDefault: 1},
-		{Lang: i18n.LangHK, Name: "繁體中文"},
-		{Lang: i18n.LangEN, Name: "English"},
+		{Lang: i18n.LangZH, Name: "简体中文", SortNo: 1},
+		{Lang: i18n.LangHK, Name: "繁體中文", SortNo: 2},
+		{Lang: i18n.LangEN, Name: "English", SortNo: 3},
 	}
 }
 
-func TestEnsureI18nLangsSeedsAndKeepsExisting(t *testing.T) {
+func TestUpsertI18nLangsSeedsAndKeepsExisting(t *testing.T) {
 	d := testDeps(t, ModeOff)
 	ctx := context.Background()
-	if err := d.EnsureI18nLangs(ctx, testLangSeeds()); err != nil {
+	if err := d.UpsertI18nLangs(ctx, testLangSeeds()); err != nil {
 		t.Fatal(err)
 	}
 	list, err := d.ListEnabledI18nLangs(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(list) != 3 || list[0].Lang != i18n.LangZH || list[0].IsDefault != 1 || list[0].Name != "简体中文" {
+	if len(list) != 3 || list[0].Lang != i18n.LangZH || list[0].Name != "简体中文" {
 		t.Fatalf("seeded=%+v", list)
 	}
 	zh, err := d.i18nLangByID(ctx, list[0].ID)
@@ -34,26 +34,23 @@ func TestEnsureI18nLangsSeedsAndKeepsExisting(t *testing.T) {
 		t.Fatal(err)
 	}
 	one := int16(1)
-	if err := d.UpdateI18nLang(ctx, UpdateI18nLangReq{ID: zh.ID, Disabled: &one}); err == nil {
-		t.Fatal("expected cannot disable default")
-	}
-	if err := d.Client.I18nLang.UpdateOneID(zh.ID).SetDisabled(1).SetIsDefault(0).Exec(ctx); err != nil {
+	if err := d.UpdateI18nLang(ctx, UpdateI18nLangReq{ID: zh.ID, Disabled: &one}); err != nil {
 		t.Fatal(err)
 	}
-	if err := d.EnsureI18nLangs(ctx, testLangSeeds()); err != nil {
+	if err := d.UpsertI18nLangs(ctx, testLangSeeds()); err != nil {
 		t.Fatal(err)
 	}
 	zh, err = d.i18nLangByID(ctx, zh.ID)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if zh.Disabled != 1 || zh.IsDefault != 0 {
+	if zh.Disabled != 1 {
 		t.Fatalf("seed must not overwrite existing: %+v", zh)
 	}
 	if err := d.Client.I18nLang.UpdateOneID(zh.ID).SetName("").Exec(ctx); err != nil {
 		t.Fatal(err)
 	}
-	if err := d.EnsureI18nLangs(ctx, testLangSeeds()); err != nil {
+	if err := d.UpsertI18nLangs(ctx, testLangSeeds()); err != nil {
 		t.Fatal(err)
 	}
 	zh, err = d.i18nLangByID(ctx, zh.ID)
@@ -66,7 +63,7 @@ func TestEnsureI18nLangsSeedsAndKeepsExisting(t *testing.T) {
 	if err := d.Client.I18nLang.UpdateOneID(zh.ID).SetName("中文").Exec(ctx); err != nil {
 		t.Fatal(err)
 	}
-	if err := d.EnsureI18nLangs(ctx, testLangSeeds()); err != nil {
+	if err := d.UpsertI18nLangs(ctx, testLangSeeds()); err != nil {
 		t.Fatal(err)
 	}
 	zh, err = d.i18nLangByID(ctx, zh.ID)
@@ -78,20 +75,11 @@ func TestEnsureI18nLangsSeedsAndKeepsExisting(t *testing.T) {
 	}
 }
 
-func TestI18nLangDefaultRules(t *testing.T) {
+func TestI18nLangCreateRules(t *testing.T) {
 	d := testDeps(t, ModeOff)
 	ctx := context.Background()
-	if err := d.EnsureI18nLangs(ctx, testLangSeeds()); err != nil {
+	if err := d.UpsertI18nLangs(ctx, testLangSeeds()); err != nil {
 		t.Fatal(err)
-	}
-	enabled, err := d.ListEnabledI18nLangs(ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
-	zh := enabled[0]
-	other := enabled[1]
-	if other.IsDefault == 1 {
-		t.Fatalf("expected only one default, second=%+v", other)
 	}
 
 	if _, err := d.CreateI18nLang(ctx, CreateI18nLangReq{Lang: "  ja-JP  "}); err == nil {
@@ -112,43 +100,19 @@ func TestI18nLangDefaultRules(t *testing.T) {
 		t.Fatalf("duplicate=%v", got.Message)
 	}
 
-	zero := int16(0)
 	one := int16(1)
-	if err := d.UpdateI18nLang(ctx, UpdateI18nLangReq{ID: zh.ID, IsDefault: &zero}); err == nil {
-		t.Fatal("expected cannot unset default")
-	} else if got := xerr.AsError(err); got.Message != i18n.I18nCannotDisableDefault {
-		t.Fatalf("unset default=%v", got.Message)
-	}
-	if err := d.UpdateI18nLang(ctx, UpdateI18nLangReq{ID: zh.ID, Disabled: &one}); err == nil {
-		t.Fatal("expected cannot disable default")
-	}
-	if err := d.DeleteI18nLangs(ctx, []int64{zh.ID}); err == nil {
-		t.Fatal("expected cannot delete default")
-	} else if got := xerr.AsError(err); got.Message != i18n.I18nCannotDeleteDefault {
-		t.Fatalf("delete default=%v", got.Message)
-	}
-
-	if err := d.UpdateI18nLang(ctx, UpdateI18nLangReq{ID: other.ID, IsDefault: &one}); err != nil {
+	if err := d.UpdateI18nLang(ctx, UpdateI18nLangReq{ID: row.ID, Disabled: &one}); err != nil {
 		t.Fatal(err)
 	}
-	zh, err = d.i18nLangByID(ctx, zh.ID)
+	got, err := d.i18nLangByID(ctx, row.ID)
 	if err != nil {
 		t.Fatal(err)
 	}
-	other, err = d.i18nLangByID(ctx, other.ID)
-	if err != nil {
+	if got.Disabled != 1 {
+		t.Fatalf("disabled=%+v", got)
+	}
+	if err := d.DeleteI18nLangs(ctx, []int64{row.ID}); err != nil {
 		t.Fatal(err)
-	}
-	if zh.IsDefault != 0 || other.IsDefault != 1 {
-		t.Fatalf("switch default zh=%+v other=%+v", zh, other)
-	}
-
-	list, err := d.ListEnabledI18nLangs(ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if list[0].ID != other.ID || list[0].IsDefault != 1 {
-		t.Fatalf("enabled order %+v", list)
 	}
 }
 
@@ -208,5 +172,106 @@ func TestCreateI18nRequiresSupportedLang(t *testing.T) {
 		t.Fatal("expected unsupported lang on by-key create")
 	} else if got := xerr.AsError(err); got.Message != i18n.I18nLangNotSupported {
 		t.Fatalf("by-key=%v", got.Message)
+	}
+}
+
+func TestI18nLangSortNo(t *testing.T) {
+	d := testDeps(t, ModeOff)
+	ctx := context.Background()
+	if err := d.UpsertI18nLangs(ctx, testLangSeeds()); err != nil {
+		t.Fatal(err)
+	}
+	late, err := d.CreateI18nLang(ctx, CreateI18nLangReq{Lang: "ja-JP", Name: "日本語", SortNo: 20})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if late.SortNo != 20 {
+		t.Fatalf("create sort=%d", late.SortNo)
+	}
+	list, _, err := d.ListI18nLangs(ctx, I18nLangListReq{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(list) != 4 || list[0].Lang != i18n.LangZH || list[1].Lang != i18n.LangHK || list[2].Lang != i18n.LangEN || list[3].ID != late.ID {
+		t.Fatalf("order=%+v", list)
+	}
+	zero := 0
+	if err := d.UpdateI18nLang(ctx, UpdateI18nLangReq{ID: late.ID, SortNo: &zero}); err != nil {
+		t.Fatal(err)
+	}
+	got, err := d.i18nLangByID(ctx, late.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got.SortNo != 0 {
+		t.Fatalf("update 0 got=%d", got.SortNo)
+	}
+}
+
+func TestReorderI18nLang(t *testing.T) {
+	d := testDeps(t, ModeOff)
+	ctx := context.Background()
+	if err := d.UpsertI18nLangs(ctx, testLangSeeds()); err != nil {
+		t.Fatal(err)
+	}
+	list, _, err := d.ListI18nLangs(ctx, I18nLangListReq{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(list) != 3 {
+		t.Fatalf("seeded=%+v", list)
+	}
+	zh, hk, en := list[0], list[1], list[2]
+	if zh.Lang != i18n.LangZH || hk.Lang != i18n.LangHK || en.Lang != i18n.LangEN {
+		t.Fatalf("order=%+v", list)
+	}
+
+	if err := d.ReorderI18nLang(ctx, en.ID, zh.ID); err != nil {
+		t.Fatal(err)
+	}
+	list, _, err = d.ListI18nLangs(ctx, I18nLangListReq{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(list) != 3 || list[0].ID != en.ID || list[1].ID != zh.ID || list[2].ID != hk.ID {
+		t.Fatalf("move en before zh: %+v", list)
+	}
+	for i, row := range list {
+		if row.SortNo != i+1 {
+			t.Fatalf("sort_no[%d]=%d", i, row.SortNo)
+		}
+	}
+
+	if err := d.ReorderI18nLang(ctx, zh.ID, hk.ID); err != nil {
+		t.Fatal(err)
+	}
+	list, _, err = d.ListI18nLangs(ctx, I18nLangListReq{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if list[0].ID != en.ID || list[1].ID != hk.ID || list[2].ID != zh.ID {
+		t.Fatalf("move zh after hk: %+v", list)
+	}
+
+	if err := d.ReorderI18nLang(ctx, en.ID, en.ID); err != nil {
+		t.Fatal(err)
+	}
+	same, _, err := d.ListI18nLangs(ctx, I18nLangListReq{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if same[0].ID != list[0].ID || same[1].ID != list[1].ID || same[2].ID != list[2].ID {
+		t.Fatalf("noop changed order: %+v", same)
+	}
+
+	if err := d.ReorderI18nLang(ctx, 0, zh.ID); err == nil {
+		t.Fatal("expected invalid param")
+	} else if got := xerr.AsError(err); got.Message != i18n.InvalidParam {
+		t.Fatalf("invalid=%v", got.Message)
+	}
+	if err := d.ReorderI18nLang(ctx, en.ID, 99999); err == nil {
+		t.Fatal("expected not found")
+	} else if got := xerr.AsError(err); got.Message != i18n.I18nLangNotFound {
+		t.Fatalf("not found=%v", got.Message)
 	}
 }

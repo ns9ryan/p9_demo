@@ -70,15 +70,6 @@ func (p *PageReq) normalize(defaultSize int) {
 	}
 }
 
-func (p *PageReq) normalizeNoLimit(defaultSize int) {
-	if p.Page <= 0 {
-		p.Page = 1
-	}
-	if p.PageSize <= 0 {
-		p.PageSize = defaultSize
-	}
-}
-
 type BindRolesReq struct {
 	UserID  int64   `json:"user_id"`
 	RoleIDs []int64 `json:"role_ids"`

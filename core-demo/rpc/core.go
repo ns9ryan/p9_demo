@@ -32,7 +32,6 @@ func main() {
 			reflection.Register(grpcServer)
 		}
 	})
-	// s.AddUnaryInterceptors(rpcerr.Unary("core-rpc", svc.ErrorRecorder{Deps: ctx.Deps}))
 	defer s.Stop()
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)

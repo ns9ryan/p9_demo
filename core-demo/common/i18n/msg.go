@@ -78,8 +78,6 @@ const (
 	I18nLangNotFound                = "i18n.langNotFound"
 	I18nLangNotSupported            = "i18n.langNotSupported"
 	I18nLangCreateFailed            = "i18n.langCreateFailed"
-	I18nCannotDisableDefault        = "i18n.cannotDisableDefault"
-	I18nCannotDeleteDefault         = "i18n.cannotDeleteDefault"
 	I18nCannotChangeLangWithEntries = "i18n.cannotChangeLangWithEntries"
 	I18nCannotDeleteLangWithEntries = "i18n.cannotDeleteLangWithEntries"
 

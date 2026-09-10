@@ -48,6 +48,7 @@ const (
 	Core_UpdateI18NLang_FullMethodName        = "/core.Core/updateI18nLang"
 	Core_DeleteI18NLang_FullMethodName        = "/core.Core/deleteI18nLang"
 	Core_GetI18NLangList_FullMethodName       = "/core.Core/getI18nLangList"
+	Core_ReorderI18NLang_FullMethodName       = "/core.Core/reorderI18nLang"
 	Core_GetEnabledI18NLangs_FullMethodName   = "/core.Core/getEnabledI18nLangs"
 	Core_GetLoginLogList_FullMethodName       = "/core.Core/getLoginLogList"
 	Core_CreateAdminActionLog_FullMethodName  = "/core.Core/createAdminActionLog"
@@ -144,6 +145,8 @@ type CoreClient interface {
 	DeleteI18NLang(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*Empty, error)
 	// group: i18n
 	GetI18NLangList(ctx context.Context, in *I18NLangListReq, opts ...grpc.CallOption) (*I18NLangListResp, error)
+	// group: i18n
+	ReorderI18NLang(ctx context.Context, in *ReorderI18NLangReq, opts ...grpc.CallOption) (*Empty, error)
 	// group: i18n
 	GetEnabledI18NLangs(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*I18NLangListResp, error)
 	// group: log
@@ -506,6 +509,16 @@ func (c *coreClient) GetI18NLangList(ctx context.Context, in *I18NLangListReq, o
 	return out, nil
 }
 
+func (c *coreClient) ReorderI18NLang(ctx context.Context, in *ReorderI18NLangReq, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, Core_ReorderI18NLang_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *coreClient) GetEnabledI18NLangs(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*I18NLangListResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(I18NLangListResp)
@@ -862,6 +875,8 @@ type CoreServer interface {
 	// group: i18n
 	GetI18NLangList(context.Context, *I18NLangListReq) (*I18NLangListResp, error)
 	// group: i18n
+	ReorderI18NLang(context.Context, *ReorderI18NLangReq) (*Empty, error)
+	// group: i18n
 	GetEnabledI18NLangs(context.Context, *Empty) (*I18NLangListResp, error)
 	// group: log
 	GetLoginLogList(context.Context, *LoginLogListReq) (*LoginLogListResp, error)
@@ -1019,6 +1034,9 @@ func (UnimplementedCoreServer) DeleteI18NLang(context.Context, *IDsReq) (*Empty,
 }
 func (UnimplementedCoreServer) GetI18NLangList(context.Context, *I18NLangListReq) (*I18NLangListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetI18NLangList not implemented")
+}
+func (UnimplementedCoreServer) ReorderI18NLang(context.Context, *ReorderI18NLangReq) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReorderI18NLang not implemented")
 }
 func (UnimplementedCoreServer) GetEnabledI18NLangs(context.Context, *Empty) (*I18NLangListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetEnabledI18NLangs not implemented")
@@ -1646,6 +1664,24 @@ func _Core_GetI18NLangList_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CoreServer).GetI18NLangList(ctx, req.(*I18NLangListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Core_ReorderI18NLang_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReorderI18NLangReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoreServer).ReorderI18NLang(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Core_ReorderI18NLang_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoreServer).ReorderI18NLang(ctx, req.(*ReorderI18NLangReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2294,6 +2330,10 @@ var Core_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getI18nLangList",
 			Handler:    _Core_GetI18NLangList_Handler,
+		},
+		{
+			MethodName: "reorderI18nLang",
+			Handler:    _Core_ReorderI18NLang_Handler,
 		},
 		{
 			MethodName: "getEnabledI18nLangs",

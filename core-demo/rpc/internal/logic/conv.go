@@ -101,6 +101,7 @@ func ToApiInfo(a model.API) *core.ApiInfo {
 func ToI18nInfo(row model.I18n) *core.I18NInfo {
 	return &core.I18NInfo{
 		Id:        row.ID,
+		I18NCode:  row.I18nCode,
 		I18NGroup: row.I18nGroup,
 		TransKey:  row.TransKey,
 		Lang:      row.Lang,
@@ -116,7 +117,7 @@ func ToI18nLangInfo(row model.I18nLang) *core.I18NLangInfo {
 		Lang:      row.Lang,
 		Name:      row.Name,
 		Disabled:  int32(row.Disabled),
-		IsDefault: int32(row.IsDefault),
+		SortNo:    int32(row.SortNo),
 		CreatedAt: row.CreatedAt.Unix(),
 		UpdatedAt: row.UpdatedAt.Unix(),
 	}

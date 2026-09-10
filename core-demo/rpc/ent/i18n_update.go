@@ -34,6 +34,20 @@ func (_u *I18nUpdate) SetUpdatedAt(v time.Time) *I18nUpdate {
 	return _u
 }
 
+// SetI18nCode sets the "i18n_code" field.
+func (_u *I18nUpdate) SetI18nCode(v string) *I18nUpdate {
+	_u.mutation.SetI18nCode(v)
+	return _u
+}
+
+// SetNillableI18nCode sets the "i18n_code" field if the given value is not nil.
+func (_u *I18nUpdate) SetNillableI18nCode(v *string) *I18nUpdate {
+	if v != nil {
+		_u.SetI18nCode(*v)
+	}
+	return _u
+}
+
 // SetI18nGroup sets the "i18n_group" field.
 func (_u *I18nUpdate) SetI18nGroup(v string) *I18nUpdate {
 	_u.mutation.SetI18nGroup(v)
@@ -133,6 +147,11 @@ func (_u *I18nUpdate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (_u *I18nUpdate) check() error {
+	if v, ok := _u.mutation.I18nCode(); ok {
+		if err := i18n.I18nCodeValidator(v); err != nil {
+			return &ValidationError{Name: "i18n_code", err: fmt.Errorf(`ent: validator failed for field "I18n.i18n_code": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.I18nGroup(); ok {
 		if err := i18n.I18nGroupValidator(v); err != nil {
 			return &ValidationError{Name: "i18n_group", err: fmt.Errorf(`ent: validator failed for field "I18n.i18n_group": %w`, err)}
@@ -171,6 +190,9 @@ func (_u *I18nUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(i18n.FieldUpdatedAt, field.TypeTime, value)
 	}
+	if value, ok := _u.mutation.I18nCode(); ok {
+		_spec.SetField(i18n.FieldI18nCode, field.TypeString, value)
+	}
 	if value, ok := _u.mutation.I18nGroup(); ok {
 		_spec.SetField(i18n.FieldI18nGroup, field.TypeString, value)
 	}
@@ -206,6 +228,20 @@ type I18nUpdateOne struct {
 // SetUpdatedAt sets the "updated_at" field.
 func (_u *I18nUpdateOne) SetUpdatedAt(v time.Time) *I18nUpdateOne {
 	_u.mutation.SetUpdatedAt(v)
+	return _u
+}
+
+// SetI18nCode sets the "i18n_code" field.
+func (_u *I18nUpdateOne) SetI18nCode(v string) *I18nUpdateOne {
+	_u.mutation.SetI18nCode(v)
+	return _u
+}
+
+// SetNillableI18nCode sets the "i18n_code" field if the given value is not nil.
+func (_u *I18nUpdateOne) SetNillableI18nCode(v *string) *I18nUpdateOne {
+	if v != nil {
+		_u.SetI18nCode(*v)
+	}
 	return _u
 }
 
@@ -321,6 +357,11 @@ func (_u *I18nUpdateOne) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (_u *I18nUpdateOne) check() error {
+	if v, ok := _u.mutation.I18nCode(); ok {
+		if err := i18n.I18nCodeValidator(v); err != nil {
+			return &ValidationError{Name: "i18n_code", err: fmt.Errorf(`ent: validator failed for field "I18n.i18n_code": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.I18nGroup(); ok {
 		if err := i18n.I18nGroupValidator(v); err != nil {
 			return &ValidationError{Name: "i18n_group", err: fmt.Errorf(`ent: validator failed for field "I18n.i18n_group": %w`, err)}
@@ -375,6 +416,9 @@ func (_u *I18nUpdateOne) sqlSave(ctx context.Context) (_node *I18n, err error) {
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(i18n.FieldUpdatedAt, field.TypeTime, value)
+	}
+	if value, ok := _u.mutation.I18nCode(); ok {
+		_spec.SetField(i18n.FieldI18nCode, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.I18nGroup(); ok {
 		_spec.SetField(i18n.FieldI18nGroup, field.TypeString, value)

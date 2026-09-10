@@ -26,7 +26,7 @@ func (I18nLang) Fields() []ent.Field {
 		field.String("lang").MaxLen(16),
 		field.String("name").MaxLen(64).Default(""),
 		field.Int16("disabled").Default(0),
-		field.Int16("is_default").Default(0),
+		field.Int("sort_no").Default(0),
 	}
 }
 

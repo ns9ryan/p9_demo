@@ -73,6 +73,7 @@ type (
 	RefreshReq              = core.RefreshReq
 	RegisterCatalogReq      = core.RegisterCatalogReq
 	RegisterMenuReq         = core.RegisterMenuReq
+	ReorderI18NLangReq      = core.ReorderI18NLangReq
 	RoleIdReq               = core.RoleIdReq
 	RoleInfo                = core.RoleInfo
 	RoleListReq             = core.RoleListReq
@@ -124,6 +125,7 @@ type (
 		UpdateI18NLang(ctx context.Context, in *UpdateI18NLangReq, opts ...grpc.CallOption) (*Empty, error)
 		DeleteI18NLang(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*Empty, error)
 		GetI18NLangList(ctx context.Context, in *I18NLangListReq, opts ...grpc.CallOption) (*I18NLangListResp, error)
+		ReorderI18NLang(ctx context.Context, in *ReorderI18NLangReq, opts ...grpc.CallOption) (*Empty, error)
 		GetEnabledI18NLangs(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*I18NLangListResp, error)
 		GetLoginLogList(ctx context.Context, in *LoginLogListReq, opts ...grpc.CallOption) (*LoginLogListResp, error)
 		CreateAdminActionLog(ctx context.Context, in *CreateAdminActionLogReq, opts ...grpc.CallOption) (*Empty, error)
@@ -316,6 +318,11 @@ func (m *defaultCore) DeleteI18NLang(ctx context.Context, in *IDsReq, opts ...gr
 func (m *defaultCore) GetI18NLangList(ctx context.Context, in *I18NLangListReq, opts ...grpc.CallOption) (*I18NLangListResp, error) {
 	client := core.NewCoreClient(m.cli.Conn())
 	return client.GetI18NLangList(ctx, in, opts...)
+}
+
+func (m *defaultCore) ReorderI18NLang(ctx context.Context, in *ReorderI18NLangReq, opts ...grpc.CallOption) (*Empty, error) {
+	client := core.NewCoreClient(m.cli.Conn())
+	return client.ReorderI18NLang(ctx, in, opts...)
 }
 
 func (m *defaultCore) GetEnabledI18NLangs(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*I18NLangListResp, error) {

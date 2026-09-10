@@ -179,20 +179,26 @@ func init() {
 	i18n.DefaultUpdatedAt = i18nDescUpdatedAt.Default.(func() time.Time)
 	// i18n.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	i18n.UpdateDefaultUpdatedAt = i18nDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// i18nDescI18nCode is the schema descriptor for i18n_code field.
+	i18nDescI18nCode := i18nFields[1].Descriptor()
+	// i18n.DefaultI18nCode holds the default value on creation for the i18n_code field.
+	i18n.DefaultI18nCode = i18nDescI18nCode.Default.(string)
+	// i18n.I18nCodeValidator is a validator for the "i18n_code" field. It is called by the builders before save.
+	i18n.I18nCodeValidator = i18nDescI18nCode.Validators[0].(func(string) error)
 	// i18nDescI18nGroup is the schema descriptor for i18n_group field.
-	i18nDescI18nGroup := i18nFields[1].Descriptor()
+	i18nDescI18nGroup := i18nFields[2].Descriptor()
 	// i18n.I18nGroupValidator is a validator for the "i18n_group" field. It is called by the builders before save.
 	i18n.I18nGroupValidator = i18nDescI18nGroup.Validators[0].(func(string) error)
 	// i18nDescTransKey is the schema descriptor for trans_key field.
-	i18nDescTransKey := i18nFields[2].Descriptor()
+	i18nDescTransKey := i18nFields[3].Descriptor()
 	// i18n.TransKeyValidator is a validator for the "trans_key" field. It is called by the builders before save.
 	i18n.TransKeyValidator = i18nDescTransKey.Validators[0].(func(string) error)
 	// i18nDescLang is the schema descriptor for lang field.
-	i18nDescLang := i18nFields[3].Descriptor()
+	i18nDescLang := i18nFields[4].Descriptor()
 	// i18n.LangValidator is a validator for the "lang" field. It is called by the builders before save.
 	i18n.LangValidator = i18nDescLang.Validators[0].(func(string) error)
 	// i18nDescValue is the schema descriptor for value field.
-	i18nDescValue := i18nFields[4].Descriptor()
+	i18nDescValue := i18nFields[5].Descriptor()
 	// i18n.ValueValidator is a validator for the "value" field. It is called by the builders before save.
 	i18n.ValueValidator = i18nDescValue.Validators[0].(func(string) error)
 	i18nlangMixin := schema.I18nLang{}.Mixin()
@@ -224,10 +230,10 @@ func init() {
 	i18nlangDescDisabled := i18nlangFields[3].Descriptor()
 	// i18nlang.DefaultDisabled holds the default value on creation for the disabled field.
 	i18nlang.DefaultDisabled = i18nlangDescDisabled.Default.(int16)
-	// i18nlangDescIsDefault is the schema descriptor for is_default field.
-	i18nlangDescIsDefault := i18nlangFields[4].Descriptor()
-	// i18nlang.DefaultIsDefault holds the default value on creation for the is_default field.
-	i18nlang.DefaultIsDefault = i18nlangDescIsDefault.Default.(int16)
+	// i18nlangDescSortNo is the schema descriptor for sort_no field.
+	i18nlangDescSortNo := i18nlangFields[4].Descriptor()
+	// i18nlang.DefaultSortNo holds the default value on creation for the sort_no field.
+	i18nlang.DefaultSortNo = i18nlangDescSortNo.Default.(int)
 	loginlogMixin := schema.LoginLog{}.Mixin()
 	loginlogMixinHooks0 := loginlogMixin[0].Hooks()
 	loginlog.Hooks[0] = loginlogMixinHooks0[0]

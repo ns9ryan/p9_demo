@@ -4125,6 +4125,7 @@ type I18nMutation struct {
 	id            *int64
 	created_at    *time.Time
 	updated_at    *time.Time
+	i18n_code     *string
 	i18n_group    *string
 	trans_key     *string
 	lang          *string
@@ -4311,6 +4312,42 @@ func (m *I18nMutation) ResetUpdatedAt() {
 	m.updated_at = nil
 }
 
+// SetI18nCode sets the "i18n_code" field.
+func (m *I18nMutation) SetI18nCode(s string) {
+	m.i18n_code = &s
+}
+
+// I18nCode returns the value of the "i18n_code" field in the mutation.
+func (m *I18nMutation) I18nCode() (r string, exists bool) {
+	v := m.i18n_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldI18nCode returns the old "i18n_code" field's value of the I18n entity.
+// If the I18n object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *I18nMutation) OldI18nCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldI18nCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldI18nCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldI18nCode: %w", err)
+	}
+	return oldValue.I18nCode, nil
+}
+
+// ResetI18nCode resets all changes to the "i18n_code" field.
+func (m *I18nMutation) ResetI18nCode() {
+	m.i18n_code = nil
+}
+
 // SetI18nGroup sets the "i18n_group" field.
 func (m *I18nMutation) SetI18nGroup(s string) {
 	m.i18n_group = &s
@@ -4489,12 +4526,15 @@ func (m *I18nMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *I18nMutation) Fields() []string {
-	fields := make([]string, 0, 6)
+	fields := make([]string, 0, 7)
 	if m.created_at != nil {
 		fields = append(fields, i18n.FieldCreatedAt)
 	}
 	if m.updated_at != nil {
 		fields = append(fields, i18n.FieldUpdatedAt)
+	}
+	if m.i18n_code != nil {
+		fields = append(fields, i18n.FieldI18nCode)
 	}
 	if m.i18n_group != nil {
 		fields = append(fields, i18n.FieldI18nGroup)
@@ -4520,6 +4560,8 @@ func (m *I18nMutation) Field(name string) (ent.Value, bool) {
 		return m.CreatedAt()
 	case i18n.FieldUpdatedAt:
 		return m.UpdatedAt()
+	case i18n.FieldI18nCode:
+		return m.I18nCode()
 	case i18n.FieldI18nGroup:
 		return m.I18nGroup()
 	case i18n.FieldTransKey:
@@ -4541,6 +4583,8 @@ func (m *I18nMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldCreatedAt(ctx)
 	case i18n.FieldUpdatedAt:
 		return m.OldUpdatedAt(ctx)
+	case i18n.FieldI18nCode:
+		return m.OldI18nCode(ctx)
 	case i18n.FieldI18nGroup:
 		return m.OldI18nGroup(ctx)
 	case i18n.FieldTransKey:
@@ -4571,6 +4615,13 @@ func (m *I18nMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUpdatedAt(v)
+		return nil
+	case i18n.FieldI18nCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetI18nCode(v)
 		return nil
 	case i18n.FieldI18nGroup:
 		v, ok := value.(string)
@@ -4655,6 +4706,9 @@ func (m *I18nMutation) ResetField(name string) error {
 	case i18n.FieldUpdatedAt:
 		m.ResetUpdatedAt()
 		return nil
+	case i18n.FieldI18nCode:
+		m.ResetI18nCode()
+		return nil
 	case i18n.FieldI18nGroup:
 		m.ResetI18nGroup()
 		return nil
@@ -4731,8 +4785,8 @@ type I18nLangMutation struct {
 	name          *string
 	disabled      *int16
 	adddisabled   *int16
-	is_default    *int16
-	addis_default *int16
+	sort_no       *int
+	addsort_no    *int
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*I18nLang, error)
@@ -5043,60 +5097,60 @@ func (m *I18nLangMutation) ResetDisabled() {
 	m.adddisabled = nil
 }
 
-// SetIsDefault sets the "is_default" field.
-func (m *I18nLangMutation) SetIsDefault(i int16) {
-	m.is_default = &i
-	m.addis_default = nil
+// SetSortNo sets the "sort_no" field.
+func (m *I18nLangMutation) SetSortNo(i int) {
+	m.sort_no = &i
+	m.addsort_no = nil
 }
 
-// IsDefault returns the value of the "is_default" field in the mutation.
-func (m *I18nLangMutation) IsDefault() (r int16, exists bool) {
-	v := m.is_default
+// SortNo returns the value of the "sort_no" field in the mutation.
+func (m *I18nLangMutation) SortNo() (r int, exists bool) {
+	v := m.sort_no
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldIsDefault returns the old "is_default" field's value of the I18nLang entity.
+// OldSortNo returns the old "sort_no" field's value of the I18nLang entity.
 // If the I18nLang object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *I18nLangMutation) OldIsDefault(ctx context.Context) (v int16, err error) {
+func (m *I18nLangMutation) OldSortNo(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldIsDefault is only allowed on UpdateOne operations")
+		return v, errors.New("OldSortNo is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldIsDefault requires an ID field in the mutation")
+		return v, errors.New("OldSortNo requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldIsDefault: %w", err)
+		return v, fmt.Errorf("querying old value for OldSortNo: %w", err)
 	}
-	return oldValue.IsDefault, nil
+	return oldValue.SortNo, nil
 }
 
-// AddIsDefault adds i to the "is_default" field.
-func (m *I18nLangMutation) AddIsDefault(i int16) {
-	if m.addis_default != nil {
-		*m.addis_default += i
+// AddSortNo adds i to the "sort_no" field.
+func (m *I18nLangMutation) AddSortNo(i int) {
+	if m.addsort_no != nil {
+		*m.addsort_no += i
 	} else {
-		m.addis_default = &i
+		m.addsort_no = &i
 	}
 }
 
-// AddedIsDefault returns the value that was added to the "is_default" field in this mutation.
-func (m *I18nLangMutation) AddedIsDefault() (r int16, exists bool) {
-	v := m.addis_default
+// AddedSortNo returns the value that was added to the "sort_no" field in this mutation.
+func (m *I18nLangMutation) AddedSortNo() (r int, exists bool) {
+	v := m.addsort_no
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ResetIsDefault resets all changes to the "is_default" field.
-func (m *I18nLangMutation) ResetIsDefault() {
-	m.is_default = nil
-	m.addis_default = nil
+// ResetSortNo resets all changes to the "sort_no" field.
+func (m *I18nLangMutation) ResetSortNo() {
+	m.sort_no = nil
+	m.addsort_no = nil
 }
 
 // Where appends a list predicates to the I18nLangMutation builder.
@@ -5149,8 +5203,8 @@ func (m *I18nLangMutation) Fields() []string {
 	if m.disabled != nil {
 		fields = append(fields, i18nlang.FieldDisabled)
 	}
-	if m.is_default != nil {
-		fields = append(fields, i18nlang.FieldIsDefault)
+	if m.sort_no != nil {
+		fields = append(fields, i18nlang.FieldSortNo)
 	}
 	return fields
 }
@@ -5170,8 +5224,8 @@ func (m *I18nLangMutation) Field(name string) (ent.Value, bool) {
 		return m.Name()
 	case i18nlang.FieldDisabled:
 		return m.Disabled()
-	case i18nlang.FieldIsDefault:
-		return m.IsDefault()
+	case i18nlang.FieldSortNo:
+		return m.SortNo()
 	}
 	return nil, false
 }
@@ -5191,8 +5245,8 @@ func (m *I18nLangMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldName(ctx)
 	case i18nlang.FieldDisabled:
 		return m.OldDisabled(ctx)
-	case i18nlang.FieldIsDefault:
-		return m.OldIsDefault(ctx)
+	case i18nlang.FieldSortNo:
+		return m.OldSortNo(ctx)
 	}
 	return nil, fmt.Errorf("unknown I18nLang field %s", name)
 }
@@ -5237,12 +5291,12 @@ func (m *I18nLangMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDisabled(v)
 		return nil
-	case i18nlang.FieldIsDefault:
-		v, ok := value.(int16)
+	case i18nlang.FieldSortNo:
+		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetIsDefault(v)
+		m.SetSortNo(v)
 		return nil
 	}
 	return fmt.Errorf("unknown I18nLang field %s", name)
@@ -5255,8 +5309,8 @@ func (m *I18nLangMutation) AddedFields() []string {
 	if m.adddisabled != nil {
 		fields = append(fields, i18nlang.FieldDisabled)
 	}
-	if m.addis_default != nil {
-		fields = append(fields, i18nlang.FieldIsDefault)
+	if m.addsort_no != nil {
+		fields = append(fields, i18nlang.FieldSortNo)
 	}
 	return fields
 }
@@ -5268,8 +5322,8 @@ func (m *I18nLangMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
 	case i18nlang.FieldDisabled:
 		return m.AddedDisabled()
-	case i18nlang.FieldIsDefault:
-		return m.AddedIsDefault()
+	case i18nlang.FieldSortNo:
+		return m.AddedSortNo()
 	}
 	return nil, false
 }
@@ -5286,12 +5340,12 @@ func (m *I18nLangMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddDisabled(v)
 		return nil
-	case i18nlang.FieldIsDefault:
-		v, ok := value.(int16)
+	case i18nlang.FieldSortNo:
+		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddIsDefault(v)
+		m.AddSortNo(v)
 		return nil
 	}
 	return fmt.Errorf("unknown I18nLang numeric field %s", name)
@@ -5335,8 +5389,8 @@ func (m *I18nLangMutation) ResetField(name string) error {
 	case i18nlang.FieldDisabled:
 		m.ResetDisabled()
 		return nil
-	case i18nlang.FieldIsDefault:
-		m.ResetIsDefault()
+	case i18nlang.FieldSortNo:
+		m.ResetSortNo()
 		return nil
 	}
 	return fmt.Errorf("unknown I18nLang field %s", name)

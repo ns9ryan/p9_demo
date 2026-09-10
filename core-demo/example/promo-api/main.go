@@ -40,6 +40,7 @@ func main() {
 	flag.Parse()
 	var c Config
 	conf.MustLoad(*configFile, &c)
+	// 设置HTTP响应格式、错误处理等
 	response.SetupHTTPX()
 
 	promo, err := openPromo(c.DB.Driver, c.DB.DSN)
@@ -66,12 +67,15 @@ func main() {
 	server.Start()
 }
 
+// openPromo 优惠中心数据库
 func openPromo(driver, dsn string) (*ent.Client, error) {
 	drv, err := entdb.Open(driver, dsn)
 	if err != nil {
 		return nil, err
 	}
+	// 创建优惠中心数据库客户端
 	client := ent.NewClient(ent.Driver(drv), ent.Debug())
+	// 注册优惠中心数据库拦截器
 	client.Intercept(intercept.TraverseFunc(func(ctx context.Context, q intercept.Query) error {
 		entmixin.FilterOperatorCode(ctx, q)
 		return nil
@@ -79,6 +83,7 @@ func openPromo(driver, dsn string) (*ent.Client, error) {
 	return client, nil
 }
 
+// promoList 获取优惠中心活动列表
 func promoList(promo *ent.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		rows, err := promo.Promotion.Query().All(r.Context())
@@ -110,6 +115,7 @@ const (
 )
 
 func registerPromoCatalog(cli coreclient.Core) error {
+	// 注册优惠中心菜单
 	req := &coreclient.RegisterCatalogReq{
 		Menus: []*coreclient.RegisterMenuReq{
 			{Name: "PromoCenter", Title: "menu.route.promoCenter", MenuType: menuTypeDir, Path: "/promo", Sort: 20},
@@ -119,13 +125,13 @@ func registerPromoCatalog(cli coreclient.Core) error {
 			{Description: "api.promoList", ApiGroup: "promo", Method: http.MethodGet, Path: "/admin/promo/list", ServiceName: "promo-api"},
 		},
 		I18N: []*coreclient.I18NItem{
-			{I18NGroup: "menu", TransKey: "menu.route.promoCenter", Lang: "zh-CN", Value: "优惠中心"},
-			{I18NGroup: "menu", TransKey: "menu.route.promoCenter", Lang: "en-US", Value: "Promotions"},
-			{I18NGroup: "menu", TransKey: "menu.route.promoActivityList", Lang: "zh-CN", Value: "活动列表"},
-			{I18NGroup: "menu", TransKey: "menu.route.promoActivityList", Lang: "en-US", Value: "Activities"},
-			{I18NGroup: "api", TransKey: "api.promoList", Lang: "zh-CN", Value: "活动列表"},
-			{I18NGroup: "api", TransKey: "api.promoList", Lang: "zh-HK", Value: "活動列表"},
-			{I18NGroup: "api", TransKey: "api.promoList", Lang: "en-US", Value: "Promotion list"},
+			{I18NCode: "promo", I18NGroup: "menu", TransKey: "menu.route.promoCenter", Lang: "zh-CN", Value: "优惠中心"},
+			{I18NCode: "promo", I18NGroup: "menu", TransKey: "menu.route.promoCenter", Lang: "en-US", Value: "Promotions"},
+			{I18NCode: "promo", I18NGroup: "menu", TransKey: "menu.route.promoActivityList", Lang: "zh-CN", Value: "活动列表"},
+			{I18NCode: "promo", I18NGroup: "menu", TransKey: "menu.route.promoActivityList", Lang: "en-US", Value: "Activities"},
+			{I18NCode: "promo", I18NGroup: "api", TransKey: "api.promoList", Lang: "zh-CN", Value: "活动列表"},
+			{I18NCode: "promo", I18NGroup: "api", TransKey: "api.promoList", Lang: "zh-HK", Value: "活動列表"},
+			{I18NCode: "promo", I18NGroup: "api", TransKey: "api.promoList", Lang: "en-US", Value: "Promotion list"},
 		},
 	}
 	var last error
@@ -141,6 +147,7 @@ func registerPromoCatalog(cli coreclient.Core) error {
 	return fmt.Errorf("register promo catalog: %w", last)
 }
 
+// seedPromos 初始化优惠中心数据
 func seedPromos(promo *ent.Client) {
 	ctx := ctxdata.SkipTenant(context.Background())
 	n, err := promo.Promotion.Query().Count(ctx)

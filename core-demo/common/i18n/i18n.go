@@ -109,6 +109,7 @@ func T(ctx context.Context, id string) string {
 	return Tf(ctx, id, nil)
 }
 
+// Tf 获取翻译(本地)
 func Tf(ctx context.Context, id string, data map[string]any) string {
 	if id == "" {
 		return id

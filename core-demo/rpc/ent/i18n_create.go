@@ -48,6 +48,20 @@ func (_c *I18nCreate) SetNillableUpdatedAt(v *time.Time) *I18nCreate {
 	return _c
 }
 
+// SetI18nCode sets the "i18n_code" field.
+func (_c *I18nCreate) SetI18nCode(v string) *I18nCreate {
+	_c.mutation.SetI18nCode(v)
+	return _c
+}
+
+// SetNillableI18nCode sets the "i18n_code" field if the given value is not nil.
+func (_c *I18nCreate) SetNillableI18nCode(v *string) *I18nCreate {
+	if v != nil {
+		_c.SetI18nCode(*v)
+	}
+	return _c
+}
+
 // SetI18nGroup sets the "i18n_group" field.
 func (_c *I18nCreate) SetI18nGroup(v string) *I18nCreate {
 	_c.mutation.SetI18nGroup(v)
@@ -121,10 +135,22 @@ func (_c *I18nCreate) defaults() {
 		v := i18n.DefaultUpdatedAt()
 		_c.mutation.SetUpdatedAt(v)
 	}
+	if _, ok := _c.mutation.I18nCode(); !ok {
+		v := i18n.DefaultI18nCode
+		_c.mutation.SetI18nCode(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
 func (_c *I18nCreate) check() error {
+	if _, ok := _c.mutation.I18nCode(); !ok {
+		return &ValidationError{Name: "i18n_code", err: errors.New(`ent: missing required field "I18n.i18n_code"`)}
+	}
+	if v, ok := _c.mutation.I18nCode(); ok {
+		if err := i18n.I18nCodeValidator(v); err != nil {
+			return &ValidationError{Name: "i18n_code", err: fmt.Errorf(`ent: validator failed for field "I18n.i18n_code": %w`, err)}
+		}
+	}
 	if _, ok := _c.mutation.I18nGroup(); !ok {
 		return &ValidationError{Name: "i18n_group", err: errors.New(`ent: missing required field "I18n.i18n_group"`)}
 	}
@@ -196,6 +222,10 @@ func (_c *I18nCreate) createSpec() (*I18n, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.UpdatedAt(); ok {
 		_spec.SetField(i18n.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
+	}
+	if value, ok := _c.mutation.I18nCode(); ok {
+		_spec.SetField(i18n.FieldI18nCode, field.TypeString, value)
+		_node.I18nCode = value
 	}
 	if value, ok := _c.mutation.I18nGroup(); ok {
 		_spec.SetField(i18n.FieldI18nGroup, field.TypeString, value)

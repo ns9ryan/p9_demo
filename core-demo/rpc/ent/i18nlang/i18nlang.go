@@ -23,8 +23,8 @@ const (
 	FieldName = "name"
 	// FieldDisabled holds the string denoting the disabled field in the database.
 	FieldDisabled = "disabled"
-	// FieldIsDefault holds the string denoting the is_default field in the database.
-	FieldIsDefault = "is_default"
+	// FieldSortNo holds the string denoting the sort_no field in the database.
+	FieldSortNo = "sort_no"
 	// Table holds the table name of the i18nlang in the database.
 	Table = "sys_i18n_lang"
 )
@@ -37,7 +37,7 @@ var Columns = []string{
 	FieldLang,
 	FieldName,
 	FieldDisabled,
-	FieldIsDefault,
+	FieldSortNo,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -65,8 +65,8 @@ var (
 	NameValidator func(string) error
 	// DefaultDisabled holds the default value on creation for the "disabled" field.
 	DefaultDisabled int16
-	// DefaultIsDefault holds the default value on creation for the "is_default" field.
-	DefaultIsDefault int16
+	// DefaultSortNo holds the default value on creation for the "sort_no" field.
+	DefaultSortNo int
 )
 
 // OrderOption defines the ordering options for the I18nLang queries.
@@ -102,7 +102,7 @@ func ByDisabled(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDisabled, opts...).ToFunc()
 }
 
-// ByIsDefault orders the results by the is_default field.
-func ByIsDefault(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldIsDefault, opts...).ToFunc()
+// BySortNo orders the results by the sort_no field.
+func BySortNo(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldSortNo, opts...).ToFunc()
 }

@@ -17,6 +17,8 @@ const (
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
 	FieldUpdatedAt = "updated_at"
+	// FieldI18nCode holds the string denoting the i18n_code field in the database.
+	FieldI18nCode = "i18n_code"
 	// FieldI18nGroup holds the string denoting the i18n_group field in the database.
 	FieldI18nGroup = "i18n_group"
 	// FieldTransKey holds the string denoting the trans_key field in the database.
@@ -34,6 +36,7 @@ var Columns = []string{
 	FieldID,
 	FieldCreatedAt,
 	FieldUpdatedAt,
+	FieldI18nCode,
 	FieldI18nGroup,
 	FieldTransKey,
 	FieldLang,
@@ -57,6 +60,10 @@ var (
 	DefaultUpdatedAt func() time.Time
 	// UpdateDefaultUpdatedAt holds the default value on update for the "updated_at" field.
 	UpdateDefaultUpdatedAt func() time.Time
+	// DefaultI18nCode holds the default value on creation for the "i18n_code" field.
+	DefaultI18nCode string
+	// I18nCodeValidator is a validator for the "i18n_code" field. It is called by the builders before save.
+	I18nCodeValidator func(string) error
 	// I18nGroupValidator is a validator for the "i18n_group" field. It is called by the builders before save.
 	I18nGroupValidator func(string) error
 	// TransKeyValidator is a validator for the "trans_key" field. It is called by the builders before save.
@@ -83,6 +90,11 @@ func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 // ByUpdatedAt orders the results by the updated_at field.
 func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
+}
+
+// ByI18nCode orders the results by the i18n_code field.
+func ByI18nCode(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldI18nCode, opts...).ToFunc()
 }
 
 // ByI18nGroup orders the results by the i18n_group field.

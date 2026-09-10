@@ -13,18 +13,18 @@ import (
 )
 
 type CreateI18nLangReq struct {
-	Lang      string
-	Name      string
-	Disabled  int16
-	IsDefault int16
+	Lang     string
+	Name     string
+	Disabled int16
+	SortNo   int
 }
 
 type UpdateI18nLangReq struct {
-	ID        int64
-	Lang      *string
-	Name      *string
-	Disabled  *int16
-	IsDefault *int16
+	ID       int64
+	Lang     *string
+	Name     *string
+	Disabled *int16
+	SortNo   *int
 }
 
 type I18nLangListReq struct {
@@ -33,7 +33,8 @@ type I18nLangListReq struct {
 	Disabled *int16
 }
 
-func (d *Deps) EnsureI18nLangs(ctx context.Context, seeds []CreateI18nLangReq) error {
+// UpsertI18nLangs 更新或创建语言列表
+func (d *Deps) UpsertI18nLangs(ctx context.Context, seeds []CreateI18nLangReq) error {
 	for _, s := range seeds {
 		row, err := d.Client.I18nLang.Query().Where(enti18nlang.LangEQ(s.Lang)).Only(ctx)
 		if err != nil {
@@ -41,7 +42,7 @@ func (d *Deps) EnsureI18nLangs(ctx context.Context, seeds []CreateI18nLangReq) e
 				return err
 			}
 			if _, err := d.Client.I18nLang.Create().
-				SetLang(s.Lang).SetName(s.Name).SetDisabled(s.Disabled).SetIsDefault(s.IsDefault).
+				SetLang(s.Lang).SetName(s.Name).SetDisabled(s.Disabled).SetSortNo(s.SortNo).
 				Save(ctx); err != nil {
 				return err
 			}
@@ -68,12 +69,6 @@ func (d *Deps) CreateI18nLang(ctx context.Context, req CreateI18nLangReq) (*mode
 	if err := validFlag01(req.Disabled); err != nil {
 		return nil, err
 	}
-	if err := validFlag01(req.IsDefault); err != nil {
-		return nil, err
-	}
-	if req.IsDefault == 1 && req.Disabled == 1 {
-		return nil, xerr.BadRequest(i18n.I18nCannotDisableDefault)
-	}
 	taken, err := d.i18nLangTaken(ctx, lang, 0)
 	if err != nil {
 		return nil, err
@@ -81,24 +76,14 @@ func (d *Deps) CreateI18nLang(ctx context.Context, req CreateI18nLangReq) (*mode
 	if taken {
 		return nil, xerr.BadRequest(i18n.I18nLangExists)
 	}
-	var out *model.I18nLang
-	err = d.withTx(ctx, func(tx *Deps) error {
-		if req.IsDefault == 1 {
-			if err := tx.clearDefaultLang(ctx, 0); err != nil {
-				return err
-			}
-		}
-		row, err := tx.Client.I18nLang.Create().
-			SetLang(lang).SetName(name).SetDisabled(req.Disabled).SetIsDefault(req.IsDefault).
-			Save(ctx)
-		if err != nil {
-			return xerr.BadRequest(i18n.I18nLangCreateFailed)
-		}
-		m := i18nLangFromEnt(row)
-		out = &m
-		return nil
-	})
-	return out, err
+	row, err := d.Client.I18nLang.Create().
+		SetLang(lang).SetName(name).SetDisabled(req.Disabled).SetSortNo(req.SortNo).
+		Save(ctx)
+	if err != nil {
+		return nil, xerr.BadRequest(i18n.I18nLangCreateFailed)
+	}
+	m := i18nLangFromEnt(row)
+	return &m, nil
 }
 
 func (d *Deps) UpdateI18nLang(ctx context.Context, req UpdateI18nLangReq) error {
@@ -136,20 +121,8 @@ func (d *Deps) UpdateI18nLang(ctx context.Context, req UpdateI18nLangReq) error 
 		}
 		next.Disabled = *req.Disabled
 	}
-	if req.IsDefault != nil {
-		if err := validFlag01(*req.IsDefault); err != nil {
-			return err
-		}
-		next.IsDefault = *req.IsDefault
-	}
-	if next.IsDefault == 1 && next.Disabled == 1 {
-		return xerr.BadRequest(i18n.I18nCannotDisableDefault)
-	}
-	if row.IsDefault == 1 && next.IsDefault == 0 {
-		return xerr.BadRequest(i18n.I18nCannotDisableDefault)
-	}
-	if row.IsDefault == 1 && next.Disabled == 1 {
-		return xerr.BadRequest(i18n.I18nCannotDisableDefault)
+	if req.SortNo != nil {
+		next.SortNo = *req.SortNo
 	}
 	taken, err := d.i18nLangTaken(ctx, next.Lang, row.ID)
 	if err != nil {
@@ -158,16 +131,9 @@ func (d *Deps) UpdateI18nLang(ctx context.Context, req UpdateI18nLangReq) error 
 	if taken {
 		return xerr.BadRequest(i18n.I18nLangExists)
 	}
-	return d.withTx(ctx, func(tx *Deps) error {
-		if next.IsDefault == 1 {
-			if err := tx.clearDefaultLang(ctx, row.ID); err != nil {
-				return err
-			}
-		}
-		return tx.Client.I18nLang.UpdateOneID(row.ID).
-			SetLang(next.Lang).SetName(next.Name).SetDisabled(next.Disabled).SetIsDefault(next.IsDefault).
-			Exec(ctx)
-	})
+	return d.Client.I18nLang.UpdateOneID(row.ID).
+		SetLang(next.Lang).SetName(next.Name).SetDisabled(next.Disabled).SetSortNo(next.SortNo).
+		Exec(ctx)
 }
 
 func (d *Deps) DeleteI18nLangs(ctx context.Context, ids []int64) error {
@@ -175,9 +141,6 @@ func (d *Deps) DeleteI18nLangs(ctx context.Context, ids []int64) error {
 		row, err := d.i18nLangByID(ctx, id)
 		if err != nil {
 			return err
-		}
-		if row.IsDefault == 1 {
-			return xerr.BadRequest(i18n.I18nCannotDeleteDefault)
 		}
 		used, err := d.i18nHasEntries(ctx, row.Lang)
 		if err != nil {
@@ -205,8 +168,8 @@ func (d *Deps) ListI18nLangs(ctx context.Context, req I18nLangListReq) ([]model.
 	if err != nil {
 		return nil, 0, err
 	}
-	req.normalizeNoLimit(50)
-	list, err := q.Order(ent.Desc(enti18nlang.FieldIsDefault), ent.Asc(enti18nlang.FieldLang), ent.Asc(enti18nlang.FieldID)).
+	req.normalize(50)
+	list, err := q.Order(ent.Asc(enti18nlang.FieldSortNo), ent.Asc(enti18nlang.FieldLang), ent.Asc(enti18nlang.FieldID)).
 		Offset((req.Page - 1) * req.PageSize).
 		Limit(req.PageSize).
 		All(ctx)
@@ -216,7 +179,7 @@ func (d *Deps) ListI18nLangs(ctx context.Context, req I18nLangListReq) ([]model.
 func (d *Deps) ListEnabledI18nLangs(ctx context.Context) ([]model.I18nLang, error) {
 	list, err := d.Client.I18nLang.Query().
 		Where(enti18nlang.DisabledEQ(0)).
-		Order(ent.Desc(enti18nlang.FieldIsDefault), ent.Asc(enti18nlang.FieldLang), ent.Asc(enti18nlang.FieldID)).
+		Order(ent.Asc(enti18nlang.FieldSortNo), ent.Asc(enti18nlang.FieldLang), ent.Asc(enti18nlang.FieldID)).
 		All(ctx)
 	if err != nil {
 		return nil, err
@@ -258,14 +221,6 @@ func (d *Deps) requireSupportedLang(ctx context.Context, lang string) error {
 	return nil
 }
 
-func (d *Deps) clearDefaultLang(ctx context.Context, exceptID int64) error {
-	q := d.Client.I18nLang.Update().Where(enti18nlang.IsDefaultEQ(1))
-	if exceptID > 0 {
-		q = q.Where(enti18nlang.IDNEQ(exceptID))
-	}
-	return q.SetIsDefault(0).Exec(ctx)
-}
-
 func (d *Deps) withTx(ctx context.Context, fn func(*Deps) error) error {
 	tx, err := d.Client.Tx(ctx)
 	if err != nil {
@@ -278,6 +233,50 @@ func (d *Deps) withTx(ctx context.Context, fn func(*Deps) error) error {
 		return err
 	}
 	return tx.Commit()
+}
+
+func (d *Deps) ReorderI18nLang(ctx context.Context, id, targetID int64) error {
+	if id <= 0 || targetID <= 0 {
+		return xerr.BadRequest(i18n.InvalidParam)
+	}
+	if id == targetID {
+		return nil
+	}
+	if _, err := d.i18nLangByID(ctx, id); err != nil {
+		return err
+	}
+	if _, err := d.i18nLangByID(ctx, targetID); err != nil {
+		return err
+	}
+	return d.withTx(ctx, func(tx *Deps) error {
+		list, err := tx.Client.I18nLang.Query().
+			Order(ent.Asc(enti18nlang.FieldSortNo), ent.Asc(enti18nlang.FieldLang), ent.Asc(enti18nlang.FieldID)).
+			All(ctx)
+		if err != nil {
+			return err
+		}
+		from, to := -1, -1
+		for i, row := range list {
+			if row.ID == id {
+				from = i
+			}
+			if row.ID == targetID {
+				to = i
+			}
+		}
+		if from < 0 || to < 0 {
+			return xerr.NotFound(i18n.I18nLangNotFound)
+		}
+		item := list[from]
+		list = append(list[:from], list[from+1:]...)
+		list = append(list[:to], append([]*ent.I18nLang{item}, list[to:]...)...)
+		for i, row := range list {
+			if err := tx.Client.I18nLang.UpdateOneID(row.ID).SetSortNo(i + 1).Exec(ctx); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 }
 
 func normalizeLangCode(lang string) (string, error) {

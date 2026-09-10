@@ -109,6 +109,10 @@
                   "description": "Service name | 服务名",
                   "type": "string"
                 },
+                "trans_description": {
+                  "description": "TransDescription | 翻译描述",
+                  "type": "string"
+                },
                 "updated_at": {
                   "description": "Updated at unix | 更新时间",
                   "type": "integer"
@@ -240,6 +244,7 @@
                     "required": [
                       "id",
                       "description",
+                      "trans_description",
                       "api_group",
                       "method",
                       "path",
@@ -279,6 +284,10 @@
                       },
                       "service_name": {
                         "description": "Service name | 服务名",
+                        "type": "string"
+                      },
+                      "trans_description": {
+                        "description": "TransDescription | 翻译描述",
                         "type": "string"
                       },
                       "updated_at": {
@@ -892,6 +901,10 @@
                 "value"
               ],
               "properties": {
+                "i18n_code": {
+                  "description": "Site | 站点编码，空则 core",
+                  "type": "string"
+                },
                 "i18n_group": {
                   "description": "Group | 分组",
                   "type": "string"
@@ -921,6 +934,10 @@
                 "created_at": {
                   "description": "Created at unix | 创建时间",
                   "type": "integer"
+                },
+                "i18n_code": {
+                  "description": "Site | 站点编码",
+                  "type": "string"
                 },
                 "i18n_group": {
                   "description": "Group | 分组",
@@ -1005,6 +1022,59 @@
         }
       }
     },
+    "/admin/i18n/dict": {
+      "get": {
+        "description": "词条下发",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "i18n"
+        ],
+        "summary": "词条下发",
+        "operationId": "i18nGetI18nDict",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Site | 站点编码",
+            "name": "i18n_code",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Group | 分组，空则下发全部组",
+            "name": "i18n_group",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "string",
+            "description": "Lang | 语言，空则从ctx取",
+            "name": "lang",
+            "in": "query",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "items": {
+                  "description": "Items | 词条",
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/admin/i18n/lang/create": {
       "post": {
         "description": "创建支持的语言",
@@ -1035,10 +1105,6 @@
                   "description": "Disabled | 是否停用",
                   "type": "integer"
                 },
-                "is_default": {
-                  "description": "Default | 是否默认",
-                  "type": "integer"
-                },
                 "lang": {
                   "description": "Lang | 语言码",
                   "type": "string"
@@ -1046,6 +1112,10 @@
                 "name": {
                   "description": "Name | 显示名",
                   "type": "string"
+                },
+                "sort_no": {
+                  "description": "Sort | 排序，越小越前",
+                  "type": "integer"
                 }
               }
             }
@@ -1069,10 +1139,6 @@
                   "description": "ID | 语言ID",
                   "type": "integer"
                 },
-                "is_default": {
-                  "description": "Default | 是否默认",
-                  "type": "integer"
-                },
                 "lang": {
                   "description": "Lang | 语言码",
                   "type": "string"
@@ -1080,6 +1146,10 @@
                 "name": {
                   "description": "Name | 显示名",
                   "type": "string"
+                },
+                "sort_no": {
+                  "description": "Sort | 排序，越小越前",
+                  "type": "integer"
                 },
                 "updated_at": {
                   "description": "Updated at unix | 更新时间",
@@ -1171,7 +1241,7 @@
                       "lang",
                       "name",
                       "disabled",
-                      "is_default",
+                      "sort_no",
                       "created_at",
                       "updated_at"
                     ],
@@ -1188,10 +1258,6 @@
                         "description": "ID | 语言ID",
                         "type": "integer"
                       },
-                      "is_default": {
-                        "description": "Default | 是否默认",
-                        "type": "integer"
-                      },
                       "lang": {
                         "description": "Lang | 语言码",
                         "type": "string"
@@ -1199,6 +1265,10 @@
                       "name": {
                         "description": "Name | 显示名",
                         "type": "string"
+                      },
+                      "sort_no": {
+                        "description": "Sort | 排序，越小越前",
+                        "type": "integer"
                       },
                       "updated_at": {
                         "description": "Updated at unix | 更新时间",
@@ -1275,7 +1345,7 @@
                       "lang",
                       "name",
                       "disabled",
-                      "is_default",
+                      "sort_no",
                       "created_at",
                       "updated_at"
                     ],
@@ -1292,10 +1362,6 @@
                         "description": "ID | 语言ID",
                         "type": "integer"
                       },
-                      "is_default": {
-                        "description": "Default | 是否默认",
-                        "type": "integer"
-                      },
                       "lang": {
                         "description": "Lang | 语言码",
                         "type": "string"
@@ -1303,6 +1369,10 @@
                       "name": {
                         "description": "Name | 显示名",
                         "type": "string"
+                      },
+                      "sort_no": {
+                        "description": "Sort | 排序，越小越前",
+                        "type": "integer"
                       },
                       "updated_at": {
                         "description": "Updated at unix | 更新时间",
@@ -1314,6 +1384,60 @@
                 "total": {
                   "description": "Total | 总数",
                   "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/i18n/lang/reorder": {
+      "post": {
+        "description": "调整语言排序",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "i18n"
+        ],
+        "summary": "调整语言排序",
+        "operationId": "i18nReorderI18nLang",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "id",
+                "target_id"
+              ],
+              "properties": {
+                "id": {
+                  "description": "ID | 被移动的语言ID",
+                  "type": "integer"
+                },
+                "target_id": {
+                  "description": "Target ID | 目标位置语言ID",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
                 }
               }
             }
@@ -1354,10 +1478,6 @@
                   "description": "ID | 语言ID",
                   "type": "integer"
                 },
-                "is_default": {
-                  "description": "Default | 是否默认",
-                  "type": "integer"
-                },
                 "lang": {
                   "description": "Lang | 语言码",
                   "type": "string"
@@ -1365,6 +1485,10 @@
                 "name": {
                   "description": "Name | 显示名",
                   "type": "string"
+                },
+                "sort_no": {
+                  "description": "Sort | 排序，越小越前",
+                  "type": "integer"
                 }
               }
             }
@@ -1408,6 +1532,10 @@
             "schema": {
               "type": "object",
               "properties": {
+                "i18n_code": {
+                  "description": "Site | 站点编码",
+                  "type": "string"
+                },
                 "i18n_group": {
                   "description": "Group | 分组",
                   "type": "string"
@@ -1445,6 +1573,7 @@
                     "type": "object",
                     "required": [
                       "id",
+                      "i18n_code",
                       "i18n_group",
                       "trans_key",
                       "lang",
@@ -1456,6 +1585,10 @@
                       "created_at": {
                         "description": "Created at unix | 创建时间",
                         "type": "integer"
+                      },
+                      "i18n_code": {
+                        "description": "Site | 站点编码",
+                        "type": "string"
                       },
                       "i18n_group": {
                         "description": "Group | 分组",
@@ -1519,6 +1652,10 @@
                 "id"
               ],
               "properties": {
+                "i18n_code": {
+                  "description": "Site | 站点编码",
+                  "type": "string"
+                },
                 "i18n_group": {
                   "description": "Group | 分组",
                   "type": "string"
@@ -2425,6 +2562,10 @@
                   "description": "Title | 标题",
                   "type": "string"
                 },
+                "trans_title": {
+                  "description": "TransTitle | 翻译标题",
+                  "type": "string"
+                },
                 "updated_at": {
                   "description": "Updated at unix | 更新时间",
                   "type": "integer"
@@ -2515,6 +2656,7 @@
                   "component",
                   "redirect",
                   "title",
+                  "trans_title",
                   "icon",
                   "permission",
                   "hide_menu",
@@ -2580,6 +2722,10 @@
                     "description": "Title | 标题",
                     "type": "string"
                   },
+                  "trans_title": {
+                    "description": "TransTitle | 翻译标题",
+                    "type": "string"
+                  },
                   "updated_at": {
                     "description": "Updated at unix | 更新时间",
                     "type": "integer"
@@ -2641,6 +2787,10 @@
                 },
                 "title": {
                   "description": "Title | 标题",
+                  "type": "string"
+                },
+                "trans_title": {
+                  "description": "TransTitle | 翻译标题",
                   "type": "string"
                 },
                 "updated_at": {
@@ -4681,7 +4831,7 @@
       "Token": []
     }
   ],
-  "x-date": "2026-09-07 15:18:32",
+  "x-date": "2026-09-10 11:39:48",
   "x-description": "This is a goctls generated swagger file.",
   "x-github": "https://github.com/suyuan32/simple-admin-core",
   "x-goctl-version": "v1.14.8",

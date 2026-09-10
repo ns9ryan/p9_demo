@@ -135,6 +135,7 @@ func apisFromEnt(list []*ent.API) []model.API {
 func i18nFromEnt(row *ent.I18n) model.I18n {
 	return model.I18n{
 		ID:        row.ID,
+		I18nCode:  row.I18nCode,
 		I18nGroup: row.I18nGroup,
 		TransKey:  row.TransKey,
 		Lang:      row.Lang,
@@ -158,7 +159,7 @@ func i18nLangFromEnt(row *ent.I18nLang) model.I18nLang {
 		Lang:      row.Lang,
 		Name:      row.Name,
 		Disabled:  row.Disabled,
-		IsDefault: row.IsDefault,
+		SortNo:    row.SortNo,
 		CreatedAt: row.CreatedAt,
 		UpdatedAt: row.UpdatedAt,
 	}

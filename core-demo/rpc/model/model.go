@@ -111,6 +111,7 @@ type API struct {
 
 type I18n struct {
 	ID        int64     `json:"id"`
+	I18nCode  string    `json:"i18n_code"`
 	I18nGroup string    `json:"i18n_group"`
 	TransKey  string    `json:"trans_key"`
 	Lang      string    `json:"lang"`
@@ -124,7 +125,7 @@ type I18nLang struct {
 	Lang      string    `json:"lang"`
 	Name      string    `json:"name"`
 	Disabled  int16     `json:"disabled"`
-	IsDefault int16     `json:"is_default"`
+	SortNo    int       `json:"sort_no"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }

@@ -5,6 +5,8 @@ Timeout: 10000
 Log:
   Mode: console
   Level: info
+# 开发模式
+Mode: dev
 
 DB:
   Driver: postgres

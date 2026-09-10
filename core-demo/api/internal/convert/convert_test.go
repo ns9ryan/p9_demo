@@ -44,18 +44,18 @@ func TestUpdateMenuReqOmitsUnset(t *testing.T) {
 
 func TestUpdateI18nLangReqKeepsZeroFlags(t *testing.T) {
 	zero := int32(0)
-	got := UpdateI18nLangReq(&types.UpdateI18nLangReq{Id: 1, Disabled: &zero, IsDefault: &zero})
+	got := UpdateI18nLangReq(&types.UpdateI18nLangReq{Id: 1, Disabled: &zero, SortNo: &zero})
 	if got.Disabled == nil || *got.Disabled != 0 {
 		t.Fatalf("Disabled=%v", got.Disabled)
 	}
-	if got.IsDefault == nil || *got.IsDefault != 0 {
-		t.Fatalf("IsDefault=%v", got.IsDefault)
+	if got.SortNo == nil || *got.SortNo != 0 {
+		t.Fatalf("SortNo=%v", got.SortNo)
 	}
 }
 
 func TestUpdateI18nLangReqOmitsUnset(t *testing.T) {
 	got := UpdateI18nLangReq(&types.UpdateI18nLangReq{Id: 1})
-	if got.Lang != nil || got.Name != nil || got.Disabled != nil || got.IsDefault != nil {
+	if got.Lang != nil || got.Name != nil || got.Disabled != nil || got.SortNo != nil {
 		t.Fatalf("expected omitted fields to stay nil, got %+v", got)
 	}
 }
@@ -109,7 +109,7 @@ func TestMenuInfoTranslatesTitleFromDict(t *testing.T) {
 		i18n.SetDictLoader(nil)
 		i18n.InvalidateAll()
 	})
-	i18n.SetDictLoader(func(_ context.Context, group, lang string) (map[string]string, error) {
+	i18n.SetDictLoader(func(_ context.Context, code, group, lang string) (map[string]string, error) {
 		if group != i18n.GroupMenu || lang != i18n.LangZH {
 			return map[string]string{}, nil
 		}
@@ -135,7 +135,7 @@ func TestApiInfoTranslatesDescriptionFromDict(t *testing.T) {
 		i18n.SetDictLoader(nil)
 		i18n.InvalidateAll()
 	})
-	i18n.SetDictLoader(func(_ context.Context, group, lang string) (map[string]string, error) {
+	i18n.SetDictLoader(func(_ context.Context, code, group, lang string) (map[string]string, error) {
 		if group != i18n.GroupAPI || lang != i18n.LangZH {
 			return map[string]string{}, nil
 		}

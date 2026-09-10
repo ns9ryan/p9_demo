@@ -1,11 +1,8 @@
 package svc
 
 import (
-	"context"
-
 	"oa.98ent.com/p9/core/api/internal/config"
 	"oa.98ent.com/p9/core/common/coreadapt"
-	"oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/common/middleware"
 	"oa.98ent.com/p9/core/rpc/coreclient"
 
@@ -15,28 +12,21 @@ import (
 
 type ServiceContext struct {
 	Config    config.Config
-	Core      coreclient.Core
-	Authority rest.Middleware
-	Jwt       rest.Middleware
-	ActionLog rest.Middleware
-	ErrorLog  rest.Middleware
+	Core      coreclient.Core // Core RPC客户端
+	Authority rest.Middleware // 权限中间件
+	Jwt       rest.Middleware // JWT中间件
+	ActionLog rest.Middleware // 操作日志中间件
+	ErrorLog  rest.Middleware // 错误日志中间件
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	cli := zrpc.MustNewClient(c.CoreRpc)
 	coreCli := coreclient.NewCore(cli)
+	// 权限中间件适配器
 	auth := coreadapt.Auth(coreCli)
-	i18n.SetDictLoader(func(ctx context.Context, group, lang string) (map[string]string, error) {
-		resp, err := coreCli.GetI18NDict(ctx, &coreclient.GetI18NDictReq{I18NGroup: group, Lang: lang})
-		if err != nil {
-			return nil, err
-		}
-		items := resp.GetItems()
-		if items == nil {
-			items = map[string]string{}
-		}
-		return items, nil
-	})
+	// 设置多语言字典加载器
+	coreadapt.SetDictLoader(coreCli)
+
 	return &ServiceContext{
 		Config:    c,
 		Core:      coreCli,

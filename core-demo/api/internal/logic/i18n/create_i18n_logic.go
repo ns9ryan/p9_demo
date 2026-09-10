@@ -30,6 +30,7 @@ func (l *CreateI18nLogic) CreateI18n(req *types.CreateI18nReq) (resp *types.I18n
 	if err != nil {
 		return nil, err
 	}
-	corei18n.Invalidate(req.I18nGroup, req.Lang)
+	corei18n.Invalidate(req.I18nCode, "", req.Lang)
+	corei18n.Invalidate(req.I18nCode, req.I18nGroup, req.Lang)
 	return convert.I18nInfo(out), nil
 }

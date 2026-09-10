@@ -49,6 +49,8 @@ type ApiInfo {
 	Id          int64  `json:"id"`
 	// Description | 描述
 	Description string `json:"description"`
+	// TransDescription | 翻译描述
+	TransDescription string `json:"trans_description"`
 	// API group | 分组
 	ApiGroup    string `json:"api_group"`
 	// Method | HTTP 方法

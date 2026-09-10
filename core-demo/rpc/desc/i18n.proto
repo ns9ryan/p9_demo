@@ -8,6 +8,7 @@ message I18nInfo {
   string value = 5;
   int64 created_at = 6;
   int64 updated_at = 7;
+  string i18n_code = 8;
 }
 
 message CreateI18nReq {
@@ -15,6 +16,7 @@ message CreateI18nReq {
   string trans_key = 2;
   string lang = 3;
   string value = 4;
+  string i18n_code = 5;
 }
 
 message UpdateI18nReq {
@@ -23,6 +25,7 @@ message UpdateI18nReq {
   optional string trans_key = 3;
   optional string lang = 4;
   optional string value = 5;
+  optional string i18n_code = 6;
 }
 
 message I18nListReq {
@@ -31,6 +34,7 @@ message I18nListReq {
   string i18n_group = 3;
   string trans_key = 4;
   string lang = 5;
+  string i18n_code = 6;
 }
 
 message I18nListResp {
@@ -39,8 +43,9 @@ message I18nListResp {
 }
 
 message GetI18nDictReq {
-  string i18n_group = 1;
+  string i18n_group = 1; // 空则下发全部组
   string lang = 2;
+  string i18n_code = 3;
 }
 
 message I18nDictResp {
@@ -52,6 +57,7 @@ message I18nItem {
   string trans_key = 2;
   string lang = 3;
   string value = 4;
+  string i18n_code = 5;
 }
 
 message UpdateI18nByKeyReq {
@@ -63,25 +69,25 @@ message I18nLangInfo {
   int64 id = 1;
   string lang = 2;
   int32 disabled = 3;
-  int32 is_default = 4;
   int64 created_at = 5;
   int64 updated_at = 6;
   string name = 7;
+  int32 sort_no = 8;
 }
 
 message CreateI18nLangReq {
   string lang = 1;
   int32 disabled = 2;
-  int32 is_default = 3;
   string name = 4;
+  int32 sort_no = 5;
 }
 
 message UpdateI18nLangReq {
   int64 id = 1;
   optional string lang = 2;
   optional int32 disabled = 3;
-  optional int32 is_default = 4;
   optional string name = 5;
+  optional int32 sort_no = 6;
 }
 
 message I18nLangListReq {
@@ -94,6 +100,11 @@ message I18nLangListReq {
 message I18nLangListResp {
   repeated I18nLangInfo list = 1;
   int64 total = 2;
+}
+
+message ReorderI18nLangReq {
+  int64 id = 1;
+  int64 target_id = 2;
 }
 
 service Core {
@@ -118,6 +129,8 @@ service Core {
   rpc deleteI18nLang (IDsReq) returns (Empty);
   // group: i18n
   rpc getI18nLangList (I18nLangListReq) returns (I18nLangListResp);
+  // group: i18n
+  rpc reorderI18nLang (ReorderI18nLangReq) returns (Empty);
   // group: i18n
   rpc getEnabledI18nLangs (Empty) returns (I18nLangListResp);
 }

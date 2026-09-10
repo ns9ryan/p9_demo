@@ -45,7 +45,7 @@ func TestTG(t *testing.T) {
 		SetDictLoader(nil)
 		InvalidateAll()
 	})
-	SetDictLoader(func(_ context.Context, group, lang string) (map[string]string, error) {
+	SetDictLoader(func(_ context.Context, code, group, lang string) (map[string]string, error) {
 		if group != GroupMenu {
 			return map[string]string{}, nil
 		}
@@ -59,16 +59,16 @@ func TestTG(t *testing.T) {
 	})
 	zh := WithLang(context.Background(), LangZH)
 	en := WithLang(context.Background(), LangEN)
-	if got := TG(zh, GroupMenu, "route.dashboard"); got != "工作台" {
+	if got := TG(zh, "platform", GroupMenu, "route.dashboard"); got != "工作台" {
 		t.Fatalf("zh=%q", got)
 	}
-	if got := TG(en, GroupMenu, "route.dashboard"); got != "Dashboard" {
+	if got := TG(en, "platform", GroupMenu, "route.dashboard"); got != "Dashboard" {
 		t.Fatalf("en=%q", got)
 	}
-	if got := TG(zh, GroupMenu, "legacy"); got != "旧" {
+	if got := TG(zh, "platform", GroupMenu, "legacy"); got != "旧" {
 		t.Fatalf("short key=%q", got)
 	}
-	if got := TG(zh, GroupMenu, "missing"); got != "missing" {
+	if got := TG(zh, "platform", GroupMenu, "missing"); got != "missing" {
 		t.Fatalf("missing=%q", got)
 	}
 }

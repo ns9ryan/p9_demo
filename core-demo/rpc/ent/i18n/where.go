@@ -64,6 +64,11 @@ func UpdatedAt(v time.Time) predicate.I18n {
 	return predicate.I18n(sql.FieldEQ(FieldUpdatedAt, v))
 }
 
+// I18nCode applies equality check predicate on the "i18n_code" field. It's identical to I18nCodeEQ.
+func I18nCode(v string) predicate.I18n {
+	return predicate.I18n(sql.FieldEQ(FieldI18nCode, v))
+}
+
 // I18nGroup applies equality check predicate on the "i18n_group" field. It's identical to I18nGroupEQ.
 func I18nGroup(v string) predicate.I18n {
 	return predicate.I18n(sql.FieldEQ(FieldI18nGroup, v))
@@ -162,6 +167,71 @@ func UpdatedAtLT(v time.Time) predicate.I18n {
 // UpdatedAtLTE applies the LTE predicate on the "updated_at" field.
 func UpdatedAtLTE(v time.Time) predicate.I18n {
 	return predicate.I18n(sql.FieldLTE(FieldUpdatedAt, v))
+}
+
+// I18nCodeEQ applies the EQ predicate on the "i18n_code" field.
+func I18nCodeEQ(v string) predicate.I18n {
+	return predicate.I18n(sql.FieldEQ(FieldI18nCode, v))
+}
+
+// I18nCodeNEQ applies the NEQ predicate on the "i18n_code" field.
+func I18nCodeNEQ(v string) predicate.I18n {
+	return predicate.I18n(sql.FieldNEQ(FieldI18nCode, v))
+}
+
+// I18nCodeIn applies the In predicate on the "i18n_code" field.
+func I18nCodeIn(vs ...string) predicate.I18n {
+	return predicate.I18n(sql.FieldIn(FieldI18nCode, vs...))
+}
+
+// I18nCodeNotIn applies the NotIn predicate on the "i18n_code" field.
+func I18nCodeNotIn(vs ...string) predicate.I18n {
+	return predicate.I18n(sql.FieldNotIn(FieldI18nCode, vs...))
+}
+
+// I18nCodeGT applies the GT predicate on the "i18n_code" field.
+func I18nCodeGT(v string) predicate.I18n {
+	return predicate.I18n(sql.FieldGT(FieldI18nCode, v))
+}
+
+// I18nCodeGTE applies the GTE predicate on the "i18n_code" field.
+func I18nCodeGTE(v string) predicate.I18n {
+	return predicate.I18n(sql.FieldGTE(FieldI18nCode, v))
+}
+
+// I18nCodeLT applies the LT predicate on the "i18n_code" field.
+func I18nCodeLT(v string) predicate.I18n {
+	return predicate.I18n(sql.FieldLT(FieldI18nCode, v))
+}
+
+// I18nCodeLTE applies the LTE predicate on the "i18n_code" field.
+func I18nCodeLTE(v string) predicate.I18n {
+	return predicate.I18n(sql.FieldLTE(FieldI18nCode, v))
+}
+
+// I18nCodeContains applies the Contains predicate on the "i18n_code" field.
+func I18nCodeContains(v string) predicate.I18n {
+	return predicate.I18n(sql.FieldContains(FieldI18nCode, v))
+}
+
+// I18nCodeHasPrefix applies the HasPrefix predicate on the "i18n_code" field.
+func I18nCodeHasPrefix(v string) predicate.I18n {
+	return predicate.I18n(sql.FieldHasPrefix(FieldI18nCode, v))
+}
+
+// I18nCodeHasSuffix applies the HasSuffix predicate on the "i18n_code" field.
+func I18nCodeHasSuffix(v string) predicate.I18n {
+	return predicate.I18n(sql.FieldHasSuffix(FieldI18nCode, v))
+}
+
+// I18nCodeEqualFold applies the EqualFold predicate on the "i18n_code" field.
+func I18nCodeEqualFold(v string) predicate.I18n {
+	return predicate.I18n(sql.FieldEqualFold(FieldI18nCode, v))
+}
+
+// I18nCodeContainsFold applies the ContainsFold predicate on the "i18n_code" field.
+func I18nCodeContainsFold(v string) predicate.I18n {
+	return predicate.I18n(sql.FieldContainsFold(FieldI18nCode, v))
 }
 
 // I18nGroupEQ applies the EQ predicate on the "i18n_group" field.

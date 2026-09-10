@@ -179,8 +179,9 @@ var (
 		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "created_at", Type: field.TypeTime, Default: schema.Expr("CURRENT_TIMESTAMP")},
 		{Name: "updated_at", Type: field.TypeTime, Default: schema.Expr("CURRENT_TIMESTAMP")},
+		{Name: "i18n_code", Type: field.TypeString, Size: 64, Default: "platform"},
 		{Name: "i18n_group", Type: field.TypeString, Size: 64},
-		{Name: "trans_key", Type: field.TypeString, Size: 192},
+		{Name: "trans_key", Type: field.TypeString, Size: 255},
 		{Name: "lang", Type: field.TypeString, Size: 16},
 		{Name: "value", Type: field.TypeString, Size: 1024},
 	}
@@ -191,14 +192,14 @@ var (
 		PrimaryKey: []*schema.Column{SysI18nColumns[0]},
 		Indexes: []*schema.Index{
 			{
-				Name:    "uk_sys_i18n_trans_key_lang",
+				Name:    "uk_sys_i18n_code_key_lang",
 				Unique:  true,
-				Columns: []*schema.Column{SysI18nColumns[4], SysI18nColumns[5]},
+				Columns: []*schema.Column{SysI18nColumns[3], SysI18nColumns[5], SysI18nColumns[6]},
 			},
 			{
-				Name:    "idx_sys_i18n_group_lang",
+				Name:    "idx_sys_i18n_code_group_lang",
 				Unique:  false,
-				Columns: []*schema.Column{SysI18nColumns[3], SysI18nColumns[5]},
+				Columns: []*schema.Column{SysI18nColumns[3], SysI18nColumns[4], SysI18nColumns[6]},
 			},
 		},
 	}
@@ -210,7 +211,7 @@ var (
 		{Name: "lang", Type: field.TypeString, Size: 16},
 		{Name: "name", Type: field.TypeString, Size: 64, Default: ""},
 		{Name: "disabled", Type: field.TypeInt16, Default: 0},
-		{Name: "is_default", Type: field.TypeInt16, Default: 0},
+		{Name: "sort_no", Type: field.TypeInt, Default: 0},
 	}
 	// SysI18nLangTable holds the schema information for the "sys_i18n_lang" table.
 	SysI18nLangTable = &schema.Table{

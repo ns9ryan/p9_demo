@@ -83,24 +83,24 @@ func (_u *I18nLangUpdate) AddDisabled(v int16) *I18nLangUpdate {
 	return _u
 }
 
-// SetIsDefault sets the "is_default" field.
-func (_u *I18nLangUpdate) SetIsDefault(v int16) *I18nLangUpdate {
-	_u.mutation.ResetIsDefault()
-	_u.mutation.SetIsDefault(v)
+// SetSortNo sets the "sort_no" field.
+func (_u *I18nLangUpdate) SetSortNo(v int) *I18nLangUpdate {
+	_u.mutation.ResetSortNo()
+	_u.mutation.SetSortNo(v)
 	return _u
 }
 
-// SetNillableIsDefault sets the "is_default" field if the given value is not nil.
-func (_u *I18nLangUpdate) SetNillableIsDefault(v *int16) *I18nLangUpdate {
+// SetNillableSortNo sets the "sort_no" field if the given value is not nil.
+func (_u *I18nLangUpdate) SetNillableSortNo(v *int) *I18nLangUpdate {
 	if v != nil {
-		_u.SetIsDefault(*v)
+		_u.SetSortNo(*v)
 	}
 	return _u
 }
 
-// AddIsDefault adds value to the "is_default" field.
-func (_u *I18nLangUpdate) AddIsDefault(v int16) *I18nLangUpdate {
-	_u.mutation.AddIsDefault(v)
+// AddSortNo adds value to the "sort_no" field.
+func (_u *I18nLangUpdate) AddSortNo(v int) *I18nLangUpdate {
+	_u.mutation.AddSortNo(v)
 	return _u
 }
 
@@ -187,11 +187,11 @@ func (_u *I18nLangUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.AddedDisabled(); ok {
 		_spec.AddField(i18nlang.FieldDisabled, field.TypeInt16, value)
 	}
-	if value, ok := _u.mutation.IsDefault(); ok {
-		_spec.SetField(i18nlang.FieldIsDefault, field.TypeInt16, value)
+	if value, ok := _u.mutation.SortNo(); ok {
+		_spec.SetField(i18nlang.FieldSortNo, field.TypeInt, value)
 	}
-	if value, ok := _u.mutation.AddedIsDefault(); ok {
-		_spec.AddField(i18nlang.FieldIsDefault, field.TypeInt16, value)
+	if value, ok := _u.mutation.AddedSortNo(); ok {
+		_spec.AddField(i18nlang.FieldSortNo, field.TypeInt, value)
 	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -268,24 +268,24 @@ func (_u *I18nLangUpdateOne) AddDisabled(v int16) *I18nLangUpdateOne {
 	return _u
 }
 
-// SetIsDefault sets the "is_default" field.
-func (_u *I18nLangUpdateOne) SetIsDefault(v int16) *I18nLangUpdateOne {
-	_u.mutation.ResetIsDefault()
-	_u.mutation.SetIsDefault(v)
+// SetSortNo sets the "sort_no" field.
+func (_u *I18nLangUpdateOne) SetSortNo(v int) *I18nLangUpdateOne {
+	_u.mutation.ResetSortNo()
+	_u.mutation.SetSortNo(v)
 	return _u
 }
 
-// SetNillableIsDefault sets the "is_default" field if the given value is not nil.
-func (_u *I18nLangUpdateOne) SetNillableIsDefault(v *int16) *I18nLangUpdateOne {
+// SetNillableSortNo sets the "sort_no" field if the given value is not nil.
+func (_u *I18nLangUpdateOne) SetNillableSortNo(v *int) *I18nLangUpdateOne {
 	if v != nil {
-		_u.SetIsDefault(*v)
+		_u.SetSortNo(*v)
 	}
 	return _u
 }
 
-// AddIsDefault adds value to the "is_default" field.
-func (_u *I18nLangUpdateOne) AddIsDefault(v int16) *I18nLangUpdateOne {
-	_u.mutation.AddIsDefault(v)
+// AddSortNo adds value to the "sort_no" field.
+func (_u *I18nLangUpdateOne) AddSortNo(v int) *I18nLangUpdateOne {
+	_u.mutation.AddSortNo(v)
 	return _u
 }
 
@@ -402,11 +402,11 @@ func (_u *I18nLangUpdateOne) sqlSave(ctx context.Context) (_node *I18nLang, err 
 	if value, ok := _u.mutation.AddedDisabled(); ok {
 		_spec.AddField(i18nlang.FieldDisabled, field.TypeInt16, value)
 	}
-	if value, ok := _u.mutation.IsDefault(); ok {
-		_spec.SetField(i18nlang.FieldIsDefault, field.TypeInt16, value)
+	if value, ok := _u.mutation.SortNo(); ok {
+		_spec.SetField(i18nlang.FieldSortNo, field.TypeInt, value)
 	}
-	if value, ok := _u.mutation.AddedIsDefault(); ok {
-		_spec.AddField(i18nlang.FieldIsDefault, field.TypeInt16, value)
+	if value, ok := _u.mutation.AddedSortNo(); ok {
+		_spec.AddField(i18nlang.FieldSortNo, field.TypeInt, value)
 	}
 	_node = &I18nLang{config: _u.config}
 	_spec.Assign = _node.assignValues

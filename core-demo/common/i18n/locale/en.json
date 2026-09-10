@@ -77,8 +77,6 @@
     "langNotFound": "language not found",
     "langNotSupported": "language is not in the supported list",
     "langCreateFailed": "create language failed",
-    "cannotDisableDefault": "cannot disable or unset default language",
-    "cannotDeleteDefault": "cannot delete default language",
     "cannotChangeLangWithEntries": "cannot change lang while translations exist",
     "cannotDeleteLangWithEntries": "cannot delete language while translations exist"
   },

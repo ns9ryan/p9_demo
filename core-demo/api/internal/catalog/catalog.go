@@ -73,10 +73,11 @@ func AdminReq() *coreclient.RegisterCatalogReq {
 			{Path: "/admin/i18n/list", Method: http.MethodPost, Description: "api.i18nList", ApiGroup: "i18n", ServiceName: "core-api"},
 			{Path: "/admin/i18n/lang/create", Method: http.MethodPost, Description: "api.i18nLangCreate", ApiGroup: "i18n", ServiceName: "core-api"},
 			{Path: "/admin/i18n/lang/update", Method: http.MethodPost, Description: "api.i18nLangUpdate", ApiGroup: "i18n", ServiceName: "core-api"},
+			{Path: "/admin/i18n/lang/reorder", Method: http.MethodPost, Description: "api.i18nLangReorder", ApiGroup: "i18n", ServiceName: "core-api"},
 			{Path: "/admin/i18n/lang/delete", Method: http.MethodPost, Description: "api.i18nLangDelete", ApiGroup: "i18n", ServiceName: "core-api"},
 			{Path: "/admin/i18n/lang/list", Method: http.MethodPost, Description: "api.i18nLangList", ApiGroup: "i18n", ServiceName: "core-api"},
 		},
-		I18N:      append(menuI18n(), apiI18n()...),
+		I18N:      append(append(menuI18n(), apiI18n()...), frontI18n()...),
 		I18NLangs: langSeeds(),
 	}
 }

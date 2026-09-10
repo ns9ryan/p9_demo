@@ -57,6 +57,8 @@ type MenuInfo {
 	Redirect   string `json:"redirect"`
 	// Title | 标题
 	Title      string `json:"title"`
+	// TransTitle | 翻译标题
+	TransTitle string `json:"trans_title"`
 	// Icon | 图标
 	Icon       string `json:"icon"`
 	// Permission | 权限码

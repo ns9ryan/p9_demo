@@ -5,6 +5,8 @@ Port: 18000
 Log:
   Mode: console
   Level: info
+# 开发模式
+Mode: dev
 
 CROSConf:
   Address: '*'

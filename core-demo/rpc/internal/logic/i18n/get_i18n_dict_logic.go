@@ -25,7 +25,7 @@ func NewGetI18nDictLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetI1
 }
 
 func (l *GetI18nDictLogic) GetI18NDict(in *core.GetI18NDictReq) (*core.I18NDictResp, error) {
-	items, err := l.svcCtx.Deps.GetI18nDict(l.ctx, in.GetI18NGroup(), in.GetLang())
+	items, err := l.svcCtx.Deps.GetI18nDict(l.ctx, in.GetI18NCode(), in.GetI18NGroup(), in.GetLang())
 	if err != nil {
 		return nil, xerr.RpcErr(err)
 	}

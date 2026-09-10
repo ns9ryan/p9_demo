@@ -27,8 +27,8 @@ type I18nLang struct {
 	Name string `json:"name,omitempty"`
 	// Disabled holds the value of the "disabled" field.
 	Disabled int16 `json:"disabled,omitempty"`
-	// IsDefault holds the value of the "is_default" field.
-	IsDefault    int16 `json:"is_default,omitempty"`
+	// SortNo holds the value of the "sort_no" field.
+	SortNo       int `json:"sort_no,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -37,7 +37,7 @@ func (*I18nLang) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case i18nlang.FieldID, i18nlang.FieldDisabled, i18nlang.FieldIsDefault:
+		case i18nlang.FieldID, i18nlang.FieldDisabled, i18nlang.FieldSortNo:
 			values[i] = new(sql.NullInt64)
 		case i18nlang.FieldLang, i18nlang.FieldName:
 			values[i] = new(sql.NullString)
@@ -94,11 +94,11 @@ func (_m *I18nLang) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.Disabled = int16(value.Int64)
 			}
-		case i18nlang.FieldIsDefault:
+		case i18nlang.FieldSortNo:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field is_default", values[i])
+				return fmt.Errorf("unexpected type %T for field sort_no", values[i])
 			} else if value.Valid {
-				_m.IsDefault = int16(value.Int64)
+				_m.SortNo = int(value.Int64)
 			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
@@ -151,8 +151,8 @@ func (_m *I18nLang) String() string {
 	builder.WriteString("disabled=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Disabled))
 	builder.WriteString(", ")
-	builder.WriteString("is_default=")
-	builder.WriteString(fmt.Sprintf("%v", _m.IsDefault))
+	builder.WriteString("sort_no=")
+	builder.WriteString(fmt.Sprintf("%v", _m.SortNo))
 	builder.WriteByte(')')
 	return builder.String()
 }

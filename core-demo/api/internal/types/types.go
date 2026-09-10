@@ -387,6 +387,8 @@ type MenuInfo struct {
 	Redirect string `json:"redirect"`
 	// Title | 标题
 	Title string `json:"title"`
+	// TransTitle | 翻译标题
+	TransTitle string `json:"trans_title"`
 	// Icon | 图标
 	Icon string `json:"icon"`
 	// Permission | 权限码
@@ -465,6 +467,8 @@ type UpdateMenuReq struct {
 type I18nInfo struct {
 	// ID | 词条ID
 	Id int64 `json:"id"`
+	// Site | 站点编码
+	I18nCode string `json:"i18n_code"`
 	// Group | 分组
 	I18nGroup string `json:"i18n_group"`
 	// Key | 词条key
@@ -481,6 +485,8 @@ type I18nInfo struct {
 
 // Create i18n request | 创建多语言
 type CreateI18nReq struct {
+	// Site | 站点编码，空则 core
+	I18nCode string `json:"i18n_code,optional"`
 	// Group | 分组
 	I18nGroup string `json:"i18n_group"`
 	// Key | 词条key
@@ -495,6 +501,8 @@ type CreateI18nReq struct {
 type UpdateI18nReq struct {
 	// ID | 词条ID
 	Id int64 `json:"id"`
+	// Site | 站点编码
+	I18nCode string `json:"i18n_code,optional"`
 	// Group | 分组
 	I18nGroup string `json:"i18n_group,optional"`
 	// Key | 词条key
@@ -511,6 +519,8 @@ type I18nListReq struct {
 	Page int32 `json:"page,optional"`
 	// Page size | 每页条数
 	PageSize int32 `json:"page_size,optional"`
+	// Site | 站点编码
+	I18nCode string `json:"i18n_code,optional"`
 	// Group | 分组
 	I18nGroup string `json:"i18n_group,optional"`
 	// Key | 词条key
@@ -525,6 +535,22 @@ type I18nListResp struct {
 	List []I18nInfo `json:"list"`
 	// Total | 总数
 	Total int64 `json:"total"`
+}
+
+// Get i18n dict request | 词条下发
+type GetI18nDictReq struct {
+	// Site | 站点编码
+	I18nCode string `form:"i18n_code"`
+	// Group | 分组，空则下发全部组
+	I18nGroup string `form:"i18n_group,optional"`
+	// Lang | 语言，空则从ctx取
+	Lang string `form:"lang,optional"`
+}
+
+// I18n dict response | 词条下发，trans_key -> value
+type I18nDictResp struct {
+	// Items | 词条
+	Items map[string]string `json:"items"`
 }
 
 // Update i18n by key request | 按词条key更新多语言
@@ -545,8 +571,8 @@ type I18nLangInfo struct {
 	Name string `json:"name"`
 	// Disabled | 是否停用
 	Disabled int32 `json:"disabled"`
-	// Default | 是否默认
-	IsDefault int32 `json:"is_default"`
+	// Sort | 排序，越小越前
+	SortNo int32 `json:"sort_no"`
 	// Created at unix | 创建时间
 	CreatedAt int64 `json:"created_at"`
 	// Updated at unix | 更新时间
@@ -561,8 +587,8 @@ type CreateI18nLangReq struct {
 	Name string `json:"name"`
 	// Disabled | 是否停用
 	Disabled int32 `json:"disabled,optional"`
-	// Default | 是否默认
-	IsDefault int32 `json:"is_default,optional"`
+	// Sort | 排序，越小越前
+	SortNo int32 `json:"sort_no,optional"`
 }
 
 // Update i18n lang request | 更新支持的语言
@@ -575,8 +601,16 @@ type UpdateI18nLangReq struct {
 	Name string `json:"name,optional"`
 	// Disabled | 是否停用
 	Disabled *int32 `json:"disabled,optional"`
-	// Default | 是否默认
-	IsDefault *int32 `json:"is_default,optional"`
+	// Sort | 排序，越小越前
+	SortNo *int32 `json:"sort_no,optional"`
+}
+
+// Reorder i18n lang request | 调整语言排序
+type ReorderI18nLangReq struct {
+	// ID | 被移动的语言ID
+	Id int64 `json:"id"`
+	// Target ID | 目标位置语言ID
+	TargetId int64 `json:"target_id"`
 }
 
 // I18n lang list request | 支持的语言列表
@@ -639,6 +673,8 @@ type ApiInfo struct {
 	Id int64 `json:"id"`
 	// Description | 描述
 	Description string `json:"description"`
+	// TransDescription | 翻译描述
+	TransDescription string `json:"trans_description"`
 	// API group | 分组
 	ApiGroup string `json:"api_group"`
 	// Method | HTTP 方法
