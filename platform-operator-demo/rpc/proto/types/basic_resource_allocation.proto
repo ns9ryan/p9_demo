@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package basicresourceallocation;
+
+option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/operator/basicresourceallocation";
+
+// 基础资源分配汇总信息
+message BasicResourceAllocationInfo {
+  // 分站ID
+  int64 operator_id = 1;
+  // 分站编码
+  string operator_code = 2;
+  // 分站名称
+  string operator_name = 3;
+  // 已分配语言数量
+  int64 language_count = 4;
+  // 已分配经营地区数量
+  int64 region_count = 5;
+  // 已分配代理子线路数量
+  int64 agent_line_count = 6;
+}
+
+// 获取基础资源分配列表请求
+message ListBasicResourceAllocationsRequest {
+  // 页码, 从1开始
+  int64 page = 1;
+  // 每页数量
+  int64 page_size = 2;
+  // 关键词, 匹配分站编码或名称
+  optional string keyword = 3;
+}
+
+// 获取基础资源分配列表响应
+message ListBasicResourceAllocationsResponse {
+  // 数据总数
+  int64 total = 1;
+  // 基础资源分配列表
+  repeated BasicResourceAllocationInfo list = 2;
+}

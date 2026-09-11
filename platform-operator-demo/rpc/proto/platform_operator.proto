@@ -8,6 +8,7 @@ import "types/ping.proto";
 import "types/operator.proto";
 import "types/profile.proto";
 import "types/domain.proto";
+import "types/basic_resource_allocation.proto";
 import "types/language_allocation.proto";
 import "types/region_allocation.proto";
 import "types/agent_line_allocation.proto";
@@ -67,6 +68,12 @@ service DomainService {
 
   // 删除域名
   rpc Delete(domain.DeleteDomainRequest) returns (domain.DeleteDomainResponse);
+}
+
+// 分站基础资源分配服务
+service BasicResourceAllocationService {
+  // 获取基础资源分配列表
+  rpc List(basicresourceallocation.ListBasicResourceAllocationsRequest) returns (basicresourceallocation.ListBasicResourceAllocationsResponse);
 }
 
 // 分站语言分配服务

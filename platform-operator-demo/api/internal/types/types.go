@@ -10,6 +10,15 @@ type AgentLineAllocationInfo struct {
 	AllocatedAt   *int64 `json:"allocated_at,optional"`
 }
 
+type BasicResourceAllocationInfo struct {
+	OperatorId     int64  `json:"operator_id"`
+	OperatorCode   string `json:"operator_code"`
+	OperatorName   string `json:"operator_name"`
+	LanguageCount  int64  `json:"language_count"`
+	RegionCount    int64  `json:"region_count"`
+	AgentLineCount int64  `json:"agent_line_count"`
+}
+
 type CompleteOperatorRequest struct {
 	Id int64 `json:"id" validate:"required,gt=0"`
 }
@@ -117,6 +126,16 @@ type ListAgentLineAllocationsRequest struct {
 
 type ListAgentLineAllocationsResponse struct {
 	List []AgentLineAllocationInfo `json:"list"`
+}
+
+type ListBasicResourceAllocationsRequest struct {
+	PageRequest
+	Keyword *string `form:"keyword,optional" validate:"omitempty,max=100"`
+}
+
+type ListBasicResourceAllocationsResponse struct {
+	Total int64                         `json:"total"`
+	List  []BasicResourceAllocationInfo `json:"list"`
 }
 
 type ListDomainsRequest struct {

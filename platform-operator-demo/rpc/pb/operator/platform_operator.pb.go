@@ -10,6 +10,7 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	agentlineallocation "oa.98ent.com/p9/platform-operator/rpc/pb/operator/agentlineallocation"
+	basicresourceallocation "oa.98ent.com/p9/platform-operator/rpc/pb/operator/basicresourceallocation"
 	domain "oa.98ent.com/p9/platform-operator/rpc/pb/operator/domain"
 	languageallocation "oa.98ent.com/p9/platform-operator/rpc/pb/operator/languageallocation"
 	operator "oa.98ent.com/p9/platform-operator/rpc/pb/operator/operator"
@@ -31,7 +32,7 @@ var File_platform_operator_proto protoreflect.FileDescriptor
 
 const file_platform_operator_proto_rawDesc = "" +
 	"\n" +
-	"\x17platform_operator.proto\x12\x11platform_operator\x1a\x10types/ping.proto\x1a\x14types/operator.proto\x1a\x13types/profile.proto\x1a\x12types/domain.proto\x1a\x1ftypes/language_allocation.proto\x1a\x1dtypes/region_allocation.proto\x1a!types/agent_line_allocation.proto2<\n" +
+	"\x17platform_operator.proto\x12\x11platform_operator\x1a\x10types/ping.proto\x1a\x14types/operator.proto\x1a\x13types/profile.proto\x1a\x12types/domain.proto\x1a%types/basic_resource_allocation.proto\x1a\x1ftypes/language_allocation.proto\x1a\x1dtypes/region_allocation.proto\x1a!types/agent_line_allocation.proto2<\n" +
 	"\vPingService\x12-\n" +
 	"\x04Ping\x12\x11.ping.PingRequest\x1a\x12.ping.PingResponse2\xdb\x03\n" +
 	"\x0fOperatorService\x12K\n" +
@@ -50,7 +51,9 @@ const file_platform_operator_proto_rawDesc = "" +
 	"\x06Update\x12\x1b.domain.UpdateDomainRequest\x1a\x1c.domain.UpdateDomainResponse\x12:\n" +
 	"\x03Get\x12\x18.domain.GetDomainRequest\x1a\x19.domain.GetDomainResponse\x12?\n" +
 	"\x04List\x12\x1a.domain.ListDomainsRequest\x1a\x1b.domain.ListDomainsResponse\x12C\n" +
-	"\x06Delete\x12\x1b.domain.DeleteDomainRequest\x1a\x1c.domain.DeleteDomainResponse2\xfd\x01\n" +
+	"\x06Delete\x12\x1b.domain.DeleteDomainRequest\x1a\x1c.domain.DeleteDomainResponse2\xa6\x01\n" +
+	"\x1eBasicResourceAllocationService\x12\x83\x01\n" +
+	"\x04List\x12<.basicresourceallocation.ListBasicResourceAllocationsRequest\x1a=.basicresourceallocation.ListBasicResourceAllocationsResponse2\xfd\x01\n" +
 	"\x19LanguageAllocationService\x12o\n" +
 	"\x04List\x122.languageallocation.ListLanguageAllocationsRequest\x1a3.languageallocation.ListLanguageAllocationsResponse\x12o\n" +
 	"\x04Save\x122.languageallocation.SaveLanguageAllocationsRequest\x1a3.languageallocation.SaveLanguageAllocationsResponse2\xeb\x01\n" +
@@ -62,48 +65,50 @@ const file_platform_operator_proto_rawDesc = "" +
 	"\x04Save\x124.agentlineallocation.SaveAgentLineAllocationsRequest\x1a5.agentlineallocation.SaveAgentLineAllocationsResponseB3Z1oa.98ent.com/p9/platform-operator/rpc/pb/operatorb\x06proto3"
 
 var file_platform_operator_proto_goTypes = []any{
-	(*ping.PingRequest)(nil),                                     // 0: ping.PingRequest
-	(*operator.CreateOperatorRequest)(nil),                       // 1: operator.CreateOperatorRequest
-	(*operator.UpdateOperatorRequest)(nil),                       // 2: operator.UpdateOperatorRequest
-	(*operator.GetOperatorRequest)(nil),                          // 3: operator.GetOperatorRequest
-	(*operator.ListOperatorsRequest)(nil),                        // 4: operator.ListOperatorsRequest
-	(*operator.CompleteOperatorRequest)(nil),                     // 5: operator.CompleteOperatorRequest
-	(*operator.PublishOperatorRequest)(nil),                      // 6: operator.PublishOperatorRequest
-	(*profile.CreateOperatorProfileRequest)(nil),                 // 7: profile.CreateOperatorProfileRequest
-	(*profile.UpdateOperatorProfileRequest)(nil),                 // 8: profile.UpdateOperatorProfileRequest
-	(*profile.GetOperatorProfileRequest)(nil),                    // 9: profile.GetOperatorProfileRequest
-	(*domain.CreateDomainRequest)(nil),                           // 10: domain.CreateDomainRequest
-	(*domain.UpdateDomainRequest)(nil),                           // 11: domain.UpdateDomainRequest
-	(*domain.GetDomainRequest)(nil),                              // 12: domain.GetDomainRequest
-	(*domain.ListDomainsRequest)(nil),                            // 13: domain.ListDomainsRequest
-	(*domain.DeleteDomainRequest)(nil),                           // 14: domain.DeleteDomainRequest
-	(*languageallocation.ListLanguageAllocationsRequest)(nil),    // 15: languageallocation.ListLanguageAllocationsRequest
-	(*languageallocation.SaveLanguageAllocationsRequest)(nil),    // 16: languageallocation.SaveLanguageAllocationsRequest
-	(*regionallocation.ListRegionAllocationsRequest)(nil),        // 17: regionallocation.ListRegionAllocationsRequest
-	(*regionallocation.SaveRegionAllocationsRequest)(nil),        // 18: regionallocation.SaveRegionAllocationsRequest
-	(*agentlineallocation.ListAgentLineAllocationsRequest)(nil),  // 19: agentlineallocation.ListAgentLineAllocationsRequest
-	(*agentlineallocation.SaveAgentLineAllocationsRequest)(nil),  // 20: agentlineallocation.SaveAgentLineAllocationsRequest
-	(*ping.PingResponse)(nil),                                    // 21: ping.PingResponse
-	(*operator.CreateOperatorResponse)(nil),                      // 22: operator.CreateOperatorResponse
-	(*operator.UpdateOperatorResponse)(nil),                      // 23: operator.UpdateOperatorResponse
-	(*operator.GetOperatorResponse)(nil),                         // 24: operator.GetOperatorResponse
-	(*operator.ListOperatorsResponse)(nil),                       // 25: operator.ListOperatorsResponse
-	(*operator.CompleteOperatorResponse)(nil),                    // 26: operator.CompleteOperatorResponse
-	(*operator.PublishOperatorResponse)(nil),                     // 27: operator.PublishOperatorResponse
-	(*profile.CreateOperatorProfileResponse)(nil),                // 28: profile.CreateOperatorProfileResponse
-	(*profile.UpdateOperatorProfileResponse)(nil),                // 29: profile.UpdateOperatorProfileResponse
-	(*profile.GetOperatorProfileResponse)(nil),                   // 30: profile.GetOperatorProfileResponse
-	(*domain.CreateDomainResponse)(nil),                          // 31: domain.CreateDomainResponse
-	(*domain.UpdateDomainResponse)(nil),                          // 32: domain.UpdateDomainResponse
-	(*domain.GetDomainResponse)(nil),                             // 33: domain.GetDomainResponse
-	(*domain.ListDomainsResponse)(nil),                           // 34: domain.ListDomainsResponse
-	(*domain.DeleteDomainResponse)(nil),                          // 35: domain.DeleteDomainResponse
-	(*languageallocation.ListLanguageAllocationsResponse)(nil),   // 36: languageallocation.ListLanguageAllocationsResponse
-	(*languageallocation.SaveLanguageAllocationsResponse)(nil),   // 37: languageallocation.SaveLanguageAllocationsResponse
-	(*regionallocation.ListRegionAllocationsResponse)(nil),       // 38: regionallocation.ListRegionAllocationsResponse
-	(*regionallocation.SaveRegionAllocationsResponse)(nil),       // 39: regionallocation.SaveRegionAllocationsResponse
-	(*agentlineallocation.ListAgentLineAllocationsResponse)(nil), // 40: agentlineallocation.ListAgentLineAllocationsResponse
-	(*agentlineallocation.SaveAgentLineAllocationsResponse)(nil), // 41: agentlineallocation.SaveAgentLineAllocationsResponse
+	(*ping.PingRequest)(nil),                                             // 0: ping.PingRequest
+	(*operator.CreateOperatorRequest)(nil),                               // 1: operator.CreateOperatorRequest
+	(*operator.UpdateOperatorRequest)(nil),                               // 2: operator.UpdateOperatorRequest
+	(*operator.GetOperatorRequest)(nil),                                  // 3: operator.GetOperatorRequest
+	(*operator.ListOperatorsRequest)(nil),                                // 4: operator.ListOperatorsRequest
+	(*operator.CompleteOperatorRequest)(nil),                             // 5: operator.CompleteOperatorRequest
+	(*operator.PublishOperatorRequest)(nil),                              // 6: operator.PublishOperatorRequest
+	(*profile.CreateOperatorProfileRequest)(nil),                         // 7: profile.CreateOperatorProfileRequest
+	(*profile.UpdateOperatorProfileRequest)(nil),                         // 8: profile.UpdateOperatorProfileRequest
+	(*profile.GetOperatorProfileRequest)(nil),                            // 9: profile.GetOperatorProfileRequest
+	(*domain.CreateDomainRequest)(nil),                                   // 10: domain.CreateDomainRequest
+	(*domain.UpdateDomainRequest)(nil),                                   // 11: domain.UpdateDomainRequest
+	(*domain.GetDomainRequest)(nil),                                      // 12: domain.GetDomainRequest
+	(*domain.ListDomainsRequest)(nil),                                    // 13: domain.ListDomainsRequest
+	(*domain.DeleteDomainRequest)(nil),                                   // 14: domain.DeleteDomainRequest
+	(*basicresourceallocation.ListBasicResourceAllocationsRequest)(nil),  // 15: basicresourceallocation.ListBasicResourceAllocationsRequest
+	(*languageallocation.ListLanguageAllocationsRequest)(nil),            // 16: languageallocation.ListLanguageAllocationsRequest
+	(*languageallocation.SaveLanguageAllocationsRequest)(nil),            // 17: languageallocation.SaveLanguageAllocationsRequest
+	(*regionallocation.ListRegionAllocationsRequest)(nil),                // 18: regionallocation.ListRegionAllocationsRequest
+	(*regionallocation.SaveRegionAllocationsRequest)(nil),                // 19: regionallocation.SaveRegionAllocationsRequest
+	(*agentlineallocation.ListAgentLineAllocationsRequest)(nil),          // 20: agentlineallocation.ListAgentLineAllocationsRequest
+	(*agentlineallocation.SaveAgentLineAllocationsRequest)(nil),          // 21: agentlineallocation.SaveAgentLineAllocationsRequest
+	(*ping.PingResponse)(nil),                                            // 22: ping.PingResponse
+	(*operator.CreateOperatorResponse)(nil),                              // 23: operator.CreateOperatorResponse
+	(*operator.UpdateOperatorResponse)(nil),                              // 24: operator.UpdateOperatorResponse
+	(*operator.GetOperatorResponse)(nil),                                 // 25: operator.GetOperatorResponse
+	(*operator.ListOperatorsResponse)(nil),                               // 26: operator.ListOperatorsResponse
+	(*operator.CompleteOperatorResponse)(nil),                            // 27: operator.CompleteOperatorResponse
+	(*operator.PublishOperatorResponse)(nil),                             // 28: operator.PublishOperatorResponse
+	(*profile.CreateOperatorProfileResponse)(nil),                        // 29: profile.CreateOperatorProfileResponse
+	(*profile.UpdateOperatorProfileResponse)(nil),                        // 30: profile.UpdateOperatorProfileResponse
+	(*profile.GetOperatorProfileResponse)(nil),                           // 31: profile.GetOperatorProfileResponse
+	(*domain.CreateDomainResponse)(nil),                                  // 32: domain.CreateDomainResponse
+	(*domain.UpdateDomainResponse)(nil),                                  // 33: domain.UpdateDomainResponse
+	(*domain.GetDomainResponse)(nil),                                     // 34: domain.GetDomainResponse
+	(*domain.ListDomainsResponse)(nil),                                   // 35: domain.ListDomainsResponse
+	(*domain.DeleteDomainResponse)(nil),                                  // 36: domain.DeleteDomainResponse
+	(*basicresourceallocation.ListBasicResourceAllocationsResponse)(nil), // 37: basicresourceallocation.ListBasicResourceAllocationsResponse
+	(*languageallocation.ListLanguageAllocationsResponse)(nil),           // 38: languageallocation.ListLanguageAllocationsResponse
+	(*languageallocation.SaveLanguageAllocationsResponse)(nil),           // 39: languageallocation.SaveLanguageAllocationsResponse
+	(*regionallocation.ListRegionAllocationsResponse)(nil),               // 40: regionallocation.ListRegionAllocationsResponse
+	(*regionallocation.SaveRegionAllocationsResponse)(nil),               // 41: regionallocation.SaveRegionAllocationsResponse
+	(*agentlineallocation.ListAgentLineAllocationsResponse)(nil),         // 42: agentlineallocation.ListAgentLineAllocationsResponse
+	(*agentlineallocation.SaveAgentLineAllocationsResponse)(nil),         // 43: agentlineallocation.SaveAgentLineAllocationsResponse
 }
 var file_platform_operator_proto_depIdxs = []int32{
 	0,  // 0: platform_operator.PingService.Ping:input_type -> ping.PingRequest
@@ -121,35 +126,37 @@ var file_platform_operator_proto_depIdxs = []int32{
 	12, // 12: platform_operator.DomainService.Get:input_type -> domain.GetDomainRequest
 	13, // 13: platform_operator.DomainService.List:input_type -> domain.ListDomainsRequest
 	14, // 14: platform_operator.DomainService.Delete:input_type -> domain.DeleteDomainRequest
-	15, // 15: platform_operator.LanguageAllocationService.List:input_type -> languageallocation.ListLanguageAllocationsRequest
-	16, // 16: platform_operator.LanguageAllocationService.Save:input_type -> languageallocation.SaveLanguageAllocationsRequest
-	17, // 17: platform_operator.RegionAllocationService.List:input_type -> regionallocation.ListRegionAllocationsRequest
-	18, // 18: platform_operator.RegionAllocationService.Save:input_type -> regionallocation.SaveRegionAllocationsRequest
-	19, // 19: platform_operator.AgentLineAllocationService.List:input_type -> agentlineallocation.ListAgentLineAllocationsRequest
-	20, // 20: platform_operator.AgentLineAllocationService.Save:input_type -> agentlineallocation.SaveAgentLineAllocationsRequest
-	21, // 21: platform_operator.PingService.Ping:output_type -> ping.PingResponse
-	22, // 22: platform_operator.OperatorService.Create:output_type -> operator.CreateOperatorResponse
-	23, // 23: platform_operator.OperatorService.Update:output_type -> operator.UpdateOperatorResponse
-	24, // 24: platform_operator.OperatorService.Get:output_type -> operator.GetOperatorResponse
-	25, // 25: platform_operator.OperatorService.List:output_type -> operator.ListOperatorsResponse
-	26, // 26: platform_operator.OperatorService.Complete:output_type -> operator.CompleteOperatorResponse
-	27, // 27: platform_operator.OperatorService.Publish:output_type -> operator.PublishOperatorResponse
-	28, // 28: platform_operator.OperatorProfileService.Create:output_type -> profile.CreateOperatorProfileResponse
-	29, // 29: platform_operator.OperatorProfileService.Update:output_type -> profile.UpdateOperatorProfileResponse
-	30, // 30: platform_operator.OperatorProfileService.Get:output_type -> profile.GetOperatorProfileResponse
-	31, // 31: platform_operator.DomainService.Create:output_type -> domain.CreateDomainResponse
-	32, // 32: platform_operator.DomainService.Update:output_type -> domain.UpdateDomainResponse
-	33, // 33: platform_operator.DomainService.Get:output_type -> domain.GetDomainResponse
-	34, // 34: platform_operator.DomainService.List:output_type -> domain.ListDomainsResponse
-	35, // 35: platform_operator.DomainService.Delete:output_type -> domain.DeleteDomainResponse
-	36, // 36: platform_operator.LanguageAllocationService.List:output_type -> languageallocation.ListLanguageAllocationsResponse
-	37, // 37: platform_operator.LanguageAllocationService.Save:output_type -> languageallocation.SaveLanguageAllocationsResponse
-	38, // 38: platform_operator.RegionAllocationService.List:output_type -> regionallocation.ListRegionAllocationsResponse
-	39, // 39: platform_operator.RegionAllocationService.Save:output_type -> regionallocation.SaveRegionAllocationsResponse
-	40, // 40: platform_operator.AgentLineAllocationService.List:output_type -> agentlineallocation.ListAgentLineAllocationsResponse
-	41, // 41: platform_operator.AgentLineAllocationService.Save:output_type -> agentlineallocation.SaveAgentLineAllocationsResponse
-	21, // [21:42] is the sub-list for method output_type
-	0,  // [0:21] is the sub-list for method input_type
+	15, // 15: platform_operator.BasicResourceAllocationService.List:input_type -> basicresourceallocation.ListBasicResourceAllocationsRequest
+	16, // 16: platform_operator.LanguageAllocationService.List:input_type -> languageallocation.ListLanguageAllocationsRequest
+	17, // 17: platform_operator.LanguageAllocationService.Save:input_type -> languageallocation.SaveLanguageAllocationsRequest
+	18, // 18: platform_operator.RegionAllocationService.List:input_type -> regionallocation.ListRegionAllocationsRequest
+	19, // 19: platform_operator.RegionAllocationService.Save:input_type -> regionallocation.SaveRegionAllocationsRequest
+	20, // 20: platform_operator.AgentLineAllocationService.List:input_type -> agentlineallocation.ListAgentLineAllocationsRequest
+	21, // 21: platform_operator.AgentLineAllocationService.Save:input_type -> agentlineallocation.SaveAgentLineAllocationsRequest
+	22, // 22: platform_operator.PingService.Ping:output_type -> ping.PingResponse
+	23, // 23: platform_operator.OperatorService.Create:output_type -> operator.CreateOperatorResponse
+	24, // 24: platform_operator.OperatorService.Update:output_type -> operator.UpdateOperatorResponse
+	25, // 25: platform_operator.OperatorService.Get:output_type -> operator.GetOperatorResponse
+	26, // 26: platform_operator.OperatorService.List:output_type -> operator.ListOperatorsResponse
+	27, // 27: platform_operator.OperatorService.Complete:output_type -> operator.CompleteOperatorResponse
+	28, // 28: platform_operator.OperatorService.Publish:output_type -> operator.PublishOperatorResponse
+	29, // 29: platform_operator.OperatorProfileService.Create:output_type -> profile.CreateOperatorProfileResponse
+	30, // 30: platform_operator.OperatorProfileService.Update:output_type -> profile.UpdateOperatorProfileResponse
+	31, // 31: platform_operator.OperatorProfileService.Get:output_type -> profile.GetOperatorProfileResponse
+	32, // 32: platform_operator.DomainService.Create:output_type -> domain.CreateDomainResponse
+	33, // 33: platform_operator.DomainService.Update:output_type -> domain.UpdateDomainResponse
+	34, // 34: platform_operator.DomainService.Get:output_type -> domain.GetDomainResponse
+	35, // 35: platform_operator.DomainService.List:output_type -> domain.ListDomainsResponse
+	36, // 36: platform_operator.DomainService.Delete:output_type -> domain.DeleteDomainResponse
+	37, // 37: platform_operator.BasicResourceAllocationService.List:output_type -> basicresourceallocation.ListBasicResourceAllocationsResponse
+	38, // 38: platform_operator.LanguageAllocationService.List:output_type -> languageallocation.ListLanguageAllocationsResponse
+	39, // 39: platform_operator.LanguageAllocationService.Save:output_type -> languageallocation.SaveLanguageAllocationsResponse
+	40, // 40: platform_operator.RegionAllocationService.List:output_type -> regionallocation.ListRegionAllocationsResponse
+	41, // 41: platform_operator.RegionAllocationService.Save:output_type -> regionallocation.SaveRegionAllocationsResponse
+	42, // 42: platform_operator.AgentLineAllocationService.List:output_type -> agentlineallocation.ListAgentLineAllocationsResponse
+	43, // 43: platform_operator.AgentLineAllocationService.Save:output_type -> agentlineallocation.SaveAgentLineAllocationsResponse
+	22, // [22:44] is the sub-list for method output_type
+	0,  // [0:22] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name
@@ -168,7 +175,7 @@ func file_platform_operator_proto_init() {
 			NumEnums:      0,
 			NumMessages:   0,
 			NumExtensions: 0,
-			NumServices:   7,
+			NumServices:   8,
 		},
 		GoTypes:           file_platform_operator_proto_goTypes,
 		DependencyIndexes: file_platform_operator_proto_depIdxs,

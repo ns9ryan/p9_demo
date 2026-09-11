@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	agent_line_allocation "oa.98ent.com/p9/platform-operator/api/internal/handler/agent_line_allocation"
+	basic_resource_allocation "oa.98ent.com/p9/platform-operator/api/internal/handler/basic_resource_allocation"
 	domain "oa.98ent.com/p9/platform-operator/api/internal/handler/domain"
 	game_allocation "oa.98ent.com/p9/platform-operator/api/internal/handler/game_allocation"
 	language_allocation "oa.98ent.com/p9/platform-operator/api/internal/handler/language_allocation"
@@ -34,6 +35,20 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Method:  http.MethodPost,
 					Path:    "/agent-line-allocation/save",
 					Handler: agent_line_allocation.SaveAgentLineAllocationsHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/admin/operator"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/basic-resource-allocation/list",
+					Handler: basic_resource_allocation.ListBasicResourceAllocationsHandler(serverCtx),
 				},
 			}...,
 		),

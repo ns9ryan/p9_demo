@@ -1,0 +1,47 @@
+syntax = "v1"
+
+import "types/common.api"
+
+type (
+	// 基础资源分配汇总信息
+	BasicResourceAllocationInfo {
+		// 分站ID
+		OperatorId int64 `json:"operator_id"`
+		// 分站编码
+		OperatorCode string `json:"operator_code"`
+		// 分站名称
+		OperatorName string `json:"operator_name"`
+		// 已分配语言数量
+		LanguageCount int64 `json:"language_count"`
+		// 已分配经营地区数量
+		RegionCount int64 `json:"region_count"`
+		// 已分配代理子线路数量
+		AgentLineCount int64 `json:"agent_line_count"`
+	}
+	// 获取基础资源分配列表请求
+	ListBasicResourceAllocationsRequest {
+		// 分页参数
+		PageRequest
+		// 搜索关键字, 匹配分站编码或名称
+		Keyword *string `form:"keyword,optional" validate:"omitempty,max=100"`
+	}
+	// 获取基础资源分配列表响应
+	ListBasicResourceAllocationsResponse {
+		// 数据总数
+		Total int64 `json:"total"`
+		// 基础资源分配列表
+		List []BasicResourceAllocationInfo `json:"list"`
+	}
+)
+
+@server (
+	group:      basic_resource_allocation
+	prefix:     /admin/operator
+	middleware: Jwt,ActionLog,Authority
+)
+service platform_operator {
+	// 获取基础资源分配列表
+	@handler ListBasicResourceAllocations
+	get /basic-resource-allocation/list (ListBasicResourceAllocationsRequest) returns (ListBasicResourceAllocationsResponse)
+}
+

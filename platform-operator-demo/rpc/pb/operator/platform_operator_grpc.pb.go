@@ -12,6 +12,7 @@ import (
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
 	agentlineallocation "oa.98ent.com/p9/platform-operator/rpc/pb/operator/agentlineallocation"
+	basicresourceallocation "oa.98ent.com/p9/platform-operator/rpc/pb/operator/basicresourceallocation"
 	domain "oa.98ent.com/p9/platform-operator/rpc/pb/operator/domain"
 	languageallocation "oa.98ent.com/p9/platform-operator/rpc/pb/operator/languageallocation"
 	operator "oa.98ent.com/p9/platform-operator/rpc/pb/operator/operator"
@@ -892,6 +893,115 @@ var DomainService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Delete",
 			Handler:    _DomainService_Delete_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "platform_operator.proto",
+}
+
+const (
+	BasicResourceAllocationService_List_FullMethodName = "/platform_operator.BasicResourceAllocationService/List"
+)
+
+// BasicResourceAllocationServiceClient is the client API for BasicResourceAllocationService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 分站基础资源分配服务
+type BasicResourceAllocationServiceClient interface {
+	// 获取基础资源分配列表
+	List(ctx context.Context, in *basicresourceallocation.ListBasicResourceAllocationsRequest, opts ...grpc.CallOption) (*basicresourceallocation.ListBasicResourceAllocationsResponse, error)
+}
+
+type basicResourceAllocationServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewBasicResourceAllocationServiceClient(cc grpc.ClientConnInterface) BasicResourceAllocationServiceClient {
+	return &basicResourceAllocationServiceClient{cc}
+}
+
+func (c *basicResourceAllocationServiceClient) List(ctx context.Context, in *basicresourceallocation.ListBasicResourceAllocationsRequest, opts ...grpc.CallOption) (*basicresourceallocation.ListBasicResourceAllocationsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(basicresourceallocation.ListBasicResourceAllocationsResponse)
+	err := c.cc.Invoke(ctx, BasicResourceAllocationService_List_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// BasicResourceAllocationServiceServer is the server API for BasicResourceAllocationService service.
+// All implementations must embed UnimplementedBasicResourceAllocationServiceServer
+// for forward compatibility.
+//
+// 分站基础资源分配服务
+type BasicResourceAllocationServiceServer interface {
+	// 获取基础资源分配列表
+	List(context.Context, *basicresourceallocation.ListBasicResourceAllocationsRequest) (*basicresourceallocation.ListBasicResourceAllocationsResponse, error)
+	mustEmbedUnimplementedBasicResourceAllocationServiceServer()
+}
+
+// UnimplementedBasicResourceAllocationServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedBasicResourceAllocationServiceServer struct{}
+
+func (UnimplementedBasicResourceAllocationServiceServer) List(context.Context, *basicresourceallocation.ListBasicResourceAllocationsRequest) (*basicresourceallocation.ListBasicResourceAllocationsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedBasicResourceAllocationServiceServer) mustEmbedUnimplementedBasicResourceAllocationServiceServer() {
+}
+func (UnimplementedBasicResourceAllocationServiceServer) testEmbeddedByValue() {}
+
+// UnsafeBasicResourceAllocationServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to BasicResourceAllocationServiceServer will
+// result in compilation errors.
+type UnsafeBasicResourceAllocationServiceServer interface {
+	mustEmbedUnimplementedBasicResourceAllocationServiceServer()
+}
+
+func RegisterBasicResourceAllocationServiceServer(s grpc.ServiceRegistrar, srv BasicResourceAllocationServiceServer) {
+	// If the following call panics, it indicates UnimplementedBasicResourceAllocationServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&BasicResourceAllocationService_ServiceDesc, srv)
+}
+
+func _BasicResourceAllocationService_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(basicresourceallocation.ListBasicResourceAllocationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BasicResourceAllocationServiceServer).List(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BasicResourceAllocationService_List_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BasicResourceAllocationServiceServer).List(ctx, req.(*basicresourceallocation.ListBasicResourceAllocationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// BasicResourceAllocationService_ServiceDesc is the grpc.ServiceDesc for BasicResourceAllocationService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var BasicResourceAllocationService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "platform_operator.BasicResourceAllocationService",
+	HandlerType: (*BasicResourceAllocationServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "List",
+			Handler:    _BasicResourceAllocationService_List_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

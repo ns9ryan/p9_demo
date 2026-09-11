@@ -6,6 +6,7 @@ import (
 
 	"oa.98ent.com/p9/platform-operator/rpc/internal/config"
 	agentlineallocationserviceServer "oa.98ent.com/p9/platform-operator/rpc/internal/server/agentlineallocationservice"
+	basicresourceallocationserviceServer "oa.98ent.com/p9/platform-operator/rpc/internal/server/basicresourceallocationservice"
 	domainserviceServer "oa.98ent.com/p9/platform-operator/rpc/internal/server/domainservice"
 	languageallocationserviceServer "oa.98ent.com/p9/platform-operator/rpc/internal/server/languageallocationservice"
 	operatorprofileserviceServer "oa.98ent.com/p9/platform-operator/rpc/internal/server/operatorprofileservice"
@@ -36,6 +37,7 @@ func main() {
 		operator.RegisterOperatorServiceServer(grpcServer, operatorserviceServer.NewOperatorServiceServer(ctx))
 		operator.RegisterOperatorProfileServiceServer(grpcServer, operatorprofileserviceServer.NewOperatorProfileServiceServer(ctx))
 		operator.RegisterDomainServiceServer(grpcServer, domainserviceServer.NewDomainServiceServer(ctx))
+		operator.RegisterBasicResourceAllocationServiceServer(grpcServer, basicresourceallocationserviceServer.NewBasicResourceAllocationServiceServer(ctx))
 		operator.RegisterLanguageAllocationServiceServer(grpcServer, languageallocationserviceServer.NewLanguageAllocationServiceServer(ctx))
 		operator.RegisterRegionAllocationServiceServer(grpcServer, regionallocationserviceServer.NewRegionAllocationServiceServer(ctx))
 		operator.RegisterAgentLineAllocationServiceServer(grpcServer, agentlineallocationserviceServer.NewAgentLineAllocationServiceServer(ctx))
