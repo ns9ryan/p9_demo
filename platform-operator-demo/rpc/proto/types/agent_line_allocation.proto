@@ -18,45 +18,23 @@ message AgentLineAllocationInfo {
 
 // 获取代理子线路分配列表请求
 message ListAgentLineAllocationsRequest {
-  // 页码, 从1开始
-  int64 page = 1;
-  // 每页数量
-  int64 page_size = 2;
   // 分站ID
-  optional int64 operator_id = 3;
-  // 代理子线路编码
-  optional string agent_line_code = 4;
+  int64 operator_id = 1;
 }
 
 // 获取代理子线路分配列表响应
 message ListAgentLineAllocationsResponse {
-  // 数据总数
-  int64 total = 1;
   // 代理子线路分配列表
-  repeated AgentLineAllocationInfo list = 2;
+  repeated AgentLineAllocationInfo list = 1;
 }
 
-// 分配代理子线路请求
-message AssignAgentLineRequest {
+// 保存代理子线路分配请求
+message SaveAgentLineAllocationsRequest {
   // 分站ID
   int64 operator_id = 1;
-  // 代理子线路编码
-  string agent_line_code = 2;
+  // 当前分配的代理子线路编码
+  repeated string agent_line_codes = 2;
 }
 
-// 分配代理子线路响应
-message AssignAgentLineResponse {
-  // 分配记录ID
-  int64 id = 1;
-}
-
-// 取消代理子线路分配请求
-message UnassignAgentLineRequest {
-  // 分站ID
-  int64 operator_id = 1;
-  // 代理子线路编码
-  string agent_line_code = 2;
-}
-
-// 取消代理子线路分配响应
-message UnassignAgentLineResponse {}
+// 保存代理子线路分配响应
+message SaveAgentLineAllocationsResponse {}

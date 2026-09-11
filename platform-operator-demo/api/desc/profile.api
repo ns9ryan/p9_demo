@@ -1,0 +1,86 @@
+syntax = "v1"
+
+type (
+	// 分站档案信息
+	OperatorProfileInfo {
+		// 档案ID
+		Id int64 `json:"id"`
+		// 分站ID
+		OperatorId int64 `json:"operator_id"`
+		// 公司名称
+		CompanyName *string `json:"company_name,optional"`
+		// 主要联系人名称
+		ContactName *string `json:"contact_name,optional"`
+		// 主要联系人邮箱
+		ContactEmail *string `json:"contact_email,optional"`
+		// 总网内部档案备注
+		Remark *string `json:"remark,optional"`
+		// 创建时间, Unix毫秒时间戳
+		CreatedAt int64 `json:"created_at"`
+		// 更新时间, Unix毫秒时间戳
+		UpdatedAt int64 `json:"updated_at"`
+	}
+	// 创建分站档案请求
+	CreateOperatorProfileRequest {
+		// 分站ID
+		OperatorId int64 `json:"operator_id" validate:"required,gt=0"`
+		// 公司名称
+		CompanyName *string `json:"company_name,optional" validate:"omitempty,max=200"`
+		// 主要联系人名称
+		ContactName *string `json:"contact_name,optional" validate:"omitempty,max=100"`
+		// 主要联系人邮箱
+		ContactEmail *string `json:"contact_email,optional" validate:"omitempty,email,max=255"`
+		// 总网内部档案备注
+		Remark *string `json:"remark,optional" validate:"omitempty,max=1000"`
+	}
+	// 创建分站档案响应
+	CreateOperatorProfileResponse {
+		// 档案ID
+		Id int64 `json:"id"`
+	}
+	// 修改分站档案请求
+	UpdateOperatorProfileRequest {
+		// 分站ID
+		OperatorId int64 `json:"operator_id" validate:"required,gt=0"`
+		// 公司名称
+		CompanyName *string `json:"company_name,optional" validate:"omitempty,max=200"`
+		// 主要联系人名称
+		ContactName *string `json:"contact_name,optional" validate:"omitempty,max=100"`
+		// 主要联系人邮箱
+		ContactEmail *string `json:"contact_email,optional" validate:"omitempty,email,max=255"`
+		// 总网内部档案备注
+		Remark *string `json:"remark,optional" validate:"omitempty,max=1000"`
+	}
+	// 修改分站档案响应
+	UpdateOperatorProfileResponse  {}
+	// 获取分站档案请求
+	GetOperatorProfileRequest {
+		// 分站ID
+		OperatorId int64 `form:"operator_id" validate:"required,gt=0"`
+	}
+	// 获取分站档案响应
+	GetOperatorProfileResponse {
+		// 分站档案信息, 尚未创建时为空
+		Profile *OperatorProfileInfo `json:"profile"`
+	}
+)
+
+@server (
+	group:      operatorProfile
+	prefix:     /admin/operator/profile
+	middleware: Jwt,ActionLog,Authority
+)
+service platform_operator {
+	// 创建分站档案
+	@handler CreateOperatorProfile
+	post /create (CreateOperatorProfileRequest) returns (CreateOperatorProfileResponse)
+
+	// 修改分站档案
+	@handler UpdateOperatorProfile
+	post /update (UpdateOperatorProfileRequest) returns (UpdateOperatorProfileResponse)
+
+	// 获取分站档案
+	@handler GetOperatorProfile
+	get /get (GetOperatorProfileRequest) returns (GetOperatorProfileResponse)
+}
+

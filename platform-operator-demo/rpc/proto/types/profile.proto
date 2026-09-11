@@ -69,6 +69,6 @@ message GetOperatorProfileRequest {
 
 // 获取分站档案响应
 message GetOperatorProfileResponse {
-  // 分站档案信息
+  // 分站档案信息, 尚未创建时为空
   OperatorProfileInfo profile = 1;
 }

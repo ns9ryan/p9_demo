@@ -23,7 +23,7 @@ message ListRegionAllocationsRequest {
   // 每页数量
   int64 page_size = 2;
   // 分站ID
-  optional int64 operator_id = 3;
+  int64 operator_id = 3;
   // 国家地区编码
   optional string region_code = 4;
 }
@@ -36,27 +36,13 @@ message ListRegionAllocationsResponse {
   repeated RegionAllocationInfo list = 2;
 }
 
-// 分配经营地区请求
-message AssignRegionRequest {
+// 保存经营地区分配请求
+message SaveRegionAllocationsRequest {
   // 分站ID
   int64 operator_id = 1;
-  // 国家地区编码
-  string region_code = 2;
+  // 当前分配的国家地区编码
+  repeated string region_codes = 2;
 }
 
-// 分配经营地区响应
-message AssignRegionResponse {
-  // 分配记录ID
-  int64 id = 1;
-}
-
-// 取消经营地区分配请求
-message UnassignRegionRequest {
-  // 分站ID
-  int64 operator_id = 1;
-  // 国家地区编码
-  string region_code = 2;
-}
-
-// 取消经营地区分配响应
-message UnassignRegionResponse {}
+// 保存经营地区分配响应
+message SaveRegionAllocationsResponse {}

@@ -74,11 +74,8 @@ service LanguageAllocationService {
   // 获取语言分配列表
   rpc List(languageallocation.ListLanguageAllocationsRequest) returns (languageallocation.ListLanguageAllocationsResponse);
 
-  // 分配语言
-  rpc Assign(languageallocation.AssignLanguageRequest) returns (languageallocation.AssignLanguageResponse);
-
-  // 取消语言分配
-  rpc Unassign(languageallocation.UnassignLanguageRequest) returns (languageallocation.UnassignLanguageResponse);
+  // 保存语言分配
+  rpc Save(languageallocation.SaveLanguageAllocationsRequest) returns (languageallocation.SaveLanguageAllocationsResponse);
 }
 
 // 分站经营地区分配服务
@@ -86,11 +83,8 @@ service RegionAllocationService {
   // 获取经营地区分配列表
   rpc List(regionallocation.ListRegionAllocationsRequest) returns (regionallocation.ListRegionAllocationsResponse);
 
-  // 分配经营地区
-  rpc Assign(regionallocation.AssignRegionRequest) returns (regionallocation.AssignRegionResponse);
-
-  // 取消经营地区分配
-  rpc Unassign(regionallocation.UnassignRegionRequest) returns (regionallocation.UnassignRegionResponse);
+  // 保存经营地区分配
+  rpc Save(regionallocation.SaveRegionAllocationsRequest) returns (regionallocation.SaveRegionAllocationsResponse);
 }
 
 // 分站代理子线路分配服务
@@ -98,9 +92,6 @@ service AgentLineAllocationService {
   // 获取代理子线路分配列表
   rpc List(agentlineallocation.ListAgentLineAllocationsRequest) returns (agentlineallocation.ListAgentLineAllocationsResponse);
 
-  // 分配代理子线路
-  rpc Assign(agentlineallocation.AssignAgentLineRequest) returns (agentlineallocation.AssignAgentLineResponse);
-
-  // 取消代理子线路分配
-  rpc Unassign(agentlineallocation.UnassignAgentLineRequest) returns (agentlineallocation.UnassignAgentLineResponse);
+  // 保存代理子线路分配
+  rpc Save(agentlineallocation.SaveAgentLineAllocationsRequest) returns (agentlineallocation.SaveAgentLineAllocationsResponse);
 }
