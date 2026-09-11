@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -22,10 +23,11 @@ import (
 )
 
 type ServiceContext struct {
-	Config     config.Config
-	GrpcClient *grpc_client.ClientManager
-	CoreAuth   *auth.CoreAuth  // Core 服务鉴权客户端
-	Auth       rest.Middleware // 认证中间件
+	Config          config.Config
+	GrpcClient      *grpc_client.ClientManager
+	CoreAuth        *auth.CoreAuth   // Core 服务鉴权客户端
+	Auth            rest.Middleware  // 认证中间件
+	SyncRateLimiter *SyncRateLimiter // 同步操作频率限制器
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -87,10 +89,11 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	authMiddleware := createAuthMiddleware(coreAuth)
 
 	return &ServiceContext{
-		Config:     c,
-		GrpcClient: grpcClient,
-		CoreAuth:   coreAuth,
-		Auth:       authMiddleware,
+		Config:          c,
+		GrpcClient:      grpcClient,
+		CoreAuth:        coreAuth,
+		Auth:            authMiddleware,
+		SyncRateLimiter: NewSyncRateLimiter(),
 	}
 }
 
@@ -150,4 +153,39 @@ func respondJSON(w http.ResponseWriter, statusCode int, code int, msg string) {
 		"msg":  msg,
 	}
 	json.NewEncoder(w).Encode(response)
+}
+
+// ===== 同步操作频率限制 =====
+
+// SyncRateLimiter 同步操作频率限制器（5秒限制）
+type SyncRateLimiter struct {
+	mu           sync.Mutex
+	lastSyncTime map[string]time.Time // 记录每种对象类型的最后一次同步时间
+	minInterval  time.Duration        // 最小间隔：5秒
+}
+
+// NewSyncRateLimiter 创建频率限制器
+func NewSyncRateLimiter() *SyncRateLimiter {
+	return &SyncRateLimiter{
+		lastSyncTime: make(map[string]time.Time),
+		minInterval:  5 * time.Second,
+	}
+}
+
+// CheckRateLimit 检查频率限制，如果超过限制则返回 true，否则返回 false 并记录时间
+func (r *SyncRateLimiter) CheckRateLimit(objectType string) bool {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	lastTime, exists := r.lastSyncTime[objectType]
+	now := time.Now()
+
+	// 如果从未调用过，或距离上次调用已超过5秒
+	if !exists || now.Sub(lastTime) >= r.minInterval {
+		r.lastSyncTime[objectType] = now
+		return true
+	}
+
+	// 未超过5秒，拒绝请求
+	return false
 }

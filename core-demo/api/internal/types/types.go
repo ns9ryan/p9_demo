@@ -41,6 +41,8 @@ type UserPublic struct {
 	Status int32 `json:"status"`
 	// Role codes | 角色编码
 	RoleCodes []string `json:"role_codes"`
+	// Role names | 角色名称
+	RoleNames []string `json:"role_names"`
 	// Home path | 首页路径
 	HomePath string `json:"home_path,optional"`
 	// Created at unix | 创建时间
@@ -555,6 +557,10 @@ type I18nDictResp struct {
 
 // Update i18n by key request | 按词条key更新多语言
 type UpdateI18nByKeyReq struct {
+	// Site | 站点编码，空则不按站点过滤
+	I18nCode string `json:"i18n_code,optional"`
+	// Group | 分组，空则不按分组过滤
+	I18nGroup string `json:"i18n_group,optional"`
 	// Key | 词条key
 	TransKey string `json:"trans_key"`
 	// Data | 各语言译文

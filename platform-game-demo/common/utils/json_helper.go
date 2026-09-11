@@ -35,3 +35,13 @@ func TimeToUnixTimestamp(t *time.Time) *int64 {
 	ts := t.Unix()
 	return &ts
 }
+
+// JSON 将任意数据序列化为JSON字符串
+func JSON(data interface{}) string {
+	bytes, _ := json.Marshal(data)
+	return string(bytes)
+}
+
+func StringToJSON(data string, v interface{}) error {
+	return json.Unmarshal([]byte(data), v)
+}

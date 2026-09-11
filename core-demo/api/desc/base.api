@@ -47,6 +47,8 @@ type UserPublic {
 	Status       int32    `json:"status"`
 	// Role codes | 角色编码
 	RoleCodes    []string `json:"role_codes"`
+	// Role names | 角色名称
+	RoleNames    []string `json:"role_names"`
 	// Home path | 首页路径
 	HomePath     string   `json:"home_path,optional"`
 	// Created at unix | 创建时间

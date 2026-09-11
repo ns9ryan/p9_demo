@@ -34,5 +34,5 @@ func (l *BootstrapOperatorLogic) BootstrapOperator(req *types.BootstrapOperatorR
 	if err != nil {
 		return nil, err
 	}
-	return convert.UserPublic(out), nil
+	return convert.UserPublic(l.ctx, out), nil
 }

@@ -66,7 +66,7 @@ type (
 )
 
 @server (
-	group:      operatorProfile
+	group:      operator_profile
 	prefix:     /admin/operator/profile
 	middleware: Jwt,ActionLog,Authority
 )

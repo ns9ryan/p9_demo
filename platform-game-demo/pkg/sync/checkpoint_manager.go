@@ -2,12 +2,12 @@ package sync
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"gorm.io/gorm"
 	"oa.98ent.com/p9/platform-game/common/logger"
-	"oa.98ent.com/p9/platform-game/common/model"
-	"oa.98ent.com/p9/platform-game/rpc/pb/vendors"
+	"oa.98ent.com/p9/platform-game/rpc/ent"
 )
 
 // CheckpointManager 检查点管理器
@@ -20,95 +20,22 @@ func NewCheckpointManager(db *gorm.DB) *CheckpointManager {
 	return &CheckpointManager{db: db}
 }
 
-// buildCheckpoint 构建检查点对象（从 UpdateCheckpoint 提取的数据构建逻辑）
-func (m *CheckpointManager) buildCheckpoint(
-	syncScope string,
-	checkpointValue string,
-	syncResult *vendors.SyncRunResp,
-	syncErr error,
-) *model.GameSyncCheckpoint {
-	now := time.Now()
-
-	// 如果 checkpointValue 为空，使用当前时间戳作为默认值
-	if checkpointValue == "" {
-		checkpointValue = now.Format(time.RFC3339Nano)
-		logger.Debugf("[检查点管理] checkpoint_value 为空，使用当前时间戳: %s", checkpointValue)
-	}
-
-	checkpoint := &model.GameSyncCheckpoint{
-		SyncScope:       syncScope,
-		CheckpointValue: checkpointValue,
-		LastSyncAt:      now,
-	}
-
-	// 处理同步状态
-	if syncErr != nil {
-		checkpoint.SyncStatus = model.SyncStatusFailed
-		errMsg := syncErr.Error()
-		checkpoint.LastErrorMessage = &errMsg
-		logger.Errorf("[检查点管理] 同步失败，保存错误信息: %s", syncErr.Error())
-	} else if syncResult == nil {
-		checkpoint.SyncStatus = model.SyncStatusFailed
-		errMsg := "sync result is nil"
-		checkpoint.LastErrorMessage = &errMsg
-		logger.Error("[检查点管理] 同步结果为空")
-	} else {
-		checkpoint.SyncStatus = model.SyncStatusSuccess
-		checkpoint.LastSuccessAt = now
-
-		// 记录同步统计信息
-		if syncResult.Preview != nil && syncResult.Preview.Stats != nil {
-			checkpoint.RemoteTotal = syncResult.Preview.Stats.RemoteTotal
-			checkpoint.LocalTotal = syncResult.Preview.Stats.LocalTotal
-		}
-
-		if syncResult.Apply != nil {
-			checkpoint.CreatedCount = int64(syncResult.Apply.Created)
-			checkpoint.UpdatedCount = int64(syncResult.Apply.Updated)
-			checkpoint.DeletedCount = int64(syncResult.Apply.Deleted)
-			checkpoint.FailedCount = int64(syncResult.Apply.Failed)
-		}
-
-		logger.Infof("[检查点管理] 同步成功 - 新增:%d, 更新:%d, 删除:%d, 失败:%d",
-			checkpoint.CreatedCount, checkpoint.UpdatedCount, checkpoint.DeletedCount, checkpoint.FailedCount)
-	}
-
-	return checkpoint
-}
-
 // saveOrUpdateCheckpoint 保存检查点到数据库（只做新增操作）
-func (m *CheckpointManager) saveOrUpdateCheckpoint(ctx context.Context, checkpoint *model.GameSyncCheckpoint) error {
+func (m *CheckpointManager) saveOrUpdateCheckpoint(ctx context.Context, checkpoint *ent.GameSyncCheckpoint) error {
 	return m.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		// 每次同步都插入新的检查点记录，不做更新操作
 		if err := tx.Create(checkpoint).Error; err != nil {
 			logger.Errorf("[检查点管理] 创建检查点失败: %v", err)
 			return err
 		}
-		logger.Infof("[检查点管理] ✓ 检查点创建成功: scope=%s, id=%d", checkpoint.SyncScope, checkpoint.ID)
+		logger.Infof("[检查点管理] ✓ 检查点创建成功: scope=%s, id=%d", checkpoint.SyncScope, checkpoint.Id)
 		return nil
 	})
 }
 
-// UpdateCheckpoint 更新同步检查点
-func (m *CheckpointManager) UpdateCheckpoint(
-	ctx context.Context,
-	syncScope string,
-	checkpointValue string,
-	syncResult *vendors.SyncRunResp,
-	syncErr error,
-) error {
-	logger.Infof("[检查点管理] 准备更新检查点: scope=%s, value=%s", syncScope, checkpointValue)
-
-	// 构建检查点对象
-	checkpoint := m.buildCheckpoint(syncScope, checkpointValue, syncResult, syncErr)
-
-	// 保存或更新检查点
-	return m.saveOrUpdateCheckpoint(ctx, checkpoint)
-}
-
 // GetCheckpoint 获取同步检查点（返回最新的那条记录）
-func (m *CheckpointManager) GetCheckpoint(ctx context.Context, syncScope string) (*model.GameSyncCheckpoint, error) {
-	var checkpoint model.GameSyncCheckpoint
+func (m *CheckpointManager) GetCheckpoint(ctx context.Context, syncScope string) (*ent.GameSyncCheckpoint, error) {
+	var checkpoint ent.GameSyncCheckpoint
 	err := m.db.WithContext(ctx).
 		Where("sync_scope = ?", syncScope).
 		Order("created_at DESC, id DESC").
@@ -124,24 +51,33 @@ func (m *CheckpointManager) GetCheckpoint(ctx context.Context, syncScope string)
 	return &checkpoint, nil
 }
 
-// GetAllCheckpoints 获取所有同步检查点
-func (m *CheckpointManager) GetAllCheckpoints(ctx context.Context) ([]*model.GameSyncCheckpoint, error) {
-	var checkpoints []*model.GameSyncCheckpoint
-	err := m.db.WithContext(ctx).Order("updated_at DESC").Find(&checkpoints).Error
-	if err != nil {
-		logger.Errorf("[检查点管理] 获取所有检查点失败: %v", err)
-		return nil, err
+// UpdateCheckpointProgress 更新指定检查点的进度
+func (m *CheckpointManager) UpdateCheckpointProgress(ctx context.Context, msg *ProgressMessage) error {
+	if msg.CheckpointID <= 0 {
+		logger.Warnf("[检查点管理] 无效的 checkpointID: %d", msg.CheckpointID)
+		return nil
 	}
-	return checkpoints, nil
-}
 
-// DeleteCheckpoint 删除同步检查点
-func (m *CheckpointManager) DeleteCheckpoint(ctx context.Context, syncScope string) error {
-	err := m.db.WithContext(ctx).Where("sync_scope = ?", syncScope).Delete(&model.GameSyncCheckpoint{}).Error
-	if err != nil {
-		logger.Errorf("[检查点管理] 删除检查点失败: %v", err)
+	checkpoint := &ent.GameSyncCheckpoint{
+		Progress:        int64(msg.Progress),
+		CheckpointValue: fmt.Sprintf("%d", msg.ProcessedCount),
+		RemoteTotal:     int64(msg.RemoteTotal),
+		LocalTotal:      int64(msg.LocalTotal),
+		CreatedCount:    int64(msg.Created),
+		UpdatedCount:    int64(msg.Updated),
+		DeletedCount:    int64(msg.Deleted),
+		FailedCount:     int64(msg.Failed),
+		SyncStatus:      1,
+		LastSuccessAt:   time.Now(),
+		LastSyncAt:      time.Now(),
+		UpdatedAt:       time.Now(),
+	}
+
+	if err := m.db.WithContext(ctx).Model(&ent.GameSyncCheckpoint{}).Where("id = ?", msg.CheckpointID).Updates(checkpoint).Error; err != nil {
+		logger.Errorf("[检查点管理] 更新检查点进度失败: checkpointID=%d, progress=%d, error=%v", msg.CheckpointID, msg.Progress, err)
 		return err
 	}
-	logger.Infof("[检查点管理] ✓ 检查点删除成功: scope=%s", syncScope)
+
+	logger.Infof("[检查点管理] ✓ 检查点进度已更新: checkpointID=%d, progress=%d%%, processedCount=%d", msg.CheckpointID, msg.Progress, msg.ProcessedCount)
 	return nil
 }

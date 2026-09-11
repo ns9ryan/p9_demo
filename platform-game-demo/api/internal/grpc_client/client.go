@@ -8,14 +8,23 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"oa.98ent.com/p9/platform-game/api/internal/config"
-	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
+	pb "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 )
 
 // ClientManager gRPC客户端管理器
 type ClientManager struct {
-	conn   *grpc.ClientConn
-	client platformgame.PlatformGameServiceClient
-	cfg    config.GrpcClientConfig
+	conn *grpc.ClientConn
+	cfg  config.GrpcClientConfig
+
+	// Individual service clients
+	pingServiceClient               pb.PingServiceClient
+	gameServiceClient               pb.GameServiceClient
+	gameCategoryServiceClient       pb.GameCategoryServiceClient
+	gameProviderServiceClient       pb.GameProviderServiceClient
+	gameChannelServiceClient        pb.GameChannelServiceClient
+	gameCurrencyServiceClient       pb.GameCurrencyServiceClient
+	gameSyncCheckpointServiceClient pb.GameSyncCheckpointServiceClient
+	syncServiceClient               pb.SyncServiceClient
 }
 
 // NewClientManager 创建新的gRPC客户端管理器
@@ -44,15 +53,57 @@ func NewClientManager(cfg config.GrpcClientConfig) (*ClientManager, error) {
 	}
 
 	return &ClientManager{
-		conn:   conn,
-		client: platformgame.NewPlatformGameServiceClient(conn),
-		cfg:    cfg,
+		conn:                            conn,
+		cfg:                             cfg,
+		pingServiceClient:               pb.NewPingServiceClient(conn),
+		gameServiceClient:               pb.NewGameServiceClient(conn),
+		gameCategoryServiceClient:       pb.NewGameCategoryServiceClient(conn),
+		gameProviderServiceClient:       pb.NewGameProviderServiceClient(conn),
+		gameChannelServiceClient:        pb.NewGameChannelServiceClient(conn),
+		gameCurrencyServiceClient:       pb.NewGameCurrencyServiceClient(conn),
+		gameSyncCheckpointServiceClient: pb.NewGameSyncCheckpointServiceClient(conn),
+		syncServiceClient:               pb.NewSyncServiceClient(conn),
 	}, nil
 }
 
-// GetPlatformGameServiceClient 获取平台游戏服务客户端
-func (cm *ClientManager) GetPlatformGameServiceClient() platformgame.PlatformGameServiceClient {
-	return cm.client
+// GetPingServiceClient 获取 Ping 服务客户端
+func (cm *ClientManager) GetPingServiceClient() pb.PingServiceClient {
+	return cm.pingServiceClient
+}
+
+// GetGameServiceClient 获取游戏服务客户端
+func (cm *ClientManager) GetGameServiceClient() pb.GameServiceClient {
+	return cm.gameServiceClient
+}
+
+// GetGameCategoryServiceClient 获取游戏分类服务客户端
+func (cm *ClientManager) GetGameCategoryServiceClient() pb.GameCategoryServiceClient {
+	return cm.gameCategoryServiceClient
+}
+
+// GetGameProviderServiceClient 获取游戏供应商服务客户端
+func (cm *ClientManager) GetGameProviderServiceClient() pb.GameProviderServiceClient {
+	return cm.gameProviderServiceClient
+}
+
+// GetGameChannelServiceClient 获取游戏渠道服务客户端
+func (cm *ClientManager) GetGameChannelServiceClient() pb.GameChannelServiceClient {
+	return cm.gameChannelServiceClient
+}
+
+// GetGameCurrencyServiceClient 获取游戏货币服务客户端
+func (cm *ClientManager) GetGameCurrencyServiceClient() pb.GameCurrencyServiceClient {
+	return cm.gameCurrencyServiceClient
+}
+
+// GetGameSyncCheckpointServiceClient 获取游戏同步检查点服务客户端
+func (cm *ClientManager) GetGameSyncCheckpointServiceClient() pb.GameSyncCheckpointServiceClient {
+	return cm.gameSyncCheckpointServiceClient
+}
+
+// GetSyncServiceClient 获取同步服务客户端
+func (cm *ClientManager) GetSyncServiceClient() pb.SyncServiceClient {
+	return cm.syncServiceClient
 }
 
 // Close 关闭gRPC连接

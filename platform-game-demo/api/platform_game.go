@@ -12,6 +12,7 @@ import (
 	"oa.98ent.com/p9/platform-game/api/internal/config"
 	"oa.98ent.com/p9/platform-game/api/internal/handler"
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
+	"oa.98ent.com/p9/platform-game/common/response"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
@@ -24,6 +25,7 @@ func main() {
 
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
+	response.SetupHTTPX()
 
 	server := rest.MustNewServer(c.RestConf)
 	defer server.Stop()

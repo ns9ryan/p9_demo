@@ -14,6 +14,7 @@ message UserPublic {
   optional int64 last_login_at = 11;
   optional string mobile = 12;
   optional string email = 13;
+  repeated string role_names = 14;
 }
 
 message SelfPasswordReq {

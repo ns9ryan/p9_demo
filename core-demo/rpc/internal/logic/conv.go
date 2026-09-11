@@ -15,6 +15,7 @@ func ToUserPublic(u service.UserPublic) *core.UserPublic {
 		IsSuperAdmin: u.IsSuperAdmin,
 		Status:       int32(u.Status),
 		RoleCodes:    u.RoleCodes,
+		RoleNames:    u.RoleNames,
 		HomePath:     u.HomePath,
 		CreatedAt:    u.CreatedAt,
 	}
@@ -32,6 +33,9 @@ func ToUserPublic(u service.UserPublic) *core.UserPublic {
 	}
 	if out.RoleCodes == nil {
 		out.RoleCodes = []string{}
+	}
+	if out.RoleNames == nil {
+		out.RoleNames = []string{}
 	}
 	return out
 }

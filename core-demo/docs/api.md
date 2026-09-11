@@ -199,7 +199,8 @@ refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环�
 | `operator_id`    | int64    | 所属分站；平台用户可省略或为 0          |
 | `is_super_admin` | bool     | 是否超管；创建用户接口不可设为 true      |
 | `status`         | int32    | `1` 启用，`2` 停用             |
-| `role_codes`     | string[] | 角色编码列表                    |
+| `role_codes`     | string[] | 角色编码列表；与 `role_names` 同序、同长度，无角色为 `[]` |
+| `role_names`     | string[] | 角色名称；内置为 i18n key，响应已按语言翻译；无角色为 `[]` |
 | `home_path`      | string   | 登录后首页，默认 `/dashboard`     |
 | `created_at`     | int64    | 创建时间，Unix 秒               |
 | `last_login_at`  | int64    | 最后登录时间，Unix 秒；从未登录可省略或为 0 |
@@ -352,6 +353,7 @@ refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环�
       "is_super_admin": true,
       "status": 1,
       "role_codes": ["super_admin"],
+      "role_names": ["超级管理员"],
       "home_path": "/dashboard"
     }
   }
@@ -400,6 +402,7 @@ refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环�
       "is_super_admin": true,
       "status": 1,
       "role_codes": ["super_admin"],
+      "role_names": ["超级管理员"],
       "home_path": "/dashboard"
     }
   }
@@ -471,6 +474,7 @@ refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环�
     "is_super_admin": true,
     "status": 1,
     "role_codes": ["super_admin"],
+    "role_names": ["超级管理员"],
     "home_path": "/dashboard"
   }
 }
@@ -781,6 +785,7 @@ Query：`/admin/i18n/dict?i18n_code=platform&i18n_group=front&lang=zh-CN`
     "is_super_admin": false,
     "status": 1,
     "role_codes": ["editor"],
+    "role_names": ["运营"],
     "home_path": "/dashboard"
   }
 }
@@ -900,6 +905,7 @@ Query：`/admin/i18n/dict?i18n_code=platform&i18n_group=front&lang=zh-CN`
         "is_super_admin": true,
         "status": 1,
         "role_codes": ["super_admin"],
+        "role_names": ["超级管理员"],
         "home_path": "/dashboard",
         "created_at": 1710000000,
         "last_login_at": 1710003600
@@ -913,6 +919,7 @@ Query：`/admin/i18n/dict?i18n_code=platform&i18n_group=front&lang=zh-CN`
         "is_super_admin": false,
         "status": 1,
         "role_codes": ["editor"],
+        "role_names": ["运营"],
         "home_path": "/dashboard",
         "created_at": 1710001200,
         "last_login_at": 0
@@ -952,6 +959,7 @@ Query：`/admin/user/detail?id=2`
     "is_super_admin": false,
     "status": 1,
     "role_codes": ["editor"],
+    "role_names": ["运营"],
     "home_path": "/dashboard",
     "created_at": 1710001200,
     "last_login_at": 1710003600,
@@ -1633,19 +1641,23 @@ Query：`/admin/role/detail?id=2`
 
 #### POST /admin/i18n/updateByKey
 
-按完整 `trans_key` 一次更新多语言，**不传 group / i18n_code**。已有该 key 时沿用其站点；同一 key 出现在多个站点则一并更新。key 尚不存在时落到 `platform`，并从 `trans_key` 第一段推断 `i18n_group`（`menu.route.dashboard` → `menu`）；无法推断则 `i18n_group` 留空。新建某语言的词条时，该语言码须已在支持列表中。
+按完整 `trans_key` 一次更新多语言。`i18n_code` / `i18n_group` 可选：有值才加入查询条件；不传则不按站点/分组过滤。已有匹配行则更新译文；没有则新建（空 code 落到 `platform`，空 group 从 `trans_key` 第一段推断，如 `menu.route.dashboard` → `menu`）。新建某语言的词条时，该语言码须已在支持列表中。
 
 **请求**
 
 
-| 字段          | 位置   | 必填  | 类型                | 说明                                |
-| ----------- | ---- | --- | ----------------- | --------------------------------- |
-| `trans_key` | json | 是   | string            | 完整词条 key，如 `menu.route.dashboard` |
-| `data`      | json | 是   | map[string]string | 语言码 → 译文；新建时语言码须已在支持列表中           |
+| 字段           | 位置   | 必填  | 类型                | 说明                                |
+| ------------ | ---- | --- | ----------------- | --------------------------------- |
+| `i18n_code`  | json | 否   | string            | 站点编码；空则不按站点过滤                     |
+| `i18n_group` | json | 否   | string            | 分组；空则不按分组过滤                       |
+| `trans_key`  | json | 是   | string            | 完整词条 key，如 `menu.route.dashboard` |
+| `data`       | json | 是   | map[string]string | 语言码 → 译文；新建时语言码须已在支持列表中           |
 
 
 ```json
 {
+  "i18n_code": "platform",
+  "i18n_group": "menu",
   "trans_key": "menu.route.dashboard",
   "data": {
     "zh-CN": "工作台",
@@ -1702,7 +1714,7 @@ Query：`/admin/role/detail?id=2`
 
 
 ```json
-{ "i18n_code": "core", "i18n_group": "menu", "lang": "zh-CN", "page": 1, "page_size": 50 }
+{ "i18n_code": "platform", "i18n_group": "menu", "lang": "zh-CN", "page": 1, "page_size": 50 }
 ```
 
 **响应**
@@ -2214,6 +2226,7 @@ Query：`/admin/role/detail?id=2`
   "is_super_admin": true,
   "status": 1,
   "role_codes": ["super_admin"],
+  "role_names": ["超级管理员"],
   "home_path": "/dashboard"
 }
 ```
@@ -2262,6 +2275,7 @@ Query：`/admin/role/detail?id=2`
   "is_super_admin": true,
   "status": 1,
   "role_codes": ["super_admin"],
+  "role_names": ["超级管理员"],
   "home_path": "/dashboard"
 }
 ```

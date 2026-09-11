@@ -13,13 +13,13 @@ func langSeeds() []*coreclient.CreateI18NLangReq {
 	}
 }
 
-func menuI18n() []*coreclient.I18NItem {
+func menuI18n(i18nCode string) []*coreclient.I18NItem {
 	var out []*coreclient.I18NItem
 	add := func(key, zh, hk, en string) {
 		out = append(out,
-			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupMenu, TransKey: key, Lang: i18n.LangZH, Value: zh},
-			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupMenu, TransKey: key, Lang: i18n.LangHK, Value: hk},
-			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupMenu, TransKey: key, Lang: i18n.LangEN, Value: en},
+			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupMenu, TransKey: key, Lang: i18n.LangZH, Value: zh},
+			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupMenu, TransKey: key, Lang: i18n.LangHK, Value: hk},
+			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupMenu, TransKey: key, Lang: i18n.LangEN, Value: en},
 		)
 	}
 	add("menu.route.dashboard", "工作台", "工作台", "Dashboard")
@@ -44,13 +44,13 @@ func menuI18n() []*coreclient.I18NItem {
 	return out
 }
 
-func apiI18n() []*coreclient.I18NItem {
+func apiI18n(i18nCode string) []*coreclient.I18NItem {
 	var out []*coreclient.I18NItem
 	add := func(key, zh, hk, en string) {
 		out = append(out,
-			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupAPI, TransKey: key, Lang: i18n.LangZH, Value: zh},
-			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupAPI, TransKey: key, Lang: i18n.LangHK, Value: hk},
-			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupAPI, TransKey: key, Lang: i18n.LangEN, Value: en},
+			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupAPI, TransKey: key, Lang: i18n.LangZH, Value: zh},
+			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupAPI, TransKey: key, Lang: i18n.LangHK, Value: hk},
+			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupAPI, TransKey: key, Lang: i18n.LangEN, Value: en},
 		)
 	}
 	add("api.operatorSelf", "当前厅", "當前廳", "Current operator")
@@ -95,20 +95,20 @@ func apiI18n() []*coreclient.I18NItem {
 	return out
 }
 
-func frontI18n() []*coreclient.I18NItem {
+func frontI18n(i18nCode string) []*coreclient.I18NItem {
 	var out []*coreclient.I18NItem
 	add := func(key, zh, hk, en string) {
 		out = append(out,
-			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupFront, TransKey: key, Lang: i18n.LangZH, Value: zh},
-			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupFront, TransKey: key, Lang: i18n.LangHK, Value: hk},
-			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupFront, TransKey: key, Lang: i18n.LangEN, Value: en},
+			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupFront, TransKey: key, Lang: i18n.LangZH, Value: zh},
+			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupFront, TransKey: key, Lang: i18n.LangHK, Value: hk},
+			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupFront, TransKey: key, Lang: i18n.LangEN, Value: en},
 		)
 	}
 	addLogin := func(key, zh, hk, en string) {
 		out = append(out,
-			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupLogin, TransKey: key, Lang: i18n.LangZH, Value: zh},
-			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupLogin, TransKey: key, Lang: i18n.LangHK, Value: hk},
-			&coreclient.I18NItem{I18NCode: i18n.CodePlatform, I18NGroup: i18n.GroupLogin, TransKey: key, Lang: i18n.LangEN, Value: en},
+			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupLogin, TransKey: key, Lang: i18n.LangZH, Value: zh},
+			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupLogin, TransKey: key, Lang: i18n.LangHK, Value: hk},
+			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupLogin, TransKey: key, Lang: i18n.LangEN, Value: en},
 		)
 	}
 	add("common.column.operations", "操作", "操作", "Operations")

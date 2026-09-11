@@ -40,9 +40,16 @@ func (l *GetUserListLogic) GetUserList(in *core.UserListReq) (*core.UserListResp
 		return nil, xerr.RpcErr(err)
 	}
 	out := make([]*core.UserPublic, 0, len(list))
+	ids := make([]int64, 0, len(list))
 	for i := range list {
-		p := service.PublicUser(&list[i], nil)
-		out = append(out, logic.ToUserPublic(p))
+		ids = append(ids, list[i].ID)
+	}
+	roles, err := l.svcCtx.Deps.RolesOfUsers(l.ctx, ids)
+	if err != nil {
+		return nil, xerr.RpcErr(err)
+	}
+	for i := range list {
+		out = append(out, logic.ToUserPublic(service.PublicUser(&list[i], roles[list[i].ID])))
 	}
 	return &core.UserListResp{List: out, Total: total}, nil
 }

@@ -1,0 +1,66 @@
+syntax = "v1"
+
+@server (
+	group: provider
+	middleware: Auth
+	prefix: /admin/game-provider
+)
+service platform_game {
+	// ===== Game Provider APIs =====
+	@handler GameProviderList
+	get /list (GameProviderListReq) returns (GameProviderListResp)
+
+	@handler GameProviderGet
+	get /get (GameProviderGetReq) returns (GameProviderResp)
+
+	@handler GameProviderUpdate
+	post /update (GameProviderUpdateReq) returns (GameProviderResp)
+}
+
+// ========== Game Provider ==========
+type GameProviderResp {
+	ID                 int64  `json:"id" comment:"厂商ID"`
+	SourceID           int64  `json:"source_id" comment:"上游厂商ID"`
+	ProviderCode       string `json:"provider_code" comment:"厂商编码"`
+	SourceProviderCode string `json:"source_provider_code" comment:"上游厂商编码"`
+	SourceNameI18n     string `json:"source_name_i18n" comment:"上游厂商名称（多语言JSON）"`
+	NameI18n           string `json:"name_i18n" comment:"厂商名称（多语言JSON）"`
+	SourceLogoUrl      string `json:"source_logo_url,omitempty" comment:"上游厂商Logo URL"`
+	LogoUrl            string `json:"logo_url,omitempty" comment:"厂商Logo URL"`
+	SourceSortNo       int32  `json:"source_sort_no,omitempty" comment:"上游排序号"`
+	SortNo             int32  `json:"sort_no" comment:"排序号"`
+	SourceStatus       int16  `json:"source_status" comment:"上游状态：1启用/2禁用"`
+	Status             int16  `json:"status" comment:"状态：1启用/2禁用"`
+	IsDeleted          int16  `json:"is_deleted" comment:"软删除：0正常/1已删除"`
+	CreatedAt          int64  `json:"created_at" comment:"创建时间戳"`
+	UpdatedAt          int64  `json:"updated_at" comment:"更新时间戳"`
+}
+
+type GameProviderListReq {
+	Page         int64  `form:"page,optional" comment:"页码（默认1）"`
+	PageSize     int64  `form:"page_size,optional" comment:"每页大小（默认15）"`
+	ProviderCode string `form:"provider_code,optional" comment:"厂商编码"`
+	Name         string `form:"name,optional" comment:"厂商名称（查询 source_name_i18n.default）"`
+	Status       int16  `form:"status,optional" comment:"状态筛选：1启用/2禁用"`
+	IsDeleted    int16  `form:"is_deleted,optional" comment:"软删除筛选：0未删除/1已删除（默认0-未删除）"`
+	SortBy       string `form:"sort_by,optional" comment:"排序字段（id/sort_no/created_at）"`
+	SortOrder    string `form:"sort_order,optional" comment:"排序顺序（asc/desc）"`
+}
+
+type GameProviderListResp {
+	List []GameProviderResp `json:"list" comment:"厂商列表"`
+	Total int64              `json:"total" comment:"总数"`
+}
+
+type GameProviderGetReq {
+	ID int64 `form:"id" binding:"required" comment:"厂商ID"`
+}
+
+type GameProviderUpdateReq {
+	ID          int64  `json:"id" binding:"required" comment:"厂商ID"`
+	NameI18n    string `json:"name_i18n,optional" comment:"厂商名称（多语言JSON）"`
+	LogoUrl     string `json:"logo_url,optional" comment:"厂商Logo URL"`
+	SortNo      int32  `json:"sort_no,optional" comment:"排序号"`
+	Status      int16  `json:"status,optional" comment:"状态：1启用/2禁用"`
+	ForceLogout bool   `json:"force_logout,optional" comment:"状态变更为停用时是否强制踢线"`
+}

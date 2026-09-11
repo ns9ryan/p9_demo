@@ -55,6 +55,7 @@ type UserPublic struct {
 	IsSuperAdmin bool     `json:"is_super_admin"`
 	Status       int16    `json:"status"`
 	RoleCodes    []string `json:"role_codes"`
+	RoleNames    []string `json:"role_names"`
 	HomePath     string   `json:"home_path,omitempty"`
 	CreatedAt    int64    `json:"created_at"`
 	LastLoginAt  *int64   `json:"last_login_at,omitempty"`
@@ -62,9 +63,12 @@ type UserPublic struct {
 	Email        *string  `json:"email,omitempty"`
 }
 
-func toPublic(u *model.User, codes []string) UserPublic {
-	if codes == nil {
-		codes = make([]string, 0)
+func toPublic(u *model.User, roles UserRoles) UserPublic {
+	if roles.Codes == nil {
+		roles.Codes = []string{}
+	}
+	if roles.Names == nil {
+		roles.Names = []string{}
 	}
 	out := UserPublic{
 		ID:           u.ID,
@@ -74,7 +78,8 @@ func toPublic(u *model.User, codes []string) UserPublic {
 		OperatorID:   u.OperatorID,
 		IsSuperAdmin: u.IsSuperAdmin,
 		Status:       u.Status,
-		RoleCodes:    codes,
+		RoleCodes:    roles.Codes,
+		RoleNames:    roles.Names,
 		HomePath:     "/dashboard",
 		CreatedAt:    u.CreatedAt.Unix(),
 		Mobile:       u.Mobile,
@@ -108,19 +113,19 @@ func (d *Deps) doLogin(ctx context.Context, req LoginReq) (*LoginResult, *model.
 	if !CheckPassword(u.PasswordHash, req.Password) {
 		return nil, u, i18n.AuthPasswordIncorrect, xerr.BadRequest(i18n.AuthPasswordIncorrect)
 	}
-	codes, err := d.RoleCodesOfUser(ctx, u.ID)
+	roles, err := d.RolesOfUser(ctx, u.ID)
 	if err != nil {
 		return nil, u, xerr.AsError(err).Message, err
 	}
-	if len(codes) == 0 {
+	if len(roles.Codes) == 0 {
 		return nil, u, i18n.AuthNoActiveRole, xerr.Forbidden(i18n.AuthNoActiveRole)
 	}
-	tok, err := d.SignTokenPair(ctx, u, codes)
+	tok, err := d.SignTokenPair(ctx, u, roles.Codes)
 	if err != nil {
 		return nil, u, xerr.AsError(err).Message, err
 	}
 	d.touchLogin(ctx, u, req.ClientIP)
-	return &LoginResult{Token: tok, User: toPublic(u, codes)}, u, "", nil
+	return &LoginResult{Token: tok, User: toPublic(u, roles)}, u, "", nil
 }
 
 func (d *Deps) writeLoginLog(ctx context.Context, req LoginReq, u *model.User, ok bool, reason string) {
@@ -238,11 +243,11 @@ func (d *Deps) Refresh(ctx context.Context, req RefreshReq) (*LoginResult, error
 	if d.TokenBlacklisted(ctx, raw) {
 		return nil, xerr.Unauthorized(i18n.Unauthorized)
 	}
-	u, codes, err := d.sessionFromClaims(ctx, c)
+	u, roles, err := d.sessionFromClaims(ctx, c)
 	if err != nil {
 		return nil, err
 	}
-	tok, err := d.SignTokenPair(ctx, u, codes)
+	tok, err := d.SignTokenPair(ctx, u, roles.Codes)
 	if err != nil {
 		return nil, err
 	}
@@ -251,5 +256,5 @@ func (d *Deps) Refresh(ctx context.Context, req RefreshReq) (*LoginResult, error
 		exp = c.ExpiresAt.Unix()
 	}
 	_ = d.BlacklistToken(ctx, raw, exp)
-	return &LoginResult{Token: tok, User: toPublic(u, codes)}, nil
+	return &LoginResult{Token: tok, User: toPublic(u, roles)}, nil
 }

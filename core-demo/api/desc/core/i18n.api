@@ -101,10 +101,14 @@ type I18nDictResp {
 
 // Update i18n by key request | 按词条key更新多语言
 type UpdateI18nByKeyReq {
+	// Site | 站点编码，空则不按站点过滤
+	I18nCode  string            `json:"i18n_code,optional"`
+	// Group | 分组，空则不按分组过滤
+	I18nGroup string            `json:"i18n_group,optional"`
 	// Key | 词条key
-	TransKey string            `json:"trans_key"`
+	TransKey  string            `json:"trans_key"`
 	// Data | 各语言译文
-	Data     map[string]string `json:"data"`
+	Data      map[string]string `json:"data"`
 }
 
 // I18n lang info | 支持的语言

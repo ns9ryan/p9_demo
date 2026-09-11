@@ -1,6 +1,7 @@
 package response
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/zeromicro/go-zero/rest/httpx"
@@ -59,4 +60,26 @@ func ListResponseData(list interface{}, total int64) interface{} {
 		List:  list,
 		Total: total,
 	}
+}
+
+// SetupHTTPX 设置全局的 HTTP 响应处理
+// 配置 go-zero 的 httpx 包来使用统一的响应格式
+func SetupHTTPX() {
+	// 设置成功响应处理
+	httpx.SetOkHandler(func(ctx context.Context, data any) any {
+		return Success(data)
+	})
+
+	// 设置错误响应处理
+	httpx.SetErrorHandlerCtx(func(ctx context.Context, err error) (int, any) {
+		// 默认返回 500 Internal Server Error
+		statusCode := http.StatusInternalServerError
+		errMsg := err.Error()
+
+		// 可以根据错误类型进行更精细的处理
+		// 例如：验证错误返回 400，权限错误返回 403 等
+		// 但为了简化，这里直接返回 500 和错误信息
+
+		return statusCode, Error(statusCode, errMsg)
+	})
 }

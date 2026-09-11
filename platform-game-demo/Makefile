@@ -42,7 +42,18 @@ api: # Generate API files | 生成 API 的代码
 	$(GOCTL) api go --api $(API_FILE) --dir $(API_DIR) --style=$(STYLE)
 
 rpc: # Generate RPC files from proto | 生成 RPC 的代码
-	$(GOCTL) rpc protoc $(RPC_PROTO) --go_out=. --go-grpc_out=. --zrpc_out=$(RPC_DIR) --go_opt=module=$(MODULE) --go-grpc_opt=module=$(MODULE) --module=$(MODULE) -I $(RPC_PROTO_PATH) --style=$(STYLE)
+	cd $(RPC_PROTO_PATH) && $(GOCTL) rpc protoc platform_game.proto --go_out=../.. --go-grpc_out=../.. --zrpc_out=.. --go_opt=module=$(MODULE) --go-grpc_opt=module=$(MODULE) --module=$(MODULE) -I . --multiple --name-from-filename --style=$(STYLE)
+
+rpc-vendor: # Generate RPC files from proto | 生成 RPC 的代码
+	cd $(RPC_PROTO_PATH) && $(GOCTL) rpc protoc vendor.proto --go_out=../.. --go-grpc_out=../.. --zrpc_out=.. --go_opt=module=$(MODULE) --go-grpc_opt=module=$(MODULE) --module=$(MODULE) -I . --multiple --name-from-filename --style=$(STYLE)
+
+
+ent: # 生成 Ent 代码
+	goctl model pg datasource \
+	--url="postgres://root:root@127.0.0.1:5432/app?sslmode=disable" \
+	--table="game,game_category,game_provider,game_channel,game_currency,game_sync_checkpoint,sys_currency" \
+	--dir ./rpc/ent \
+	--style=$(STYLE)
 
 swagger: # Generate Swagger API documentation | 生成 API Swagger 文档
 	mkdir -p api/swagger

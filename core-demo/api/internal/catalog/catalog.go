@@ -12,8 +12,8 @@ const (
 	menuTypeButton int32 = 2
 )
 
-// AdminReq 管理员请求(菜单相关种子数据)
-func AdminReq() *coreclient.RegisterCatalogReq {
+// CatalogReq 菜单、API目录、多语言数据种子数据
+func catalogReq(code string) *coreclient.RegisterCatalogReq {
 	return &coreclient.RegisterCatalogReq{
 		Menus: []*coreclient.RegisterMenuReq{
 			{Name: "Dashboard", Title: "menu.route.dashboard", Path: "/dashboard", MenuType: menuTypeMenu, Component: "dashboard/index", Sort: 1},
@@ -77,7 +77,7 @@ func AdminReq() *coreclient.RegisterCatalogReq {
 			{Path: "/admin/i18n/lang/delete", Method: http.MethodPost, Description: "api.i18nLangDelete", ApiGroup: "i18n", ServiceName: "core-api"},
 			{Path: "/admin/i18n/lang/list", Method: http.MethodPost, Description: "api.i18nLangList", ApiGroup: "i18n", ServiceName: "core-api"},
 		},
-		I18N:      append(append(menuI18n(), apiI18n()...), frontI18n()...),
+		I18N:      append(append(menuI18n(code), apiI18n(code)...), frontI18n(code)...),
 		I18NLangs: langSeeds(),
 	}
 }

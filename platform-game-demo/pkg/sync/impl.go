@@ -5,18 +5,23 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"sync"
 	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"gorm.io/gorm"
+	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 	"oa.98ent.com/p9/platform-game/rpc/pb/vendors"
 )
+
+const BatchSize = 10
 
 // ===== 同步服务实现 =====
 
 // SyncServiceImpl 同步服务实现
 type SyncServiceImpl struct {
+	mu                  sync.Mutex
 	db                  *gorm.DB
 	grpcServerAddr      string
 	categorySyncService *CategorySyncService
@@ -127,117 +132,222 @@ func (s *SyncServiceImpl) GetGRPCClient(ctx context.Context) (vendors.VendorGame
 }
 
 // Preview 预检查同步
-func (s *SyncServiceImpl) Preview(ctx context.Context, objectType string) (*vendors.SyncPreviewResp, error) {
+func (s *SyncServiceImpl) Preview(ctx context.Context, req *platform_game.SyncPreviewRequest) (*platform_game.SyncPreviewResp, error) {
+	objectType := req.ObjectType
 	log.Printf("[Preview] 开始处理 %s 同步预检查\n", objectType)
-	// 获取 gRPC 客户端
-	// log.Println("[Preview] 正在获取 gRPC 客户端...")
-	// client, conn, err := s.GetGRPCClient(ctx)
-	// if err != nil {
-	// 	log.Printf("[Preview] ✗ 获取 gRPC 客户端失败: %v\n", err)
-	// 	return nil, err
-	// }
-	// defer conn.Close()
-	// log.Println("[Preview] ✓ gRPC 客户端获取成功")
+
 	var client vendors.VendorGameServiceClient = nil
+	isGetRemoteClient := false
+	// grpcServerAddr为空时同步本地数据
+	if s.grpcServerAddr != "" {
+		// 获取 gRPC 客户端
+		log.Println("[Preview] 正在获取 gRPC 客户端...")
+		cli, conn, err := s.GetGRPCClient(ctx)
+		if err != nil {
+			log.Printf("[Preview] ✗ 获取 gRPC 客户端失败: %v\n", err)
+			return nil, err
+		}
+		defer conn.Close()
+		client = cli
+		isGetRemoteClient = true
+		log.Println("[Preview] ✓ gRPC 客户端获取成功")
+	}
 
 	// 根据对象类型选择对应的同步服务进行预检查
 	log.Printf("[Preview] 正在调用 %s 同步服务...\n", objectType)
 	switch objectType {
 	case "category":
-		return s.categorySyncService.Preview(ctx, client)
+		previewResp, _, err := s.categorySyncService.Preview(ctx, client, req, isGetRemoteClient)
+		log.Printf("[Preview] [游戏分类同步] 预检查结果数量: %d", len(previewResp.Diffs))
+		return previewResp, err
 	case "provider":
-		return s.providerSyncService.Preview(ctx, client)
+		previewResp, _, err := s.providerSyncService.Preview(ctx, client, req, isGetRemoteClient)
+		log.Printf("[Preview] [游戏提供商同步] 预检查结果数量: %d", len(previewResp.Diffs))
+		return previewResp, err
 	case "channel":
-		return s.channelSyncService.Preview(ctx, client)
+		previewResp, _, err := s.channelSyncService.Preview(ctx, client, req, isGetRemoteClient)
+		log.Printf("[Preview] [游戏渠道同步] 预检查结果数量: %d", len(previewResp.Diffs))
+		return previewResp, err
 	case "game":
-		return s.gameSyncService.Preview(ctx, client)
+		previewResp, _, err := s.gameSyncService.Preview(ctx, client, req, isGetRemoteClient)
+		log.Printf("[Preview] [游戏同步] 预检查结果数量: %d", len(previewResp.Diffs))
+		return previewResp, err
 	case "currency":
-		return s.currencySyncService.Preview(ctx, client)
+		previewResp, _, err := s.currencySyncService.Preview(ctx, client, req, isGetRemoteClient)
+		log.Printf("[Preview] [游戏货币同步] 预检查结果数量: %d", len(previewResp.Diffs))
+		return previewResp, err
 	default:
 		return nil, fmt.Errorf("未知的对象类型: %s", objectType)
 	}
 }
 
 // Run 执行同步操作
-func (s *SyncServiceImpl) Run(ctx context.Context, objectType string) (*vendors.SyncRunResp, error) {
-	// 获取 gRPC 客户端
-	// client, conn, err := s.GetGRPCClient(ctx)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// defer conn.Close()
+func (s *SyncServiceImpl) Run(ctx context.Context, objectType string, syncCols []string, localCheckpointID int64) (*platform_game.SyncRunResp, error) {
+	// 加锁，确保同一时间仅有一个协程执行同步
+	s.mu.Lock()
+	defer s.mu.Unlock()
 	var client vendors.VendorGameServiceClient = nil
+	isGetRemoteClient := false
+	// grpcServerAddr为空时同步本地数据
+	if s.grpcServerAddr != "" {
+		// 获取 gRPC 客户端
+		log.Println("[Run] 正在获取 gRPC 客户端...")
+		cli, conn, err := s.GetGRPCClient(ctx)
+		if err != nil {
+			log.Printf("[Run] ✗ 获取 gRPC 客户端失败: %v\n", err)
+			return nil, err
+		}
+		defer conn.Close()
+		client = cli
+		isGetRemoteClient = true
+		log.Println("[Run] ✓ gRPC 客户端获取成功")
+	}
+	// var client vendors.VendorGameServiceClient = nil
 
 	// 根据对象类型选择对应的同步服务进行同步
 	switch objectType {
 	case "category":
-		return s.categorySyncService.Run(ctx, client)
+		err := s.categorySyncService.Run(ctx, client, syncCols, localCheckpointID, isGetRemoteClient)
+		if err != nil {
+			return nil, err
+		}
 	case "provider":
-		return s.providerSyncService.Run(ctx, client)
+		err := s.providerSyncService.Run(ctx, client, syncCols, localCheckpointID, isGetRemoteClient)
+		if err != nil {
+			return nil, err
+		}
 	case "channel":
-		return s.channelSyncService.Run(ctx, client)
+		err := s.channelSyncService.Run(ctx, client, syncCols, localCheckpointID, isGetRemoteClient)
+		if err != nil {
+			return nil, err
+		}
 	case "game":
-		return s.gameSyncService.Run(ctx, client)
+		err := s.gameSyncService.Run(ctx, client, syncCols, localCheckpointID, isGetRemoteClient)
+		if err != nil {
+			return nil, err
+		}
 	case "currency":
-		return s.currencySyncService.Run(ctx, client)
+		err := s.currencySyncService.Run(ctx, client, syncCols, localCheckpointID, isGetRemoteClient)
+		if err != nil {
+			return nil, err
+		}
 	default:
 		return nil, fmt.Errorf("未知的对象类型: %s", objectType)
 	}
+
+	return &platform_game.SyncRunResp{CheckpointId: localCheckpointID}, nil
 }
 
-// SyncAll 全量同步所有类型的数据
-func (s *SyncServiceImpl) SyncAll(ctx context.Context) (*vendors.SyncRunResp, error) {
-	// 创建聚合结果
-	totalResult := &vendors.SyncRunResp{
-		Preview: &vendors.SyncPreviewResp{
-			Stats: &vendors.SyncStats{},
-			Diffs: make([]*vendors.SyncDiff, 0),
+// SyncPageHandler 分页处理器
+type SyncPageHandler struct {
+	RemoteData  []interface{}
+	LocalIndex  map[string]interface{}
+	CompareFunc func(remoteItem interface{}, localIndex map[string]interface{}) *platform_game.SyncDiff
+	PageSize    int64
+	Page        int64
+	SkipNoop    bool
+}
+
+// Handle 处理分页逻辑并返回预检查结果
+func (h *SyncPageHandler) Handle(totalRemote, totalLocal int64) *platform_game.SyncPreviewResp {
+	result := &platform_game.SyncPreviewResp{
+		Stats: &platform_game.SyncStats{
+			RemoteTotal: int32(totalRemote),
+			LocalTotal:  int32(totalLocal),
 		},
-		Apply: &vendors.SyncApplyResult{},
+		Diffs: make([]*platform_game.SyncDiff, 0),
 	}
 
-	// 按依赖顺序同步：分类 -> 提供商 -> 渠道 -> 游戏 -> 货币
-	syncOrder := []string{"category", "provider", "channel", "game", "currency"}
+	count := 0
+	// 当 Page=0 时，返回全量结果（不做分页）
+	if h.Page == 0 {
+		for _, item := range h.RemoteData {
+			diff := h.CompareFunc(item, h.LocalIndex)
 
-	for _, objectType := range syncOrder {
-		log.Printf("[全量同步] 开始同步%s", objectType)
+			// 统计各类型操作
+			h.recordStats(result.Stats, diff)
 
-		// 执行同步
-		result, err := s.Run(ctx, objectType)
-		if err != nil {
-			log.Printf("[全量同步] 同步%s失败: %v", objectType, err)
-			return nil, fmt.Errorf("同步%s失败: %w", objectType, err)
+			// 如果启用了跳过 noop，则不添加
+			if h.SkipNoop && diff.Action == "noop" {
+				continue
+			}
+			count++
+
+			result.Diffs = append(result.Diffs, diff)
 		}
-
-		// 汇总统计信息
-		if result.Preview != nil && result.Preview.Stats != nil {
-			totalResult.Preview.Stats.RemoteTotal += result.Preview.Stats.RemoteTotal
-			totalResult.Preview.Stats.LocalTotal += result.Preview.Stats.LocalTotal
-			totalResult.Preview.Stats.CreateTotal += result.Preview.Stats.CreateTotal
-			totalResult.Preview.Stats.UpdateTotal += result.Preview.Stats.UpdateTotal
-			totalResult.Preview.Stats.DeleteTotal += result.Preview.Stats.DeleteTotal
-			totalResult.Preview.Stats.NoopTotal += result.Preview.Stats.NoopTotal
-			totalResult.Preview.Stats.ConflictTotal += result.Preview.Stats.ConflictTotal
-			totalResult.Preview.Stats.ErrorTotal += result.Preview.Stats.ErrorTotal
-		}
-
-		// 汇总差异信息
-		if result.Preview != nil && result.Preview.Diffs != nil {
-			totalResult.Preview.Diffs = append(totalResult.Preview.Diffs, result.Preview.Diffs...)
-		}
-
-		// 汇总应用结果
-		if result.Apply != nil {
-			totalResult.Apply.Created += result.Apply.Created
-			totalResult.Apply.Updated += result.Apply.Updated
-			totalResult.Apply.Deleted += result.Apply.Deleted
-			totalResult.Apply.Failed += result.Apply.Failed
-			totalResult.Apply.Skipped += result.Apply.Skipped
-		}
-
-		log.Printf("[全量同步] 完成%s同步 (新增:%d, 更新:%d, 失败:%d)", objectType,
-			result.Apply.Created, result.Apply.Updated, result.Apply.Failed)
+		result.Stats.DiffTotal = int32(count)
+		return result
 	}
 
-	return totalResult, nil
+	// 计算分页范围
+	limit := int(h.PageSize * h.Page)
+	offset := limit - int(h.PageSize)
+
+	// 遍历远程数据
+	for _, item := range h.RemoteData {
+		diff := h.CompareFunc(item, h.LocalIndex)
+		// 统计各类型操作
+		h.recordStats(result.Stats, diff)
+
+		// 如果启用了跳过 noop，则不计数
+		if h.SkipNoop && diff.Action == "noop" {
+			continue
+		}
+
+		count++
+
+		// 在分页范围内添加差异项
+		if count > offset && count <= limit {
+			result.Diffs = append(result.Diffs, diff)
+		}
+	}
+	result.Stats.DiffTotal = int32(count)
+	return result
+}
+
+// recordStats 记录统计信息
+func (h *SyncPageHandler) recordStats(stats *platform_game.SyncStats, diff *platform_game.SyncDiff) {
+	switch diff.Action {
+	case "create":
+		stats.CreateTotal++
+	case "update":
+		stats.UpdateTotal++
+	case "noop":
+		stats.NoopTotal++
+	}
+}
+
+func getValidSyncCols(localCols []string, syncCols []string) []string {
+	validCols := make([]string, 0)
+	for _, col := range localCols {
+		for _, c := range syncCols {
+			if c == col {
+				validCols = append(validCols, col)
+				break
+			}
+		}
+	}
+	return validCols
+}
+
+func GetUpdatedData(allColsData map[string]interface{}, syncCols []string) map[string]interface{} {
+	localCols := make([]string, 0, len(allColsData))
+	for col := range allColsData {
+		localCols = append(localCols, col)
+	}
+	validCols := getValidSyncCols(localCols, syncCols)
+	fmt.Println("validCols ===", validCols)
+	updatedData := make(map[string]interface{})
+	for _, col := range validCols {
+		updatedData[col] = allColsData[col]
+	}
+	return updatedData
+}
+
+type Apply struct {
+	Created int32
+	Updated int32
+	Deleted int32
+	Failed  int32
+	Skipped int32
 }

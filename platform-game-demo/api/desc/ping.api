@@ -1,0 +1,16 @@
+syntax = "v1"
+
+// Ping响应
+type PingResponse {
+	Message string `json:"message"`
+}
+
+@server (
+	group: ping
+)
+service platform_game {
+	// Ping
+	@handler Ping
+	get /ping returns (PingResponse)
+}
+

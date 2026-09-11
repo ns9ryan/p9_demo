@@ -6,6 +6,7 @@ import (
 	"oa.98ent.com/p9/core/api/internal/convert"
 	"oa.98ent.com/p9/core/api/internal/svc"
 	"oa.98ent.com/p9/core/api/internal/types"
+	"oa.98ent.com/p9/core/common/i18n"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -29,5 +30,5 @@ func (l *GetApiListLogic) GetApiList(req *types.ApiListReq) (*types.ApiListResp,
 	if err != nil {
 		return nil, err
 	}
-	return convert.ApiList(l.ctx, out), nil
+	return convert.ApiList(l.ctx, i18n.CodeByPartnerMode(l.svcCtx.Config.PartnerMode), out), nil
 }

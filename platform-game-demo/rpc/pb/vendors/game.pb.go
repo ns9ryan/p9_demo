@@ -2,14 +2,13 @@
 // versions:
 // 	protoc-gen-go v1.36.12
 // 	protoc        v3.19.4
-// source: game.proto
+// source: vendor/game.proto
 
 package vendors
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	_ "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -34,7 +33,7 @@ type GetGameRequest struct {
 
 func (x *GetGameRequest) Reset() {
 	*x = GetGameRequest{}
-	mi := &file_game_proto_msgTypes[0]
+	mi := &file_vendor_game_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -46,7 +45,7 @@ func (x *GetGameRequest) String() string {
 func (*GetGameRequest) ProtoMessage() {}
 
 func (x *GetGameRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_game_proto_msgTypes[0]
+	mi := &file_vendor_game_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -59,7 +58,7 @@ func (x *GetGameRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetGameRequest.ProtoReflect.Descriptor instead.
 func (*GetGameRequest) Descriptor() ([]byte, []int) {
-	return file_game_proto_rawDescGZIP(), []int{0}
+	return file_vendor_game_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *GetGameRequest) GetAction() int32 {
@@ -102,7 +101,7 @@ type GameInfo struct {
 
 func (x *GameInfo) Reset() {
 	*x = GameInfo{}
-	mi := &file_game_proto_msgTypes[1]
+	mi := &file_vendor_game_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -114,7 +113,7 @@ func (x *GameInfo) String() string {
 func (*GameInfo) ProtoMessage() {}
 
 func (x *GameInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_game_proto_msgTypes[1]
+	mi := &file_vendor_game_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -127,7 +126,7 @@ func (x *GameInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GameInfo.ProtoReflect.Descriptor instead.
 func (*GameInfo) Descriptor() ([]byte, []int) {
-	return file_game_proto_rawDescGZIP(), []int{1}
+	return file_vendor_game_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *GameInfo) GetId() int64 {
@@ -200,155 +199,6 @@ func (x *GameInfo) GetLoadType() uint32 {
 	return 0
 }
 
-// GameDeletedInfo 游戏删除记录
-type GameDeletedInfo struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	VenId         int64                  `protobuf:"varint,2,opt,name=ven_id,json=venId,proto3" json:"ven_id,omitempty"`
-	CatId         int64                  `protobuf:"varint,3,opt,name=cat_id,json=catId,proto3" json:"cat_id,omitempty"`
-	GroupId       int64                  `protobuf:"varint,4,opt,name=group_id,json=groupId,proto3" json:"group_id,omitempty"`
-	VenKey        string                 `protobuf:"bytes,5,opt,name=ven_key,json=venKey,proto3" json:"ven_key,omitempty"`
-	Code          string                 `protobuf:"bytes,6,opt,name=code,proto3" json:"code,omitempty"`
-	Name          string                 `protobuf:"bytes,7,opt,name=name,proto3" json:"name,omitempty"`
-	Image         string                 `protobuf:"bytes,8,opt,name=image,proto3" json:"image,omitempty"`
-	DeleteUtype   uint32                 `protobuf:"varint,9,opt,name=delete_utype,json=deleteUtype,proto3" json:"delete_utype,omitempty"` // 删除人类型：1.系统用户 2.合作商用户 3.代理用户 4.游戏用户
-	DeleteUid     int64                  `protobuf:"varint,10,opt,name=delete_uid,json=deleteUid,proto3" json:"delete_uid,omitempty"`      // 删除人ID
-	DeleteNotes   string                 `protobuf:"bytes,11,opt,name=delete_notes,json=deleteNotes,proto3" json:"delete_notes,omitempty"` // 删除备注
-	DeleteAt      int64                  `protobuf:"varint,12,opt,name=delete_at,json=deleteAt,proto3" json:"delete_at,omitempty"`         // 删除时间
-	ChanId        int64                  `protobuf:"varint,13,opt,name=chan_id,json=chanId,proto3" json:"chan_id,omitempty"`               // GameChannel id
-	LoadType      uint32                 `protobuf:"varint,14,opt,name=load_type,json=loadType,proto3" json:"load_type,omitempty"`         // GameLoadType 1.Embed 2.Ext link 4.SDK DOM (来自所属渠道 GameChannel.load_type)
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GameDeletedInfo) Reset() {
-	*x = GameDeletedInfo{}
-	mi := &file_game_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GameDeletedInfo) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GameDeletedInfo) ProtoMessage() {}
-
-func (x *GameDeletedInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_game_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GameDeletedInfo.ProtoReflect.Descriptor instead.
-func (*GameDeletedInfo) Descriptor() ([]byte, []int) {
-	return file_game_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *GameDeletedInfo) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-func (x *GameDeletedInfo) GetVenId() int64 {
-	if x != nil {
-		return x.VenId
-	}
-	return 0
-}
-
-func (x *GameDeletedInfo) GetCatId() int64 {
-	if x != nil {
-		return x.CatId
-	}
-	return 0
-}
-
-func (x *GameDeletedInfo) GetGroupId() int64 {
-	if x != nil {
-		return x.GroupId
-	}
-	return 0
-}
-
-func (x *GameDeletedInfo) GetVenKey() string {
-	if x != nil {
-		return x.VenKey
-	}
-	return ""
-}
-
-func (x *GameDeletedInfo) GetCode() string {
-	if x != nil {
-		return x.Code
-	}
-	return ""
-}
-
-func (x *GameDeletedInfo) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *GameDeletedInfo) GetImage() string {
-	if x != nil {
-		return x.Image
-	}
-	return ""
-}
-
-func (x *GameDeletedInfo) GetDeleteUtype() uint32 {
-	if x != nil {
-		return x.DeleteUtype
-	}
-	return 0
-}
-
-func (x *GameDeletedInfo) GetDeleteUid() int64 {
-	if x != nil {
-		return x.DeleteUid
-	}
-	return 0
-}
-
-func (x *GameDeletedInfo) GetDeleteNotes() string {
-	if x != nil {
-		return x.DeleteNotes
-	}
-	return ""
-}
-
-func (x *GameDeletedInfo) GetDeleteAt() int64 {
-	if x != nil {
-		return x.DeleteAt
-	}
-	return 0
-}
-
-func (x *GameDeletedInfo) GetChanId() int64 {
-	if x != nil {
-		return x.ChanId
-	}
-	return 0
-}
-
-func (x *GameDeletedInfo) GetLoadType() uint32 {
-	if x != nil {
-		return x.LoadType
-	}
-	return 0
-}
-
 // GetGameResponse 获取游戏列表响应
 type GetGameResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -361,7 +211,7 @@ type GetGameResponse struct {
 
 func (x *GetGameResponse) Reset() {
 	*x = GetGameResponse{}
-	mi := &file_game_proto_msgTypes[3]
+	mi := &file_vendor_game_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -373,7 +223,7 @@ func (x *GetGameResponse) String() string {
 func (*GetGameResponse) ProtoMessage() {}
 
 func (x *GetGameResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_game_proto_msgTypes[3]
+	mi := &file_vendor_game_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -386,7 +236,7 @@ func (x *GetGameResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetGameResponse.ProtoReflect.Descriptor instead.
 func (*GetGameResponse) Descriptor() ([]byte, []int) {
-	return file_game_proto_rawDescGZIP(), []int{3}
+	return file_vendor_game_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GetGameResponse) GetCode() int64 {
@@ -410,73 +260,11 @@ func (x *GetGameResponse) GetGameList() []*GameInfo {
 	return nil
 }
 
-// GetGameDeletedResponse 获取已删除游戏列表响应
-type GetGameDeletedResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          int64                  `protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty"`
-	Msg           string                 `protobuf:"bytes,2,opt,name=msg,proto3" json:"msg,omitempty"`
-	GameList      []*GameDeletedInfo     `protobuf:"bytes,3,rep,name=game_list,json=gameList,proto3" json:"game_list,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
+var File_vendor_game_proto protoreflect.FileDescriptor
 
-func (x *GetGameDeletedResponse) Reset() {
-	*x = GetGameDeletedResponse{}
-	mi := &file_game_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetGameDeletedResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetGameDeletedResponse) ProtoMessage() {}
-
-func (x *GetGameDeletedResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_game_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetGameDeletedResponse.ProtoReflect.Descriptor instead.
-func (*GetGameDeletedResponse) Descriptor() ([]byte, []int) {
-	return file_game_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *GetGameDeletedResponse) GetCode() int64 {
-	if x != nil {
-		return x.Code
-	}
-	return 0
-}
-
-func (x *GetGameDeletedResponse) GetMsg() string {
-	if x != nil {
-		return x.Msg
-	}
-	return ""
-}
-
-func (x *GetGameDeletedResponse) GetGameList() []*GameDeletedInfo {
-	if x != nil {
-		return x.GameList
-	}
-	return nil
-}
-
-var File_game_proto protoreflect.FileDescriptor
-
-const file_game_proto_rawDesc = "" +
+const file_vendor_game_proto_rawDesc = "" +
 	"\n" +
-	"\n" +
-	"game.proto\x12\avendors\x1a\x1bgoogle/protobuf/empty.proto\"e\n" +
+	"\x11vendor/game.proto\x12\avendors\"e\n" +
 	"\x0eGetGameRequest\x12\x16\n" +
 	"\x06action\x18\x01 \x01(\x05R\x06action\x12\x19\n" +
 	"\bven_code\x18\x02 \x01(\tR\avenCode\x12 \n" +
@@ -493,83 +281,59 @@ const file_game_proto_rawDesc = "" +
 	"\x05image\x18\b \x01(\tR\x05image\x12\x17\n" +
 	"\achan_id\x18\t \x01(\x03R\x06chanId\x12\x1b\n" +
 	"\tload_type\x18\n" +
-	" \x01(\rR\bloadType\"\xf9\x02\n" +
-	"\x0fGameDeletedInfo\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x15\n" +
-	"\x06ven_id\x18\x02 \x01(\x03R\x05venId\x12\x15\n" +
-	"\x06cat_id\x18\x03 \x01(\x03R\x05catId\x12\x19\n" +
-	"\bgroup_id\x18\x04 \x01(\x03R\agroupId\x12\x17\n" +
-	"\aven_key\x18\x05 \x01(\tR\x06venKey\x12\x12\n" +
-	"\x04code\x18\x06 \x01(\tR\x04code\x12\x12\n" +
-	"\x04name\x18\a \x01(\tR\x04name\x12\x14\n" +
-	"\x05image\x18\b \x01(\tR\x05image\x12!\n" +
-	"\fdelete_utype\x18\t \x01(\rR\vdeleteUtype\x12\x1d\n" +
-	"\n" +
-	"delete_uid\x18\n" +
-	" \x01(\x03R\tdeleteUid\x12!\n" +
-	"\fdelete_notes\x18\v \x01(\tR\vdeleteNotes\x12\x1b\n" +
-	"\tdelete_at\x18\f \x01(\x03R\bdeleteAt\x12\x17\n" +
-	"\achan_id\x18\r \x01(\x03R\x06chanId\x12\x1b\n" +
-	"\tload_type\x18\x0e \x01(\rR\bloadType\"g\n" +
+	" \x01(\rR\bloadType\"g\n" +
 	"\x0fGetGameResponse\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\x03R\x04code\x12\x10\n" +
 	"\x03msg\x18\x02 \x01(\tR\x03msg\x12.\n" +
-	"\tgame_list\x18\x03 \x03(\v2\x11.vendors.GameInfoR\bgameList\"u\n" +
-	"\x16GetGameDeletedResponse\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\x03R\x04code\x12\x10\n" +
-	"\x03msg\x18\x02 \x01(\tR\x03msg\x125\n" +
-	"\tgame_list\x18\x03 \x03(\v2\x18.vendors.GameDeletedInfoR\bgameListB.Z,oa.98ent.com/p9/platform-game/rpc/pb/vendorsb\x06proto3"
+	"\tgame_list\x18\x03 \x03(\v2\x11.vendors.GameInfoR\bgameListB.Z,oa.98ent.com/p9/platform-game/rpc/pb/vendorsb\x06proto3"
 
 var (
-	file_game_proto_rawDescOnce sync.Once
-	file_game_proto_rawDescData []byte
+	file_vendor_game_proto_rawDescOnce sync.Once
+	file_vendor_game_proto_rawDescData []byte
 )
 
-func file_game_proto_rawDescGZIP() []byte {
-	file_game_proto_rawDescOnce.Do(func() {
-		file_game_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_game_proto_rawDesc), len(file_game_proto_rawDesc)))
+func file_vendor_game_proto_rawDescGZIP() []byte {
+	file_vendor_game_proto_rawDescOnce.Do(func() {
+		file_vendor_game_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_vendor_game_proto_rawDesc), len(file_vendor_game_proto_rawDesc)))
 	})
-	return file_game_proto_rawDescData
+	return file_vendor_game_proto_rawDescData
 }
 
-var file_game_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
-var file_game_proto_goTypes = []any{
-	(*GetGameRequest)(nil),         // 0: vendors.GetGameRequest
-	(*GameInfo)(nil),               // 1: vendors.GameInfo
-	(*GameDeletedInfo)(nil),        // 2: vendors.GameDeletedInfo
-	(*GetGameResponse)(nil),        // 3: vendors.GetGameResponse
-	(*GetGameDeletedResponse)(nil), // 4: vendors.GetGameDeletedResponse
+var file_vendor_game_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_vendor_game_proto_goTypes = []any{
+	(*GetGameRequest)(nil),  // 0: vendors.GetGameRequest
+	(*GameInfo)(nil),        // 1: vendors.GameInfo
+	(*GetGameResponse)(nil), // 2: vendors.GetGameResponse
 }
-var file_game_proto_depIdxs = []int32{
+var file_vendor_game_proto_depIdxs = []int32{
 	1, // 0: vendors.GetGameResponse.game_list:type_name -> vendors.GameInfo
-	2, // 1: vendors.GetGameDeletedResponse.game_list:type_name -> vendors.GameDeletedInfo
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_game_proto_init() }
-func file_game_proto_init() {
-	if File_game_proto != nil {
+func init() { file_vendor_game_proto_init() }
+func file_vendor_game_proto_init() {
+	if File_vendor_game_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_game_proto_rawDesc), len(file_game_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_vendor_game_proto_rawDesc), len(file_vendor_game_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_game_proto_goTypes,
-		DependencyIndexes: file_game_proto_depIdxs,
-		MessageInfos:      file_game_proto_msgTypes,
+		GoTypes:           file_vendor_game_proto_goTypes,
+		DependencyIndexes: file_vendor_game_proto_depIdxs,
+		MessageInfos:      file_vendor_game_proto_msgTypes,
 	}.Build()
-	File_game_proto = out.File
-	file_game_proto_goTypes = nil
-	file_game_proto_depIdxs = nil
+	File_vendor_game_proto = out.File
+	file_vendor_game_proto_goTypes = nil
+	file_vendor_game_proto_depIdxs = nil
 }

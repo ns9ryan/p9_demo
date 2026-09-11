@@ -40,5 +40,5 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	if err != nil {
 		return nil, err
 	}
-	return convert.LoginResp(out), nil
+	return convert.LoginResp(l.ctx, out), nil
 }

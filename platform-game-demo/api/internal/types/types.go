@@ -3,10 +3,6 @@
 
 package types
 
-type ExecuteV2SqlReq struct {
-	Sql string `json:"sql" comment:"SQL语句"`
-}
-
 type ExecuteV2SqlResp struct {
 	Success bool        `json:"success" comment:"执行是否成功"`
 	Message string      `json:"message,omitempty" comment:"执行消息"`
@@ -23,18 +19,18 @@ type GameCategoryInfo struct {
 }
 
 type GameCategoryListReq struct {
-	Page         int64  `form:"page,omitempty" comment:"页码（默认1）"`
-	PageSize     int64  `form:"page_size,omitempty" comment:"每页大小（默认15）"`
-	CategoryCode string `form:"category_code,omitempty" comment:"分类编码"`
-	Name         string `form:"name,omitempty" comment:"分类名称（查询 source_name_i18n.default）"`
-	Status       int16  `form:"status,omitempty" comment:"状态筛选：1启用/2禁用"`
-	IsDeleted    int16  `form:"is_deleted,omitempty" comment:"软删除筛选：0未删除/1已删除（默认0-未删除）"`
-	SortBy       string `form:"sort_by,omitempty" comment:"排序字段（id/sort_no/created_at）"`
-	SortOrder    string `form:"sort_order,omitempty" comment:"排序顺序（asc/desc）"`
+	Page         int64  `form:"page,optional" comment:"页码（默认1）"`
+	PageSize     int64  `form:"page_size,optional" comment:"每页大小（默认15）"`
+	CategoryCode string `form:"category_code,optional" comment:"分类编码"`
+	Name         string `form:"name,optional" comment:"分类名称（查询 source_name_i18n.default）"`
+	Status       int16  `form:"status,optional" comment:"状态筛选：1启用/2禁用"`
+	IsDeleted    int16  `form:"is_deleted,optional" comment:"软删除筛选：0未删除/1已删除（默认0-未删除）"`
+	SortBy       string `form:"sort_by,optional" comment:"排序字段（id/sort_no/created_at）"`
+	SortOrder    string `form:"sort_order,optional" comment:"排序顺序（asc/desc）"`
 }
 
 type GameCategoryListResp struct {
-	Items []GameCategoryResp `json:"items" comment:"分类列表"`
+	List  []GameCategoryResp `json:"list" comment:"分类列表"`
 	Total int64              `json:"total" comment:"总数"`
 }
 
@@ -56,10 +52,10 @@ type GameCategoryResp struct {
 
 type GameCategoryUpdateReq struct {
 	ID          int64  `json:"id" binding:"required" comment:"分类ID"`
-	NameI18n    string `json:"name_i18n,omitempty" comment:"分类名称（多语言JSON）"`
-	SortNo      int32  `json:"sort_no,omitempty" comment:"排序号"`
-	Status      int16  `json:"status,omitempty" comment:"状态：1启用/2禁用"`
-	ForceLogout bool   `json:"force_logout,omitempty" comment:"状态变更为停用时是否强制踢线"`
+	NameI18n    string `json:"name_i18n,optional" comment:"分类名称（多语言JSON）"`
+	SortNo      int32  `json:"sort_no,optional" comment:"排序号"`
+	Status      int16  `json:"status,optional" comment:"状态：1启用/2禁用"`
+	ForceLogout bool   `json:"force_logout,optional" comment:"状态变更为停用时是否强制踢线"`
 }
 
 type GameChannelGetReq struct {
@@ -67,46 +63,43 @@ type GameChannelGetReq struct {
 }
 
 type GameChannelListReq struct {
-	Page        int64  `form:"page,omitempty" comment:"页码（默认1）"`
-	PageSize    int64  `form:"page_size,omitempty" comment:"每页大小（默认15）"`
-	ChannelCode string `form:"channel_code,omitempty" comment:"渠道编码"`
-	Name        string `form:"name,omitempty" comment:"渠道名称（查询 source_name_i18n.default）"`
-	Status      int16  `form:"status,omitempty" comment:"状态筛选：1启用/2禁用"`
-	IsDeleted   int16  `form:"is_deleted,omitempty" comment:"软删除筛选：0未删除/1已删除（默认0-未删除）"`
-	SortBy      string `form:"sort_by,omitempty" comment:"排序字段（id/sort_no/created_at）"`
-	SortOrder   string `form:"sort_order,omitempty" comment:"排序顺序（asc/desc）"`
+	Page        int64  `form:"page,optional" comment:"页码（默认1）"`
+	PageSize    int64  `form:"page_size,optional" comment:"每页大小（默认15）"`
+	ChannelCode string `form:"channel_code,optional" comment:"渠道编码"`
+	Name        string `form:"name,optional" comment:"渠道名称（查询 source_name_i18n.default）"`
+	Status      int16  `form:"status,optional" comment:"状态筛选：1启用/2禁用"`
+	IsDeleted   int16  `form:"is_deleted,optional" comment:"软删除筛选：0未删除/1已删除（默认0-未删除）"`
+	SortBy      string `form:"sort_by,optional" comment:"排序字段（id/sort_no/created_at）"`
+	SortOrder   string `form:"sort_order,optional" comment:"排序顺序（asc/desc）"`
 }
 
 type GameChannelListResp struct {
-	Items []GameChannelResp `json:"items" comment:"渠道列表"`
+	List  []GameChannelResp `json:"list" comment:"渠道列表"`
 	Total int64             `json:"total" comment:"总数"`
 }
 
 type GameChannelResp struct {
-	ID                int64              `json:"id" comment:"渠道ID"`
-	SourceID          int64              `json:"source_id" comment:"上游渠道ID"`
-	ChannelCode       string             `json:"channel_code" comment:"渠道编码"`
-	SourceChannelCode string             `json:"source_channel_code" comment:"上游渠道编码"`
-	SourceNameI18n    string             `json:"source_name_i18n" comment:"上游渠道名称（多语言JSON）"`
-	NameI18n          string             `json:"name_i18n" comment:"渠道名称（多语言JSON）"`
-	SourceSortNo      int32              `json:"source_sort_no" comment:"上游排序号"`
-	SortNo            int32              `json:"sort_no" comment:"排序号"`
-	SourceStatus      int16              `json:"source_status" comment:"上游状态：1启用/2禁用"`
-	Status            int16              `json:"status" comment:"状态：1启用/2禁用"`
-	IsDeleted         int16              `json:"is_deleted" comment:"软删除：0正常/1已删除"`
-	VendorCount       int64              `json:"vendor_count" comment:"该渠道下的厂商数量"`
-	CatIds            []GameCategoryInfo `json:"cat_ids" comment:"该渠道下的游戏分类信息"`
-	GameCount         int64              `json:"game_count" comment:"该渠道下的游戏数量"`
-	CreatedAt         int64              `json:"created_at" comment:"创建时间戳"`
-	UpdatedAt         int64              `json:"updated_at" comment:"更新时间戳"`
+	ID                int64  `json:"id" comment:"渠道ID"`
+	SourceID          int64  `json:"source_id" comment:"上游渠道ID"`
+	ChannelCode       string `json:"channel_code" comment:"渠道编码"`
+	SourceChannelCode string `json:"source_channel_code" comment:"上游渠道编码"`
+	SourceNameI18n    string `json:"source_name_i18n" comment:"上游渠道名称（多语言JSON）"`
+	NameI18n          string `json:"name_i18n" comment:"渠道名称（多语言JSON）"`
+	SourceSortNo      int32  `json:"source_sort_no" comment:"上游排序号"`
+	SortNo            int32  `json:"sort_no" comment:"排序号"`
+	SourceStatus      int16  `json:"source_status" comment:"上游状态：1启用/2禁用"`
+	Status            int16  `json:"status" comment:"状态：1启用/2禁用"`
+	IsDeleted         int16  `json:"is_deleted" comment:"软删除：0正常/1已删除"`
+	CreatedAt         int64  `json:"created_at" comment:"创建时间戳"`
+	UpdatedAt         int64  `json:"updated_at" comment:"更新时间戳"`
 }
 
 type GameChannelUpdateReq struct {
 	ID          int64  `json:"id" binding:"required" comment:"渠道ID"`
-	NameI18n    string `json:"name_i18n,omitempty" comment:"渠道名称（多语言JSON）"`
-	SortNo      int32  `json:"sort_no,omitempty" comment:"排序号"`
-	Status      int16  `json:"status,omitempty" comment:"状态：1启用/2禁用"`
-	ForceLogout bool   `json:"force_logout,omitempty" comment:"状态变更为停用时是否强制踢线"`
+	NameI18n    string `json:"name_i18n,optional" comment:"渠道名称（多语言JSON）"`
+	SortNo      int32  `json:"sort_no,optional" comment:"排序号"`
+	Status      int16  `json:"status,optional" comment:"状态：1启用/2禁用"`
+	ForceLogout bool   `json:"force_logout,optional" comment:"状态变更为停用时是否强制踢线"`
 }
 
 type GameCurrencyGetReq struct {
@@ -119,17 +112,18 @@ type GameCurrencyInfo struct {
 }
 
 type GameCurrencyListReq struct {
-	Page      int64  `form:"page,omitempty" comment:"页码（默认1）"`
-	PageSize  int64  `form:"page_size,omitempty" comment:"每页大小（默认15）"`
-	GameID    int64  `form:"game_id,omitempty" comment:"游戏ID筛选"`
-	Status    int16  `form:"status,omitempty" comment:"状态筛选：1启用/2禁用"`
-	IsDeleted int16  `form:"is_deleted,omitempty" comment:"软删除筛选：0未删除/1已删除（默认0-未删除）"`
-	SortBy    string `form:"sort_by,omitempty" comment:"排序字段（id/created_at）"`
-	SortOrder string `form:"sort_order,omitempty" comment:"排序顺序（asc/desc）"`
+	Page       int64  `form:"page,optional" comment:"页码（默认1）"`
+	PageSize   int64  `form:"page_size,optional" comment:"每页大小（默认15）"`
+	GameID     int64  `form:"game_id,optional" comment:"游戏ID筛选"`
+	CurrencyID int64  `form:"currency_id,optional" comment:"币种ID筛选"`
+	Status     int16  `form:"status,optional" comment:"状态筛选：1启用/2禁用"`
+	IsDeleted  int16  `form:"is_deleted,optional" comment:"软删除筛选：0未删除/1已删除（默认0-未删除）"`
+	SortBy     string `form:"sort_by,optional" comment:"排序字段（id/created_at）"`
+	SortOrder  string `form:"sort_order,optional" comment:"排序顺序（asc/desc）"`
 }
 
 type GameCurrencyListResp struct {
-	Items []GameCurrencyResp `json:"items" comment:"游戏货币列表"`
+	List  []GameCurrencyResp `json:"list" comment:"游戏货币列表"`
 	Total int64              `json:"total" comment:"总数"`
 }
 
@@ -150,8 +144,8 @@ type GameCurrencyResp struct {
 
 type GameCurrencyUpdateReq struct {
 	ID          int64 `json:"id" binding:"required" comment:"游戏货币ID"`
-	Status      int16 `json:"status,omitempty" comment:"状态：1启用/2禁用"`
-	ForceLogout bool  `json:"force_logout,omitempty" comment:"状态变更为停用时是否强制踢线"`
+	Status      int16 `json:"status,optional" comment:"状态：1启用/2禁用"`
+	ForceLogout bool  `json:"force_logout,optional" comment:"状态变更为停用时是否强制踢线"`
 }
 
 type GameGetReq struct {
@@ -159,21 +153,21 @@ type GameGetReq struct {
 }
 
 type GameListReq struct {
-	Page       int64  `form:"page,omitempty" comment:"页码（默认1）"`
-	PageSize   int64  `form:"page_size,omitempty" comment:"每页大小（默认15）"`
-	GameCode   string `form:"game_code,omitempty" comment:"游戏编码"`
-	Name       string `form:"name,omitempty" comment:"游戏名称（查询 source_name_i18n.default）"`
-	CategoryID int64  `form:"category_id,omitempty" comment:"分类ID筛选"`
-	ProviderID int64  `form:"provider_id,omitempty" comment:"厂商ID筛选"`
-	ChannelID  int64  `form:"channel_id,omitempty" comment:"渠道ID筛选"`
-	Status     int16  `form:"status,omitempty" comment:"状态筛选：1启用/2禁用"`
-	IsDeleted  int16  `form:"is_deleted,omitempty" comment:"软删除筛选：0未删除/1已删除（默认0-未删除）"`
-	SortBy     string `form:"sort_by,omitempty" comment:"排序字段（id/sort_no/created_at）"`
-	SortOrder  string `form:"sort_order,omitempty" comment:"排序顺序（asc/desc）"`
+	Page       int64  `form:"page,optional" comment:"页码（默认1）"`
+	PageSize   int64  `form:"page_size,optional" comment:"每页大小（默认15）"`
+	GameCode   string `form:"game_code,optional" comment:"游戏编码"`
+	Name       string `form:"name,optional" comment:"游戏名称（查询 source_name_i18n.default）"`
+	CategoryID int64  `form:"category_id,optional" comment:"分类ID筛选"`
+	ProviderID int64  `form:"provider_id,optional" comment:"厂商ID筛选"`
+	ChannelID  int64  `form:"channel_id,optional" comment:"渠道ID筛选"`
+	Status     int16  `form:"status,optional" comment:"状态筛选：1启用/2禁用"`
+	IsDeleted  int16  `form:"is_deleted,optional" comment:"软删除筛选：0未删除/1已删除（默认0-未删除）"`
+	SortBy     string `form:"sort_by,optional" comment:"排序字段（id/sort_no/created_at）"`
+	SortOrder  string `form:"sort_order,optional" comment:"排序顺序（asc/desc）"`
 }
 
 type GameListResp struct {
-	Items []GameResp `json:"items" comment:"游戏列表"`
+	List  []GameResp `json:"list" comment:"游戏列表"`
 	Total int64      `json:"total" comment:"总数"`
 }
 
@@ -182,18 +176,18 @@ type GameProviderGetReq struct {
 }
 
 type GameProviderListReq struct {
-	Page         int64  `form:"page,omitempty" comment:"页码（默认1）"`
-	PageSize     int64  `form:"page_size,omitempty" comment:"每页大小（默认15）"`
-	ProviderCode string `form:"provider_code,omitempty" comment:"厂商编码"`
-	Name         string `form:"name,omitempty" comment:"厂商名称（查询 source_name_i18n.default）"`
-	Status       int16  `form:"status,omitempty" comment:"状态筛选：1启用/2禁用"`
-	IsDeleted    int16  `form:"is_deleted,omitempty" comment:"软删除筛选：0未删除/1已删除（默认0-未删除）"`
-	SortBy       string `form:"sort_by,omitempty" comment:"排序字段（id/sort_no/created_at）"`
-	SortOrder    string `form:"sort_order,omitempty" comment:"排序顺序（asc/desc）"`
+	Page         int64  `form:"page,optional" comment:"页码（默认1）"`
+	PageSize     int64  `form:"page_size,optional" comment:"每页大小（默认15）"`
+	ProviderCode string `form:"provider_code,optional" comment:"厂商编码"`
+	Name         string `form:"name,optional" comment:"厂商名称（查询 source_name_i18n.default）"`
+	Status       int16  `form:"status,optional" comment:"状态筛选：1启用/2禁用"`
+	IsDeleted    int16  `form:"is_deleted,optional" comment:"软删除筛选：0未删除/1已删除（默认0-未删除）"`
+	SortBy       string `form:"sort_by,optional" comment:"排序字段（id/sort_no/created_at）"`
+	SortOrder    string `form:"sort_order,optional" comment:"排序顺序（asc/desc）"`
 }
 
 type GameProviderListResp struct {
-	Items []GameProviderResp `json:"items" comment:"厂商列表"`
+	List  []GameProviderResp `json:"list" comment:"厂商列表"`
 	Total int64              `json:"total" comment:"总数"`
 }
 
@@ -217,11 +211,11 @@ type GameProviderResp struct {
 
 type GameProviderUpdateReq struct {
 	ID          int64  `json:"id" binding:"required" comment:"厂商ID"`
-	NameI18n    string `json:"name_i18n,omitempty" comment:"厂商名称（多语言JSON）"`
-	LogoUrl     string `json:"logo_url,omitempty" comment:"厂商Logo URL"`
-	SortNo      int32  `json:"sort_no,omitempty" comment:"排序号"`
-	Status      int16  `json:"status,omitempty" comment:"状态：1启用/2禁用"`
-	ForceLogout bool   `json:"force_logout,omitempty" comment:"状态变更为停用时是否强制踢线"`
+	NameI18n    string `json:"name_i18n,optional" comment:"厂商名称（多语言JSON）"`
+	LogoUrl     string `json:"logo_url,optional" comment:"厂商Logo URL"`
+	SortNo      int32  `json:"sort_no,optional" comment:"排序号"`
+	Status      int16  `json:"status,optional" comment:"状态：1启用/2禁用"`
+	ForceLogout bool   `json:"force_logout,optional" comment:"状态变更为停用时是否强制踢线"`
 }
 
 type GameResp struct {
@@ -254,19 +248,20 @@ type GameResp struct {
 }
 
 type GameSyncCheckpointGetReq struct {
-	SyncScope string `form:"sync_scope" comment:"同步范围"`
+	ID        int64  `form:"id,optional" comment:"同步范围"`
+	SyncScope string `form:"sync_scope,optional" comment:"同步范围"`
 }
 
 type GameSyncCheckpointListReq struct {
-	Page      int64  `form:"page,omitempty" comment:"页码（默认1）"`
-	PageSize  int64  `form:"page_size,omitempty" comment:"每页大小（默认15）"`
-	SyncScope string `form:"sync_scope,omitempty" comment:"同步范围（可选，用于筛选特定同步范围）"`
-	StartTime int64  `form:"start_time,omitempty" comment:"起始时间戳（可选，用于 last_success_at 区间筛选）"`
-	EndTime   int64  `form:"end_time,omitempty" comment:"结束时间戳（可选，用于 last_success_at 区间筛选）"`
+	Page      int64  `form:"page,optional" comment:"页码（默认1）"`
+	PageSize  int64  `form:"page_size,optional" comment:"每页大小（默认15）"`
+	SyncScope string `form:"sync_scope,optional" comment:"同步范围（可选，用于筛选特定同步范围）"`
+	StartTime int64  `form:"start_time,optional" comment:"起始时间戳（可选，用于 last_success_at 区间筛选）"`
+	EndTime   int64  `form:"end_time,optional" comment:"结束时间戳（可选，用于 last_success_at 区间筛选）"`
 }
 
 type GameSyncCheckpointListResp struct {
-	Items []GameSyncCheckpointResp `json:"items" comment:"检查点列表"`
+	List  []GameSyncCheckpointResp `json:"list" comment:"检查点列表"`
 	Total int64                    `json:"total" comment:"总数"`
 }
 
@@ -281,6 +276,7 @@ type GameSyncCheckpointResp struct {
 	DeletedCount     int64  `json:"deleted_count" comment:"删除数量"`
 	FailedCount      int64  `json:"failed_count" comment:"失败数量"`
 	SyncStatus       int16  `json:"sync_status" comment:"同步状态：0未进行/1进行中"`
+	Progress         int16  `json:"progress" comment:"进度百分比"`
 	LastErrorMessage string `json:"last_error_message,omitempty" comment:"最后错误信息"`
 	LastSuccessAt    int64  `json:"last_success_at" comment:"最后成功时间戳"`
 	LastSyncAt       int64  `json:"last_sync_at" comment:"最后同步时间戳"`
@@ -290,14 +286,13 @@ type GameSyncCheckpointResp struct {
 
 type GameUpdateReq struct {
 	ID               int64  `json:"id" binding:"required" comment:"游戏ID"`
-	NameI18n         string `json:"name_i18n,omitempty" comment:"游戏名称（多语言JSON）"`
-	ImageUrl         string `json:"image_url,omitempty" comment:"游戏图片URL"`
-	SortNo           int32  `json:"sort_no,omitempty" comment:"排序号"`
-	ProviderKey      string `json:"provider_key,omitempty" comment:"厂商Key"`
-	SupportsEmbed    bool   `json:"supports_embed,omitempty" comment:"是否支持嵌入"`
-	SupportsRedirect bool   `json:"supports_redirect,omitempty" comment:"是否支持重定向"`
-	Status           int16  `json:"status,omitempty" comment:"状态：1启用/2禁用"`
-	ForceLogout      bool   `json:"force_logout,omitempty" comment:"状态变更为停用时是否强制踢线"`
+	NameI18n         string `json:"name_i18n,optional" comment:"游戏名称（多语言JSON）"`
+	ImageUrl         string `json:"image_url,optional" comment:"游戏图片URL"`
+	SortNo           int32  `json:"sort_no,optional" comment:"排序号"`
+	SupportsEmbed    *bool  `json:"supports_embed,optional" comment:"是否支持嵌入"`
+	SupportsRedirect *bool  `json:"supports_redirect,optional" comment:"是否支持重定向"`
+	Status           int16  `json:"status,optional" comment:"状态：1启用/2禁用"`
+	ForceLogout      bool   `json:"force_logout,optional" comment:"状态变更为停用时是否强制踢线"`
 }
 
 type PingResponse struct {
@@ -327,23 +322,29 @@ type SyncDiff struct {
 	RemoteCode   string `json:"remote_code" comment:"上游对象编码"`
 	Reason       string `json:"reason" comment:"原因说明"`
 	ConflictType string `json:"conflict_type" comment:"冲突类型"`
-	Details      string `json:"details" comment:"详细信息（JSON字符串）"`
 }
 
 type SyncPreviewReq struct {
+	Page     int64 `json:"page,optional" comment:"页码（默认1）"`
+	PageSize int64 `json:"page_size,optional" comment:"每页大小（默认15）"`
+	IsSkip   bool  `json:"is_skip,optional" comment:"是否跳过noop操作（默认false）"`
 }
 
 type SyncPreviewResp struct {
-	Stats SyncStats  `json:"stats" comment:"统计信息"`
-	Diffs []SyncDiff `json:"diffs" comment:"差异列表"`
+	Stats      SyncStats  `json:"stats" comment:"统计信息"`
+	Diffs      []SyncDiff `json:"diffs" comment:"差异列表（分页后）"`
+	Page       int64      `json:"page" comment:"当前页码"`
+	PageSize   int64      `json:"page_size" comment:"每页大小"`
+	TotalCount int64      `json:"total_count" comment:"总数（应用过滤后）"`
+	TotalPage  int64      `json:"total_page" comment:"总页数"`
 }
 
 type SyncRunReq struct {
+	SyncCols []string `json:"sync_cols,optional" comment:"同步字段"`
 }
 
 type SyncRunResp struct {
-	Preview SyncPreviewResp `json:"preview" comment:"预检查结果"`
-	Apply   SyncApplyResult `json:"apply" comment:"执行结果"`
+	CheckpointID int64 `json:"checkpoint_id" comment:"同步检查点ID，用于异步跟踪进度"`
 }
 
 type SyncStats struct {

@@ -34,7 +34,7 @@ type (
 )
 
 @server (
-	group:      agentLineAllocation
+	group:      agent_line_allocation
 	prefix:     /admin/operator
 	middleware: Jwt,ActionLog,Authority
 )

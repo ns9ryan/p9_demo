@@ -90,18 +90,64 @@ func (d *Deps) ActiveUserByID(ctx context.Context, id int64) (*model.User, error
 	return userFromEnt(u), nil
 }
 
+type UserRoles struct {
+	Codes []string
+	Names []string
+}
+
+func emptyUserRoles() UserRoles {
+	return UserRoles{Codes: []string{}, Names: []string{}}
+}
+
 func (d *Deps) RoleCodesOfUser(ctx context.Context, userID int64) ([]string, error) {
-	roles, err := d.Client.User.Query().Where(user.ID(userID)).QueryRoles().
-		Where(role.DeletedAtIsNil(), role.StatusEQ(model.StatusNormal)).
+	roles, err := d.RolesOfUser(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	return roles.Codes, nil
+}
+
+func (d *Deps) RolesOfUser(ctx context.Context, userID int64) (UserRoles, error) {
+	m, err := d.RolesOfUsers(ctx, []int64{userID})
+	if err != nil {
+		return UserRoles{}, err
+	}
+	if r, ok := m[userID]; ok {
+		return r, nil
+	}
+	return emptyUserRoles(), nil
+}
+
+func (d *Deps) RolesOfUsers(ctx context.Context, userIDs []int64) (map[int64]UserRoles, error) {
+	out := make(map[int64]UserRoles, len(userIDs))
+	for _, id := range userIDs {
+		out[id] = emptyUserRoles()
+	}
+	if len(userIDs) == 0 {
+		return out, nil
+	}
+	users, err := d.Client.User.Query().
+		Where(user.IDIn(userIDs...)).
+		WithRoles(func(q *ent.RoleQuery) {
+			q.Where(role.DeletedAtIsNil(), role.StatusEQ(model.StatusNormal)).
+				Order(ent.Asc(role.FieldSortNo), ent.Asc(role.FieldID))
+		}).
 		All(ctx)
 	if err != nil {
 		return nil, err
 	}
-	codes := make([]string, 0, len(roles))
-	for _, r := range roles {
-		codes = append(codes, r.RoleCode)
+	for _, u := range users {
+		r := UserRoles{
+			Codes: make([]string, 0, len(u.Edges.Roles)),
+			Names: make([]string, 0, len(u.Edges.Roles)),
+		}
+		for _, row := range u.Edges.Roles {
+			r.Codes = append(r.Codes, row.RoleCode)
+			r.Names = append(r.Names, row.RoleName)
+		}
+		out[u.ID] = r
 	}
-	return codes, nil
+	return out, nil
 }
 
 func (d *Deps) RotateSalt(ctx context.Context, userID int64) error {

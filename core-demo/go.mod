@@ -8,6 +8,7 @@ require (
 	entgo.io/ent v0.14.6
 	github.com/casbin/casbin/v2 v2.103.0
 	github.com/casbin/redis-watcher/v2 v2.5.0
+	github.com/duke-git/lancet/v2 v2.3.9
 	github.com/go-sql-driver/mysql v1.10.0
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/google/uuid v1.6.0

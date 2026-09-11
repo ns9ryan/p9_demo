@@ -1,0 +1,29 @@
+syntax = "v1"
+
+type (
+	// 创建分站管理员请求
+	CreateOperatorAdminRequest  {}
+	// 创建分站管理员响应
+	CreateOperatorAdminResponse  {}
+	// 获取分站管理员列表请求
+	ListOperatorAdminsRequest  {}
+	// 获取分站管理员列表响应
+	ListOperatorAdminsResponse  {}
+)
+
+@server (
+	group:      operator_admin
+	prefix:     /admin/operator/admin
+	middleware: Jwt,ActionLog,Authority
+)
+service platform_operator {
+	// 创建分站管理员
+	@handler CreateOperatorAdmin
+	post /create (CreateOperatorAdminRequest) returns (CreateOperatorAdminResponse)
+
+	// 获取分站管理员列表
+	@handler ListOperatorAdmins
+	get /list (ListOperatorAdminsRequest) returns (ListOperatorAdminsResponse)
+// todo: 其余接口根据业务补充
+}
+

@@ -255,7 +255,7 @@ message ErrorLogListResp {
 }
 
 message GetI18nDictReq {
-  string i18n_group = 1; // 空则下发全部组
+  string i18n_group = 1;
   string lang = 2;
   string i18n_code = 3;
 }
@@ -546,6 +546,8 @@ message UpdateApiReq {
 message UpdateI18nByKeyReq {
   string trans_key = 1;
   map<string,string> data = 2;
+  string i18n_code = 3;
+  string i18n_group = 4;
 }
 
 message UpdateI18nLangReq {
@@ -631,6 +633,7 @@ message UserPublic {
   optional int64 last_login_at = 11;
   optional string mobile = 12;
   optional string email = 13;
+  repeated string role_names = 14;
 }
 
 service Core {

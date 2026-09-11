@@ -5,9 +5,16 @@ import (
 	"fmt"
 
 	"oa.98ent.com/p9/platform-game/rpc/internal/config"
-	"oa.98ent.com/p9/platform-game/rpc/internal/server"
+	categoryserver "oa.98ent.com/p9/platform-game/rpc/internal/server/gamecategoryservice"
+	channelserver "oa.98ent.com/p9/platform-game/rpc/internal/server/gamechannelservice"
+	currencyserver "oa.98ent.com/p9/platform-game/rpc/internal/server/gamecurrencyservice"
+	providerserver "oa.98ent.com/p9/platform-game/rpc/internal/server/gameproviderservice"
+	gameserver "oa.98ent.com/p9/platform-game/rpc/internal/server/gameservice"
+	checkpointserver "oa.98ent.com/p9/platform-game/rpc/internal/server/gamesynccheckpointservice"
+	pingserver "oa.98ent.com/p9/platform-game/rpc/internal/server/pingservice"
+	syncserver "oa.98ent.com/p9/platform-game/rpc/internal/server/syncservice"
 	"oa.98ent.com/p9/platform-game/rpc/internal/svc"
-	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
+	platform_game_pb "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/zrpc"
@@ -27,7 +34,15 @@ func main() {
 	ctx := svc.NewServiceContext(*c)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
-		platformgame.RegisterPlatformGameServiceServer(grpcServer, server.NewPlatformGameServiceServer(ctx))
+		// Register all individual services
+		platform_game_pb.RegisterPingServiceServer(grpcServer, pingserver.NewPingServiceServer(ctx))
+		platform_game_pb.RegisterGameServiceServer(grpcServer, gameserver.NewGameServiceServer(ctx))
+		platform_game_pb.RegisterGameCategoryServiceServer(grpcServer, categoryserver.NewGameCategoryServiceServer(ctx))
+		platform_game_pb.RegisterGameProviderServiceServer(grpcServer, providerserver.NewGameProviderServiceServer(ctx))
+		platform_game_pb.RegisterGameChannelServiceServer(grpcServer, channelserver.NewGameChannelServiceServer(ctx))
+		platform_game_pb.RegisterGameCurrencyServiceServer(grpcServer, currencyserver.NewGameCurrencyServiceServer(ctx))
+		platform_game_pb.RegisterGameSyncCheckpointServiceServer(grpcServer, checkpointserver.NewGameSyncCheckpointServiceServer(ctx))
+		platform_game_pb.RegisterSyncServiceServer(grpcServer, syncserver.NewSyncServiceServer(ctx))
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)

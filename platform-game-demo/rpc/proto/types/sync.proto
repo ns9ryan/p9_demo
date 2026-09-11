@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package platform_game;
+
+option go_package = "oa.98ent.com/p9/platform-game/rpc/pb/platform_game";
+
+// SyncStats 同步统计信息
+message SyncStats {
+    int32 total = 1;           // 总数
+    int32 create_total = 2;           // 新增
+    int32 update_total = 3;         // 更新
+    int32 delete_total = 4;         // 删除
+    int32 conflicts = 5;       // 冲突
+    int32 diff_total = 6;         // 差异总数
+    int32 remote_total = 7;     // 远程总数
+    int32 local_total = 8;      // 本地总数
+    int32 noop_total = 9;      // 无操作总数
+}
+
+// SyncDiff 同步差异项
+message SyncDiff {
+    string object_type = 1;           // 对象类型
+    string action = 2;         // 操作类型 (add/update/delete)
+    int64 object_id = 3;      // 对象ID
+    string description = 4;    // 描述
+    int64 object_numeric_id = 5; // P9对象ID
+    string object_code = 6;      // P9对象编码
+    int64 remote_id = 7;         // 上游对象ID
+    string remote_code = 8;      // 上游对象编码
+    string reason = 9;            // 差异原因
+    string conflict_type = 10;   // 冲突类型
+}
+
+// SyncPreviewRequest 同步预检查请求
+message SyncPreviewRequest {
+    string object_type = 1;    // category/provider/channel/game/currency
+    int64 page = 2;
+    int64 page_size = 3;
+    bool is_skip = 4;
+}
+
+// SyncPreviewResp 同步预检查响应
+message SyncPreviewResp {
+    int32 code = 1;
+    string message = 2;
+    SyncStats stats = 3;
+    repeated SyncDiff diffs = 4;
+}
+
+// SyncRunRequest 同步执行请求
+message SyncRunRequest {
+    string object_type = 1;    // category/provider/channel/game/currency
+    repeated string sync_cols = 2;
+}
+
+// SyncRunResp 同步执行响应
+message SyncRunResp {
+    int32 code = 1;
+    string message = 2;
+    int64 checkpoint_id = 3;  // 返回同步检查点ID，用于异步跟踪进度
+}
+
+// SyncAllRequest 全量同步请求
+message SyncAllRequest {
+    bool auto_apply = 1;       // 是否自动应用
+}
+
+// ExecuteV2SqlRequest 执行 v2sql 初始化脚本
+message ExecuteV2SqlRequest {
+    // 指定要执行的 SQL 文件名（相对于 v2sql 目录），为空表示执行目录下所有 .sql 文件，按文件名排序执行
+    string file = 1;
+}
+
+// ExecuteV2SqlResp 执行结果
+message ExecuteV2SqlResp {
+    int32 code = 1;
+    string message = 2;
+    // 可选的执行输出或错误详情
+    string output = 3;
+}

@@ -180,13 +180,13 @@ func (d *Deps) DeleteUsers(ctx context.Context, claims *ctxdata.Claims, ids []in
 	return nil
 }
 
-func (d *Deps) GetUser(ctx context.Context, claims *ctxdata.Claims, id int64) (*model.User, []string, error) {
+func (d *Deps) GetUser(ctx context.Context, claims *ctxdata.Claims, id int64) (*model.User, UserRoles, error) {
 	u, err := d.mustTenantUser(ctx, claims, id)
 	if err != nil {
-		return nil, nil, err
+		return nil, UserRoles{}, err
 	}
-	codes, err := d.RoleCodesOfUser(ctx, u.ID)
-	return u, codes, err
+	roles, err := d.RolesOfUser(ctx, u.ID)
+	return u, roles, err
 }
 
 func (d *Deps) ListUsers(ctx context.Context, claims *ctxdata.Claims, req UserListReq) ([]model.User, int64, error) {

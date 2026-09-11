@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package platform_game;
+
+option go_package = "oa.98ent.com/p9/platform-game/rpc/pb/platform_game";
+
+// GameInfo 游戏信息
+message GameInfo {
+  int64  id = 1;
+  int64  source_id = 2;
+  string game_code = 3;
+  string source_game_code = 4;
+  string name_i18n = 5;
+  string source_name_i18n = 6;
+  int32  status = 7;
+  int32  source_status = 8;
+  int64  cat_id = 9;
+  int64  ven_id = 10;
+  int64  chan_id = 11;
+  string category_name_i18n = 12;
+  string provider_name_i18n = 13;
+  string channel_name_i18n = 14;
+  string provider_key = 15;
+  string game_currency_info = 16;
+  string image_url = 17;
+  string source_image_url = 18;
+  int64  sort_no = 19;
+  bool supports_embed = 20;
+  bool supports_redirect = 21;
+  int32  is_deleted = 22;
+  int64  created_at = 23;
+  int64  updated_at = 24;
+}
+
+// GetGameListRequest 获取游戏列表请求
+message GetGameListRequest {
+    int32 page = 1;
+    int32 page_size = 2;
+    string game_code = 3;
+    string name = 4;
+    int64 category_id = 5;
+    int64 provider_id = 6;
+    int64 channel_id = 7;
+    int32 status = 8;
+    int32 is_deleted = 9;  // 0=未删除(默认), 1=已删除, 其他=不过滤
+    string sort_by = 10;    // id/sort_no/created_at
+    string sort_order = 11; // asc/desc
+}
+
+// GetGameListResp 游戏列表响应
+message GetGameListResp {
+    int32 code = 1;
+    string message = 2;
+    repeated GameInfo data = 3;
+    int64 total = 4;
+    int32 page = 5;
+    int32 page_size = 6;
+}
+
+// GetGameRequest 获取单个游戏请求
+message GetGameRequest {
+    int64 id = 1;
+}
+
+// GetGameResp 获取单个游戏响应
+message GetGameResp {
+    int32 code = 1;
+    string message = 2;
+    GameInfo data = 3;
+}
+
+// UpdateGameRequest 更新游戏请求
+message UpdateGameRequest {
+    int64 id = 1;
+    string name_i18n = 2;
+    int32 sort_no = 3;
+    int32 status = 4;
+    string image_url = 5;
+    int32 supports_embed = 6;
+    int32 supports_redirect = 7;
+    bool force_logout = 8;
+}
+
+// UpdateGameResp 更新游戏响应
+message UpdateGameResp {
+    int32 code = 1;
+    string message = 2;
+    GameInfo data = 3;
+}

@@ -6,7 +6,7 @@
     "application/json"
   ],
   "schemes": [
-    "https"
+    "http"
   ],
   "swagger": "2.0",
   "info": {
@@ -15,6 +15,35 @@
   },
   "basePath": "/",
   "paths": {
+    "/admin/execute/v2sql": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "summary": "ExecuteV2sqlGet",
+        "operationId": "executeExecuteV2sqlGet",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {},
+                "message": {
+                  "type": "string"
+                },
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/admin/game-category/get": {
       "get": {
         "produces": [
@@ -24,7 +53,7 @@
           "https"
         ],
         "summary": "GameCategoryGet",
-        "operationId": "gameCategoryGet",
+        "operationId": "categoryGameCategoryGet",
         "parameters": [
           {
             "type": "integer",
@@ -93,55 +122,55 @@
           "https"
         ],
         "summary": "GameCategoryList",
-        "operationId": "gameCategoryList",
+        "operationId": "categoryGameCategoryList",
         "parameters": [
           {
             "type": "integer",
             "name": "page",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "integer",
             "name": "page_size",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "string",
             "name": "category_code",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "string",
             "name": "name",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "integer",
             "name": "status",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "integer",
             "name": "is_deleted",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "string",
             "name": "sort_by",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "string",
             "name": "sort_order",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           }
         ],
         "responses": {
@@ -150,7 +179,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "items": {
+                "list": {
                   "type": "array",
                   "items": {
                     "type": "object",
@@ -233,7 +262,7 @@
           "https"
         ],
         "summary": "GameCategoryUpdate",
-        "operationId": "gameCategoryUpdate",
+        "operationId": "categoryGameCategoryUpdate",
         "parameters": [
           {
             "name": "body",
@@ -242,11 +271,7 @@
             "schema": {
               "type": "object",
               "required": [
-                "id",
-                "name_i18n",
-                "sort_no",
-                "status",
-                "force_logout"
+                "id"
               ],
               "properties": {
                 "force_logout": {
@@ -328,7 +353,7 @@
           "https"
         ],
         "summary": "GameChannelGet",
-        "operationId": "gameChannelGet",
+        "operationId": "channelGameChannelGet",
         "parameters": [
           {
             "type": "integer",
@@ -343,31 +368,10 @@
             "schema": {
               "type": "object",
               "properties": {
-                "cat_ids": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "required": [
-                      "id",
-                      "name_i18n"
-                    ],
-                    "properties": {
-                      "id": {
-                        "type": "integer"
-                      },
-                      "name_i18n": {
-                        "type": "string"
-                      }
-                    }
-                  }
-                },
                 "channel_code": {
                   "type": "string"
                 },
                 "created_at": {
-                  "type": "integer"
-                },
-                "game_count": {
                   "type": "integer"
                 },
                 "id": {
@@ -402,9 +406,6 @@
                 },
                 "updated_at": {
                   "type": "integer"
-                },
-                "vendor_count": {
-                  "type": "integer"
                 }
               }
             }
@@ -421,55 +422,55 @@
           "https"
         ],
         "summary": "GameChannelList",
-        "operationId": "gameChannelList",
+        "operationId": "channelGameChannelList",
         "parameters": [
           {
             "type": "integer",
             "name": "page",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "integer",
             "name": "page_size",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "string",
             "name": "channel_code",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "string",
             "name": "name",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "integer",
             "name": "status",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "integer",
             "name": "is_deleted",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "string",
             "name": "sort_by",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "string",
             "name": "sort_order",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           }
         ],
         "responses": {
@@ -478,7 +479,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "items": {
+                "list": {
                   "type": "array",
                   "items": {
                     "type": "object",
@@ -494,38 +495,14 @@
                       "source_status",
                       "status",
                       "is_deleted",
-                      "vendor_count",
-                      "cat_ids",
-                      "game_count",
                       "created_at",
                       "updated_at"
                     ],
                     "properties": {
-                      "cat_ids": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "required": [
-                            "id",
-                            "name_i18n"
-                          ],
-                          "properties": {
-                            "id": {
-                              "type": "integer"
-                            },
-                            "name_i18n": {
-                              "type": "string"
-                            }
-                          }
-                        }
-                      },
                       "channel_code": {
                         "type": "string"
                       },
                       "created_at": {
-                        "type": "integer"
-                      },
-                      "game_count": {
                         "type": "integer"
                       },
                       "id": {
@@ -560,9 +537,6 @@
                       },
                       "updated_at": {
                         "type": "integer"
-                      },
-                      "vendor_count": {
-                        "type": "integer"
                       }
                     }
                   }
@@ -588,7 +562,7 @@
           "https"
         ],
         "summary": "GameChannelUpdate",
-        "operationId": "gameChannelUpdate",
+        "operationId": "channelGameChannelUpdate",
         "parameters": [
           {
             "name": "body",
@@ -597,11 +571,7 @@
             "schema": {
               "type": "object",
               "required": [
-                "id",
-                "name_i18n",
-                "sort_no",
-                "status",
-                "force_logout"
+                "id"
               ],
               "properties": {
                 "force_logout": {
@@ -629,31 +599,10 @@
             "schema": {
               "type": "object",
               "properties": {
-                "cat_ids": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "required": [
-                      "id",
-                      "name_i18n"
-                    ],
-                    "properties": {
-                      "id": {
-                        "type": "integer"
-                      },
-                      "name_i18n": {
-                        "type": "string"
-                      }
-                    }
-                  }
-                },
                 "channel_code": {
                   "type": "string"
                 },
                 "created_at": {
-                  "type": "integer"
-                },
-                "game_count": {
                   "type": "integer"
                 },
                 "id": {
@@ -688,9 +637,6 @@
                 },
                 "updated_at": {
                   "type": "integer"
-                },
-                "vendor_count": {
-                  "type": "integer"
                 }
               }
             }
@@ -707,7 +653,7 @@
           "https"
         ],
         "summary": "GameCurrencyGet",
-        "operationId": "gameCurrencyGet",
+        "operationId": "currencyGameCurrencyGet",
         "parameters": [
           {
             "type": "integer",
@@ -773,49 +719,55 @@
           "https"
         ],
         "summary": "GameCurrencyList",
-        "operationId": "gameCurrencyList",
+        "operationId": "currencyGameCurrencyList",
         "parameters": [
           {
             "type": "integer",
             "name": "page",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "integer",
             "name": "page_size",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "integer",
             "name": "game_id",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
+          },
+          {
+            "type": "integer",
+            "name": "currency_id",
+            "in": "query",
+            "allowEmptyValue": true
           },
           {
             "type": "integer",
             "name": "status",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "integer",
             "name": "is_deleted",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "string",
             "name": "sort_by",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "string",
             "name": "sort_order",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           }
         ],
         "responses": {
@@ -824,7 +776,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "items": {
+                "list": {
                   "type": "array",
                   "items": {
                     "type": "object",
@@ -903,7 +855,7 @@
           "https"
         ],
         "summary": "GameCurrencyUpdate",
-        "operationId": "gameCurrencyUpdate",
+        "operationId": "currencyGameCurrencyUpdate",
         "parameters": [
           {
             "name": "body",
@@ -912,9 +864,7 @@
             "schema": {
               "type": "object",
               "required": [
-                "id",
-                "status",
-                "force_logout"
+                "id"
               ],
               "properties": {
                 "force_logout": {
@@ -987,7 +937,7 @@
           "https"
         ],
         "summary": "GameProviderGet",
-        "operationId": "gameProviderGet",
+        "operationId": "providerGameProviderGet",
         "parameters": [
           {
             "type": "integer",
@@ -1062,55 +1012,55 @@
           "https"
         ],
         "summary": "GameProviderList",
-        "operationId": "gameProviderList",
+        "operationId": "providerGameProviderList",
         "parameters": [
           {
             "type": "integer",
             "name": "page",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "integer",
             "name": "page_size",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "string",
             "name": "provider_code",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "string",
             "name": "name",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "integer",
             "name": "status",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "integer",
             "name": "is_deleted",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "string",
             "name": "sort_by",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "string",
             "name": "sort_order",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           }
         ],
         "responses": {
@@ -1119,7 +1069,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "items": {
+                "list": {
                   "type": "array",
                   "items": {
                     "type": "object",
@@ -1210,7 +1160,7 @@
           "https"
         ],
         "summary": "GameProviderUpdate",
-        "operationId": "gameProviderUpdate",
+        "operationId": "providerGameProviderUpdate",
         "parameters": [
           {
             "name": "body",
@@ -1219,12 +1169,7 @@
             "schema": {
               "type": "object",
               "required": [
-                "id",
-                "name_i18n",
-                "logo_url",
-                "sort_no",
-                "status",
-                "force_logout"
+                "id"
               ],
               "properties": {
                 "force_logout": {
@@ -1315,13 +1260,19 @@
           "https"
         ],
         "summary": "GameSyncCheckpointGet",
-        "operationId": "gameSyncCheckpointGet",
+        "operationId": "checkpointGameSyncCheckpointGet",
         "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "query",
+            "allowEmptyValue": true
+          },
           {
             "type": "string",
             "name": "sync_scope",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           }
         ],
         "responses": {
@@ -1360,6 +1311,9 @@
                 "local_total": {
                   "type": "integer"
                 },
+                "progress": {
+                  "type": "integer"
+                },
                 "remote_total": {
                   "type": "integer"
                 },
@@ -1390,37 +1344,37 @@
           "https"
         ],
         "summary": "GameSyncCheckpointList",
-        "operationId": "gameSyncCheckpointList",
+        "operationId": "checkpointGameSyncCheckpointList",
         "parameters": [
           {
             "type": "integer",
             "name": "page",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "integer",
             "name": "page_size",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "string",
             "name": "sync_scope",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "integer",
             "name": "start_time",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "integer",
             "name": "end_time",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           }
         ],
         "responses": {
@@ -1429,7 +1383,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "items": {
+                "list": {
                   "type": "array",
                   "items": {
                     "type": "object",
@@ -1444,6 +1398,7 @@
                       "deleted_count",
                       "failed_count",
                       "sync_status",
+                      "progress",
                       "last_error_message",
                       "last_success_at",
                       "last_sync_at",
@@ -1479,6 +1434,9 @@
                         "type": "integer"
                       },
                       "local_total": {
+                        "type": "integer"
+                      },
+                      "progress": {
                         "type": "integer"
                       },
                       "remote_total": {
@@ -1517,7 +1475,7 @@
           "https"
         ],
         "summary": "GameGet",
-        "operationId": "gameGet",
+        "operationId": "gameGameGet",
         "parameters": [
           {
             "type": "integer",
@@ -1640,73 +1598,73 @@
           "https"
         ],
         "summary": "GameList",
-        "operationId": "gameList",
+        "operationId": "gameGameList",
         "parameters": [
           {
             "type": "integer",
             "name": "page",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "integer",
             "name": "page_size",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "string",
             "name": "game_code",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "string",
             "name": "name",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "integer",
             "name": "category_id",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "integer",
             "name": "provider_id",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "integer",
             "name": "channel_id",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "integer",
             "name": "status",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "integer",
             "name": "is_deleted",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "string",
             "name": "sort_by",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           },
           {
             "type": "string",
             "name": "sort_order",
             "in": "query",
-            "required": true
+            "allowEmptyValue": true
           }
         ],
         "responses": {
@@ -1715,7 +1673,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "items": {
+                "list": {
                   "type": "array",
                   "items": {
                     "type": "object",
@@ -1865,7 +1823,7 @@
           "https"
         ],
         "summary": "GameUpdate",
-        "operationId": "gameUpdate",
+        "operationId": "gameGameUpdate",
         "parameters": [
           {
             "name": "body",
@@ -1874,15 +1832,7 @@
             "schema": {
               "type": "object",
               "required": [
-                "id",
-                "name_i18n",
-                "image_url",
-                "sort_no",
-                "provider_key",
-                "supports_embed",
-                "supports_redirect",
-                "status",
-                "force_logout"
+                "id"
               ],
               "properties": {
                 "force_logout": {
@@ -1895,9 +1845,6 @@
                   "type": "string"
                 },
                 "name_i18n": {
-                  "type": "string"
-                },
-                "provider_key": {
                   "type": "string"
                 },
                 "sort_no": {
@@ -2024,7 +1971,7 @@
     "/admin/sync/categories/preview": {
       "post": {
         "consumes": [
-          "application/x-www-form-urlencoded"
+          "application/json"
         ],
         "produces": [
           "application/json"
@@ -2033,7 +1980,28 @@
           "https"
         ],
         "summary": "PreviewCategory",
-        "operationId": "previewCategory",
+        "operationId": "previewPreviewCategory",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "is_skip": {
+                  "type": "boolean"
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "page_size": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -2052,17 +2020,13 @@
                       "remote_id",
                       "remote_code",
                       "reason",
-                      "conflict_type",
-                      "details"
+                      "conflict_type"
                     ],
                     "properties": {
                       "action": {
                         "type": "string"
                       },
                       "conflict_type": {
-                        "type": "string"
-                      },
-                      "details": {
                         "type": "string"
                       },
                       "object_code": {
@@ -2085,6 +2049,12 @@
                       }
                     }
                   }
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "page_size": {
+                  "type": "integer"
                 },
                 "stats": {
                   "type": "object",
@@ -2124,6 +2094,12 @@
                       "type": "integer"
                     }
                   }
+                },
+                "total_count": {
+                  "type": "integer"
+                },
+                "total_page": {
+                  "type": "integer"
                 }
               }
             }
@@ -2134,7 +2110,7 @@
     "/admin/sync/categories/run": {
       "post": {
         "consumes": [
-          "application/x-www-form-urlencoded"
+          "application/json"
         ],
         "produces": [
           "application/json"
@@ -2143,133 +2119,33 @@
           "https"
         ],
         "summary": "RunCategory",
-        "operationId": "runCategory",
+        "operationId": "syncRunCategory",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "sync_cols": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
             "schema": {
               "type": "object",
               "properties": {
-                "apply": {
-                  "type": "object",
-                  "required": [
-                    "created",
-                    "updated",
-                    "deleted",
-                    "failed",
-                    "skipped"
-                  ],
-                  "properties": {
-                    "created": {
-                      "type": "integer"
-                    },
-                    "deleted": {
-                      "type": "integer"
-                    },
-                    "failed": {
-                      "type": "integer"
-                    },
-                    "skipped": {
-                      "type": "integer"
-                    },
-                    "updated": {
-                      "type": "integer"
-                    }
-                  }
-                },
-                "preview": {
-                  "type": "object",
-                  "required": [
-                    "stats",
-                    "diffs"
-                  ],
-                  "properties": {
-                    "diffs": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "required": [
-                          "object_type",
-                          "object_id",
-                          "object_code",
-                          "action",
-                          "remote_id",
-                          "remote_code",
-                          "reason",
-                          "conflict_type",
-                          "details"
-                        ],
-                        "properties": {
-                          "action": {
-                            "type": "string"
-                          },
-                          "conflict_type": {
-                            "type": "string"
-                          },
-                          "details": {
-                            "type": "string"
-                          },
-                          "object_code": {
-                            "type": "string"
-                          },
-                          "object_id": {
-                            "type": "integer"
-                          },
-                          "object_type": {
-                            "type": "string"
-                          },
-                          "reason": {
-                            "type": "string"
-                          },
-                          "remote_code": {
-                            "type": "string"
-                          },
-                          "remote_id": {
-                            "type": "integer"
-                          }
-                        }
-                      }
-                    },
-                    "stats": {
-                      "type": "object",
-                      "required": [
-                        "remote_total",
-                        "local_total",
-                        "create_total",
-                        "update_total",
-                        "delete_total",
-                        "noop_total",
-                        "conflict_total",
-                        "error_total"
-                      ],
-                      "properties": {
-                        "conflict_total": {
-                          "type": "integer"
-                        },
-                        "create_total": {
-                          "type": "integer"
-                        },
-                        "delete_total": {
-                          "type": "integer"
-                        },
-                        "error_total": {
-                          "type": "integer"
-                        },
-                        "local_total": {
-                          "type": "integer"
-                        },
-                        "noop_total": {
-                          "type": "integer"
-                        },
-                        "remote_total": {
-                          "type": "integer"
-                        },
-                        "update_total": {
-                          "type": "integer"
-                        }
-                      }
-                    }
-                  }
+                "checkpoint_id": {
+                  "type": "integer"
                 }
               }
             }
@@ -2280,7 +2156,7 @@
     "/admin/sync/channel/preview": {
       "post": {
         "consumes": [
-          "application/x-www-form-urlencoded"
+          "application/json"
         ],
         "produces": [
           "application/json"
@@ -2289,7 +2165,28 @@
           "https"
         ],
         "summary": "PreviewChannel",
-        "operationId": "previewChannel",
+        "operationId": "previewPreviewChannel",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "is_skip": {
+                  "type": "boolean"
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "page_size": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -2308,17 +2205,13 @@
                       "remote_id",
                       "remote_code",
                       "reason",
-                      "conflict_type",
-                      "details"
+                      "conflict_type"
                     ],
                     "properties": {
                       "action": {
                         "type": "string"
                       },
                       "conflict_type": {
-                        "type": "string"
-                      },
-                      "details": {
                         "type": "string"
                       },
                       "object_code": {
@@ -2341,6 +2234,12 @@
                       }
                     }
                   }
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "page_size": {
+                  "type": "integer"
                 },
                 "stats": {
                   "type": "object",
@@ -2380,6 +2279,12 @@
                       "type": "integer"
                     }
                   }
+                },
+                "total_count": {
+                  "type": "integer"
+                },
+                "total_page": {
+                  "type": "integer"
                 }
               }
             }
@@ -2390,7 +2295,7 @@
     "/admin/sync/channel/run": {
       "post": {
         "consumes": [
-          "application/x-www-form-urlencoded"
+          "application/json"
         ],
         "produces": [
           "application/json"
@@ -2399,133 +2304,33 @@
           "https"
         ],
         "summary": "RunChannel",
-        "operationId": "runChannel",
+        "operationId": "syncRunChannel",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "sync_cols": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
             "schema": {
               "type": "object",
               "properties": {
-                "apply": {
-                  "type": "object",
-                  "required": [
-                    "created",
-                    "updated",
-                    "deleted",
-                    "failed",
-                    "skipped"
-                  ],
-                  "properties": {
-                    "created": {
-                      "type": "integer"
-                    },
-                    "deleted": {
-                      "type": "integer"
-                    },
-                    "failed": {
-                      "type": "integer"
-                    },
-                    "skipped": {
-                      "type": "integer"
-                    },
-                    "updated": {
-                      "type": "integer"
-                    }
-                  }
-                },
-                "preview": {
-                  "type": "object",
-                  "required": [
-                    "stats",
-                    "diffs"
-                  ],
-                  "properties": {
-                    "diffs": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "required": [
-                          "object_type",
-                          "object_id",
-                          "object_code",
-                          "action",
-                          "remote_id",
-                          "remote_code",
-                          "reason",
-                          "conflict_type",
-                          "details"
-                        ],
-                        "properties": {
-                          "action": {
-                            "type": "string"
-                          },
-                          "conflict_type": {
-                            "type": "string"
-                          },
-                          "details": {
-                            "type": "string"
-                          },
-                          "object_code": {
-                            "type": "string"
-                          },
-                          "object_id": {
-                            "type": "integer"
-                          },
-                          "object_type": {
-                            "type": "string"
-                          },
-                          "reason": {
-                            "type": "string"
-                          },
-                          "remote_code": {
-                            "type": "string"
-                          },
-                          "remote_id": {
-                            "type": "integer"
-                          }
-                        }
-                      }
-                    },
-                    "stats": {
-                      "type": "object",
-                      "required": [
-                        "remote_total",
-                        "local_total",
-                        "create_total",
-                        "update_total",
-                        "delete_total",
-                        "noop_total",
-                        "conflict_total",
-                        "error_total"
-                      ],
-                      "properties": {
-                        "conflict_total": {
-                          "type": "integer"
-                        },
-                        "create_total": {
-                          "type": "integer"
-                        },
-                        "delete_total": {
-                          "type": "integer"
-                        },
-                        "error_total": {
-                          "type": "integer"
-                        },
-                        "local_total": {
-                          "type": "integer"
-                        },
-                        "noop_total": {
-                          "type": "integer"
-                        },
-                        "remote_total": {
-                          "type": "integer"
-                        },
-                        "update_total": {
-                          "type": "integer"
-                        }
-                      }
-                    }
-                  }
+                "checkpoint_id": {
+                  "type": "integer"
                 }
               }
             }
@@ -2536,7 +2341,7 @@
     "/admin/sync/currencies/preview": {
       "post": {
         "consumes": [
-          "application/x-www-form-urlencoded"
+          "application/json"
         ],
         "produces": [
           "application/json"
@@ -2545,7 +2350,28 @@
           "https"
         ],
         "summary": "PreviewCurrency",
-        "operationId": "previewCurrency",
+        "operationId": "previewPreviewCurrency",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "is_skip": {
+                  "type": "boolean"
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "page_size": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -2564,17 +2390,13 @@
                       "remote_id",
                       "remote_code",
                       "reason",
-                      "conflict_type",
-                      "details"
+                      "conflict_type"
                     ],
                     "properties": {
                       "action": {
                         "type": "string"
                       },
                       "conflict_type": {
-                        "type": "string"
-                      },
-                      "details": {
                         "type": "string"
                       },
                       "object_code": {
@@ -2597,6 +2419,12 @@
                       }
                     }
                   }
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "page_size": {
+                  "type": "integer"
                 },
                 "stats": {
                   "type": "object",
@@ -2636,6 +2464,12 @@
                       "type": "integer"
                     }
                   }
+                },
+                "total_count": {
+                  "type": "integer"
+                },
+                "total_page": {
+                  "type": "integer"
                 }
               }
             }
@@ -2646,7 +2480,7 @@
     "/admin/sync/currencies/run": {
       "post": {
         "consumes": [
-          "application/x-www-form-urlencoded"
+          "application/json"
         ],
         "produces": [
           "application/json"
@@ -2655,133 +2489,33 @@
           "https"
         ],
         "summary": "RunCurrency",
-        "operationId": "runCurrency",
+        "operationId": "syncRunCurrency",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "sync_cols": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
             "schema": {
               "type": "object",
               "properties": {
-                "apply": {
-                  "type": "object",
-                  "required": [
-                    "created",
-                    "updated",
-                    "deleted",
-                    "failed",
-                    "skipped"
-                  ],
-                  "properties": {
-                    "created": {
-                      "type": "integer"
-                    },
-                    "deleted": {
-                      "type": "integer"
-                    },
-                    "failed": {
-                      "type": "integer"
-                    },
-                    "skipped": {
-                      "type": "integer"
-                    },
-                    "updated": {
-                      "type": "integer"
-                    }
-                  }
-                },
-                "preview": {
-                  "type": "object",
-                  "required": [
-                    "stats",
-                    "diffs"
-                  ],
-                  "properties": {
-                    "diffs": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "required": [
-                          "object_type",
-                          "object_id",
-                          "object_code",
-                          "action",
-                          "remote_id",
-                          "remote_code",
-                          "reason",
-                          "conflict_type",
-                          "details"
-                        ],
-                        "properties": {
-                          "action": {
-                            "type": "string"
-                          },
-                          "conflict_type": {
-                            "type": "string"
-                          },
-                          "details": {
-                            "type": "string"
-                          },
-                          "object_code": {
-                            "type": "string"
-                          },
-                          "object_id": {
-                            "type": "integer"
-                          },
-                          "object_type": {
-                            "type": "string"
-                          },
-                          "reason": {
-                            "type": "string"
-                          },
-                          "remote_code": {
-                            "type": "string"
-                          },
-                          "remote_id": {
-                            "type": "integer"
-                          }
-                        }
-                      }
-                    },
-                    "stats": {
-                      "type": "object",
-                      "required": [
-                        "remote_total",
-                        "local_total",
-                        "create_total",
-                        "update_total",
-                        "delete_total",
-                        "noop_total",
-                        "conflict_total",
-                        "error_total"
-                      ],
-                      "properties": {
-                        "conflict_total": {
-                          "type": "integer"
-                        },
-                        "create_total": {
-                          "type": "integer"
-                        },
-                        "delete_total": {
-                          "type": "integer"
-                        },
-                        "error_total": {
-                          "type": "integer"
-                        },
-                        "local_total": {
-                          "type": "integer"
-                        },
-                        "noop_total": {
-                          "type": "integer"
-                        },
-                        "remote_total": {
-                          "type": "integer"
-                        },
-                        "update_total": {
-                          "type": "integer"
-                        }
-                      }
-                    }
-                  }
+                "checkpoint_id": {
+                  "type": "integer"
                 }
               }
             }
@@ -2792,7 +2526,7 @@
     "/admin/sync/games/preview": {
       "post": {
         "consumes": [
-          "application/x-www-form-urlencoded"
+          "application/json"
         ],
         "produces": [
           "application/json"
@@ -2801,7 +2535,28 @@
           "https"
         ],
         "summary": "PreviewGame",
-        "operationId": "previewGame",
+        "operationId": "previewPreviewGame",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "is_skip": {
+                  "type": "boolean"
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "page_size": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -2820,17 +2575,13 @@
                       "remote_id",
                       "remote_code",
                       "reason",
-                      "conflict_type",
-                      "details"
+                      "conflict_type"
                     ],
                     "properties": {
                       "action": {
                         "type": "string"
                       },
                       "conflict_type": {
-                        "type": "string"
-                      },
-                      "details": {
                         "type": "string"
                       },
                       "object_code": {
@@ -2853,6 +2604,12 @@
                       }
                     }
                   }
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "page_size": {
+                  "type": "integer"
                 },
                 "stats": {
                   "type": "object",
@@ -2892,6 +2649,12 @@
                       "type": "integer"
                     }
                   }
+                },
+                "total_count": {
+                  "type": "integer"
+                },
+                "total_page": {
+                  "type": "integer"
                 }
               }
             }
@@ -2902,7 +2665,7 @@
     "/admin/sync/games/run": {
       "post": {
         "consumes": [
-          "application/x-www-form-urlencoded"
+          "application/json"
         ],
         "produces": [
           "application/json"
@@ -2911,133 +2674,33 @@
           "https"
         ],
         "summary": "RunGame",
-        "operationId": "runGame",
+        "operationId": "syncRunGame",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "sync_cols": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
             "schema": {
               "type": "object",
               "properties": {
-                "apply": {
-                  "type": "object",
-                  "required": [
-                    "created",
-                    "updated",
-                    "deleted",
-                    "failed",
-                    "skipped"
-                  ],
-                  "properties": {
-                    "created": {
-                      "type": "integer"
-                    },
-                    "deleted": {
-                      "type": "integer"
-                    },
-                    "failed": {
-                      "type": "integer"
-                    },
-                    "skipped": {
-                      "type": "integer"
-                    },
-                    "updated": {
-                      "type": "integer"
-                    }
-                  }
-                },
-                "preview": {
-                  "type": "object",
-                  "required": [
-                    "stats",
-                    "diffs"
-                  ],
-                  "properties": {
-                    "diffs": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "required": [
-                          "object_type",
-                          "object_id",
-                          "object_code",
-                          "action",
-                          "remote_id",
-                          "remote_code",
-                          "reason",
-                          "conflict_type",
-                          "details"
-                        ],
-                        "properties": {
-                          "action": {
-                            "type": "string"
-                          },
-                          "conflict_type": {
-                            "type": "string"
-                          },
-                          "details": {
-                            "type": "string"
-                          },
-                          "object_code": {
-                            "type": "string"
-                          },
-                          "object_id": {
-                            "type": "integer"
-                          },
-                          "object_type": {
-                            "type": "string"
-                          },
-                          "reason": {
-                            "type": "string"
-                          },
-                          "remote_code": {
-                            "type": "string"
-                          },
-                          "remote_id": {
-                            "type": "integer"
-                          }
-                        }
-                      }
-                    },
-                    "stats": {
-                      "type": "object",
-                      "required": [
-                        "remote_total",
-                        "local_total",
-                        "create_total",
-                        "update_total",
-                        "delete_total",
-                        "noop_total",
-                        "conflict_total",
-                        "error_total"
-                      ],
-                      "properties": {
-                        "conflict_total": {
-                          "type": "integer"
-                        },
-                        "create_total": {
-                          "type": "integer"
-                        },
-                        "delete_total": {
-                          "type": "integer"
-                        },
-                        "error_total": {
-                          "type": "integer"
-                        },
-                        "local_total": {
-                          "type": "integer"
-                        },
-                        "noop_total": {
-                          "type": "integer"
-                        },
-                        "remote_total": {
-                          "type": "integer"
-                        },
-                        "update_total": {
-                          "type": "integer"
-                        }
-                      }
-                    }
-                  }
+                "checkpoint_id": {
+                  "type": "integer"
                 }
               }
             }
@@ -3048,7 +2711,7 @@
     "/admin/sync/vendors/preview": {
       "post": {
         "consumes": [
-          "application/x-www-form-urlencoded"
+          "application/json"
         ],
         "produces": [
           "application/json"
@@ -3057,7 +2720,28 @@
           "https"
         ],
         "summary": "PreviewProvider",
-        "operationId": "previewProvider",
+        "operationId": "previewPreviewProvider",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "is_skip": {
+                  "type": "boolean"
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "page_size": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -3076,17 +2760,13 @@
                       "remote_id",
                       "remote_code",
                       "reason",
-                      "conflict_type",
-                      "details"
+                      "conflict_type"
                     ],
                     "properties": {
                       "action": {
                         "type": "string"
                       },
                       "conflict_type": {
-                        "type": "string"
-                      },
-                      "details": {
                         "type": "string"
                       },
                       "object_code": {
@@ -3109,6 +2789,12 @@
                       }
                     }
                   }
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "page_size": {
+                  "type": "integer"
                 },
                 "stats": {
                   "type": "object",
@@ -3148,6 +2834,12 @@
                       "type": "integer"
                     }
                   }
+                },
+                "total_count": {
+                  "type": "integer"
+                },
+                "total_page": {
+                  "type": "integer"
                 }
               }
             }
@@ -3158,7 +2850,7 @@
     "/admin/sync/vendors/run": {
       "post": {
         "consumes": [
-          "application/x-www-form-urlencoded"
+          "application/json"
         ],
         "produces": [
           "application/json"
@@ -3167,133 +2859,33 @@
           "https"
         ],
         "summary": "RunProvider",
-        "operationId": "runProvider",
+        "operationId": "syncRunProvider",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "sync_cols": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
             "schema": {
               "type": "object",
               "properties": {
-                "apply": {
-                  "type": "object",
-                  "required": [
-                    "created",
-                    "updated",
-                    "deleted",
-                    "failed",
-                    "skipped"
-                  ],
-                  "properties": {
-                    "created": {
-                      "type": "integer"
-                    },
-                    "deleted": {
-                      "type": "integer"
-                    },
-                    "failed": {
-                      "type": "integer"
-                    },
-                    "skipped": {
-                      "type": "integer"
-                    },
-                    "updated": {
-                      "type": "integer"
-                    }
-                  }
-                },
-                "preview": {
-                  "type": "object",
-                  "required": [
-                    "stats",
-                    "diffs"
-                  ],
-                  "properties": {
-                    "diffs": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "required": [
-                          "object_type",
-                          "object_id",
-                          "object_code",
-                          "action",
-                          "remote_id",
-                          "remote_code",
-                          "reason",
-                          "conflict_type",
-                          "details"
-                        ],
-                        "properties": {
-                          "action": {
-                            "type": "string"
-                          },
-                          "conflict_type": {
-                            "type": "string"
-                          },
-                          "details": {
-                            "type": "string"
-                          },
-                          "object_code": {
-                            "type": "string"
-                          },
-                          "object_id": {
-                            "type": "integer"
-                          },
-                          "object_type": {
-                            "type": "string"
-                          },
-                          "reason": {
-                            "type": "string"
-                          },
-                          "remote_code": {
-                            "type": "string"
-                          },
-                          "remote_id": {
-                            "type": "integer"
-                          }
-                        }
-                      }
-                    },
-                    "stats": {
-                      "type": "object",
-                      "required": [
-                        "remote_total",
-                        "local_total",
-                        "create_total",
-                        "update_total",
-                        "delete_total",
-                        "noop_total",
-                        "conflict_total",
-                        "error_total"
-                      ],
-                      "properties": {
-                        "conflict_total": {
-                          "type": "integer"
-                        },
-                        "create_total": {
-                          "type": "integer"
-                        },
-                        "delete_total": {
-                          "type": "integer"
-                        },
-                        "error_total": {
-                          "type": "integer"
-                        },
-                        "local_total": {
-                          "type": "integer"
-                        },
-                        "noop_total": {
-                          "type": "integer"
-                        },
-                        "remote_total": {
-                          "type": "integer"
-                        },
-                        "update_total": {
-                          "type": "integer"
-                        }
-                      }
-                    }
-                  }
+                "checkpoint_id": {
+                  "type": "integer"
                 }
               }
             }
@@ -3310,7 +2902,7 @@
           "https"
         ],
         "summary": "Ping",
-        "operationId": "ping",
+        "operationId": "pingPing",
         "responses": {
           "200": {
             "description": "",
@@ -3327,7 +2919,7 @@
       }
     }
   },
-  "x-date": "2026-09-03 17:19:21",
+  "x-date": "2026-09-10 18:44:59",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",

@@ -50,7 +50,7 @@ type (
 )
 
 @server (
-	group:      regionAllocation
+	group:      region_allocation
 	prefix:     /admin/operator/region-allocation
 	middleware: Jwt,ActionLog,Authority
 )

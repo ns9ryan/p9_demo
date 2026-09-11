@@ -91,6 +91,26 @@ func TestI18nCodeIsolation(t *testing.T) {
 	}
 
 	if err := d.UpdateI18nByKey(ctx, UpdateI18nByKeyReq{
+		I18nCode: "promo", TransKey: key, Data: map[string]string{i18n.LangEN: "PromoHi"},
+	}); err != nil {
+		t.Fatal(err)
+	}
+	dictPromo, err = d.GetI18nDict(ctx, "promo", "front", i18n.LangEN)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if dictPromo[key] != "PromoHi" {
+		t.Fatalf("by-key filter promo=%v", dictPromo)
+	}
+	dictCore, err = d.GetI18nDict(ctx, i18n.CodePlatform, "front", i18n.LangEN)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if dictCore[key] != "Hi" {
+		t.Fatalf("platform should stay, got=%v", dictCore)
+	}
+
+	if err := d.UpdateI18nByKey(ctx, UpdateI18nByKeyReq{
 		TransKey: "front.only.platform", Data: map[string]string{i18n.LangZH: "仅平台"},
 	}); err != nil {
 		t.Fatal(err)

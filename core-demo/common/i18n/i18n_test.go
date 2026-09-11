@@ -5,6 +5,22 @@ import (
 	"testing"
 )
 
+func TestCodeByPartnerMode(t *testing.T) {
+	cases := map[string]string{
+		"on":       CodeOperator,
+		"ON":       CodeOperator,
+		" on ":     CodeOperator,
+		"off":      CodePlatform,
+		"":         CodePlatform,
+		"platform": CodePlatform,
+	}
+	for in, want := range cases {
+		if got := CodeByPartnerMode(in); got != want {
+			t.Fatalf("CodeByPartnerMode(%q)=%q want %q", in, got, want)
+		}
+	}
+}
+
 func TestParseLang(t *testing.T) {
 	cases := map[string]string{
 		"":               LangZH,

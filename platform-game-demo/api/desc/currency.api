@@ -1,0 +1,60 @@
+syntax = "v1"
+
+@server (
+	group: currency
+	middleware: Auth
+	prefix: /admin/game-currency
+)
+service platform_game {
+	// ===== Game Currency APIs =====
+	@handler GameCurrencyList
+	get /list (GameCurrencyListReq) returns (GameCurrencyListResp)
+
+	@handler GameCurrencyGet
+	get /get (GameCurrencyGetReq) returns (GameCurrencyResp)
+
+	@handler GameCurrencyUpdate
+	post /update (GameCurrencyUpdateReq) returns (GameCurrencyResp)
+}
+
+// ========== Game Currency ==========
+type GameCurrencyResp {
+	ID               int64  `json:"id" comment:"游戏货币ID"`
+	GameID           int64  `json:"game_id" comment:"游戏ID"`
+	CurrencyID       int64  `json:"currency_id" comment:"货币ID"`
+	GameCode         string `json:"game_code,omitempty" comment:"游戏编码"`
+	GameNameI18n     string `json:"game_name_i18n,omitempty" comment:"游戏名称（多语言JSON）"`
+	CurrencyCode     string `json:"currency_code,omitempty" comment:"币种编码"`
+	CurrencyNameI18n string `json:"currency_name_i18n,omitempty" comment:"币种名称（多语言JSON）"`
+	SourceStatus     int16  `json:"source_status" comment:"上游状态：1启用/2禁用"`
+	Status           int16  `json:"status" comment:"状态：1启用/2禁用"`
+	IsDeleted        int16  `json:"is_deleted" comment:"软删除：0正常/1已删除"`
+	CreatedAt        int64  `json:"created_at" comment:"创建时间戳"`
+	UpdatedAt        int64  `json:"updated_at" comment:"更新时间戳"`
+}
+
+type GameCurrencyListReq {
+	Page      int64  `form:"page,optional" comment:"页码（默认1）"`
+	PageSize  int64  `form:"page_size,optional" comment:"每页大小（默认15）"`
+	GameID    int64  `form:"game_id,optional" comment:"游戏ID筛选"`
+	CurrencyID int64  `form:"currency_id,optional" comment:"币种ID筛选"`
+	Status    int16  `form:"status,optional" comment:"状态筛选：1启用/2禁用"`
+	IsDeleted int16  `form:"is_deleted,optional" comment:"软删除筛选：0未删除/1已删除（默认0-未删除）"`
+	SortBy    string `form:"sort_by,optional" comment:"排序字段（id/created_at）"`
+	SortOrder string `form:"sort_order,optional" comment:"排序顺序（asc/desc）"`
+}
+
+type GameCurrencyListResp {
+	List []GameCurrencyResp `json:"list" comment:"游戏货币列表"`
+	Total int64              `json:"total" comment:"总数"`
+}
+
+type GameCurrencyGetReq {
+	ID int64 `form:"id" binding:"required" comment:"游戏货币ID"`
+}
+
+type GameCurrencyUpdateReq {
+	ID          int64 `json:"id" binding:"required" comment:"游戏货币ID"`
+	Status      int16 `json:"status,optional" comment:"状态：1启用/2禁用"`
+	ForceLogout bool  `json:"force_logout,optional" comment:"状态变更为停用时是否强制踢线"`
+}

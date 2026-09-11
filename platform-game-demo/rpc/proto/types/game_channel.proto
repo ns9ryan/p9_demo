@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package platform_game;
+
+option go_package = "oa.98ent.com/p9/platform-game/rpc/pb/platform_game";
+
+// GameCategoryInfo 游戏分类信息（包含名称）
+message GameCategoryInfo {
+    int64 id = 1;
+    string name_i18n = 2;
+}
+
+// ChannelInfo 渠道信息
+message ChannelInfo {
+    int64 id = 1;
+    string code = 2;
+    string name = 3;
+    int32 status = 4;
+    string name_i18n = 5;
+    string source_name_i18n = 6;
+}
+
+// GameChannelResp 游戏渠道响应
+message GameChannelResp {
+    int64 id = 1;
+    int64 source_id = 2;
+    string channel_code = 3;
+    string source_channel_code = 4;
+    string name_i18n = 5;
+    string source_name_i18n = 6;
+    int32 sort_no = 7;
+    int32 source_sort_no = 8;
+    int32 status = 9;
+    int32 source_status = 10;
+    int32 is_deleted = 11;
+    int64 created_at = 12;
+    int64 updated_at = 13;
+}
+
+// GetGameChannelRequest 获取单个游戏渠道请求
+message GetGameChannelRequest {
+    int64 id = 1;
+}
+
+// GetGameChannelResp 获取单个游戏渠道响应
+message GetGameChannelResp {
+    int32 code = 1;
+    string message = 2;
+    GameChannelResp data = 3;
+}
+
+// GetGameChannelListRequest 获取游戏渠道列表请求
+message GetGameChannelListRequest {
+    int32 page = 1;
+    int32 page_size = 2;
+    string channel_code = 3;
+    string name = 4;
+    int32 status = 5;
+    int32 is_deleted = 6;  // 0=未删除(默认), 1=已删除, 其他=不过滤
+    string sort_by = 7;     // id/sort_no/created_at
+    string sort_order = 8;  // asc/desc
+}
+
+// GetGameChannelListResp 游戏渠道列表响应
+message GetGameChannelListResp {
+    int32 code = 1;
+    string message = 2;
+    repeated GameChannelResp items = 3;
+    int64 total = 4;
+    int32 page = 5;
+    int32 page_size = 6;
+}
+
+// UpdateGameChannelRequest 更新渠道请求
+message UpdateGameChannelRequest {
+    int64 id = 1;
+    string name_i18n = 2;
+    int32 sort_no = 3;
+    int32 status = 4;
+    bool force_logout = 5;
+}
+
+// UpdateGameChannelResp 更新渠道响应
+message UpdateGameChannelResp {
+    int32 code = 1;
+    string message = 2;
+    GameChannelResp data = 3;
+}

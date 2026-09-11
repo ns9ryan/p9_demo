@@ -30,5 +30,5 @@ func (l *RefreshLogic) Refresh(req *types.RefreshReq) (resp *types.LoginResp, er
 	if err != nil {
 		return nil, err
 	}
-	return convert.LoginResp(out), nil
+	return convert.LoginResp(l.ctx, out), nil
 }

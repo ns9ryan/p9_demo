@@ -1,0 +1,18 @@
+[
+    {
+        "game_id": 1,
+        "currency_id": 1
+    },
+    {
+        "game_id": 2,
+        "currency_id": 1
+    },
+    {
+        "game_id": 4,
+        "currency_id": 1
+    },
+    {
+        "game_id": 5,
+        "currency_id": 1
+    }
+]

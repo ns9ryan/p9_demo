@@ -1,0 +1,29 @@
+syntax = "v1"
+
+type (
+	// 获取游戏资源分配列表请求
+	ListGameAllocationsRequest  {}
+	// 获取游戏资源分配列表响应
+	ListGameAllocationsResponse  {}
+	// 保存游戏资源分配请求
+	SaveGameAllocationsRequest  {}
+	// 保存游戏资源分配响应
+	SaveGameAllocationsResponse  {}
+)
+
+@server (
+	group:      game_allocation
+	prefix:     /admin/operator/game-allocation
+	middleware: Jwt,ActionLog,Authority
+)
+service platform_operator {
+	// 获取游戏资源分配列表
+	@handler ListGameAllocations
+	get /list (ListGameAllocationsRequest) returns (ListGameAllocationsResponse)
+
+	// 保存游戏资源分配
+	@handler SaveGameAllocations
+	post /save (SaveGameAllocationsRequest) returns (SaveGameAllocationsResponse)
+//  todo: 其余接口根据业务补充
+}
+
