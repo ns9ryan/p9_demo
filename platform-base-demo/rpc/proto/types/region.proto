@@ -46,6 +46,18 @@ message GetRegionResponse {
   RegionInfo region = 1;
 }
 
+// 按编码获取国家地区请求
+message GetRegionByCodeRequest {
+  // 国家或地区编码
+  string code = 1;
+}
+
+// 按编码获取国家地区响应
+message GetRegionByCodeResponse {
+  // 国家地区信息
+  RegionInfo region = 1;
+}
+
 // 获取国家地区管理列表请求
 message ListRegionsRequest {
   // 页码, 从1开始

@@ -36,6 +36,12 @@ func (s *RegionServiceServer) Get(ctx context.Context, in *region.GetRegionReque
 	return l.Get(in)
 }
 
+// 按编码获取国家地区
+func (s *RegionServiceServer) GetByCode(ctx context.Context, in *region.GetRegionByCodeRequest) (*region.GetRegionByCodeResponse, error) {
+	l := regionservicelogic.NewGetByCodeLogic(ctx, s.svcCtx)
+	return l.GetByCode(in)
+}
+
 // 获取国家地区管理列表
 func (s *RegionServiceServer) List(ctx context.Context, in *region.ListRegionsRequest) (*region.ListRegionsResponse, error) {
 	l := regionservicelogic.NewListLogic(ctx, s.svcCtx)

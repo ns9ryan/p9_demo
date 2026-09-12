@@ -65,6 +65,9 @@ service RegionService {
   // 获取国家地区
   rpc Get(region.GetRegionRequest) returns (region.GetRegionResponse);
 
+  // 按编码获取国家地区
+  rpc GetByCode(region.GetRegionByCodeRequest) returns (region.GetRegionByCodeResponse);
+
   // 获取国家地区管理列表
   rpc List(region.ListRegionsRequest) returns (region.ListRegionsResponse);
 

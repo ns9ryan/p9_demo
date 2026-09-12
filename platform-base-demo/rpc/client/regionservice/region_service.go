@@ -21,6 +21,8 @@ type (
 		Update(ctx context.Context, in *region.UpdateRegionRequest, opts ...grpc.CallOption) (*region.UpdateRegionResponse, error)
 		// 获取国家地区
 		Get(ctx context.Context, in *region.GetRegionRequest, opts ...grpc.CallOption) (*region.GetRegionResponse, error)
+		// 按编码获取国家地区
+		GetByCode(ctx context.Context, in *region.GetRegionByCodeRequest, opts ...grpc.CallOption) (*region.GetRegionByCodeResponse, error)
 		// 获取国家地区管理列表
 		List(ctx context.Context, in *region.ListRegionsRequest, opts ...grpc.CallOption) (*region.ListRegionsResponse, error)
 		// 获取全部国家地区
@@ -50,6 +52,12 @@ func (m *defaultRegionService) Update(ctx context.Context, in *region.UpdateRegi
 func (m *defaultRegionService) Get(ctx context.Context, in *region.GetRegionRequest, opts ...grpc.CallOption) (*region.GetRegionResponse, error) {
 	client := base.NewRegionServiceClient(m.cli.Conn())
 	return client.Get(ctx, in, opts...)
+}
+
+// 按编码获取国家地区
+func (m *defaultRegionService) GetByCode(ctx context.Context, in *region.GetRegionByCodeRequest, opts ...grpc.CallOption) (*region.GetRegionByCodeResponse, error) {
+	client := base.NewRegionServiceClient(m.cli.Conn())
+	return client.GetByCode(ctx, in, opts...)
 }
 
 // 获取国家地区管理列表

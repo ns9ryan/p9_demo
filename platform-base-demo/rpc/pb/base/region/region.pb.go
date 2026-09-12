@@ -305,6 +305,98 @@ func (x *GetRegionResponse) GetRegion() *RegionInfo {
 	return nil
 }
 
+// 按编码获取国家地区请求
+type GetRegionByCodeRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 国家或地区编码
+	Code          string `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetRegionByCodeRequest) Reset() {
+	*x = GetRegionByCodeRequest{}
+	mi := &file_types_region_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetRegionByCodeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetRegionByCodeRequest) ProtoMessage() {}
+
+func (x *GetRegionByCodeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_types_region_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetRegionByCodeRequest.ProtoReflect.Descriptor instead.
+func (*GetRegionByCodeRequest) Descriptor() ([]byte, []int) {
+	return file_types_region_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *GetRegionByCodeRequest) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+// 按编码获取国家地区响应
+type GetRegionByCodeResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 国家地区信息
+	Region        *RegionInfo `protobuf:"bytes,1,opt,name=region,proto3" json:"region,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetRegionByCodeResponse) Reset() {
+	*x = GetRegionByCodeResponse{}
+	mi := &file_types_region_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetRegionByCodeResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetRegionByCodeResponse) ProtoMessage() {}
+
+func (x *GetRegionByCodeResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_types_region_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetRegionByCodeResponse.ProtoReflect.Descriptor instead.
+func (*GetRegionByCodeResponse) Descriptor() ([]byte, []int) {
+	return file_types_region_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *GetRegionByCodeResponse) GetRegion() *RegionInfo {
+	if x != nil {
+		return x.Region
+	}
+	return nil
+}
+
 // 获取国家地区管理列表请求
 type ListRegionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -320,7 +412,7 @@ type ListRegionsRequest struct {
 
 func (x *ListRegionsRequest) Reset() {
 	*x = ListRegionsRequest{}
-	mi := &file_types_region_proto_msgTypes[5]
+	mi := &file_types_region_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -332,7 +424,7 @@ func (x *ListRegionsRequest) String() string {
 func (*ListRegionsRequest) ProtoMessage() {}
 
 func (x *ListRegionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_region_proto_msgTypes[5]
+	mi := &file_types_region_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -345,7 +437,7 @@ func (x *ListRegionsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListRegionsRequest.ProtoReflect.Descriptor instead.
 func (*ListRegionsRequest) Descriptor() ([]byte, []int) {
-	return file_types_region_proto_rawDescGZIP(), []int{5}
+	return file_types_region_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ListRegionsRequest) GetPage() int64 {
@@ -382,7 +474,7 @@ type ListRegionsResponse struct {
 
 func (x *ListRegionsResponse) Reset() {
 	*x = ListRegionsResponse{}
-	mi := &file_types_region_proto_msgTypes[6]
+	mi := &file_types_region_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -394,7 +486,7 @@ func (x *ListRegionsResponse) String() string {
 func (*ListRegionsResponse) ProtoMessage() {}
 
 func (x *ListRegionsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_region_proto_msgTypes[6]
+	mi := &file_types_region_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -407,7 +499,7 @@ func (x *ListRegionsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListRegionsResponse.ProtoReflect.Descriptor instead.
 func (*ListRegionsResponse) Descriptor() ([]byte, []int) {
-	return file_types_region_proto_rawDescGZIP(), []int{6}
+	return file_types_region_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ListRegionsResponse) GetTotal() int64 {
@@ -435,7 +527,7 @@ type ListAllRegionsRequest struct {
 
 func (x *ListAllRegionsRequest) Reset() {
 	*x = ListAllRegionsRequest{}
-	mi := &file_types_region_proto_msgTypes[7]
+	mi := &file_types_region_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -447,7 +539,7 @@ func (x *ListAllRegionsRequest) String() string {
 func (*ListAllRegionsRequest) ProtoMessage() {}
 
 func (x *ListAllRegionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_region_proto_msgTypes[7]
+	mi := &file_types_region_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -460,7 +552,7 @@ func (x *ListAllRegionsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAllRegionsRequest.ProtoReflect.Descriptor instead.
 func (*ListAllRegionsRequest) Descriptor() ([]byte, []int) {
-	return file_types_region_proto_rawDescGZIP(), []int{7}
+	return file_types_region_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ListAllRegionsRequest) GetStatus() int64 {
@@ -481,7 +573,7 @@ type ListAllRegionsResponse struct {
 
 func (x *ListAllRegionsResponse) Reset() {
 	*x = ListAllRegionsResponse{}
-	mi := &file_types_region_proto_msgTypes[8]
+	mi := &file_types_region_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -493,7 +585,7 @@ func (x *ListAllRegionsResponse) String() string {
 func (*ListAllRegionsResponse) ProtoMessage() {}
 
 func (x *ListAllRegionsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_region_proto_msgTypes[8]
+	mi := &file_types_region_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -506,7 +598,7 @@ func (x *ListAllRegionsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAllRegionsResponse.ProtoReflect.Descriptor instead.
 func (*ListAllRegionsResponse) Descriptor() ([]byte, []int) {
-	return file_types_region_proto_rawDescGZIP(), []int{8}
+	return file_types_region_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *ListAllRegionsResponse) GetList() []*RegionInfo {
@@ -529,7 +621,7 @@ type ReorderRegionRequest struct {
 
 func (x *ReorderRegionRequest) Reset() {
 	*x = ReorderRegionRequest{}
-	mi := &file_types_region_proto_msgTypes[9]
+	mi := &file_types_region_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -541,7 +633,7 @@ func (x *ReorderRegionRequest) String() string {
 func (*ReorderRegionRequest) ProtoMessage() {}
 
 func (x *ReorderRegionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_region_proto_msgTypes[9]
+	mi := &file_types_region_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -554,7 +646,7 @@ func (x *ReorderRegionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReorderRegionRequest.ProtoReflect.Descriptor instead.
 func (*ReorderRegionRequest) Descriptor() ([]byte, []int) {
-	return file_types_region_proto_rawDescGZIP(), []int{9}
+	return file_types_region_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *ReorderRegionRequest) GetId() int64 {
@@ -580,7 +672,7 @@ type ReorderRegionResponse struct {
 
 func (x *ReorderRegionResponse) Reset() {
 	*x = ReorderRegionResponse{}
-	mi := &file_types_region_proto_msgTypes[10]
+	mi := &file_types_region_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -592,7 +684,7 @@ func (x *ReorderRegionResponse) String() string {
 func (*ReorderRegionResponse) ProtoMessage() {}
 
 func (x *ReorderRegionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_region_proto_msgTypes[10]
+	mi := &file_types_region_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -605,7 +697,7 @@ func (x *ReorderRegionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReorderRegionResponse.ProtoReflect.Descriptor instead.
 func (*ReorderRegionResponse) Descriptor() ([]byte, []int) {
-	return file_types_region_proto_rawDescGZIP(), []int{10}
+	return file_types_region_proto_rawDescGZIP(), []int{12}
 }
 
 var File_types_region_proto protoreflect.FileDescriptor
@@ -631,6 +723,10 @@ const file_types_region_proto_rawDesc = "" +
 	"\x10GetRegionRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"?\n" +
 	"\x11GetRegionResponse\x12*\n" +
+	"\x06region\x18\x01 \x01(\v2\x12.region.RegionInfoR\x06region\",\n" +
+	"\x16GetRegionByCodeRequest\x12\x12\n" +
+	"\x04code\x18\x01 \x01(\tR\x04code\"E\n" +
+	"\x17GetRegionByCodeResponse\x12*\n" +
 	"\x06region\x18\x01 \x01(\v2\x12.region.RegionInfoR\x06region\"m\n" +
 	"\x12ListRegionsRequest\x12\x12\n" +
 	"\x04page\x18\x01 \x01(\x03R\x04page\x12\x1b\n" +
@@ -662,29 +758,32 @@ func file_types_region_proto_rawDescGZIP() []byte {
 	return file_types_region_proto_rawDescData
 }
 
-var file_types_region_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_types_region_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_types_region_proto_goTypes = []any{
-	(*RegionInfo)(nil),             // 0: region.RegionInfo
-	(*UpdateRegionRequest)(nil),    // 1: region.UpdateRegionRequest
-	(*UpdateRegionResponse)(nil),   // 2: region.UpdateRegionResponse
-	(*GetRegionRequest)(nil),       // 3: region.GetRegionRequest
-	(*GetRegionResponse)(nil),      // 4: region.GetRegionResponse
-	(*ListRegionsRequest)(nil),     // 5: region.ListRegionsRequest
-	(*ListRegionsResponse)(nil),    // 6: region.ListRegionsResponse
-	(*ListAllRegionsRequest)(nil),  // 7: region.ListAllRegionsRequest
-	(*ListAllRegionsResponse)(nil), // 8: region.ListAllRegionsResponse
-	(*ReorderRegionRequest)(nil),   // 9: region.ReorderRegionRequest
-	(*ReorderRegionResponse)(nil),  // 10: region.ReorderRegionResponse
+	(*RegionInfo)(nil),              // 0: region.RegionInfo
+	(*UpdateRegionRequest)(nil),     // 1: region.UpdateRegionRequest
+	(*UpdateRegionResponse)(nil),    // 2: region.UpdateRegionResponse
+	(*GetRegionRequest)(nil),        // 3: region.GetRegionRequest
+	(*GetRegionResponse)(nil),       // 4: region.GetRegionResponse
+	(*GetRegionByCodeRequest)(nil),  // 5: region.GetRegionByCodeRequest
+	(*GetRegionByCodeResponse)(nil), // 6: region.GetRegionByCodeResponse
+	(*ListRegionsRequest)(nil),      // 7: region.ListRegionsRequest
+	(*ListRegionsResponse)(nil),     // 8: region.ListRegionsResponse
+	(*ListAllRegionsRequest)(nil),   // 9: region.ListAllRegionsRequest
+	(*ListAllRegionsResponse)(nil),  // 10: region.ListAllRegionsResponse
+	(*ReorderRegionRequest)(nil),    // 11: region.ReorderRegionRequest
+	(*ReorderRegionResponse)(nil),   // 12: region.ReorderRegionResponse
 }
 var file_types_region_proto_depIdxs = []int32{
 	0, // 0: region.GetRegionResponse.region:type_name -> region.RegionInfo
-	0, // 1: region.ListRegionsResponse.list:type_name -> region.RegionInfo
-	0, // 2: region.ListAllRegionsResponse.list:type_name -> region.RegionInfo
-	3, // [3:3] is the sub-list for method output_type
-	3, // [3:3] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	0, // 1: region.GetRegionByCodeResponse.region:type_name -> region.RegionInfo
+	0, // 2: region.ListRegionsResponse.list:type_name -> region.RegionInfo
+	0, // 3: region.ListAllRegionsResponse.list:type_name -> region.RegionInfo
+	4, // [4:4] is the sub-list for method output_type
+	4, // [4:4] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_types_region_proto_init() }
@@ -693,15 +792,15 @@ func file_types_region_proto_init() {
 		return
 	}
 	file_types_region_proto_msgTypes[1].OneofWrappers = []any{}
-	file_types_region_proto_msgTypes[5].OneofWrappers = []any{}
 	file_types_region_proto_msgTypes[7].OneofWrappers = []any{}
+	file_types_region_proto_msgTypes[9].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_region_proto_rawDesc), len(file_types_region_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   11,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

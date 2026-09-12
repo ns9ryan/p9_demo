@@ -747,11 +747,12 @@ var CurrencyService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	RegionService_Update_FullMethodName  = "/platform_base.RegionService/Update"
-	RegionService_Get_FullMethodName     = "/platform_base.RegionService/Get"
-	RegionService_List_FullMethodName    = "/platform_base.RegionService/List"
-	RegionService_ListAll_FullMethodName = "/platform_base.RegionService/ListAll"
-	RegionService_Reorder_FullMethodName = "/platform_base.RegionService/Reorder"
+	RegionService_Update_FullMethodName    = "/platform_base.RegionService/Update"
+	RegionService_Get_FullMethodName       = "/platform_base.RegionService/Get"
+	RegionService_GetByCode_FullMethodName = "/platform_base.RegionService/GetByCode"
+	RegionService_List_FullMethodName      = "/platform_base.RegionService/List"
+	RegionService_ListAll_FullMethodName   = "/platform_base.RegionService/ListAll"
+	RegionService_Reorder_FullMethodName   = "/platform_base.RegionService/Reorder"
 )
 
 // RegionServiceClient is the client API for RegionService service.
@@ -764,6 +765,8 @@ type RegionServiceClient interface {
 	Update(ctx context.Context, in *region.UpdateRegionRequest, opts ...grpc.CallOption) (*region.UpdateRegionResponse, error)
 	// 获取国家地区
 	Get(ctx context.Context, in *region.GetRegionRequest, opts ...grpc.CallOption) (*region.GetRegionResponse, error)
+	// 按编码获取国家地区
+	GetByCode(ctx context.Context, in *region.GetRegionByCodeRequest, opts ...grpc.CallOption) (*region.GetRegionByCodeResponse, error)
 	// 获取国家地区管理列表
 	List(ctx context.Context, in *region.ListRegionsRequest, opts ...grpc.CallOption) (*region.ListRegionsResponse, error)
 	// 获取全部国家地区
@@ -794,6 +797,16 @@ func (c *regionServiceClient) Get(ctx context.Context, in *region.GetRegionReque
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(region.GetRegionResponse)
 	err := c.cc.Invoke(ctx, RegionService_Get_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *regionServiceClient) GetByCode(ctx context.Context, in *region.GetRegionByCodeRequest, opts ...grpc.CallOption) (*region.GetRegionByCodeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(region.GetRegionByCodeResponse)
+	err := c.cc.Invoke(ctx, RegionService_GetByCode_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -840,6 +853,8 @@ type RegionServiceServer interface {
 	Update(context.Context, *region.UpdateRegionRequest) (*region.UpdateRegionResponse, error)
 	// 获取国家地区
 	Get(context.Context, *region.GetRegionRequest) (*region.GetRegionResponse, error)
+	// 按编码获取国家地区
+	GetByCode(context.Context, *region.GetRegionByCodeRequest) (*region.GetRegionByCodeResponse, error)
 	// 获取国家地区管理列表
 	List(context.Context, *region.ListRegionsRequest) (*region.ListRegionsResponse, error)
 	// 获取全部国家地区
@@ -861,6 +876,9 @@ func (UnimplementedRegionServiceServer) Update(context.Context, *region.UpdateRe
 }
 func (UnimplementedRegionServiceServer) Get(context.Context, *region.GetRegionRequest) (*region.GetRegionResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedRegionServiceServer) GetByCode(context.Context, *region.GetRegionByCodeRequest) (*region.GetRegionByCodeResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetByCode not implemented")
 }
 func (UnimplementedRegionServiceServer) List(context.Context, *region.ListRegionsRequest) (*region.ListRegionsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
@@ -924,6 +942,24 @@ func _RegionService_Get_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(RegionServiceServer).Get(ctx, req.(*region.GetRegionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RegionService_GetByCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(region.GetRegionByCodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RegionServiceServer).GetByCode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RegionService_GetByCode_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RegionServiceServer).GetByCode(ctx, req.(*region.GetRegionByCodeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -996,6 +1032,10 @@ var RegionService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Get",
 			Handler:    _RegionService_Get_Handler,
+		},
+		{
+			MethodName: "GetByCode",
+			Handler:    _RegionService_GetByCode_Handler,
 		},
 		{
 			MethodName: "List",
