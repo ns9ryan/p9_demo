@@ -41,6 +41,6 @@ func (l *GetLogic) Get(in *currency.GetCurrencyRequest) (*currency.GetCurrencyRe
 	}
 
 	return &currency.GetCurrencyResponse{
-		Currency: toCurrencyInfo(result),
+		Currency: toCurrencyInfo(result), // 货币信息
 	}, nil
 }
