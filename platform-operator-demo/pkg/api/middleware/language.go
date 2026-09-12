@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	"oa.98ent.com/p9/platform-base/pkg/i18n"
+	"oa.98ent.com/p9/platform-operator/pkg/i18n"
 )
 
 // LanguageMiddleware 语言中间件
