@@ -33,24 +33,15 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
-		// Ping 服务
 		operator.RegisterPingServiceServer(grpcServer, pingserviceServer.NewPingServiceServer(ctx))
-		// 分站服务
 		operator.RegisterOperatorServiceServer(grpcServer, operatorserviceServer.NewOperatorServiceServer(ctx))
-		// 分站档案服务
 		operator.RegisterOperatorProfileServiceServer(grpcServer, operatorprofileserviceServer.NewOperatorProfileServiceServer(ctx))
-		// 分站域名服务
 		operator.RegisterDomainServiceServer(grpcServer, domainserviceServer.NewDomainServiceServer(ctx))
-		// 分站基础资源分配服务
 		operator.RegisterBasicResourceAllocationServiceServer(grpcServer, basicresourceallocationserviceServer.NewBasicResourceAllocationServiceServer(ctx))
-		// 分站语言分配服务
 		operator.RegisterLanguageAllocationServiceServer(grpcServer, languageallocationserviceServer.NewLanguageAllocationServiceServer(ctx))
-		// 分站经营地区分配服务
 		operator.RegisterRegionAllocationServiceServer(grpcServer, regionallocationserviceServer.NewRegionAllocationServiceServer(ctx))
-		// 分站代理子线路分配服务
 		operator.RegisterAgentLineAllocationServiceServer(grpcServer, agentlineallocationserviceServer.NewAgentLineAllocationServiceServer(ctx))
 
-		// 开发和测试环境额外开启服务反射
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)
 		}

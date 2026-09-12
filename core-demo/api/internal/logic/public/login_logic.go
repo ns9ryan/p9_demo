@@ -7,7 +7,6 @@ import (
 	"oa.98ent.com/p9/core/api/internal/convert"
 	"oa.98ent.com/p9/core/api/internal/svc"
 	"oa.98ent.com/p9/core/api/internal/types"
-	"oa.98ent.com/p9/core/common/ctxdata"
 	"oa.98ent.com/p9/core/common/utils"
 	"oa.98ent.com/p9/core/rpc/coreclient"
 
@@ -31,21 +30,15 @@ func NewLoginLogic(r *http.Request, svcCtx *svc.ServiceContext) *LoginLogic {
 }
 
 func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err error) {
-	ctx := l.ctx
-	ip := ctxdata.ClientIPFromCtx(ctx)
-	if ip == "" {
-		ip = utils.ClientIP(l.r)
-		ctx = ctxdata.WithClientIP(ctx, ip)
-	}
-	out, err := l.svcCtx.Core.Login(ctx, &coreclient.LoginReq{
+	out, err := l.svcCtx.Core.Login(l.ctx, &coreclient.LoginReq{
 		Username:     req.Username,
 		Password:     req.Password,
 		OperatorCode: req.OperatorCode,
-		ClientIp:     ip,
+		ClientIp:     utils.ClientIP(l.r),
 		UserAgent:    utils.UserAgent(l.r),
 	})
 	if err != nil {
 		return nil, err
 	}
-	return convert.LoginResp(ctx, out), nil
+	return convert.LoginResp(l.ctx, out), nil
 }

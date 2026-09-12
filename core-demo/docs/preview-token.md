@@ -9,7 +9,7 @@
 
 |               | 登录 access           | 预览 preview                  |
 | ------------- | ------------------- | --------------------------- |
-| 签发            | `POST /admin/login` | `POST /admin/previewToken` |
+| 签发            | `POST /admin/login` | `POST /admin/preview-token` |
 | 鉴权            | 用户名密码               | 公开接口，只传 `operator_code`     |
 | 身份            | 登录用户                | 该分站 `is_super_admin` 且启用的用户 |
 | `token_type`  | `access`            | `preview`                   |
@@ -26,7 +26,7 @@
 ```mermaid
 flowchart TB
   Plat["总网后台"]
-  Issue["分站 API<br/>POST /admin/previewToken"]
+  Issue["分站 API<br/>POST /admin/preview-token"]
   JWT["Authorization: Bearer preview"]
   MW["JWT 中间件"]
   RO{"token_type=preview<br/>且是写接口?"}
@@ -51,13 +51,13 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-  Req["POST /admin/previewToken<br/>{ operator_code }"]
+  Req["POST /admin/preview-token<br/>{ operator_code }"]
   Mode{"RPC Mode == on ?"}
   Code{"operator_code 非空 ?"}
   Op["查 Operator<br/>跳过租户过滤"]
   St{"status 正常 ?"}
   User["查该分站 is_super_admin<br/>未删除且启用"]
-  Sign["jwt.Sign 同一把 Access 密钥<br/>token_type=preview<br/>is_platform=true<br/>role_codes=super_admin<br/>client_ip=当前请求 IP"]
+  Sign["jwt.Sign 同一把 Access 密钥<br/>token_type=preview<br/>is_platform=true<br/>role_codes=super_admin"]
   Out["access_token / expire<br/>operator_code / home_path=/dashboard"]
 
   Req --> Mode
@@ -75,7 +75,7 @@ Claims 里带上分站超管的 `user_id` / `username` / `salt`，以及分站�
 
 ## 2. 后续请求怎么校验
 
-预览 token 当普通 Bearer 用，走同一套 `CheckToken`：解析、黑名单、客户端 IP、用户启用、salt、分站租户。`token_type=refresh` 不能当 Bearer。签发时绑定当前请求 IP，后续请求 IP 不一致返回 401。
+预览 token 当普通 Bearer 用，走同一套 `CheckToken`：解析、黑名单、用户启用、salt、分站租户。`token_type=refresh` 不能当 Bearer。
 
 ```mermaid
 flowchart TB

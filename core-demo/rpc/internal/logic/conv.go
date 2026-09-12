@@ -8,18 +8,16 @@ import (
 
 func ToUserPublic(u service.UserPublic) *core.UserPublic {
 	out := &core.UserPublic{
-		Id:                 u.ID,
-		UserCode:           u.UserCode,
-		Username:           u.Username,
-		DisplayName:        u.DisplayName,
-		IsSuperAdmin:       u.IsSuperAdmin,
-		Status:             int32(u.Status),
-		RoleCodes:          u.RoleCodes,
-		RoleNames:          u.RoleNames,
-		HomePath:           u.HomePath,
-		CreatedAt:          u.CreatedAt,
-		IpWhitelistEnabled: int32(u.IPWhitelistEnabled),
-		IpWhitelist:        u.IPWhitelist,
+		Id:           u.ID,
+		UserCode:     u.UserCode,
+		Username:     u.Username,
+		DisplayName:  u.DisplayName,
+		IsSuperAdmin: u.IsSuperAdmin,
+		Status:       int32(u.Status),
+		RoleCodes:    u.RoleCodes,
+		RoleNames:    u.RoleNames,
+		HomePath:     u.HomePath,
+		CreatedAt:    u.CreatedAt,
 	}
 	if u.OperatorID != nil {
 		out.OperatorId = u.OperatorID
@@ -38,9 +36,6 @@ func ToUserPublic(u service.UserPublic) *core.UserPublic {
 	}
 	if out.RoleNames == nil {
 		out.RoleNames = []string{}
-	}
-	if out.IpWhitelist == nil {
-		out.IpWhitelist = []string{}
 	}
 	return out
 }

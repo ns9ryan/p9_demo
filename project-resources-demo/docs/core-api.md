@@ -33,7 +33,6 @@ core-api 默认 `http://192.168.0.15:18000`，前缀 `/admin`。JSON 字段以 `
     - [GET /admin/user/detail](#get-adminuserdetail)
     - [POST /admin/user/password](#post-adminuserpassword)
     - [POST /admin/user/roles](#post-adminuserroles)
-    - [POST /admin/user/ipWhitelist](#post-adminuseripwhitelist)
   - [角色](#角色)
     - [POST /admin/role/create](#post-adminrolecreate)
     - [POST /admin/role/update](#post-adminroleupdate)
@@ -200,15 +199,12 @@ refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环�
 | `operator_id`    | int64    | 所属分站；平台用户可省略或为 0          |
 | `is_super_admin` | bool     | 是否超管；创建用户接口不可设为 true      |
 | `status`         | int32    | `1` 启用，`2` 停用             |
-| `role_codes`     | string[] | 角色编码列表；与 `role_names` 同序、同长度，无角色为 `[]` |
-| `role_names`     | string[] | 角色名称；内置为 i18n key，响应已按语言翻译；无角色为 `[]` |
+| `role_codes`     | string[] | 角色编码列表                    |
 | `home_path`      | string   | 登录后首页，默认 `/dashboard`     |
 | `created_at`     | int64    | 创建时间，Unix 秒               |
 | `last_login_at`  | int64    | 最后登录时间，Unix 秒；从未登录可省略或为 0 |
 | `mobile`         | string   | 手机号；未填写可省略或为空             |
 | `email`          | string   | 邮箱；未填写可省略或为空              |
-| `ip_whitelist_enabled` | int32 | `0` 关闭登录 IP 白名单（默认），`1` 开启 |
-| `ip_whitelist`  | string[] | 允许登录的 IP 或 CIDR；未配置为 `[]` |
 
 
 `RoleInfo`：
@@ -356,10 +352,7 @@ refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环�
       "is_super_admin": true,
       "status": 1,
       "role_codes": ["super_admin"],
-      "role_names": ["超级管理员"],
-      "home_path": "/dashboard",
-      "ip_whitelist_enabled": 0,
-      "ip_whitelist": []
+      "home_path": "/dashboard"
     }
   }
 }
@@ -407,7 +400,6 @@ refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环�
       "is_super_admin": true,
       "status": 1,
       "role_codes": ["super_admin"],
-      "role_names": ["超级管理员"],
       "home_path": "/dashboard"
     }
   }
@@ -479,7 +471,6 @@ refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环�
     "is_super_admin": true,
     "status": 1,
     "role_codes": ["super_admin"],
-    "role_names": ["超级管理员"],
     "home_path": "/dashboard"
   }
 }
@@ -790,10 +781,7 @@ Query：`/admin/i18n/dict?i18n_code=platform&i18n_group=front&lang=zh-CN`
     "is_super_admin": false,
     "status": 1,
     "role_codes": ["editor"],
-    "role_names": ["运营"],
-    "home_path": "/dashboard",
-    "ip_whitelist_enabled": 0,
-    "ip_whitelist": []
+    "home_path": "/dashboard"
   }
 }
 ```
@@ -912,7 +900,6 @@ Query：`/admin/i18n/dict?i18n_code=platform&i18n_group=front&lang=zh-CN`
         "is_super_admin": true,
         "status": 1,
         "role_codes": ["super_admin"],
-        "role_names": ["超级管理员"],
         "home_path": "/dashboard",
         "created_at": 1710000000,
         "last_login_at": 1710003600
@@ -926,7 +913,6 @@ Query：`/admin/i18n/dict?i18n_code=platform&i18n_group=front&lang=zh-CN`
         "is_super_admin": false,
         "status": 1,
         "role_codes": ["editor"],
-        "role_names": ["运营"],
         "home_path": "/dashboard",
         "created_at": 1710001200,
         "last_login_at": 0
@@ -966,7 +952,6 @@ Query：`/admin/user/detail?id=2`
     "is_super_admin": false,
     "status": 1,
     "role_codes": ["editor"],
-    "role_names": ["运营"],
     "home_path": "/dashboard",
     "created_at": 1710001200,
     "last_login_at": 1710003600,
@@ -1023,38 +1008,6 @@ Query：`/admin/user/detail?id=2`
 {
   "user_id": 2,
   "role_ids": [2, 3]
-}
-```
-
-**响应**
-
-```json
-{ "code": 0, "msg": "ok", "data": { "result": "success" } }
-```
-
-
-
-#### POST /admin/user/ipWhitelist
-
-单独修改登录 IP 白名单，不并入 `POST /admin/user/update`。JWT + Casbin。超管不豁免登录校验。只拦登录，不拦 refresh / 已有会话。
-
-开启后客户端 IP（已规范化，含 IPv4-mapped）须命中列表中的精确 IP 或 CIDR；开启且列表为空会拒绝登录，因此开启时列表不能为空。
-
-**请求**
-
-
-| 字段 | 位置 | 必填 | 类型 | 说明 |
-| --- | --- | --- | --- | --- |
-| `id` | json | 是 | int64 | 用户主键 |
-| `ip_whitelist_enabled` | json | 是 | int32 | `0` 关闭 / `1` 开启 |
-| `ip_whitelist` | json | 是 | string[] | IP 或 CIDR；保存前规范化单 IP 并去重。开启时不能为空 |
-
-
-```json
-{
-  "id": 2,
-  "ip_whitelist_enabled": 1,
-  "ip_whitelist": ["192.168.0.6", "10.0.0.0/8"]
 }
 ```
 
@@ -1687,8 +1640,8 @@ Query：`/admin/role/detail?id=2`
 
 | 字段           | 位置   | 必填  | 类型                | 说明                                |
 | ------------ | ---- | --- | ----------------- | --------------------------------- |
-| `i18n_code`  | json | 否   | string            | 站点编码；空则不按站点过滤                     |
-| `i18n_group` | json | 否   | string            | 分组；空则不按分组过滤                       |
+| `i18n_code`  | json | 否   | string            | 站点编码；空则不按站点过滤                   |
+| `i18n_group` | json | 否   | string            | 分组；空则不按分组过滤                     |
 | `trans_key`  | json | 是   | string            | 完整词条 key，如 `menu.route.dashboard` |
 | `data`       | json | 是   | map[string]string | 语言码 → 译文；新建时语言码须已在支持列表中           |
 
@@ -1753,7 +1706,7 @@ Query：`/admin/role/detail?id=2`
 
 
 ```json
-{ "i18n_code": "platform", "i18n_group": "menu", "lang": "zh-CN", "page": 1, "page_size": 50 }
+{ "i18n_code": "core", "i18n_group": "menu", "lang": "zh-CN", "page": 1, "page_size": 50 }
 ```
 
 **响应**
@@ -2265,7 +2218,6 @@ Query：`/admin/role/detail?id=2`
   "is_super_admin": true,
   "status": 1,
   "role_codes": ["super_admin"],
-  "role_names": ["超级管理员"],
   "home_path": "/dashboard"
 }
 ```
@@ -2314,7 +2266,6 @@ Query：`/admin/role/detail?id=2`
   "is_super_admin": true,
   "status": 1,
   "role_codes": ["super_admin"],
-  "role_names": ["超级管理员"],
   "home_path": "/dashboard"
 }
 ```
