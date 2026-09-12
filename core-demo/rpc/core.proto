@@ -596,6 +596,12 @@ message UpdateRoleReq {
   optional int32 sort_no = 5;
 }
 
+message UpdateUserIpWhitelistReq {
+  int64 id = 1;
+  int32 ip_whitelist_enabled = 2;
+  repeated string ip_whitelist = 3;
+}
+
 message UpdateUserReq {
   int64 id = 1;
   optional string display_name = 2;
@@ -634,6 +640,8 @@ message UserPublic {
   optional string mobile = 12;
   optional string email = 13;
   repeated string role_names = 14;
+  int32 ip_whitelist_enabled = 15;
+  repeated string ip_whitelist = 16;
 }
 
 service Core {
@@ -762,5 +770,7 @@ service Core {
   rpc updateUserPassword(PasswordReq) returns (Empty);
   //  group: user
   rpc bindUserRoles(BindRolesReq) returns (Empty);
+  //  group: user
+  rpc updateUserIpWhitelist(UpdateUserIpWhitelistReq) returns (Empty);
 }
 

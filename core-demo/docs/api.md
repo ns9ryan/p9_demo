@@ -33,6 +33,7 @@ core-api 默认 `http://192.168.0.15:18000`，前缀 `/admin`。JSON 字段以 `
     - [GET /admin/user/detail](#get-adminuserdetail)
     - [POST /admin/user/password](#post-adminuserpassword)
     - [POST /admin/user/roles](#post-adminuserroles)
+    - [POST /admin/user/ipWhitelist](#post-adminuseripwhitelist)
   - [角色](#角色)
     - [POST /admin/role/create](#post-adminrolecreate)
     - [POST /admin/role/update](#post-adminroleupdate)
@@ -109,6 +110,8 @@ access 过期（前端用 refresh 后续请求）：
 
 登录后请求头：`Authorization: Bearer <access_token>`。
 
+access / refresh / preview token 都会写入签发时的客户端 IP（已规范化，含 IPv4-mapped）。后续请求的客户端 IP 须与 token 内一致，否则 **401**（`auth.ipMismatch`），需重新登录。不要用 498。发版前签发、没有 `client_ip` 的旧 token 同样失效。`POST /admin/refresh` 也会比对 refresh token 内的 IP，新 token 仍绑定当前请求 IP。
+
 
 | 分组           | 中间件                        |
 | ------------ | -------------------------- |
@@ -155,14 +158,14 @@ access 过期（前端用 refresh 后续请求）：
 | code | 含义                                                               |
 | ---- | ---------------------------------------------------------------- |
 | 400  | 参数错误                                                             |
-| 401  | 未登录 / token 无效 / 需重新登录                                           |
+| 401  | 未登录 / token 无效 / 登录 IP 已变化需重新登录                                  |
 | 403  | 无权限或资源被禁用                                                        |
 | 404  | 不存在                                                              |
 | 498  | access token 过期：用 `refresh_token` 调 `POST /admin/refresh` 后重试原请求 |
 | 500  | 内部错误                                                             |
 
 
-refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环。
+refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环。客户端 IP 与 token 内不一致同样返回 **401**，需重新登录，不要走 refresh。
 
 ### 响应字段说明
 
@@ -206,6 +209,8 @@ refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环�
 | `last_login_at`  | int64    | 最后登录时间，Unix 秒；从未登录可省略或为 0 |
 | `mobile`         | string   | 手机号；未填写可省略或为空             |
 | `email`          | string   | 邮箱；未填写可省略或为空              |
+| `ip_whitelist_enabled` | int32 | `0` 关闭登录 IP 白名单（默认），`1` 开启 |
+| `ip_whitelist`  | string[] | 允许登录的 IP 或 CIDR；未配置为 `[]` |
 
 
 `RoleInfo`：
@@ -354,7 +359,9 @@ refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环�
       "status": 1,
       "role_codes": ["super_admin"],
       "role_names": ["超级管理员"],
-      "home_path": "/dashboard"
+      "home_path": "/dashboard",
+      "ip_whitelist_enabled": 0,
+      "ip_whitelist": []
     }
   }
 }
@@ -364,7 +371,7 @@ refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环�
 
 ### POST /admin/refresh
 
-校验 refresh 密钥 + 用户 salt，下发新 token 对并拉黑旧 refresh。过期返回 401。
+校验 refresh 密钥 + 用户 salt + 客户端 IP，下发新 token 对并拉黑旧 refresh。过期或 IP 不一致返回 401。
 
 **请求**
 
@@ -786,7 +793,9 @@ Query：`/admin/i18n/dict?i18n_code=platform&i18n_group=front&lang=zh-CN`
     "status": 1,
     "role_codes": ["editor"],
     "role_names": ["运营"],
-    "home_path": "/dashboard"
+    "home_path": "/dashboard",
+    "ip_whitelist_enabled": 0,
+    "ip_whitelist": []
   }
 }
 ```
@@ -1016,6 +1025,38 @@ Query：`/admin/user/detail?id=2`
 {
   "user_id": 2,
   "role_ids": [2, 3]
+}
+```
+
+**响应**
+
+```json
+{ "code": 0, "msg": "ok", "data": { "result": "success" } }
+```
+
+
+
+#### POST /admin/user/ipWhitelist
+
+单独修改登录 IP 白名单，不并入 `POST /admin/user/update`。JWT + Casbin。超管不豁免登录校验。只拦登录，不拦 refresh / 已有会话。
+
+开启后客户端 IP（已规范化，含 IPv4-mapped）须命中列表中的精确 IP 或 CIDR；开启且列表为空会拒绝登录，因此开启时列表不能为空。
+
+**请求**
+
+
+| 字段 | 位置 | 必填 | 类型 | 说明 |
+| --- | --- | --- | --- | --- |
+| `id` | json | 是 | int64 | 用户主键 |
+| `ip_whitelist_enabled` | json | 是 | int32 | `0` 关闭 / `1` 开启 |
+| `ip_whitelist` | json | 是 | string[] | IP 或 CIDR；保存前规范化单 IP 并去重。开启时不能为空 |
+
+
+```json
+{
+  "id": 2,
+  "ip_whitelist_enabled": 1,
+  "ip_whitelist": ["192.168.0.6", "10.0.0.0/8"]
 }
 ```
 

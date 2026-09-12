@@ -42,17 +42,27 @@ func UserPublic(ctx context.Context, in *coreclient.UserPublic) *types.UserPubli
 	if roleNames == nil {
 		roleNames = []string{}
 	}
-	// trans := make([]string, 0, len(roleNames))
-	// for _, name := range roleNames {
-	// 	trans = append(trans, i18n.T(ctx, name))
-	// }
+	trans := make([]string, 0, len(roleNames))
+	for _, name := range roleNames {
+		trans = append(trans, i18n.T(ctx, name))
+	}
 	return &types.UserPublic{
 		Id: in.Id, UserCode: in.UserCode, Username: in.Username, DisplayName: in.DisplayName,
 		OperatorId: in.GetOperatorId(), IsSuperAdmin: in.IsSuperAdmin, Status: in.Status,
-		RoleCodes: codes, RoleNames: roleNames, HomePath: in.HomePath,
+		RoleCodes: codes, RoleNames: trans, HomePath: in.HomePath,
 		CreatedAt: in.CreatedAt, LastLoginAt: in.GetLastLoginAt(),
 		Mobile: in.GetMobile(), Email: in.GetEmail(),
+		IpWhitelistEnabled: in.IpWhitelistEnabled, IpWhitelist: copyStrSlice(in.IpWhitelist),
 	}
+}
+
+func copyStrSlice(in []string) []string {
+	if in == nil {
+		return []string{}
+	}
+	out := make([]string, len(in))
+	copy(out, in)
+	return out
 }
 
 func LoginResp(ctx context.Context, in *coreclient.LoginResp) *types.LoginResp {
@@ -237,6 +247,16 @@ func UpdateUserReq(in *types.UpdateUserReq) *coreclient.UpdateUserReq {
 	return &coreclient.UpdateUserReq{
 		Id: in.Id, DisplayName: strPtr(in.DisplayName), Mobile: strPtr(in.Mobile),
 		Email: strPtr(in.Email), Status: i32Ptr(in.Status),
+	}
+}
+
+func UpdateUserIpWhitelistReq(in *types.UpdateUserIpWhitelistReq) *coreclient.UpdateUserIpWhitelistReq {
+	list := in.IpWhitelist
+	if list == nil {
+		list = []string{}
+	}
+	return &coreclient.UpdateUserIpWhitelistReq{
+		Id: in.Id, IpWhitelistEnabled: in.IpWhitelistEnabled, IpWhitelist: list,
 	}
 }
 
