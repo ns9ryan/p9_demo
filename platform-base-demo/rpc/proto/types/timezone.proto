@@ -41,6 +41,18 @@ message GetTimezoneResponse {
   TimezoneInfo timezone = 1;
 }
 
+// 按编码获取时区请求
+message GetTimezoneByCodeRequest {
+  // IANA 时区编码
+  string code = 1;
+}
+
+// 按编码获取时区响应
+message GetTimezoneByCodeResponse {
+  // 时区信息
+  TimezoneInfo timezone = 1;
+}
+
 // 获取时区管理列表请求
 message ListTimezonesRequest {
   // 页码, 从1开始

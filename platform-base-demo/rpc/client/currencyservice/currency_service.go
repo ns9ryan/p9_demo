@@ -21,6 +21,8 @@ type (
 		Update(ctx context.Context, in *currency.UpdateCurrencyRequest, opts ...grpc.CallOption) (*currency.UpdateCurrencyResponse, error)
 		// 获取货币
 		Get(ctx context.Context, in *currency.GetCurrencyRequest, opts ...grpc.CallOption) (*currency.GetCurrencyResponse, error)
+		// 按编码获取货币
+		GetByCode(ctx context.Context, in *currency.GetCurrencyByCodeRequest, opts ...grpc.CallOption) (*currency.GetCurrencyByCodeResponse, error)
 		// 获取货币管理列表
 		List(ctx context.Context, in *currency.ListCurrenciesRequest, opts ...grpc.CallOption) (*currency.ListCurrenciesResponse, error)
 		// 获取全部货币
@@ -50,6 +52,12 @@ func (m *defaultCurrencyService) Update(ctx context.Context, in *currency.Update
 func (m *defaultCurrencyService) Get(ctx context.Context, in *currency.GetCurrencyRequest, opts ...grpc.CallOption) (*currency.GetCurrencyResponse, error) {
 	client := base.NewCurrencyServiceClient(m.cli.Conn())
 	return client.Get(ctx, in, opts...)
+}
+
+// 按编码获取货币
+func (m *defaultCurrencyService) GetByCode(ctx context.Context, in *currency.GetCurrencyByCodeRequest, opts ...grpc.CallOption) (*currency.GetCurrencyByCodeResponse, error) {
+	client := base.NewCurrencyServiceClient(m.cli.Conn())
+	return client.GetByCode(ctx, in, opts...)
 }
 
 // 获取货币管理列表

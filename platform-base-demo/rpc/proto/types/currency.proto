@@ -52,6 +52,18 @@ message GetCurrencyResponse {
   CurrencyInfo currency = 1;
 }
 
+// 按编码获取货币请求
+message GetCurrencyByCodeRequest {
+  // 货币编码
+  string code = 1;
+}
+
+// 按编码获取货币响应
+message GetCurrencyByCodeResponse {
+  // 货币信息
+  CurrencyInfo currency = 1;
+}
+
 // 获取货币管理列表请求
 message ListCurrenciesRequest {
   // 页码, 从1开始

@@ -36,6 +36,12 @@ func (s *CurrencyServiceServer) Get(ctx context.Context, in *currency.GetCurrenc
 	return l.Get(in)
 }
 
+// 按编码获取货币
+func (s *CurrencyServiceServer) GetByCode(ctx context.Context, in *currency.GetCurrencyByCodeRequest) (*currency.GetCurrencyByCodeResponse, error) {
+	l := currencyservicelogic.NewGetByCodeLogic(ctx, s.svcCtx)
+	return l.GetByCode(in)
+}
+
 // 获取货币管理列表
 func (s *CurrencyServiceServer) List(ctx context.Context, in *currency.ListCurrenciesRequest) (*currency.ListCurrenciesResponse, error) {
 	l := currencyservicelogic.NewListLogic(ctx, s.svcCtx)

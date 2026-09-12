@@ -36,6 +36,12 @@ func (s *TimezoneServiceServer) Get(ctx context.Context, in *timezone.GetTimezon
 	return l.Get(in)
 }
 
+// 按编码获取时区
+func (s *TimezoneServiceServer) GetByCode(ctx context.Context, in *timezone.GetTimezoneByCodeRequest) (*timezone.GetTimezoneByCodeResponse, error) {
+	l := timezoneservicelogic.NewGetByCodeLogic(ctx, s.svcCtx)
+	return l.GetByCode(in)
+}
+
 // 获取时区管理列表
 func (s *TimezoneServiceServer) List(ctx context.Context, in *timezone.ListTimezonesRequest) (*timezone.ListTimezonesResponse, error) {
 	l := timezoneservicelogic.NewListLogic(ctx, s.svcCtx)

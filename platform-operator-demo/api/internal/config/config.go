@@ -13,6 +13,9 @@ import (
 type Config struct {
 	rest.RestConf
 
+	// Platform Operator RPC配置
+	PlatformOperatorRpc zrpc.RpcClientConf
+
 	// Platform Base RPC配置
 	PlatformBaseRpc zrpc.RpcClientConf
 

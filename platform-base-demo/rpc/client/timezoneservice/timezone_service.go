@@ -21,6 +21,8 @@ type (
 		Update(ctx context.Context, in *timezone.UpdateTimezoneRequest, opts ...grpc.CallOption) (*timezone.UpdateTimezoneResponse, error)
 		// 获取时区
 		Get(ctx context.Context, in *timezone.GetTimezoneRequest, opts ...grpc.CallOption) (*timezone.GetTimezoneResponse, error)
+		// 按编码获取时区
+		GetByCode(ctx context.Context, in *timezone.GetTimezoneByCodeRequest, opts ...grpc.CallOption) (*timezone.GetTimezoneByCodeResponse, error)
 		// 获取时区管理列表
 		List(ctx context.Context, in *timezone.ListTimezonesRequest, opts ...grpc.CallOption) (*timezone.ListTimezonesResponse, error)
 		// 获取全部时区
@@ -50,6 +52,12 @@ func (m *defaultTimezoneService) Update(ctx context.Context, in *timezone.Update
 func (m *defaultTimezoneService) Get(ctx context.Context, in *timezone.GetTimezoneRequest, opts ...grpc.CallOption) (*timezone.GetTimezoneResponse, error) {
 	client := base.NewTimezoneServiceClient(m.cli.Conn())
 	return client.Get(ctx, in, opts...)
+}
+
+// 按编码获取时区
+func (m *defaultTimezoneService) GetByCode(ctx context.Context, in *timezone.GetTimezoneByCodeRequest, opts ...grpc.CallOption) (*timezone.GetTimezoneByCodeResponse, error) {
+	client := base.NewTimezoneServiceClient(m.cli.Conn())
+	return client.GetByCode(ctx, in, opts...)
 }
 
 // 获取时区管理列表

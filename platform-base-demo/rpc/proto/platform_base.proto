@@ -23,6 +23,9 @@ service TimezoneService {
   // 获取时区
   rpc Get(timezone.GetTimezoneRequest) returns (timezone.GetTimezoneResponse);
 
+  // 按编码获取时区
+  rpc GetByCode(timezone.GetTimezoneByCodeRequest) returns (timezone.GetTimezoneByCodeResponse);
+
   // 获取时区管理列表
   rpc List(timezone.ListTimezonesRequest) returns (timezone.ListTimezonesResponse);
 
@@ -40,6 +43,9 @@ service CurrencyService {
 
   // 获取货币
   rpc Get(currency.GetCurrencyRequest) returns (currency.GetCurrencyResponse);
+
+  // 按编码获取货币
+  rpc GetByCode(currency.GetCurrencyByCodeRequest) returns (currency.GetCurrencyByCodeResponse);
 
   // 获取货币管理列表
   rpc List(currency.ListCurrenciesRequest) returns (currency.ListCurrenciesResponse);
