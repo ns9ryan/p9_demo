@@ -100,61 +100,74 @@ func (l *ListLogic) List(in *basicresourceallocation.ListBasicResourceAllocation
 		operatorIDs = append(operatorIDs, item.ID)
 	}
 
-	// 统计当前页分站的语言分配数量
-	var languageCounts []allocationCount
-	err = l.svcCtx.DB.OperatorLanguageAllocation.
-		Query().
-		Where(operatorlanguageallocation.OperatorIDIn(operatorIDs...)).
-		GroupBy(operatorlanguageallocation.FieldOperatorID).
-		Aggregate(ent.As(ent.Count(), "count")).
-		Scan(l.ctx, &languageCounts)
-	if err != nil {
-		// 转换Ent错误为gRPC错误
-		return nil, enterror.Handle(l.Logger, err)
+	var languageCountMap map[int64]int64  // 语言分配数量
+	var regionCountMap map[int64]int64    // 经营地区分配数量
+	var agentLineCountMap map[int64]int64 // 代理子线路分配数量
+
+	// 语言分配数量
+	{
+		// 查询语言分配数量
+		var counts []allocationCount
+		err = l.svcCtx.DB.OperatorLanguageAllocation.
+			Query().
+			Where(operatorlanguageallocation.OperatorIDIn(operatorIDs...)).
+			GroupBy(operatorlanguageallocation.FieldOperatorID).
+			Aggregate(ent.As(ent.Count(), "count")).
+			Scan(l.ctx, &counts)
+		if err != nil {
+			// 转换Ent错误为gRPC错误
+			return nil, enterror.Handle(l.Logger, err)
+		}
+
+		// 整理语言分配数量
+		languageCountMap = make(map[int64]int64, len(counts))
+		for _, item := range counts {
+			languageCountMap[item.OperatorID] = item.Count
+		}
 	}
 
-	// 统计当前页分站的经营地区分配数量
-	var regionCounts []allocationCount
-	err = l.svcCtx.DB.OperatorRegionAllocation.
-		Query().
-		Where(operatorregionallocation.OperatorIDIn(operatorIDs...)).
-		GroupBy(operatorregionallocation.FieldOperatorID).
-		Aggregate(ent.As(ent.Count(), "count")).
-		Scan(l.ctx, &regionCounts)
-	if err != nil {
-		// 转换Ent错误为gRPC错误
-		return nil, enterror.Handle(l.Logger, err)
+	// 经营地区分配数量
+	{
+		// 查询经营地区分配数量
+		var counts []allocationCount
+		err = l.svcCtx.DB.OperatorRegionAllocation.
+			Query().
+			Where(operatorregionallocation.OperatorIDIn(operatorIDs...)).
+			GroupBy(operatorregionallocation.FieldOperatorID).
+			Aggregate(ent.As(ent.Count(), "count")).
+			Scan(l.ctx, &counts)
+		if err != nil {
+			// 转换Ent错误为gRPC错误
+			return nil, enterror.Handle(l.Logger, err)
+		}
+
+		// 整理经营地区分配数量
+		regionCountMap = make(map[int64]int64, len(counts))
+		for _, item := range counts {
+			regionCountMap[item.OperatorID] = item.Count
+		}
 	}
 
-	// 统计当前页分站的代理子线路分配数量
-	var agentLineCounts []allocationCount
-	err = l.svcCtx.DB.OperatorAgentLineAllocation.
-		Query().
-		Where(operatoragentlineallocation.OperatorIDIn(operatorIDs...)).
-		GroupBy(operatoragentlineallocation.FieldOperatorID).
-		Aggregate(ent.As(ent.Count(), "count")).
-		Scan(l.ctx, &agentLineCounts)
-	if err != nil {
-		// 转换Ent错误为gRPC错误
-		return nil, enterror.Handle(l.Logger, err)
-	}
+	// 代理子线路分配数量
+	{
+		// 查询代理子线路分配数量
+		var counts []allocationCount
+		err = l.svcCtx.DB.OperatorAgentLineAllocation.
+			Query().
+			Where(operatoragentlineallocation.OperatorIDIn(operatorIDs...)).
+			GroupBy(operatoragentlineallocation.FieldOperatorID).
+			Aggregate(ent.As(ent.Count(), "count")).
+			Scan(l.ctx, &counts)
+		if err != nil {
+			// 转换Ent错误为gRPC错误
+			return nil, enterror.Handle(l.Logger, err)
+		}
 
-	// 整理语言分配数量
-	languageCountMap := make(map[int64]int64, len(languageCounts))
-	for _, item := range languageCounts {
-		languageCountMap[item.OperatorID] = item.Count
-	}
-
-	// 整理经营地区分配数量
-	regionCountMap := make(map[int64]int64, len(regionCounts))
-	for _, item := range regionCounts {
-		regionCountMap[item.OperatorID] = item.Count
-	}
-
-	// 整理代理子线路分配数量
-	agentLineCountMap := make(map[int64]int64, len(agentLineCounts))
-	for _, item := range agentLineCounts {
-		agentLineCountMap[item.OperatorID] = item.Count
+		// 整理代理子线路分配数量
+		agentLineCountMap = make(map[int64]int64, len(counts))
+		for _, item := range counts {
+			agentLineCountMap[item.OperatorID] = item.Count
+		}
 	}
 
 	// 组装基础资源分配列表
