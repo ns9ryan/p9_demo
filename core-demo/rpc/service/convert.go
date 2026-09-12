@@ -10,23 +10,34 @@ func userFromEnt(u *ent.User) *model.User {
 		return nil
 	}
 	return &model.User{
-		ID:           u.ID,
-		UserCode:     u.UserCode,
-		OperatorID:   u.OperatorID,
-		Username:     u.Username,
-		PasswordHash: u.PasswordHash,
-		Salt:         u.Salt,
-		DisplayName:  u.DisplayName,
-		Mobile:       u.Mobile,
-		Email:        u.Email,
-		Status:       u.Status,
-		IsSuperAdmin: u.IsSuperAdmin,
-		LastLoginAt:  u.LastLoginAt,
-		LastLoginIP:  u.LastLoginIP,
-		CreatedAt:    u.CreatedAt,
-		UpdatedAt:    u.UpdatedAt,
-		DeletedAt:    u.DeletedAt,
+		ID:                 u.ID,
+		UserCode:           u.UserCode,
+		OperatorID:         u.OperatorID,
+		Username:           u.Username,
+		PasswordHash:       u.PasswordHash,
+		Salt:               u.Salt,
+		DisplayName:        u.DisplayName,
+		Mobile:             u.Mobile,
+		Email:              u.Email,
+		Status:             u.Status,
+		IsSuperAdmin:       u.IsSuperAdmin,
+		LastLoginAt:        u.LastLoginAt,
+		LastLoginIP:        u.LastLoginIP,
+		IPWhitelistEnabled: u.IPWhitelistEnabled,
+		IPWhitelist:        copyStrings(u.IPWhitelist),
+		CreatedAt:          u.CreatedAt,
+		UpdatedAt:          u.UpdatedAt,
+		DeletedAt:          u.DeletedAt,
 	}
+}
+
+func copyStrings(in []string) []string {
+	if in == nil {
+		return []string{}
+	}
+	out := make([]string, len(in))
+	copy(out, in)
+	return out
 }
 
 func usersFromEnt(list []*ent.User) []model.User {

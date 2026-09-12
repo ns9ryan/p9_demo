@@ -6,6 +6,16 @@ package handler
 import (
 	"net/http"
 
+	category "oa.98ent.com/p9/platform-game/api/internal/handler/category"
+	channel "oa.98ent.com/p9/platform-game/api/internal/handler/channel"
+	checkpoint "oa.98ent.com/p9/platform-game/api/internal/handler/checkpoint"
+	currency "oa.98ent.com/p9/platform-game/api/internal/handler/currency"
+	execute "oa.98ent.com/p9/platform-game/api/internal/handler/execute"
+	game "oa.98ent.com/p9/platform-game/api/internal/handler/game"
+	ping "oa.98ent.com/p9/platform-game/api/internal/handler/ping"
+	preview "oa.98ent.com/p9/platform-game/api/internal/handler/preview"
+	provider "oa.98ent.com/p9/platform-game/api/internal/handler/provider"
+	sync "oa.98ent.com/p9/platform-game/api/internal/handler/sync"
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -13,11 +23,140 @@ import (
 
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.Auth},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/get",
+					Handler: category.GameCategoryGetHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/list",
+					Handler: category.GameCategoryListHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/update",
+					Handler: category.GameCategoryUpdateHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/admin/game-category"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.Auth},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/get",
+					Handler: channel.GameChannelGetHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/list",
+					Handler: channel.GameChannelListHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/update",
+					Handler: channel.GameChannelUpdateHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/admin/game-channel"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.Auth},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/game-sync-checkpoint/get",
+					Handler: checkpoint.GameSyncCheckpointGetHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/game-sync-checkpoint/list",
+					Handler: checkpoint.GameSyncCheckpointListHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/admin"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.Auth},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/get",
+					Handler: currency.GameCurrencyGetHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/list",
+					Handler: currency.GameCurrencyListHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/update",
+					Handler: currency.GameCurrencyUpdateHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/admin/game-currency"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.Auth},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/v2sql",
+					Handler: execute.ExecuteV2sqlGetHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/admin/execute"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.Auth},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/get",
+					Handler: game.GameGetHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/list",
+					Handler: game.GameListHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/update",
+					Handler: game.GameUpdateHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/admin/game"),
+	)
+
+	server.AddRoutes(
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
 				Path:    "/ping",
-				Handler: PingHandler(serverCtx),
+				Handler: ping.PingHandler(serverCtx),
 			},
 		},
 	)
@@ -27,141 +166,90 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			[]rest.Middleware{serverCtx.Auth},
 			[]rest.Route{
 				{
-					Method:  http.MethodGet,
-					Path:    "/admin/game-category/get",
-					Handler: GameCategoryGetHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/admin/game-category/list",
-					Handler: GameCategoryListHandler(serverCtx),
+					Method:  http.MethodPost,
+					Path:    "/categories/preview",
+					Handler: preview.PreviewCategoryHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
-					Path:    "/admin/game-category/update",
-					Handler: GameCategoryUpdateHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/admin/game-channel/get",
-					Handler: GameChannelGetHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/admin/game-channel/list",
-					Handler: GameChannelListHandler(serverCtx),
+					Path:    "/channel/preview",
+					Handler: preview.PreviewChannelHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
-					Path:    "/admin/game-channel/update",
-					Handler: GameChannelUpdateHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/admin/game-currency/get",
-					Handler: GameCurrencyGetHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/admin/game-currency/list",
-					Handler: GameCurrencyListHandler(serverCtx),
+					Path:    "/currencies/preview",
+					Handler: preview.PreviewCurrencyHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
-					Path:    "/admin/game-currency/update",
-					Handler: GameCurrencyUpdateHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/admin/game-provider/get",
-					Handler: GameProviderGetHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/admin/game-provider/list",
-					Handler: GameProviderListHandler(serverCtx),
+					Path:    "/games/preview",
+					Handler: preview.PreviewGameHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
-					Path:    "/admin/game-provider/update",
-					Handler: GameProviderUpdateHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/admin/game-sync-checkpoint/get",
-					Handler: GameSyncCheckpointGetHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/admin/game-sync-checkpoint/list",
-					Handler: GameSyncCheckpointListHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/admin/game/get",
-					Handler: GameGetHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/admin/game/list",
-					Handler: GameListHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/admin/game/update",
-					Handler: GameUpdateHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/admin/sync/categories/preview",
-					Handler: PreviewCategoryHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/admin/sync/categories/run",
-					Handler: RunCategoryHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/admin/sync/channel/preview",
-					Handler: PreviewChannelHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/admin/sync/channel/run",
-					Handler: RunChannelHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/admin/sync/currencies/preview",
-					Handler: PreviewCurrencyHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/admin/sync/currencies/run",
-					Handler: RunCurrencyHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/admin/sync/games/preview",
-					Handler: PreviewGameHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/admin/sync/games/run",
-					Handler: RunGameHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/admin/sync/vendors/preview",
-					Handler: PreviewProviderHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/admin/sync/vendors/run",
-					Handler: RunProviderHandler(serverCtx),
+					Path:    "/vendors/preview",
+					Handler: preview.PreviewProviderHandler(serverCtx),
 				},
 			}...,
 		),
+		rest.WithPrefix("/admin/sync"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.Auth},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/get",
+					Handler: provider.GameProviderGetHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/list",
+					Handler: provider.GameProviderListHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/update",
+					Handler: provider.GameProviderUpdateHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/admin/game-provider"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.Auth},
+			[]rest.Route{
+				{
+					Method:  http.MethodPost,
+					Path:    "/categories/run",
+					Handler: sync.RunCategoryHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/channel/run",
+					Handler: sync.RunChannelHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/currencies/run",
+					Handler: sync.RunCurrencyHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/games/run",
+					Handler: sync.RunGameHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/vendors/run",
+					Handler: sync.RunProviderHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/admin/sync"),
 	)
 }

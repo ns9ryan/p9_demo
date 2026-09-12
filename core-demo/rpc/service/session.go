@@ -6,6 +6,7 @@ import (
 	"oa.98ent.com/p9/core/common/ctxdata"
 	"oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/common/jwt"
+	"oa.98ent.com/p9/core/common/utils"
 	"oa.98ent.com/p9/core/common/xerr"
 	"oa.98ent.com/p9/core/rpc/model"
 )
@@ -58,11 +59,11 @@ func (d *Deps) CurrentUser(ctx context.Context) (UserPublic, error) {
 	if err != nil {
 		return UserPublic{}, xerr.Unauthorized(i18n.Unauthorized)
 	}
-	codes, err := d.RoleCodesOfUser(ctx, u.ID)
+	roles, err := d.RolesOfUser(ctx, u.ID)
 	if err != nil {
 		return UserPublic{}, err
 	}
-	return toPublic(u, codes), nil
+	return toPublic(u, roles), nil
 }
 
 func (d *Deps) CheckToken(ctx context.Context, raw string) (*ctxdata.Claims, error) {
@@ -76,6 +77,9 @@ func (d *Deps) CheckToken(ctx context.Context, raw string) (*ctxdata.Claims, err
 	}
 	if claims.TokenType == jwt.TokenRefresh {
 		return nil, xerr.Unauthorized(i18n.Unauthorized)
+	}
+	if err := d.checkTokenClientIP(ctx, claims); err != nil {
+		return nil, err
 	}
 	if d.TokenBlacklisted(ctx, raw) {
 		return nil, xerr.Unauthorized(i18n.Unauthorized)
@@ -112,6 +116,7 @@ func (d *Deps) CheckToken(ctx context.Context, raw string) (*ctxdata.Claims, err
 		ExpiresAt:    exp,
 		TokenType:    claims.TokenType,
 		IsPlatform:   claims.IsPlatform,
+		ClientIP:     claims.ClientIP,
 	}, nil
 }
 
@@ -159,7 +164,17 @@ func (d *Deps) checkPreviewToken(ctx context.Context, claims *jwt.Claims) (*ctxd
 		ExpiresAt:    exp,
 		IsPlatform:   true,
 		TokenType:    jwt.TokenPreview,
+		ClientIP:     claims.ClientIP,
 	}, nil
+}
+
+func (d *Deps) checkTokenClientIP(ctx context.Context, claims *jwt.Claims) error {
+	got := utils.NormalizeIP(claims.ClientIP)
+	want := utils.NormalizeIP(ctxdata.ClientIPFromCtx(ctx))
+	if got == "" || got != want {
+		return xerr.Unauthorized(i18n.AuthIPMismatch)
+	}
+	return nil
 }
 
 func (d *Deps) Enforce(ctx context.Context, claims *ctxdata.Claims, path, method string) (bool, error) {
@@ -183,25 +198,25 @@ func (d *Deps) Enforce(ctx context.Context, claims *ctxdata.Claims, path, method
 	return false, nil
 }
 
-func (d *Deps) sessionFromClaims(ctx context.Context, c *jwt.Claims) (*model.User, []string, error) {
+func (d *Deps) sessionFromClaims(ctx context.Context, c *jwt.Claims) (*model.User, UserRoles, error) {
 	u, err := d.ActiveUserByID(ctx, c.UserID)
 	if err != nil {
-		return nil, nil, xerr.Unauthorized(i18n.Unauthorized)
+		return nil, UserRoles{}, xerr.Unauthorized(i18n.Unauthorized)
 	}
 	if u.Status != model.StatusNormal || u.Salt != c.Salt {
-		return nil, nil, xerr.Unauthorized(i18n.Unauthorized)
+		return nil, UserRoles{}, xerr.Unauthorized(i18n.Unauthorized)
 	}
 	if err := d.checkTokenTenant(ctx, u, c); err != nil {
-		return nil, nil, err
+		return nil, UserRoles{}, err
 	}
-	codes, err := d.RoleCodesOfUser(ctx, u.ID)
+	roles, err := d.RolesOfUser(ctx, u.ID)
 	if err != nil {
-		return nil, nil, err
+		return nil, UserRoles{}, err
 	}
-	if len(codes) == 0 {
-		return nil, nil, xerr.Forbidden(i18n.AuthNoActiveRole)
+	if len(roles.Codes) == 0 {
+		return nil, UserRoles{}, xerr.Forbidden(i18n.AuthNoActiveRole)
 	}
-	return u, codes, nil
+	return u, roles, nil
 }
 
 func (d *Deps) checkTokenTenant(ctx context.Context, u *model.User, c *jwt.Claims) error {
@@ -238,14 +253,14 @@ func (d *Deps) operatorCodeOf(ctx context.Context, c *jwt.Claims) string {
 	return op.OperatorCode
 }
 
-func PublicUser(u *model.User, codes []string) UserPublic {
-	return toPublic(u, codes)
+func PublicUser(u *model.User, roles UserRoles) UserPublic {
+	return toPublic(u, roles)
 }
 
 func PublicUsers(list []model.User) []UserPublic {
 	out := make([]UserPublic, 0, len(list))
 	for i := range list {
-		out = append(out, toPublic(&list[i], nil))
+		out = append(out, toPublic(&list[i], emptyUserRoles()))
 	}
 	return out
 }

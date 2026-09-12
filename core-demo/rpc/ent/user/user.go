@@ -45,6 +45,10 @@ const (
 	FieldLastLoginAt = "last_login_at"
 	// FieldLastLoginIP holds the string denoting the last_login_ip field in the database.
 	FieldLastLoginIP = "last_login_ip"
+	// FieldIPWhitelistEnabled holds the string denoting the ip_whitelist_enabled field in the database.
+	FieldIPWhitelistEnabled = "ip_whitelist_enabled"
+	// FieldIPWhitelist holds the string denoting the ip_whitelist field in the database.
+	FieldIPWhitelist = "ip_whitelist"
 	// EdgeRoles holds the string denoting the roles edge name in mutations.
 	EdgeRoles = "roles"
 	// EdgeLoginLogs holds the string denoting the login_logs edge name in mutations.
@@ -101,6 +105,8 @@ var Columns = []string{
 	FieldIsSuperAdmin,
 	FieldLastLoginAt,
 	FieldLastLoginIP,
+	FieldIPWhitelistEnabled,
+	FieldIPWhitelist,
 }
 
 var (
@@ -151,6 +157,10 @@ var (
 	DefaultStatus int16
 	// DefaultIsSuperAdmin holds the default value on creation for the "is_super_admin" field.
 	DefaultIsSuperAdmin bool
+	// DefaultIPWhitelistEnabled holds the default value on creation for the "ip_whitelist_enabled" field.
+	DefaultIPWhitelistEnabled int16
+	// DefaultIPWhitelist holds the default value on creation for the "ip_whitelist" field.
+	DefaultIPWhitelist []string
 )
 
 // OrderOption defines the ordering options for the User queries.
@@ -234,6 +244,11 @@ func ByLastLoginAt(opts ...sql.OrderTermOption) OrderOption {
 // ByLastLoginIP orders the results by the last_login_ip field.
 func ByLastLoginIP(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldLastLoginIP, opts...).ToFunc()
+}
+
+// ByIPWhitelistEnabled orders the results by the ip_whitelist_enabled field.
+func ByIPWhitelistEnabled(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIPWhitelistEnabled, opts...).ToFunc()
 }
 
 // ByRolesCount orders the results by roles count.

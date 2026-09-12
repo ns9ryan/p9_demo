@@ -28,9 +28,9 @@ func NewGetUserByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUs
 }
 
 func (l *GetUserByIdLogic) GetUserById(in *core.IDReq) (*core.UserPublic, error) {
-	u, codes, err := l.svcCtx.Deps.GetUser(l.ctx, ctxdata.ClaimsFromCtx(l.ctx), in.Id)
+	u, roles, err := l.svcCtx.Deps.GetUser(l.ctx, ctxdata.ClaimsFromCtx(l.ctx), in.Id)
 	if err != nil {
 		return nil, xerr.RpcErr(err)
 	}
-	return logic.ToUserPublic(service.PublicUser(u, codes)), nil
+	return logic.ToUserPublic(service.PublicUser(u, roles)), nil
 }

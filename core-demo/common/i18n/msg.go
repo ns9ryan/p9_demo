@@ -24,6 +24,8 @@ const (
 	AuthRootUserExists           = "auth.rootUserExists"
 	AuthBootstrapFieldsRequired  = "auth.bootstrapFieldsRequired"
 	AuthPreviewReadOnly          = "auth.previewReadOnly"
+	AuthIPNotAllowed             = "auth.ipNotAllowed"
+	AuthIPMismatch               = "auth.ipMismatch"
 
 	UserCreateFieldsRequired = "user.createFieldsRequired"
 	UserCreateFailed         = "user.createFailed"
@@ -33,6 +35,7 @@ const (
 	UserOldPasswordMismatch  = "user.oldPasswordMismatch"
 	UserNotFound             = "user.notFound"
 	UserRoleNotFound         = "user.roleNotFound"
+	UserInvalidIpWhitelist   = "user.invalidIpWhitelist"
 
 	RoleCodeNameRequired    = "role.codeNameRequired"
 	RoleCreateFailed        = "role.createFailed"

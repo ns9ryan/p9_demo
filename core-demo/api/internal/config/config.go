@@ -11,4 +11,5 @@ type Config struct {
 	CROSConf struct {
 		Address string
 	}
+	PartnerMode string
 }

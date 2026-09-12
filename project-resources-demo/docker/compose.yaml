@@ -1,0 +1,188 @@
+# docker-compose.yml
+name: local #本地环境
+
+services:
+  mysql:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+      - "33060:33060"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/my.cnf
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+  
+  postgres:
+    image: postgres:18
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=company
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root -d company"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    # container_name: my-clickhouse
+    ports:
+      - "8123:8123" # HTTP
+      - "9000:9000" # TCP
+    environment:
+      - CLICKHOUSE_USER=root
+      - CLICKHOUSE_PASSWORD=root
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+    healthcheck:
+      test: ["CMD-SHELL", "clickhouse-client --query 'SELECT 1' || exit 1"]
+      interval: 5s
+      timeout: 2s
+      retries: 30
+    restart: unless-stopped
+
+  redis:
+    image: bitnamisecure/redis:latest
+    ports:
+      - "6379:6379"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - redis-data:/bitnami/redis/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  etcd:
+    image: quay.io/coreos/etcd:v3.6.0
+    ports:
+      - "2379:2379"
+      - "2380:2380"
+    command:
+      - /usr/local/bin/etcd
+      - --data-dir=/etcd-data
+      - --name=node1
+      - --initial-advertise-peer-urls=http://127.0.0.1:2380
+      - --listen-peer-urls=http://0.0.0.0:2380
+      - --advertise-client-urls=http://127.0.0.1:2379
+      - --listen-client-urls=http://0.0.0.0:2379
+      - --initial-cluster=node1=http://127.0.0.1:2380
+    volumes:
+      - etcd-data:/etcd-data
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/etcdctl", "--endpoints=http://127.0.0.1:2379", "endpoint", "health"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
+    restart: unless-stopped
+
+  sponge:
+    image: zhufuyi/sponge:latest
+    restart: always
+    command: ["-a","http://127.0.0.1:24631"]
+    ports:
+      - "24631:24631"
+
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    # container_name: mosquitto
+    ports:
+      - "1883:1883" # MQTT TCP
+      - "9001:9001" # MQTT TCP
+      - "8883:8883" # （可选）MQTT over TLS
+      - "9443:9443" # （可选）MQTT over WebSocket + TLS (wss)
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mosquitto/pwfile:/mosquitto/config/pwfile
+      - ./mosquitto/aclfile:/mosquitto/config/aclfile
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+      - ./mosquitto/certs:/mosquitto/certs  # 若不开 TLS 也可以留着
+    restart: unless-stopped
+
+  mqtt-explorer:
+    image: smeagolworms4/mqtt-explorer:master
+    # container_name: mqtt-explorer
+    ports:
+      - "4000:4000" # Web 页面访问端口
+    environment:
+      - HTTP_PORT=4000
+      - CONFIG_PATH=/mqtt-explorer/config
+    depends_on:
+      - mosquitto
+    restart: unless-stopped
+
+  kafka:
+    image: bitnamilegacy/kafka:latest
+    # container_name: kafka
+    ports:
+      - "9092:9092"   # 内部通信
+      - "9094:9094"   # 外部访问（主机端）
+    environment:
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@localhost:9093
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    volumes:
+      - kafka-data:/bitnami/kafka
+    healthcheck:
+      test: ["CMD", "kafka-topics.sh", "--bootstrap-server", "localhost:9092", "--list"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+  
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    # container_name: kafka-ui
+    ports:
+      - "18080:8080"
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+    depends_on:
+      - kafka
+    restart: unless-stopped
+
+volumes:
+  mysql-data:
+    name: mysql-data
+  clickhouse-data:
+    name: clickhouse-data # 固定卷名，长期持久化更稳 advertised
+  redis-data:
+    name: redis-data
+  etcd-data:
+    name: etcd-data
+  kafka-data:
+    name: kafka-data
+  postgres-data:
+    name: postgres-data

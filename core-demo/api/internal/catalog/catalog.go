@@ -12,8 +12,8 @@ const (
 	menuTypeButton int32 = 2
 )
 
-// AdminReq 管理员请求(菜单相关种子数据)
-func AdminReq() *coreclient.RegisterCatalogReq {
+// CatalogReq 菜单、API目录、多语言数据种子数据
+func catalogReq(code string) *coreclient.RegisterCatalogReq {
 	return &coreclient.RegisterCatalogReq{
 		Menus: []*coreclient.RegisterMenuReq{
 			{Name: "Dashboard", Title: "menu.route.dashboard", Path: "/dashboard", MenuType: menuTypeMenu, Component: "dashboard/index", Sort: 1},
@@ -46,6 +46,7 @@ func AdminReq() *coreclient.RegisterCatalogReq {
 			{Path: "/admin/user/detail", Method: http.MethodGet, Description: "api.userDetail", ApiGroup: "user", ServiceName: "core-api"},
 			{Path: "/admin/user/password", Method: http.MethodPost, Description: "api.userPassword", ApiGroup: "user", ServiceName: "core-api"},
 			{Path: "/admin/user/roles", Method: http.MethodPost, Description: "api.userRoles", ApiGroup: "user", ServiceName: "core-api"},
+			{Path: "/admin/user/ipWhitelist", Method: http.MethodPost, Description: "api.userIpWhitelist", ApiGroup: "user", ServiceName: "core-api"},
 			{Path: "/admin/role/create", Method: http.MethodPost, Description: "api.roleCreate", ApiGroup: "role", ServiceName: "core-api"},
 			{Path: "/admin/role/update", Method: http.MethodPost, Description: "api.roleUpdate", ApiGroup: "role", ServiceName: "core-api"},
 			{Path: "/admin/role/delete", Method: http.MethodPost, Description: "api.roleDelete", ApiGroup: "role", ServiceName: "core-api"},
@@ -77,7 +78,7 @@ func AdminReq() *coreclient.RegisterCatalogReq {
 			{Path: "/admin/i18n/lang/delete", Method: http.MethodPost, Description: "api.i18nLangDelete", ApiGroup: "i18n", ServiceName: "core-api"},
 			{Path: "/admin/i18n/lang/list", Method: http.MethodPost, Description: "api.i18nLangList", ApiGroup: "i18n", ServiceName: "core-api"},
 		},
-		I18N:      append(append(menuI18n(), apiI18n()...), frontI18n()...),
+		I18N:      append(append(menuI18n(code), apiI18n(code)...), frontI18n(code)...),
 		I18NLangs: langSeeds(),
 	}
 }

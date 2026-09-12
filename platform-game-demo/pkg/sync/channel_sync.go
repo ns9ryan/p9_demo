@@ -8,7 +8,9 @@ import (
 
 	"gorm.io/gorm"
 	"oa.98ent.com/p9/platform-game/common/logger"
-	"oa.98ent.com/p9/platform-game/common/model"
+	"oa.98ent.com/p9/platform-game/rpc/ent"
+	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
+	platform_game_sync "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 	"oa.98ent.com/p9/platform-game/rpc/pb/vendors"
 )
 
@@ -16,71 +18,110 @@ import (
 
 // ChannelSyncService 渠道同步服务
 type ChannelSyncService struct {
-	db *gorm.DB
+	db            *gorm.DB
+	progressQueue *ProgressQueue
 }
 
 // NewChannelSyncService 创建渠道同步服务
 func NewChannelSyncService(db *gorm.DB) *ChannelSyncService {
-	return &ChannelSyncService{db: db}
+	return &ChannelSyncService{
+		db:            db,
+		progressQueue: NewProgressQueue(db),
+	}
 }
 
 // Preview 预检查渠道同步
-func (s *ChannelSyncService) Preview(ctx context.Context, client vendors.VendorGameServiceClient) (*vendors.SyncPreviewResp, error) {
+func (s *ChannelSyncService) Preview(ctx context.Context, client vendors.VendorGameServiceClient, req *platform_game_sync.SyncPreviewRequest, isGetRemoteClient bool) (*platform_game.SyncPreviewResp, *RemoteChannelResponse, error) {
 	// 获取远程渠道数据
-	// remoteResp, err := client.GetChannel(ctx, &emptypb.Empty{})
-	// if err != nil {
-	// 	log.Printf("[渠道预检查] 获取远程数据失败: %v", err)
-	// 	return nil, err
-	// }
-	remoteResp, err := getTestGameChannel()
+	remoteResp, err := getRemoteGameChannel(ctx, client, isGetRemoteClient)
 	if err != nil {
 		log.Printf("[渠道预检查] 获取测试数据失败: %v", err)
-		return nil, err
+		return nil, nil, err
 	}
-	remote := remoteResp.Data
 
 	// 获取本地渠道数据
 	local, localIndex, err := s.fetchLocal(ctx)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	// 初始化预检查结果
-	result := &vendors.SyncPreviewResp{
-		Stats: &vendors.SyncStats{
-			RemoteTotal: int64(len(remote)),
-			LocalTotal:  int64(len(local)),
-		},
-		Diffs: make([]*vendors.SyncDiff, 0),
+	// 转换为接口切片
+	remoteItems := make([]interface{}, len(remoteResp.Data))
+	for i, v := range remoteResp.Data {
+		remoteItems[i] = v
 	}
 
-	// 对每条远程渠道进行比较
-	for _, remoteItem := range remote {
-		diff := s.compareOne(remoteItem, localIndex)
-		result.Diffs = append(result.Diffs, diff)
+	// 转换本地索引为接口类型
+	localIndexInterface := make(map[string]interface{})
+	for k, v := range localIndex {
+		localIndexInterface[k] = v
+	}
 
-		// 按操作类型统计
-		switch diff.Action {
-		case "create":
-			result.Stats.CreateTotal++
-		case "update":
-			result.Stats.UpdateTotal++
-		case "noop":
-			result.Stats.NoopTotal++
-		case "conflict":
-			result.Stats.ConflictTotal++
+	// 当 req 为 nil 时，返回全量结果不做分页
+	if req == nil {
+		handler := &SyncPageHandler{
+			RemoteData: remoteItems,
+			LocalIndex: localIndexInterface,
+			CompareFunc: func(item interface{}, localIndex map[string]interface{}) *platform_game.SyncDiff {
+				remoteChannel := item.(*vendors.GameChannelInfo)
+				localIdx := make(map[string]*ent.GameChannel)
+				for k, v := range localIndex {
+					localIdx[k] = v.(*ent.GameChannel)
+				}
+				return s.compareOne(remoteChannel, localIdx)
+			},
+			PageSize: 0,
+			Page:     0,
+			SkipNoop: false,
 		}
+		result := handler.Handle(int64(len(remoteResp.Data)), int64(len(local)))
+		return result, remoteResp, nil
 	}
 
-	return result, nil
+	// 创建分页处理器
+	handler := &SyncPageHandler{
+		RemoteData: remoteItems,
+		LocalIndex: localIndexInterface,
+		CompareFunc: func(item interface{}, localIndex map[string]interface{}) *platform_game.SyncDiff {
+			remoteChannel := item.(*vendors.GameChannelInfo)
+			localIdx := make(map[string]*ent.GameChannel)
+			for k, v := range localIndex {
+				localIdx[k] = v.(*ent.GameChannel)
+			}
+			return s.compareOne(remoteChannel, localIdx)
+		},
+		PageSize: req.PageSize,
+		Page:     req.Page,
+		SkipNoop: req.IsSkip,
+	}
+
+	// 处理分页逻辑
+	result := handler.Handle(int64(len(remoteResp.Data)), int64(len(local)))
+	return result, remoteResp, nil
 }
 
 // Run 执行渠道同步
-// processChannelData 处理渠道数据的创建和更新（从 Run 提取的业务逻辑）
-func (s *ChannelSyncService) processChannelData(ctx context.Context, tx *gorm.DB, remoteData []*vendors.GameChannelInfo, applyResult *vendors.SyncApplyResult) error {
+// 处理渠道数据的创建和更新（从 Run 提取的业务逻辑）
+func (s *ChannelSyncService) processChannelDataWithProgress(ctx context.Context, tx *gorm.DB, remoteData []*vendors.GameChannelInfo, applyResult *Apply, syncCols []string, checkpointID int64) error {
 	i := 0
+	var processedCount int32 = 0
+	var totalCount int32 = int32(len(remoteData))
 	counterMap := make(map[string]int) // 用于记录每个 source_channel_code 的计数，确保唯一性
 	for _, remoteChannel := range remoteData {
+		processedCount++
+		// 每 DefaultBufferSize 条记录发送一条进度消息
+		if processedCount%DefaultBufferSize == 0 {
+			progress := CalculateProgress(int64(processedCount), int64(totalCount))
+			msg := &ProgressMessage{
+				TableName:      "channel",
+				ProcessedCount: processedCount,
+				RemoteTotal:    totalCount,
+				LocalTotal:     int32(0),
+				Progress:       progress,
+				CheckpointID:   checkpointID,
+			}
+			s.progressQueue.Send(msg)
+		}
 		if counterMap[remoteChannel.Code] > 0 {
 			logger.Errorf("[渠道同步] 检测到重复的远程渠道编码: %s, 计数器: %d, 跳过处理", remoteChannel.Code, counterMap[remoteChannel.Code])
 			applyResult.Failed++
@@ -90,25 +131,24 @@ func (s *ChannelSyncService) processChannelData(ctx context.Context, tx *gorm.DB
 		counterMap[remoteChannel.Code]++
 		i++
 		// 检查本地是否存在该渠道（使用上游渠道编码）
-		var localChannel model.Channel
+		var localChannel ent.GameChannel
 		exists := tx.Where("source_channel_code = ?", remoteChannel.Code).
 			Where("deleted_at IS NULL").
 			First(&localChannel).Error == nil
-
+		channelCode := remoteChannel.Code + "_" + fmt.Sprintf("%d", i)
+		nameI18n := map[string]interface{}{"default": remoteChannel.Name}
+		sourceNameI18n := map[string]interface{}{"default": remoteChannel.Name}
 		if !exists {
-			// 新增渠道 - 生成 P9 内部的渠道编码
-			channelCode := remoteChannel.Code + "_" + fmt.Sprintf("%d", i)
-			nameI18n := model.JSONMap{"default": remoteChannel.Name}
-			sourceNameI18n := model.JSONMap{"default": remoteChannel.Name}
-
-			newChannel := model.Channel{
-				SourceID:          remoteChannel.Id,
+			newChannel := ent.GameChannel{
+				SourceId:          remoteChannel.Id,
 				ChannelCode:       channelCode,
 				SourceChannelCode: remoteChannel.Code,
-				SourceNameI18n:    sourceNameI18n,
-				NameI18n:          nameI18n,
-				SourceStatus:      remoteChannel.Status,
-				Status:            remoteChannel.Status,
+				SourceNameI18n:    JSONToString(sourceNameI18n),
+				NameI18n:          JSONToString(nameI18n),
+				SortNo:            remoteChannel.Id,
+				SourceSortNo:      0,
+				Status:            int64(remoteChannel.Status),
+				SourceStatus:      int64(remoteChannel.Status),
 				CreatedAt:         time.Now(),
 				UpdatedAt:         time.Now(),
 			}
@@ -119,15 +159,34 @@ func (s *ChannelSyncService) processChannelData(ctx context.Context, tx *gorm.DB
 			}
 			applyResult.Created++
 		} else {
-			// 更新渠道信息
-			channelCode := remoteChannel.Code + "_" + fmt.Sprintf("%d", i)
-			sourceNameI18n := model.JSONMap{"default": remoteChannel.Name}
+			updateData := map[string]interface{}{
+				"channel_code":        channelCode,
+				"source_channel_code": remoteChannel.Code,
+				"source_name_i18n":    JSONToString(sourceNameI18n),
+				"source_status":       int64(remoteChannel.Status),
+				"source_sort_no":      0,
+				"updated_at":          time.Now(),
+			}
+			if len(syncCols) > 0 {
+				updateData = GetUpdatedData(map[string]interface{}{
+					"channel_code":        channelCode,
+					"source_channel_code": remoteChannel.Code,
+					"name_i18n":           JSONToString(nameI18n),
+					"source_name_i18n":    JSONToString(sourceNameI18n),
+					"status":              int64(remoteChannel.Status),
+					"source_status":       int64(remoteChannel.Status),
+					"sort_no":             0,
+					"source_sort_no":      0,
+				}, syncCols)
+				updateData["updated_at"] = time.Now()
+			}
 			if err := tx.Model(&localChannel).
 				Updates(map[string]interface{}{
 					"channel_code":        channelCode,
 					"source_channel_code": remoteChannel.Code,
-					"source_name_i18n":    sourceNameI18n,
-					"source_status":       remoteChannel.Status,
+					"source_name_i18n":    JSONToString(sourceNameI18n),
+					"source_status":       int64(remoteChannel.Status),
+					"source_sort_no":      0,
 					"updated_at":          time.Now(),
 				}).Error; err != nil {
 				logger.Errorf("[渠道更新] 失败: %v", err)
@@ -140,85 +199,133 @@ func (s *ChannelSyncService) processChannelData(ctx context.Context, tx *gorm.DB
 	return nil
 }
 
-func (s *ChannelSyncService) Run(ctx context.Context, client vendors.VendorGameServiceClient) (*vendors.SyncRunResp, error) {
+func (s *ChannelSyncService) Run(ctx context.Context, client vendors.VendorGameServiceClient, syncCols []string, checkpointID int64, isGetRemoteClient bool) error {
 	logger.Infof("[渠道同步] ===== 开始执行同步 =====")
 
 	// 先执行预检查
 	logger.Infof("[渠道同步] 执行预检查")
-	previewResp, err := s.Preview(ctx, client)
+	previewResp, remoteResp, err := s.Preview(ctx, client, nil, isGetRemoteClient)
 	if err != nil {
 		logger.Errorf("[渠道同步] 预检查失败: %v", err)
-		return nil, err
+		return err
+	}
+	// 创建并启动进度队列
+	s.progressQueue.Start(ctx)
+	if previewResp.Stats.UpdateTotal == 0 && previewResp.Stats.CreateTotal == 0 && previewResp.Stats.DeleteTotal == 0 && previewResp.Stats.RemoteTotal == previewResp.Stats.LocalTotal {
+		defer s.progressQueue.Stop()
+		logger.Infof("[渠道同步] 无需更新，直接返回")
+		logger.Infof("[渠道同步] UpdateTotal=%d, CreateTotal=%d, DeleteTotal=%d, RemoteTotal=%d, LocalTotal=%d",
+			previewResp.Stats.UpdateTotal, previewResp.Stats.CreateTotal, previewResp.Stats.DeleteTotal, previewResp.Stats.RemoteTotal, previewResp.Stats.LocalTotal)
+		// 更新checkpointID进度为100
+		s.progressQueue.Send(&ProgressMessage{
+			TableName:      "channel",
+			ProcessedCount: previewResp.Stats.RemoteTotal,
+			RemoteTotal:    previewResp.Stats.RemoteTotal,
+			LocalTotal:     previewResp.Stats.LocalTotal,
+			Progress:       100,
+			CheckpointID:   checkpointID,
+		})
+		return nil
 	}
 	logger.Infof("[渠道同步] 预检查完成: remote_total=%d, local_total=%d",
 		previewResp.Stats.RemoteTotal, previewResp.Stats.LocalTotal)
 
-	// 构建执行结果
-	result := &vendors.SyncRunResp{
-		Preview: previewResp,
-		Apply:   &vendors.SyncApplyResult{},
-	}
-
 	// 获取远程渠道数据
 	logger.Infof("[渠道同步] 获取远程渠道数据")
-	// remoteResp, err := client.GetChannel(ctx, &emptypb.Empty{})
-	// if err != nil {
-	// 	logger.Errorf("[渠道同步] 获取远程数据失败: %v", err)
-	// 	return nil, err
-	// }
-	remoteResp, err := getTestGameChannel()
-	if err != nil {
-		logger.Errorf("[渠道同步] 获取远程数据失败: %v", err)
-		return nil, err
-	}
 	logger.Infof("[渠道同步] 获取到远程数据: count=%d", len(remoteResp.Data))
 
-	// 在事务中执行数据库操作
-	logger.Infof("[渠道同步] 开始处理渠道数据")
-	err = s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		return s.processChannelData(ctx, tx, remoteResp.Data, result.Apply)
-	})
-	if err != nil {
-		logger.Errorf("[渠道同步] 处理渠道数据失败: %v", err)
-		return nil, err
-	}
-	logger.Infof("[渠道同步] 处理完成: created=%d, updated=%d, deleted=%d, failed=%d",
-		result.Apply.Created, result.Apply.Updated, result.Apply.Deleted, result.Apply.Failed)
+	// 创建初始检查点记录（此时progress=0）
+	logger.Infof("[渠道同步] 创建初始检查点")
+	logger.Infof("[渠道同步] ✓ 检查点已创建: checkpointID=%d", checkpointID)
 
-	// 执行逆向同步
-	logger.Infof("[渠道同步] 开始执行逆向同步")
-	reverseResp, err := s.ReverseSync(ctx, client)
-	if err != nil {
-		logger.Errorf("[渠道同步] 逆向同步失败: %v", err)
-		return nil, err
-	}
-	result.Apply.Deleted = reverseResp.Apply.Deleted
-	logger.Infof("[渠道同步] 逆向同步完成: deleted=%d", result.Apply.Deleted)
+	go func() {
+		defer s.progressQueue.Stop()
+		// 在事务中执行数据库操作
+		logger.Infof("[渠道同步] 开始处理渠道数据")
+		// 把remoteResp.Data拆分为100条一批进行处理（可根据实际情况调整批次大小）
+		batchSize := BatchSize
+		totalCount := len(remoteResp.Data)
+		apply := &Apply{}
+		for i := 0; i < len(remoteResp.Data); i += batchSize {
+			end := i + batchSize
+			if end > len(remoteResp.Data) {
+				end = len(remoteResp.Data)
+			}
+			batch := remoteResp.Data[i:end]
+			logger.Infof("[渠道同步] 处理批次: start=%d, end=%d", i, end)
+			// 模拟等待
+			logger.Debugf("[进度队列] 模拟处理延迟: 表=channel, checkpointID=%d", checkpointID)
+			time.Sleep(1000 * time.Millisecond)
+			logger.Debugf("[进度队列] 开始处理消息: 表=channel, checkpointID=%d", checkpointID)
+			err = s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+				return s.processChannelDataWithProgress(ctx, tx, batch, apply, syncCols, checkpointID)
+			})
+			if err != nil {
+				logger.Errorf("[渠道同步] 处理渠道数据失败: %v", err)
+				return
+			}
+			progress := CalculateProgress(int64(i+1), int64(totalCount))
+			msg := &ProgressMessage{
+				TableName:      "channel",
+				ProcessedCount: int32(i + 1),
+				RemoteTotal:    previewResp.Stats.RemoteTotal,
+				LocalTotal:     previewResp.Stats.LocalTotal,
+				Progress:       progress,
+				CheckpointID:   checkpointID,
+				Created:        apply.Created,
+				Updated:        apply.Updated,
+				Deleted:        apply.Deleted,
+				Failed:         apply.Failed,
+				Skipped:        apply.Skipped,
+			}
+			logger.Infof("[渠道同步] 发送进度消息: 表=channel, 处理数=%d, 总数=%d, 进度=%d%%", i+1, totalCount, progress)
+			s.progressQueue.Send(msg)
+		}
+		if err != nil {
+			logger.Errorf("[渠道同步] 处理渠道数据失败: %v", err)
+			return
+		}
 
-	// 保存同步检查点
-	logger.Infof("[渠道同步] 准备保存同步检查点")
-	checkpointMgr := NewCheckpointManager(s.db)
-	checkpointValue := previewResp.Stats.RemoteTotal // 使用远程总数作为检查点值
-	if err := checkpointMgr.UpdateCheckpoint(ctx, "CHANNEL",
-		fmt.Sprintf("%d", checkpointValue), result, nil); err != nil {
-		logger.Errorf("[渠道同步] 保存检查点失败: %v", err)
-		return nil, err
-	}
-	logger.Infof("[渠道同步] ✓ 检查点已保存")
+		// 执行逆向同步
+		logger.Infof("[渠道同步] 开始执行逆向同步")
+		err := s.ReverseSync(ctx, client, remoteResp, apply)
+		if err != nil {
+			logger.Errorf("❌ [渠道同步] 逆向同步失败: %v", err)
+			return
+		}
+		logger.Infof("[渠道同步] 逆向同步完成: deleted=%d", apply.Deleted)
 
-	logger.Infof("[渠道同步] ===== 同步完成 =====")
-	return result, nil
+		// 最后一次进度更新（100%）
+		logger.Infof("[渠道同步] 发送最终进度消息（100%%）")
+		finalMsg := &ProgressMessage{
+			TableName:      "channel",
+			ProcessedCount: previewResp.Stats.RemoteTotal,
+			RemoteTotal:    previewResp.Stats.RemoteTotal,
+			LocalTotal:     previewResp.Stats.LocalTotal,
+			Progress:       100,
+			CheckpointID:   checkpointID,
+			Created:        apply.Created,
+			Updated:        apply.Updated,
+			Deleted:        apply.Deleted,
+			Failed:         apply.Failed,
+			Skipped:        apply.Skipped,
+		}
+		s.progressQueue.Send(finalMsg)
+
+		logger.Infof("[渠道同步] ===== 同步完成 =====")
+	}()
+	return nil
 }
 
-// fetchLocal 获取本地所有渠道
-func (s *ChannelSyncService) fetchLocal(ctx context.Context) ([]*model.Channel, map[string]*model.Channel, error) {
-	var channels []*model.Channel
+// 获取本地所有渠道
+func (s *ChannelSyncService) fetchLocal(ctx context.Context) ([]*ent.GameChannel, map[string]*ent.GameChannel, error) {
+	var channels []*ent.GameChannel
 	if err := s.db.WithContext(ctx).Where("deleted_at IS NULL").Find(&channels).Error; err != nil {
 		return nil, nil, err
 	}
 
 	// 构建本地渠道索引（按上游渠道编码）
-	index := make(map[string]*model.Channel)
+	index := make(map[string]*ent.GameChannel)
 	for _, channel := range channels {
 		if channel.SourceChannelCode != "" {
 			index[channel.SourceChannelCode] = channel
@@ -228,12 +335,12 @@ func (s *ChannelSyncService) fetchLocal(ctx context.Context) ([]*model.Channel, 
 	return channels, index, nil
 }
 
-// compareOne 比较单个渠道的本地和远程数据
-func (s *ChannelSyncService) compareOne(remote *vendors.GameChannelInfo, localIndex map[string]*model.Channel) *vendors.SyncDiff {
+// 比较单个渠道的本地和远程数据
+func (s *ChannelSyncService) compareOne(remote *vendors.GameChannelInfo, localIndex map[string]*ent.GameChannel) *platform_game.SyncDiff {
 	local, exists := localIndex[remote.Code]
 
 	// 初始化差异记录
-	diff := &vendors.SyncDiff{
+	diff := &platform_game.SyncDiff{
 		ObjectType: "channel",
 		ObjectId:   remote.Id,
 		ObjectCode: remote.Code,
@@ -248,14 +355,9 @@ func (s *ChannelSyncService) compareOne(remote *vendors.GameChannelInfo, localIn
 		return diff
 	}
 
-	// 对比渠道名称是否变更
-	var localSourceName string
-	if sourceNameI18n, ok := local.SourceNameI18n["default"]; ok {
-		localSourceName = sourceNameI18n.(string)
-	}
-	if localSourceName != remote.Name {
+	if CompareName(local.SourceNameI18n, remote.Name) {
 		diff.Action = "update"
-		diff.Reason = fmt.Sprintf("渠道名称变更: %s -> %s", localSourceName, remote.Name)
+		diff.Reason = fmt.Sprintf("渠道名称变更: %s -> %s", local.SourceNameI18n, remote.Name)
 		return diff
 	}
 
@@ -266,21 +368,8 @@ func (s *ChannelSyncService) compareOne(remote *vendors.GameChannelInfo, localIn
 }
 
 // ReverseSync 逆向同步：检查本地数据在远程是否存在，不存在则软删除
-func (s *ChannelSyncService) ReverseSync(ctx context.Context, client vendors.VendorGameServiceClient) (*vendors.SyncRunResp, error) {
+func (s *ChannelSyncService) ReverseSync(ctx context.Context, client vendors.VendorGameServiceClient, remoteResp *RemoteChannelResponse, apply *Apply) error {
 	log.Println("[渠道逆向同步] 开始执行逆向同步...")
-
-	// 获取远程渠道数据
-	// remoteResp, err := client.GetChannel(ctx, &emptypb.Empty{})
-	// if err != nil {
-	// 	log.Printf("[渠道逆向同步] ✗ 获取远程数据失败: %v\n", err)
-	// 	return nil, err
-	// }
-	remoteResp, err := getTestGameChannel()
-	if err != nil {
-		log.Printf("[渠道逆向同步] ✗ 获取测试数据失败: %v\n", err)
-		return nil, err
-	}
-	log.Printf("[渠道逆向同步] ✓ 获取远程数据成功, 共 %d 条\n", len(remoteResp.Data))
 
 	// 构建远程渠道编码索引
 	remoteIndex := make(map[string]bool)
@@ -289,51 +378,24 @@ func (s *ChannelSyncService) ReverseSync(ctx context.Context, client vendors.Ven
 	}
 
 	// 获取本地渠道数据
-	var localChannels []*model.Channel
+	var localChannels []*ent.GameChannel
 	if err := s.db.WithContext(ctx).Where("deleted_at IS NULL").Find(&localChannels).Error; err != nil {
 		log.Printf("[渠道逆向同步] ✗ 获取本地数据失败: %v\n", err)
-		return nil, err
+		return err
 	}
 	log.Printf("[渠道逆向同步] ✓ 获取本地数据成功, 共 %d 条\n", len(localChannels))
 
-	// 构建执行结果
-	result := &vendors.SyncRunResp{
-		Preview: &vendors.SyncPreviewResp{
-			Stats: &vendors.SyncStats{
-				LocalTotal: int64(len(localChannels)),
-			},
-		},
-		Apply: &vendors.SyncApplyResult{},
-	}
-
 	// 在事务中执行软删除
-	err = s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+	err := s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		for _, localChannel := range localChannels {
 			// 如果本地渠道在远程不存在，则软删除
 			if !remoteIndex[localChannel.SourceChannelCode] {
-				// 检查唯一性：是否存在其他 deleted_at IS NULL 的记录有相同的 source_channel_code
-				var duplicateCount int64
-				if err := tx.Model(&model.Channel{}).
-					Where("source_channel_code = ?", localChannel.SourceChannelCode).
-					Where("deleted_at IS NULL").
-					Count(&duplicateCount).Error; err != nil {
-					log.Printf("[渠道逆向同步] 唯一性检查失败: %v", err)
-					result.Apply.Failed++
-					continue
-				}
-
-				if duplicateCount > 1 {
-					logger.Errorf("[渠道逆向同步] 存在 %d 条记录有相同的 source_channel_code=%s, 跳过本条删除以保护数据", duplicateCount, localChannel.SourceChannelCode)
-					result.Apply.Failed++
-					continue
-				}
-
 				if err := tx.Model(localChannel).Update("deleted_at", time.Now()).Error; err != nil {
 					log.Printf("[渠道逆向同步] 软删除失败: %v", err)
-					result.Apply.Failed++
+					apply.Failed++
 					continue
 				}
-				result.Apply.Deleted++
+				apply.Deleted++
 				log.Printf("[渠道逆向同步] ✓ 已软删除渠道: %s\n", localChannel.SourceChannelCode)
 			}
 		}
@@ -341,19 +403,35 @@ func (s *ChannelSyncService) ReverseSync(ctx context.Context, client vendors.Ven
 	})
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	log.Printf("[渠道逆向同步] ✓ 完成，删除: %d\n", result.Apply.Deleted)
-	return result, nil
+	log.Printf("[渠道逆向同步] ✓ 完成，删除: %d\n", apply.Deleted)
+	return nil
 }
 
-func getTestGameChannel() (*vendors.GetGameChannelResp, error) {
-	var list []*vendors.GameChannelInfo
-	if err := loadTestJSON("channel.json", &list); err != nil {
-		log.Printf("[渠道测试数据] 读取 channel.json 失败: %v", err)
-		return &vendors.GetGameChannelResp{Data: []*vendors.GameChannelInfo{}}, err
+func getRemoteGameChannel(ctx context.Context, client vendors.VendorGameServiceClient, isGetRemoteClient bool) (*RemoteChannelResponse, error) {
+	if isGetRemoteClient {
+		logger.Infof("[同步数据源] 使用远程客户端获取数据")
+		remoteResp, err := client.GetChannel(ctx, &vendors.Empty{})
+		if err != nil {
+			logger.Errorf("❌ [同步数据源] 获取远程数据失败: %v", err)
+			return nil, err
+		}
+		logger.Infof("[同步数据源] ✓ 获取远程数据成功, 共 %d 条", len(remoteResp.ChannelList))
+		return &RemoteChannelResponse{Data: remoteResp.ChannelList}, nil
+	} else {
+		logger.Infof("[同步数据源] 使用本地 JSON 数据获取渠道信息")
+		var list []*vendors.GameChannelInfo
+		if err := loadLocalJSON("channel.json", &list); err != nil {
+			logger.Errorf("[同步数据源] 读取 channel.json 失败: %v", err)
+			return nil, err
+		}
+		logger.Infof("[同步数据源] ✓ 读取本地 JSON 数据成功, 共 %d 条", len(list))
+		return &RemoteChannelResponse{Data: list}, nil
 	}
+}
 
-	return &vendors.GetGameChannelResp{Data: list}, nil
+type RemoteChannelResponse struct {
+	Data []*vendors.GameChannelInfo `json:"data"`
 }

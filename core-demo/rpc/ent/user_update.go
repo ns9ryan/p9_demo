@@ -10,6 +10,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"entgo.io/ent/dialect/sql/sqljson"
 	"entgo.io/ent/schema/field"
 	"oa.98ent.com/p9/core/rpc/ent/adminactionlog"
 	"oa.98ent.com/p9/core/rpc/ent/errorlog"
@@ -267,6 +268,39 @@ func (_u *UserUpdate) SetNillableLastLoginIP(v *string) *UserUpdate {
 // ClearLastLoginIP clears the value of the "last_login_ip" field.
 func (_u *UserUpdate) ClearLastLoginIP() *UserUpdate {
 	_u.mutation.ClearLastLoginIP()
+	return _u
+}
+
+// SetIPWhitelistEnabled sets the "ip_whitelist_enabled" field.
+func (_u *UserUpdate) SetIPWhitelistEnabled(v int16) *UserUpdate {
+	_u.mutation.ResetIPWhitelistEnabled()
+	_u.mutation.SetIPWhitelistEnabled(v)
+	return _u
+}
+
+// SetNillableIPWhitelistEnabled sets the "ip_whitelist_enabled" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableIPWhitelistEnabled(v *int16) *UserUpdate {
+	if v != nil {
+		_u.SetIPWhitelistEnabled(*v)
+	}
+	return _u
+}
+
+// AddIPWhitelistEnabled adds value to the "ip_whitelist_enabled" field.
+func (_u *UserUpdate) AddIPWhitelistEnabled(v int16) *UserUpdate {
+	_u.mutation.AddIPWhitelistEnabled(v)
+	return _u
+}
+
+// SetIPWhitelist sets the "ip_whitelist" field.
+func (_u *UserUpdate) SetIPWhitelist(v []string) *UserUpdate {
+	_u.mutation.SetIPWhitelist(v)
+	return _u
+}
+
+// AppendIPWhitelist appends value to the "ip_whitelist" field.
+func (_u *UserUpdate) AppendIPWhitelist(v []string) *UserUpdate {
+	_u.mutation.AppendIPWhitelist(v)
 	return _u
 }
 
@@ -578,6 +612,20 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if _u.mutation.LastLoginIPCleared() {
 		_spec.ClearField(user.FieldLastLoginIP, field.TypeString)
+	}
+	if value, ok := _u.mutation.IPWhitelistEnabled(); ok {
+		_spec.SetField(user.FieldIPWhitelistEnabled, field.TypeInt16, value)
+	}
+	if value, ok := _u.mutation.AddedIPWhitelistEnabled(); ok {
+		_spec.AddField(user.FieldIPWhitelistEnabled, field.TypeInt16, value)
+	}
+	if value, ok := _u.mutation.IPWhitelist(); ok {
+		_spec.SetField(user.FieldIPWhitelist, field.TypeJSON, value)
+	}
+	if value, ok := _u.mutation.AppendedIPWhitelist(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, user.FieldIPWhitelist, value)
+		})
 	}
 	if _u.mutation.RolesCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -1017,6 +1065,39 @@ func (_u *UserUpdateOne) ClearLastLoginIP() *UserUpdateOne {
 	return _u
 }
 
+// SetIPWhitelistEnabled sets the "ip_whitelist_enabled" field.
+func (_u *UserUpdateOne) SetIPWhitelistEnabled(v int16) *UserUpdateOne {
+	_u.mutation.ResetIPWhitelistEnabled()
+	_u.mutation.SetIPWhitelistEnabled(v)
+	return _u
+}
+
+// SetNillableIPWhitelistEnabled sets the "ip_whitelist_enabled" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableIPWhitelistEnabled(v *int16) *UserUpdateOne {
+	if v != nil {
+		_u.SetIPWhitelistEnabled(*v)
+	}
+	return _u
+}
+
+// AddIPWhitelistEnabled adds value to the "ip_whitelist_enabled" field.
+func (_u *UserUpdateOne) AddIPWhitelistEnabled(v int16) *UserUpdateOne {
+	_u.mutation.AddIPWhitelistEnabled(v)
+	return _u
+}
+
+// SetIPWhitelist sets the "ip_whitelist" field.
+func (_u *UserUpdateOne) SetIPWhitelist(v []string) *UserUpdateOne {
+	_u.mutation.SetIPWhitelist(v)
+	return _u
+}
+
+// AppendIPWhitelist appends value to the "ip_whitelist" field.
+func (_u *UserUpdateOne) AppendIPWhitelist(v []string) *UserUpdateOne {
+	_u.mutation.AppendIPWhitelist(v)
+	return _u
+}
+
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
 func (_u *UserUpdateOne) AddRoleIDs(ids ...int64) *UserUpdateOne {
 	_u.mutation.AddRoleIDs(ids...)
@@ -1355,6 +1436,20 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	}
 	if _u.mutation.LastLoginIPCleared() {
 		_spec.ClearField(user.FieldLastLoginIP, field.TypeString)
+	}
+	if value, ok := _u.mutation.IPWhitelistEnabled(); ok {
+		_spec.SetField(user.FieldIPWhitelistEnabled, field.TypeInt16, value)
+	}
+	if value, ok := _u.mutation.AddedIPWhitelistEnabled(); ok {
+		_spec.AddField(user.FieldIPWhitelistEnabled, field.TypeInt16, value)
+	}
+	if value, ok := _u.mutation.IPWhitelist(); ok {
+		_spec.SetField(user.FieldIPWhitelist, field.TypeJSON, value)
+	}
+	if value, ok := _u.mutation.AppendedIPWhitelist(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, user.FieldIPWhitelist, value)
+		})
 	}
 	if _u.mutation.RolesCleared() {
 		edge := &sqlgraph.EdgeSpec{

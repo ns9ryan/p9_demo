@@ -30,14 +30,8 @@ func (s *LanguageAllocationServiceServer) List(ctx context.Context, in *language
 	return l.List(in)
 }
 
-// 分配语言
-func (s *LanguageAllocationServiceServer) Assign(ctx context.Context, in *languageallocation.AssignLanguageRequest) (*languageallocation.AssignLanguageResponse, error) {
-	l := languageallocationservicelogic.NewAssignLogic(ctx, s.svcCtx)
-	return l.Assign(in)
-}
-
-// 取消语言分配
-func (s *LanguageAllocationServiceServer) Unassign(ctx context.Context, in *languageallocation.UnassignLanguageRequest) (*languageallocation.UnassignLanguageResponse, error) {
-	l := languageallocationservicelogic.NewUnassignLogic(ctx, s.svcCtx)
-	return l.Unassign(in)
+// 保存语言分配
+func (s *LanguageAllocationServiceServer) Save(ctx context.Context, in *languageallocation.SaveLanguageAllocationsRequest) (*languageallocation.SaveLanguageAllocationsResponse, error) {
+	l := languageallocationservicelogic.NewSaveLogic(ctx, s.svcCtx)
+	return l.Save(in)
 }

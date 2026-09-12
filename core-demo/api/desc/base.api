@@ -47,6 +47,8 @@ type UserPublic {
 	Status       int32    `json:"status"`
 	// Role codes | 角色编码
 	RoleCodes    []string `json:"role_codes"`
+	// Role names | 角色名称
+	RoleNames    []string `json:"role_names"`
 	// Home path | 首页路径
 	HomePath     string   `json:"home_path,optional"`
 	// Created at unix | 创建时间
@@ -57,6 +59,10 @@ type UserPublic {
 	Mobile       string   `json:"mobile,optional"`
 	// Email | 邮箱
 	Email        string   `json:"email,optional"`
+	// IP whitelist enabled | 是否开启登录 IP 白名单
+	IpWhitelistEnabled int32    `json:"ip_whitelist_enabled"`
+	// IP whitelist | 登录 IP 白名单
+	IpWhitelist        []string `json:"ip_whitelist"`
 }
 
 // Login response | 登录响应

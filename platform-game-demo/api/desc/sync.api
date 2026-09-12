@@ -1,0 +1,112 @@
+syntax = "v1"
+
+@server (
+	group: sync
+	middleware: Auth
+	prefix: /admin/sync
+)
+service platform_game {
+	// ===== Sync APIs =====
+	// 分类同步
+	@handler RunCategory
+	post /categories/run (SyncRunReq) returns (SyncRunResp)
+
+	// 厂商同步
+	@handler RunProvider
+	post /vendors/run (SyncRunReq) returns (SyncRunResp)
+
+	// 渠道同步
+	@handler RunChannel
+	post /channel/run (SyncRunReq) returns (SyncRunResp)
+
+	// 游戏同步
+	@handler RunGame
+	post /games/run (SyncRunReq) returns (SyncRunResp)
+
+	// 游戏货币同步
+	@handler RunCurrency
+	post /currencies/run (SyncRunReq) returns (SyncRunResp)
+}
+
+@server (
+	group: preview
+	middleware: Auth
+	prefix: /admin/sync
+)
+service platform_game {
+	// ===== Sync APIs =====
+	// 分类预览
+	@handler PreviewCategory
+	post /categories/preview (SyncPreviewReq) returns (SyncPreviewResp)
+
+	// 厂商预览
+	@handler PreviewProvider
+	post /vendors/preview (SyncPreviewReq) returns (SyncPreviewResp)
+
+	// 渠道预览
+	@handler PreviewChannel
+	post /channel/preview (SyncPreviewReq) returns (SyncPreviewResp)
+
+	// 游戏预览
+	@handler PreviewGame
+	post /games/preview (SyncPreviewReq) returns (SyncPreviewResp)
+
+	// 游戏货币预览
+	@handler PreviewCurrency
+	post /currencies/preview (SyncPreviewReq) returns (SyncPreviewResp)
+}
+
+
+// ========== 同步 Sync ==========
+type SyncDiff {
+	ObjectType   string `json:"object_type" comment:"对象类型"`
+	ObjectID     int64  `json:"object_id" comment:"P9对象ID"`
+	ObjectCode   string `json:"object_code" comment:"P9对象编码"`
+	Action       string `json:"action" comment:"同步操作"`
+	RemoteID     int64  `json:"remote_id" comment:"上游对象ID"`
+	RemoteCode   string `json:"remote_code" comment:"上游对象编码"`
+	Reason       string `json:"reason" comment:"原因说明"`
+	ConflictType string `json:"conflict_type" comment:"冲突类型"`
+}
+
+type SyncStats {
+	RemoteTotal   int64 `json:"remote_total" comment:"上游总数"`
+	LocalTotal    int64 `json:"local_total" comment:"本地总数"`
+	CreateTotal   int64 `json:"create_total" comment:"新增数量"`
+	UpdateTotal   int64 `json:"update_total" comment:"更新数量"`
+	DeleteTotal   int64 `json:"delete_total" comment:"删除数量"`
+	NoopTotal     int64 `json:"noop_total" comment:"无操作数量"`
+	ConflictTotal int64 `json:"conflict_total" comment:"冲突数量"`
+	ErrorTotal    int64 `json:"error_total" comment:"错误数量"`
+}
+
+type SyncPreviewReq {
+	Page     int64 `json:"page,optional" comment:"页码（默认1）"`
+	PageSize int64 `json:"page_size,optional" comment:"每页大小（默认15）"`
+	IsSkip   bool  `json:"is_skip,optional" comment:"是否跳过noop操作（默认false）"`
+}
+
+type SyncPreviewResp {
+	Stats      SyncStats  `json:"stats" comment:"统计信息"`
+	Diffs      []SyncDiff `json:"diffs" comment:"差异列表（分页后）"`
+	Page       int64      `json:"page" comment:"当前页码"`
+	PageSize   int64      `json:"page_size" comment:"每页大小"`
+	TotalCount int64      `json:"total_count" comment:"总数（应用过滤后）"`
+	TotalPage  int64      `json:"total_page" comment:"总页数"`
+}
+
+type SyncRunReq {
+	SyncCols []string	`json:"sync_cols,optional" comment:"同步字段"`
+}
+
+type SyncRunResp {
+	CheckpointID int64 `json:"checkpoint_id" comment:"同步检查点ID，用于异步跟踪进度"`
+}
+
+type SyncApplyResult {
+	Created int64 `json:"created" comment:"新增数量"`
+	Updated int64 `json:"updated" comment:"更新数量"`
+	Deleted int64 `json:"deleted" comment:"删除数量"`
+	Failed  int64 `json:"failed" comment:"失败数量"`
+	Skipped int64 `json:"skipped" comment:"跳过数量"`
+}

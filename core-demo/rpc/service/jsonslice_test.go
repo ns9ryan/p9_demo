@@ -21,10 +21,13 @@ func TestEmptySlicesJSONArray(t *testing.T) {
 		}
 	})
 	t.Run("role codes", func(t *testing.T) {
-		u := UserPublic{ID: 1, RoleCodes: make([]string, 0)}
+		u := UserPublic{ID: 1, RoleCodes: make([]string, 0), IPWhitelist: make([]string, 0)}
 		b, err := json.Marshal(u)
 		if err != nil || !strings.Contains(string(b), `"role_codes":[]`) {
 			t.Fatalf("user=%s err=%v", b, err)
+		}
+		if !strings.Contains(string(b), `"ip_whitelist":[]`) {
+			t.Fatalf("whitelist=%s", b)
 		}
 	})
 	t.Run("public users", func(t *testing.T) {

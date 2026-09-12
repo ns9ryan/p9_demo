@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package vendors;
+
+option go_package = "oa.98ent.com/p9/platform-game/rpc/pb/vendors";
+
+// ===============================
+// 游戏厂商
+// ===============================
+
+// VendorInfo 游戏厂商（来自 game-vendor-gateway 返回值）
+message VendorInfo {
+  int64 id = 1;
+  string code = 2;
+  string abbr = 3;
+  string name = 4;
+  uint32 status = 5;        // 1.Normal 2.Disabled
+  string notes = 6;
+  int64 weight = 7;
+  map<string, string> settings = 8;
+  map<string, string> extra = 9;
+  uint32 update_utype = 10;
+  int64 update_uid = 11;
+  int64 updates = 12;
+  int64 update_at = 13;
+  uint32 create_utype = 14;
+  int64 create_uid = 15;
+  int64 create_at = 16;
+  int64 chan_id = 17;        // GameChannel id
+}
+
+// GetVendorResponse 获取厂商列表响应
+message GetVendorResponse {
+  int64 code = 1;
+  string msg = 2;
+  repeated VendorInfo vendor_list = 3;
+}

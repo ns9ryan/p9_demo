@@ -45,8 +45,10 @@ type I18nItem struct {
 }
 
 type UpdateI18nByKeyReq struct {
-	TransKey string
-	Data     map[string]string
+	I18nCode  string
+	I18nGroup string
+	TransKey  string
+	Data      map[string]string
 }
 
 func (d *Deps) CreateI18n(ctx context.Context, req CreateI18nReq) (*model.I18n, error) {
@@ -198,15 +200,11 @@ func (d *Deps) UpdateI18nByKey(ctx context.Context, req UpdateI18nByKeyReq) erro
 	if len(req.Data) == 0 {
 		return xerr.BadRequest(i18n.I18nDataRequired)
 	}
-	codes, group, err := d.i18nCodesGroupByKey(ctx, key)
+	code := strings.TrimSpace(req.I18nCode)
+	group := strings.TrimSpace(req.I18nGroup)
+	targets, err := d.i18nByKeyTargets(ctx, code, group, key)
 	if err != nil {
 		return err
-	}
-	if len(codes) == 0 {
-		codes = []string{i18n.CodePlatform}
-	}
-	if group == "" {
-		group = inferI18nGroup(key)
 	}
 	wrote := false
 	for lang, value := range req.Data {
@@ -216,8 +214,8 @@ func (d *Deps) UpdateI18nByKey(ctx context.Context, req UpdateI18nByKeyReq) erro
 		}
 		wrote = true
 		val := strings.TrimSpace(value)
-		for _, code := range codes {
-			if err := d.upsertI18nLang(ctx, code, group, key, lang, val); err != nil {
+		for _, t := range targets {
+			if err := d.upsertI18nLang(ctx, t.code, t.group, key, lang, val); err != nil {
 				return err
 			}
 		}
@@ -226,6 +224,50 @@ func (d *Deps) UpdateI18nByKey(ctx context.Context, req UpdateI18nByKeyReq) erro
 		return xerr.BadRequest(i18n.I18nDataRequired)
 	}
 	return nil
+}
+
+type i18nKeyTarget struct {
+	code  string
+	group string
+}
+
+func (d *Deps) i18nByKeyTargets(ctx context.Context, code, group, key string) ([]i18nKeyTarget, error) {
+	q := d.Client.I18n.Query().Where(enti18n.TransKeyEQ(key))
+	if code != "" {
+		q.Where(enti18n.I18nCodeEQ(code))
+	}
+	if group != "" {
+		q.Where(enti18n.I18nGroupEQ(group))
+	}
+	list, err := q.Order(ent.Asc(enti18n.FieldID)).All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	var out []i18nKeyTarget
+	seen := map[string]struct{}{}
+	for _, row := range list {
+		if _, ok := seen[row.I18nCode]; ok {
+			continue
+		}
+		seen[row.I18nCode] = struct{}{}
+		g := row.I18nGroup
+		if group != "" {
+			g = group
+		}
+		out = append(out, i18nKeyTarget{code: row.I18nCode, group: g})
+	}
+	if len(out) > 0 {
+		return out, nil
+	}
+	createCode := code
+	if createCode == "" {
+		createCode = i18n.CodePlatform
+	}
+	createGroup := group
+	if createGroup == "" {
+		createGroup = inferI18nGroup(key)
+	}
+	return []i18nKeyTarget{{code: createCode, group: createGroup}}, nil
 }
 
 func (d *Deps) upsertI18nLang(ctx context.Context, code, group, key, lang, value string) error {
@@ -245,36 +287,7 @@ func (d *Deps) upsertI18nLang(ctx context.Context, code, group, key, lang, value
 	if err != nil {
 		return err
 	}
-	upd := d.Client.I18n.UpdateOne(exist).SetValue(value)
-	if group != "" && exist.I18nGroup == "" {
-		upd.SetI18nGroup(group)
-	}
-	return upd.Exec(ctx)
-}
-
-func (d *Deps) i18nCodesGroupByKey(ctx context.Context, key string) ([]string, string, error) {
-	list, err := d.Client.I18n.Query().
-		Where(enti18n.TransKeyEQ(key)).
-		Order(ent.Asc(enti18n.FieldID)).
-		All(ctx)
-	if err != nil {
-		return nil, "", err
-	}
-	var codes []string
-	seen := map[string]struct{}{}
-	group := ""
-	for _, row := range list {
-		if row.I18nCode != "" {
-			if _, ok := seen[row.I18nCode]; !ok {
-				seen[row.I18nCode] = struct{}{}
-				codes = append(codes, row.I18nCode)
-			}
-		}
-		if group == "" && row.I18nGroup != "" {
-			group = row.I18nGroup
-		}
-	}
-	return codes, group, nil
+	return d.Client.I18n.UpdateOne(exist).SetValue(value).Exec(ctx)
 }
 
 func (d *Deps) i18nByID(ctx context.Context, id int64) (model.I18n, error) {

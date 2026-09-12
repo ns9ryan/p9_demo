@@ -2,12 +2,16 @@ package sync
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
+	"sync"
 	"time"
 
 	"gorm.io/gorm"
 	"oa.98ent.com/p9/platform-game/common/logger"
-	"oa.98ent.com/p9/platform-game/common/model"
+	"oa.98ent.com/p9/platform-game/rpc/ent"
+	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
+	platform_game_sync "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 	"oa.98ent.com/p9/platform-game/rpc/pb/vendors"
 )
 
@@ -15,77 +19,102 @@ import (
 
 // CategorySyncService 分类同步服务
 type CategorySyncService struct {
-	db *gorm.DB
+	db            *gorm.DB
+	progressQueue *ProgressQueue
+	mu            sync.Mutex
 }
 
 // NewCategorySyncService 创建分类同步服务
 func NewCategorySyncService(db *gorm.DB) *CategorySyncService {
-	return &CategorySyncService{db: db}
+	return &CategorySyncService{
+		db:            db,
+		progressQueue: NewProgressQueue(db),
+	}
 }
 
-// Preview 预检查分类同步
-func (s *CategorySyncService) Preview(ctx context.Context, client vendors.VendorGameServiceClient) (*vendors.SyncPreviewResp, error) {
+// 预检查分类同步
+func (s *CategorySyncService) Preview(ctx context.Context, client vendors.VendorGameServiceClient, req *platform_game_sync.SyncPreviewRequest, isGetRemoteClient bool) (*platform_game.SyncPreviewResp, *RemoteCategoryResponse, error) {
 	logger.Info("[分类预检查] 开始执行")
 
 	// 获取远程分类数据
 	logger.Info("[分类预检查] 正在调用 GetGameCategory RPC")
-	// remoteResp, err := client.GetGameCategory(ctx, &emptypb.Empty{})
-	// if err != nil {
-	// 	logger.Errorf("❌ [分类预检查] 获取远程数据失败: %v", err)
-	// 	return nil, err
-	// }
-	remoteResp, err := getTestGameCategory()
+	remoteResp, err := getRemoteGameCategory(ctx, client, isGetRemoteClient)
 	if err != nil {
 		logger.Errorf("❌ [分类预检查] 获取测试数据失败: %v", err)
-		return nil, err
+		return nil, nil, err
 	}
 
 	logger.Infof("[分类预检查] ✓ 获取远程数据成功, 共 %d 条", len(remoteResp.Data))
-	remote := remoteResp.Data
 
 	// 获取本地分类数据
 	logger.Info("[分类预检查] 正在获取本地数据")
 	local, localIndex, err := s.fetchLocal(ctx)
 	if err != nil {
 		logger.Errorf("❌ [分类预检查] 获取本地数据失败: %v", err)
-		return nil, err
+		return nil, nil, err
 	}
 	logger.Infof("[分类预检查] ✓ 获取本地数据成功, 共 %d 条", len(local))
 
-	// 初始化预检查结果
-	result := &vendors.SyncPreviewResp{
-		Stats: &vendors.SyncStats{
-			RemoteTotal: int64(len(remote)),
-			LocalTotal:  int64(len(local)),
-		},
-		Diffs: make([]*vendors.SyncDiff, 0),
+	// 转换为接口切片
+	remoteItems := make([]interface{}, len(remoteResp.Data))
+	for i, v := range remoteResp.Data {
+		remoteItems[i] = v
 	}
 
-	// 对每条远程分类进行比较
-	for _, remoteItem := range remote {
-		diff := s.compareOne(remoteItem, localIndex)
-		result.Diffs = append(result.Diffs, diff)
+	// 转换本地索引为接口类型
+	localIndexInterface := make(map[string]interface{})
+	for k, v := range localIndex {
+		localIndexInterface[k] = v
+	}
 
-		// 按操作类型统计
-		switch diff.Action {
-		case "create":
-			result.Stats.CreateTotal++
-		case "update":
-			result.Stats.UpdateTotal++
-		case "noop":
-			result.Stats.NoopTotal++
-		case "conflict":
-			result.Stats.ConflictTotal++
+	// 当 req 为 nil 时，返回全量结果不做分页
+	if req == nil {
+		handler := &SyncPageHandler{
+			RemoteData: remoteItems,
+			LocalIndex: localIndexInterface,
+			CompareFunc: func(item interface{}, localIndex map[string]interface{}) *platform_game.SyncDiff {
+				remoteCategory := item.(*vendors.GameCategoryInfo)
+				localIdx := make(map[string]*ent.GameCategory)
+				for k, v := range localIndex {
+					localIdx[k] = v.(*ent.GameCategory)
+				}
+				return s.compareOne(remoteCategory, localIdx)
+			},
+			PageSize: 0,
+			Page:     0,
+			SkipNoop: false,
 		}
+		result := handler.Handle(int64(len(remoteResp.Data)), int64(len(local)))
+		return result, remoteResp, nil
 	}
 
-	return result, nil
+	// 创建分页处理器
+	handler := &SyncPageHandler{
+		RemoteData: remoteItems,
+		LocalIndex: localIndexInterface,
+		CompareFunc: func(item interface{}, localIndex map[string]interface{}) *platform_game.SyncDiff {
+			remoteCategory := item.(*vendors.GameCategoryInfo)
+			localIdx := make(map[string]*ent.GameCategory)
+			for k, v := range localIndex {
+				localIdx[k] = v.(*ent.GameCategory)
+			}
+			return s.compareOne(remoteCategory, localIdx)
+		},
+		PageSize: req.PageSize,
+		Page:     req.Page,
+		SkipNoop: req.IsSkip,
+	}
+
+	// 处理分页逻辑
+	result := handler.Handle(int64(len(remoteResp.Data)), int64(len(local)))
+	return result, remoteResp, nil
 }
 
 // processCategoryData 处理分类数据的创建和更新（从 Run 提取的业务逻辑）
-func (s *CategorySyncService) processCategoryData(ctx context.Context, tx *gorm.DB, remoteData []*vendors.GameCategoryInfo, applyResult *vendors.SyncApplyResult) error {
+func (s *CategorySyncService) processCategoryDataWithProgress(ctx context.Context, tx *gorm.DB, remoteData []*vendors.GameCategoryInfo, applyResult *Apply, syncCols []string, checkpointID int64) error {
 	i := 0
 	counterMap := make(map[string]int) // 用于记录每个 source_category_code 的计数，确保唯一性
+
 	for _, remoteCat := range remoteData {
 		if counterMap[remoteCat.Code] > 0 {
 			logger.Errorf("[分类同步] 检测到重复的远程分类编码: %s, 计数器: %d, 跳过处理", remoteCat.Code, counterMap[remoteCat.Code])
@@ -96,27 +125,25 @@ func (s *CategorySyncService) processCategoryData(ctx context.Context, tx *gorm.
 		counterMap[remoteCat.Code]++
 		i++
 		// 检查本地是否存在该分类（使用上游分类编码）
-		var localCat model.Category
+		var localCat ent.GameCategory
 		exists := tx.Where("source_category_code = ?", remoteCat.Code).
 			Where("deleted_at IS NULL").
 			First(&localCat).Error == nil
-
+		categoryCode := remoteCat.Code + "_" + fmt.Sprintf("%d", i)
+		nameI18n := map[string]interface{}{"default": remoteCat.Name}
+		sourceNameI18n := map[string]interface{}{"default": remoteCat.Name}
 		if !exists {
 			// 新增分类 - 生成 P9 内部的分类编码
-			categoryCode := remoteCat.Code + "_" + fmt.Sprintf("%d", i)
-			nameI18n := model.JSONMap{"default": remoteCat.Name}
-			sourceNameI18n := model.JSONMap{"default": remoteCat.Name}
-
-			newCat := model.Category{
-				SourceID:           remoteCat.Id,
+			newCat := ent.GameCategory{
+				SourceId:           remoteCat.Id,
 				CategoryCode:       categoryCode,
 				SourceCategoryCode: remoteCat.Code,
-				NameI18n:           nameI18n,
-				SourceNameI18n:     sourceNameI18n,
-				SortNo:             remoteCat.Weight,
-				SourceSortNo:       remoteCat.Weight,
-				Status:             remoteCat.Status,
-				SourceStatus:       remoteCat.Status,
+				NameI18n:           JSONToString(nameI18n),
+				SourceNameI18n:     JSONToString(sourceNameI18n),
+				SortNo:             remoteCat.Id,
+				SourceSortNo:       sql.NullInt64{Int64: 0, Valid: true},
+				Status:             int64(remoteCat.Status),
+				SourceStatus:       int64(remoteCat.Status),
 				CreatedAt:          time.Now(),
 				UpdatedAt:          time.Now(),
 			}
@@ -129,17 +156,28 @@ func (s *CategorySyncService) processCategoryData(ctx context.Context, tx *gorm.
 			logger.Infof("[分类新增] ✓ 已创建新分类: %s", remoteCat.Code)
 		} else {
 			// 更新分类信息
-			categoryCode := remoteCat.Code + "_" + fmt.Sprintf("%d", i)
-			sourceNameI18n := model.JSONMap{"default": remoteCat.Name}
-			if err := tx.Model(&localCat).
-				Updates(map[string]interface{}{
+			updateData := map[string]interface{}{
+				"category_code":        categoryCode,
+				"source_category_code": remoteCat.Code,
+				"source_name_i18n":     JSONToString(sourceNameI18n),
+				"source_sort_no":       0,
+				"source_status":        int64(remoteCat.Status),
+			}
+			if len(syncCols) > 0 {
+				updateData = GetUpdatedData(map[string]interface{}{
 					"category_code":        categoryCode,
 					"source_category_code": remoteCat.Code,
-					"source_name_i18n":     sourceNameI18n,
-					"source_sort_no":       remoteCat.Weight,
-					"source_status":        remoteCat.Status,
-					"updated_at":           time.Now(),
-				}).Error; err != nil {
+					"name_i18n":            JSONToString(nameI18n),
+					"source_name_i18n":     JSONToString(sourceNameI18n),
+					"sort_no":              remoteCat.Id,
+					"source_sort_no":       0,
+					"status":               int64(remoteCat.Status),
+					"source_status":        int64(remoteCat.Status),
+				}, syncCols)
+				updateData["updated_at"] = time.Now()
+			}
+			if err := tx.Model(&localCat).
+				Updates(updateData).Error; err != nil {
 				logger.Errorf("[分类更新] 失败: %v", err)
 				applyResult.Failed++
 				continue
@@ -147,90 +185,141 @@ func (s *CategorySyncService) processCategoryData(ctx context.Context, tx *gorm.
 			applyResult.Updated++
 			logger.Infof("[分类更新] ✓ 已更新分类: %s", remoteCat.Code)
 		}
+
 	}
+
 	return nil
 }
 
 // Run 执行分类同步
-func (s *CategorySyncService) Run(ctx context.Context, client vendors.VendorGameServiceClient) (*vendors.SyncRunResp, error) {
+func (s *CategorySyncService) Run(ctx context.Context, client vendors.VendorGameServiceClient, syncCols []string, checkpointID int64, isGetRemoteClient bool) error {
 	logger.Infof("[分类同步] ===== 开始执行同步 =====")
 
 	// 先执行预检查
 	logger.Infof("[分类同步] 执行预检查")
-	previewResp, err := s.Preview(ctx, client)
+	previewResp, remoteResp, err := s.Preview(ctx, client, nil, isGetRemoteClient)
 	if err != nil {
 		logger.Errorf("[分类同步] 预检查失败: %v", err)
-		return nil, err
+		return err
+	}
+	s.progressQueue.Start(ctx)
+	if previewResp.Stats.UpdateTotal == 0 && previewResp.Stats.CreateTotal == 0 && previewResp.Stats.DeleteTotal == 0 && previewResp.Stats.RemoteTotal == previewResp.Stats.LocalTotal {
+		defer s.progressQueue.Stop()
+		logger.Infof("[分类同步] 无需更新，直接返回")
+		logger.Infof("[分类同步] UpdateTotal=%d, CreateTotal=%d, DeleteTotal=%d, RemoteTotal=%d, LocalTotal=%d",
+			previewResp.Stats.UpdateTotal, previewResp.Stats.CreateTotal, previewResp.Stats.DeleteTotal, previewResp.Stats.RemoteTotal, previewResp.Stats.LocalTotal)
+		// 更新checkpointID进度为100
+		s.progressQueue.Send(&ProgressMessage{
+			TableName:      "category",
+			ProcessedCount: previewResp.Stats.RemoteTotal,
+			RemoteTotal:    previewResp.Stats.RemoteTotal,
+			LocalTotal:     previewResp.Stats.LocalTotal,
+			Progress:       100,
+			CheckpointID:   checkpointID,
+		})
+		return nil
 	}
 	logger.Infof("[分类同步] 预检查完成: remote_total=%d, local_total=%d",
 		previewResp.Stats.RemoteTotal, previewResp.Stats.LocalTotal)
 
-	// 构建执行结果
-	result := &vendors.SyncRunResp{
-		Preview: previewResp,
-		Apply:   &vendors.SyncApplyResult{},
-	}
-
 	// 获取远程分类数据
 	logger.Infof("[分类同步] 获取远程分类数据")
-	// remoteResp, err := client.GetGameCategory(ctx, &emptypb.Empty{})
-	// if err != nil {
-	// 	logger.Errorf("[分类同步] 获取远程数据失败: %v", err)
-	// 	return nil, err
-	// }
-	remoteResp, err := getTestGameCategory()
-	if err != nil {
-		logger.Errorf("[分类同步] 获取远程数据失败: %v", err)
-		return nil, err
-	}
+	// remoteResp 已经从 Preview 获取，无需再次获取
 	logger.Infof("[分类同步] 获取到远程数据: count=%d", len(remoteResp.Data))
 
-	// 在事务中执行数据库操作
-	logger.Infof("[分类同步] 开始处理分类数据")
-	err = s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		return s.processCategoryData(ctx, tx, remoteResp.Data, result.Apply)
-	})
-	if err != nil {
-		logger.Errorf("[分类同步] 处理分类数据失败: %v", err)
-		return nil, err
-	}
-	logger.Infof("[分类同步] 处理完成: created=%d, updated=%d, deleted=%d, failed=%d",
-		result.Apply.Created, result.Apply.Updated, result.Apply.Deleted, result.Apply.Failed)
+	// 创建初始检查点记录（此时progress=0）
+	logger.Infof("[分类同步] 创建初始检查点 (syncCols=%v)", syncCols)
+	logger.Infof("[分类同步] ✓ 检查点已创建: checkpointID=%d", checkpointID)
 
-	// 执行逆向同步
-	logger.Infof("[分类同步] 开始执行逆向同步")
-	reverseResp, err := s.ReverseSync(ctx, client)
-	if err != nil {
-		logger.Errorf("❌ [分类同步] 逆向同步失败: %v", err)
-		return nil, err
-	}
-	result.Apply.Deleted = reverseResp.Apply.Deleted
-	logger.Infof("[分类同步] 逆向同步完成: deleted=%d", result.Apply.Deleted)
+	go func() {
+		defer s.progressQueue.Stop()
+		// 在事务中执行数据库操作
+		logger.Infof("[分类同步] 开始处理分类数据")
+		// 把remoteResp.Data拆分为100条一批进行处理（可根据实际情况调整批次大小）
+		batchSize := BatchSize
+		totalCount := len(remoteResp.Data)
+		apply := &Apply{}
+		for i := 0; i < len(remoteResp.Data); i += batchSize {
+			end := i + batchSize
+			if end > len(remoteResp.Data) {
+				end = len(remoteResp.Data)
+			}
+			batch := remoteResp.Data[i:end]
+			logger.Infof("[分类同步] 处理批次: start=%d, end=%d", i, end)
+			// 模拟等待
+			logger.Debugf("[进度队列] 模拟处理延迟: 表=category, checkpointID=%d", checkpointID)
+			time.Sleep(1000 * time.Millisecond)
+			logger.Debugf("[进度队列] 开始处理消息: 表=category, checkpointID=%d", checkpointID)
+			err = s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+				return s.processCategoryDataWithProgress(ctx, tx, batch, apply, syncCols, checkpointID)
+			})
+			if err != nil {
+				logger.Errorf("[分类同步] 处理分类数据失败: %v", err)
+				return
+			}
+			progress := CalculateProgress(int64(i+1), int64(totalCount))
+			msg := &ProgressMessage{
+				TableName:      "category",
+				ProcessedCount: int32(i + 1),
+				RemoteTotal:    previewResp.Stats.RemoteTotal,
+				LocalTotal:     previewResp.Stats.LocalTotal,
+				Progress:       progress,
+				CheckpointID:   checkpointID,
+				Created:        apply.Created,
+				Updated:        apply.Updated,
+				Deleted:        apply.Deleted,
+				Failed:         apply.Failed,
+				Skipped:        apply.Skipped,
+			}
+			logger.Infof("[分类同步] 发送进度消息: 表=category, 处理数=%d, 总数=%d, 进度=%d%%", i+1, totalCount, progress)
+			s.progressQueue.Send(msg)
+		}
+		if err != nil {
+			logger.Errorf("[分类同步] 处理分类数据失败: %v", err)
+			return
+		}
 
-	// 保存同步检查点
-	logger.Infof("[分类同步] 准备保存同步检查点")
-	checkpointMgr := NewCheckpointManager(s.db)
-	checkpointValue := previewResp.Stats.RemoteTotal // 使用远程总数作为检查点值
-	if err := checkpointMgr.UpdateCheckpoint(ctx, "CATEGORY",
-		fmt.Sprintf("%d", checkpointValue), result, nil); err != nil {
-		logger.Errorf("[分类同步] 保存检查点失败: %v", err)
-		return nil, err
-	}
-	logger.Infof("[分类同步] ✓ 检查点已保存")
+		// 执行逆向同步
+		logger.Infof("[分类同步] 开始执行逆向同步")
+		_, err := s.ReverseSync(ctx, client, remoteResp, apply)
+		if err != nil {
+			logger.Errorf("❌ [分类同步] 逆向同步失败: %v", err)
+			return
+		}
+		logger.Infof("[分类同步] 逆向同步完成: deleted=%d", apply.Deleted)
 
-	logger.Infof("[分类同步] ===== 同步完成 =====")
-	return result, nil
+		// 最后一次进度更新（100%）
+		logger.Infof("[分类同步] 发送最终进度消息（100%%）")
+		finalMsg := &ProgressMessage{
+			TableName:      "category",
+			ProcessedCount: previewResp.Stats.RemoteTotal,
+			RemoteTotal:    previewResp.Stats.RemoteTotal,
+			LocalTotal:     previewResp.Stats.LocalTotal,
+			Progress:       100,
+			CheckpointID:   checkpointID,
+			Created:        apply.Created,
+			Updated:        apply.Updated,
+			Deleted:        apply.Deleted,
+			Failed:         apply.Failed,
+			Skipped:        apply.Skipped,
+		}
+		s.progressQueue.Send(finalMsg)
+
+		logger.Infof("[分类同步] ===== 同步完成 =====")
+	}()
+
+	return nil
 }
 
 // fetchLocal 获取本地所有分类
-func (s *CategorySyncService) fetchLocal(ctx context.Context) ([]*model.Category, map[string]*model.Category, error) {
-	var categories []*model.Category
+func (s *CategorySyncService) fetchLocal(ctx context.Context) ([]*ent.GameCategory, map[string]*ent.GameCategory, error) {
+	var categories []*ent.GameCategory
 	if err := s.db.WithContext(ctx).Where("deleted_at IS NULL").Find(&categories).Error; err != nil {
 		return nil, nil, err
 	}
 
 	// 构建本地分类索引（按上游分类编码）
-	index := make(map[string]*model.Category)
+	index := make(map[string]*ent.GameCategory)
 	for _, cat := range categories {
 		index[cat.SourceCategoryCode] = cat
 	}
@@ -239,11 +328,11 @@ func (s *CategorySyncService) fetchLocal(ctx context.Context) ([]*model.Category
 }
 
 // compareOne 比较单个分类的本地和远程数据
-func (s *CategorySyncService) compareOne(remote *vendors.GameCategoryInfo, localIndex map[string]*model.Category) *vendors.SyncDiff {
+func (s *CategorySyncService) compareOne(remote *vendors.GameCategoryInfo, localIndex map[string]*ent.GameCategory) *platform_game.SyncDiff {
 	local, exists := localIndex[remote.Code]
 
 	// 初始化差异记录
-	diff := &vendors.SyncDiff{
+	diff := &platform_game.SyncDiff{
 		ObjectType: "category",
 		ObjectId:   remote.Id,
 		ObjectCode: remote.Code,
@@ -258,17 +347,24 @@ func (s *CategorySyncService) compareOne(remote *vendors.GameCategoryInfo, local
 		return diff
 	}
 
-	// 对比分类名称是否变更
-	localName := ""
-	if local.SourceNameI18n != nil {
-		if nameVal, ok := local.SourceNameI18n["default"]; ok {
-			localName = nameVal.(string)
-		}
+	if CompareName(local.SourceNameI18n, remote.Name) {
+		diff.Action = "update"
+		diff.Reason = fmt.Sprintf("分类名称变更: %s -> %s", local.SourceNameI18n, remote.Name)
+		diff.ConflictType = "name_changed"
+		return diff
 	}
 
-	if localName != remote.Name {
+	if local.SourceCategoryCode != remote.Code {
 		diff.Action = "update"
-		diff.Reason = fmt.Sprintf("分类名称变更: %s -> %s", localName, remote.Name)
+		diff.Reason = fmt.Sprintf("分类编码变更: %s -> %s", local.SourceCategoryCode, remote.Code)
+		diff.ConflictType = "code_changed"
+		return diff
+	}
+
+	if local.SourceStatus != int64(remote.Status) {
+		diff.Action = "update"
+		diff.Reason = fmt.Sprintf("分类状态变更: %d -> %d", local.SourceStatus, remote.Status)
+		diff.ConflictType = "status_changed"
 		return diff
 	}
 
@@ -278,21 +374,11 @@ func (s *CategorySyncService) compareOne(remote *vendors.GameCategoryInfo, local
 	return diff
 }
 
-// ReverseSync 逆向同步：检查本地数据在远程是否存在，不存在则软删除
-func (s *CategorySyncService) ReverseSync(ctx context.Context, client vendors.VendorGameServiceClient) (*vendors.SyncRunResp, error) {
+// 逆向同步：检查本地数据在远程是否存在，不存在则软删除
+func (s *CategorySyncService) ReverseSync(ctx context.Context, client vendors.VendorGameServiceClient, remoteResp *RemoteCategoryResponse, apply *Apply) (*Apply, error) {
 	logger.Info("[分类逆向同步] 开始执行逆向同步")
 
 	// 获取远程分类数据
-	// remoteResp, err := client.GetGameCategory(ctx, &emptypb.Empty{})
-	// if err != nil {
-	// 	logger.Errorf("❌ [分类逆向同步] 获取远程数据失败: %v", err)
-	// 	return nil, err
-	// }
-	remoteResp, err := getTestGameCategory()
-	if err != nil {
-		logger.Errorf("❌ [分类逆向同步] 获取测试数据失败: %v", err)
-		return nil, err
-	}
 	logger.Infof("[分类逆向同步] ✓ 获取远程数据成功, 共 %d 条", len(remoteResp.Data))
 
 	// 构建远程分类编码索引
@@ -304,7 +390,7 @@ func (s *CategorySyncService) ReverseSync(ctx context.Context, client vendors.Ve
 	logger.Infof("[分类逆向同步] 远程分类编码总数: %d", len(remoteIndex))
 
 	// 获取本地分类数据
-	var localCategories []*model.Category
+	var localCategories []*ent.GameCategory
 	if err := s.db.WithContext(ctx).Where("deleted_at IS NULL").Find(&localCategories).Error; err != nil {
 		logger.Errorf("❌ [分类逆向同步] 获取本地数据失败: %v", err)
 		return nil, err
@@ -314,34 +400,21 @@ func (s *CategorySyncService) ReverseSync(ctx context.Context, client vendors.Ve
 	// 打印本地所有分类编码
 	for _, localCat := range localCategories {
 		logger.Debugf("[分类逆向同步] 本地分类编码: %s (ID: %d, deleted_at: %v)",
-			localCat.SourceCategoryCode, localCat.ID, localCat.DeletedAt)
-	}
-
-	// 构建执行结果
-	result := &vendors.SyncRunResp{
-		Preview: &vendors.SyncPreviewResp{
-			Stats: &vendors.SyncStats{
-				LocalTotal: int64(len(localCategories)),
-			},
-		},
-		Apply: &vendors.SyncApplyResult{},
+			localCat.SourceCategoryCode, localCat.Id, localCat.DeletedAt)
 	}
 
 	// 在事务中执行软删除
-	err = s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+	err := s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		for _, localCat := range localCategories {
 			// 如果本地分类在远程不存在，则软删除
 			if !remoteIndex[localCat.SourceCategoryCode] {
-				logger.Infof("[分类逆向同步] 检测到本地孤立分类: %s (ID: %d)，准备软删除",
-					localCat.SourceCategoryCode, localCat.ID)
-
 				if err := tx.Model(localCat).Update("deleted_at", time.Now()).Error; err != nil {
 					logger.Errorf("❌ [分类逆向同步] 软删除失败: %v", err)
-					result.Apply.Failed++
+					apply.Failed++
 					continue
 				}
-				result.Apply.Deleted++
-				logger.Infof("[分类逆向同步] ✓ 已软删除分类: %s (ID: %d)", localCat.SourceCategoryCode, localCat.ID)
+				apply.Deleted++
+				logger.Infof("[分类逆向同步] ✓ 已软删除分类: %s (ID: %d)", localCat.SourceCategoryCode, localCat.Id)
 			} else {
 				logger.Debugf("[分类逆向同步] 本地分类在远程存在，无需删除: %s", localCat.SourceCategoryCode)
 			}
@@ -353,16 +426,44 @@ func (s *CategorySyncService) ReverseSync(ctx context.Context, client vendors.Ve
 		return nil, err
 	}
 
-	logger.Infof("[分类逆向同步] ✓ 完成，删除: %d", result.Apply.Deleted)
-	return result, nil
+	logger.Infof("[分类逆向同步] ✓ 完成，删除: %d", apply.Deleted)
+	return apply, nil
 }
 
-func getTestGameCategory() (*vendors.GetGameCategoryResp, error) {
-	var list []*vendors.GameCategoryInfo
-	if err := loadTestJSON("category.json", &list); err != nil {
-		logger.Errorf("[分类测试数据] 读取 category.json 失败: %v", err)
-		return &vendors.GetGameCategoryResp{Data: []*vendors.GameCategoryInfo{}}, err
-	}
+func getRemoteGameCategory(ctx context.Context, client vendors.VendorGameServiceClient, isGetRemoteClient bool) (*RemoteCategoryResponse, error) {
+	if isGetRemoteClient {
+		logger.Infof("[同步数据源] 正在获取远程分类数据...")
+		remoteResp, err := client.GetGameCategory(ctx, &vendors.Empty{})
+		if err != nil {
+			logger.Errorf("❌ [同步数据源] 获取远程数据失败: %v", err)
+			return nil, err
+		}
+		logger.Infof("[同步数据源] ✓ 获取远程分类数据成功, 共 %d 条", len(remoteResp.CategoryList))
+		return &RemoteCategoryResponse{Data: remoteResp.CategoryList}, nil
+	} else {
+		logger.Infof("[同步数据源] 正在获取本地分类数据...")
+		var list []*vendors.GameCategoryInfo
+		if err := loadLocalJSON("category.json", &list); err != nil {
+			logger.Errorf("[同步数据源] 读取 category.json 失败: %v", err)
+			return &RemoteCategoryResponse{Data: []*vendors.GameCategoryInfo{}}, err
+		}
 
-	return &vendors.GetGameCategoryResp{Data: list}, nil
+		// 转换 vendors.GameCategoryInfo 为 platformgame.CategoryInfo
+		categoryList := make([]*vendors.GameCategoryInfo, 0, len(list))
+		for _, item := range list {
+			categoryList = append(categoryList, &vendors.GameCategoryInfo{
+				Id:      item.Id,
+				Code:    item.Code,
+				Name:    item.Name,
+				Status:  item.Status,
+				Channel: item.Channel,
+			})
+		}
+		logger.Infof("[同步数据源] ✓ 获取本地分类数据成功, 共 %d 条", len(categoryList))
+		return &RemoteCategoryResponse{Data: categoryList}, nil
+	}
+}
+
+type RemoteCategoryResponse struct {
+	Data []*vendors.GameCategoryInfo `json:"data"`
 }

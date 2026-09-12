@@ -19,10 +19,8 @@ type (
 	AgentLineAllocationService interface {
 		// 获取代理子线路分配列表
 		List(ctx context.Context, in *agentlineallocation.ListAgentLineAllocationsRequest, opts ...grpc.CallOption) (*agentlineallocation.ListAgentLineAllocationsResponse, error)
-		// 分配代理子线路
-		Assign(ctx context.Context, in *agentlineallocation.AssignAgentLineRequest, opts ...grpc.CallOption) (*agentlineallocation.AssignAgentLineResponse, error)
-		// 取消代理子线路分配
-		Unassign(ctx context.Context, in *agentlineallocation.UnassignAgentLineRequest, opts ...grpc.CallOption) (*agentlineallocation.UnassignAgentLineResponse, error)
+		// 保存代理子线路分配
+		Save(ctx context.Context, in *agentlineallocation.SaveAgentLineAllocationsRequest, opts ...grpc.CallOption) (*agentlineallocation.SaveAgentLineAllocationsResponse, error)
 	}
 
 	defaultAgentLineAllocationService struct {
@@ -42,14 +40,8 @@ func (m *defaultAgentLineAllocationService) List(ctx context.Context, in *agentl
 	return client.List(ctx, in, opts...)
 }
 
-// 分配代理子线路
-func (m *defaultAgentLineAllocationService) Assign(ctx context.Context, in *agentlineallocation.AssignAgentLineRequest, opts ...grpc.CallOption) (*agentlineallocation.AssignAgentLineResponse, error) {
+// 保存代理子线路分配
+func (m *defaultAgentLineAllocationService) Save(ctx context.Context, in *agentlineallocation.SaveAgentLineAllocationsRequest, opts ...grpc.CallOption) (*agentlineallocation.SaveAgentLineAllocationsResponse, error) {
 	client := operator.NewAgentLineAllocationServiceClient(m.cli.Conn())
-	return client.Assign(ctx, in, opts...)
-}
-
-// 取消代理子线路分配
-func (m *defaultAgentLineAllocationService) Unassign(ctx context.Context, in *agentlineallocation.UnassignAgentLineRequest, opts ...grpc.CallOption) (*agentlineallocation.UnassignAgentLineResponse, error) {
-	client := operator.NewAgentLineAllocationServiceClient(m.cli.Conn())
-	return client.Unassign(ctx, in, opts...)
+	return client.Save(ctx, in, opts...)
 }

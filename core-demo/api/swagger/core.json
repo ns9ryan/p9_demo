@@ -704,6 +704,17 @@
                   "description": "User ID | 用户ID",
                   "type": "integer"
                 },
+                "ip_whitelist": {
+                  "description": "IP whitelist | 登录 IP 白名单",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "ip_whitelist_enabled": {
+                  "description": "IP whitelist enabled | 是否开启登录 IP 白名单",
+                  "type": "integer"
+                },
                 "is_super_admin": {
                   "description": "Super admin | 是否超管",
                   "type": "boolean"
@@ -722,6 +733,13 @@
                 },
                 "role_codes": {
                   "description": "Role codes | 角色编码",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "role_names": {
+                  "description": "Role names | 角色名称",
                   "type": "array",
                   "items": {
                     "type": "string"
@@ -832,6 +850,17 @@
                   "description": "User ID | 用户ID",
                   "type": "integer"
                 },
+                "ip_whitelist": {
+                  "description": "IP whitelist | 登录 IP 白名单",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "ip_whitelist_enabled": {
+                  "description": "IP whitelist enabled | 是否开启登录 IP 白名单",
+                  "type": "integer"
+                },
                 "is_super_admin": {
                   "description": "Super admin | 是否超管",
                   "type": "boolean"
@@ -850,6 +879,13 @@
                 },
                 "role_codes": {
                   "description": "Role codes | 角色编码",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "role_names": {
+                  "description": "Role names | 角色名称",
                   "type": "array",
                   "items": {
                     "type": "string"
@@ -1729,6 +1765,14 @@
                     "type": "string"
                   }
                 },
+                "i18n_code": {
+                  "description": "Site | 站点编码，空则不按站点过滤",
+                  "type": "string"
+                },
+                "i18n_group": {
+                  "description": "Group | 分组，空则不按分组过滤",
+                  "type": "string"
+                },
                 "trans_key": {
                   "description": "Key | 词条key",
                   "type": "string"
@@ -2279,7 +2323,10 @@
                     "is_super_admin",
                     "status",
                     "role_codes",
-                    "created_at"
+                    "role_names",
+                    "created_at",
+                    "ip_whitelist_enabled",
+                    "ip_whitelist"
                   ],
                   "properties": {
                     "created_at": {
@@ -2302,6 +2349,17 @@
                       "description": "User ID | 用户ID",
                       "type": "integer"
                     },
+                    "ip_whitelist": {
+                      "description": "IP whitelist | 登录 IP 白名单",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "ip_whitelist_enabled": {
+                      "description": "IP whitelist enabled | 是否开启登录 IP 白名单",
+                      "type": "integer"
+                    },
                     "is_super_admin": {
                       "description": "Super admin | 是否超管",
                       "type": "boolean"
@@ -2320,6 +2378,13 @@
                     },
                     "role_codes": {
                       "description": "Role codes | 角色编码",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "role_names": {
+                      "description": "Role names | 角色名称",
                       "type": "array",
                       "items": {
                         "type": "string"
@@ -3454,7 +3519,7 @@
         }
       }
     },
-    "/admin/preview-token": {
+    "/admin/previewToken": {
       "post": {
         "description": "签发总网预览令牌，只读",
         "consumes": [
@@ -3593,7 +3658,10 @@
                     "is_super_admin",
                     "status",
                     "role_codes",
-                    "created_at"
+                    "role_names",
+                    "created_at",
+                    "ip_whitelist_enabled",
+                    "ip_whitelist"
                   ],
                   "properties": {
                     "created_at": {
@@ -3616,6 +3684,17 @@
                       "description": "User ID | 用户ID",
                       "type": "integer"
                     },
+                    "ip_whitelist": {
+                      "description": "IP whitelist | 登录 IP 白名单",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "ip_whitelist_enabled": {
+                      "description": "IP whitelist enabled | 是否开启登录 IP 白名单",
+                      "type": "integer"
+                    },
                     "is_super_admin": {
                       "description": "Super admin | 是否超管",
                       "type": "boolean"
@@ -3634,6 +3713,13 @@
                     },
                     "role_codes": {
                       "description": "Role codes | 角色编码",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "role_names": {
+                      "description": "Role names | 角色名称",
                       "type": "array",
                       "items": {
                         "type": "string"
@@ -4152,6 +4238,17 @@
                   "description": "User ID | 用户ID",
                   "type": "integer"
                 },
+                "ip_whitelist": {
+                  "description": "IP whitelist | 登录 IP 白名单",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "ip_whitelist_enabled": {
+                  "description": "IP whitelist enabled | 是否开启登录 IP 白名单",
+                  "type": "integer"
+                },
                 "is_super_admin": {
                   "description": "Super admin | 是否超管",
                   "type": "boolean"
@@ -4170,6 +4267,13 @@
                 },
                 "role_codes": {
                   "description": "Role codes | 角色编码",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "role_names": {
+                  "description": "Role names | 角色名称",
                   "type": "array",
                   "items": {
                     "type": "string"
@@ -4292,6 +4396,17 @@
                   "description": "User ID | 用户ID",
                   "type": "integer"
                 },
+                "ip_whitelist": {
+                  "description": "IP whitelist | 登录 IP 白名单",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "ip_whitelist_enabled": {
+                  "description": "IP whitelist enabled | 是否开启登录 IP 白名单",
+                  "type": "integer"
+                },
                 "is_super_admin": {
                   "description": "Super admin | 是否超管",
                   "type": "boolean"
@@ -4310,6 +4425,13 @@
                 },
                 "role_codes": {
                   "description": "Role codes | 角色编码",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "role_names": {
+                  "description": "Role names | 角色名称",
                   "type": "array",
                   "items": {
                     "type": "string"
@@ -4370,6 +4492,17 @@
                   "description": "User ID | 用户ID",
                   "type": "integer"
                 },
+                "ip_whitelist": {
+                  "description": "IP whitelist | 登录 IP 白名单",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "ip_whitelist_enabled": {
+                  "description": "IP whitelist enabled | 是否开启登录 IP 白名单",
+                  "type": "integer"
+                },
                 "is_super_admin": {
                   "description": "Super admin | 是否超管",
                   "type": "boolean"
@@ -4393,6 +4526,13 @@
                     "type": "string"
                   }
                 },
+                "role_names": {
+                  "description": "Role names | 角色名称",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
                 "status": {
                   "description": "Status | 状态",
                   "type": "integer"
@@ -4403,6 +4543,68 @@
                 },
                 "username": {
                   "description": "Username | 用户名",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/user/ipWhitelist": {
+      "post": {
+        "description": "更新用户登录 IP 白名单",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "更新用户登录 IP 白名单",
+        "operationId": "userUpdateUserIpWhitelist",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "id",
+                "ip_whitelist_enabled",
+                "ip_whitelist"
+              ],
+              "properties": {
+                "id": {
+                  "description": "User ID | 用户ID",
+                  "type": "integer"
+                },
+                "ip_whitelist": {
+                  "description": "IP whitelist | IP 或 CIDR 列表",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "ip_whitelist_enabled": {
+                  "description": "IP whitelist enabled | 是否开启，0 否 1 是",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
                   "type": "string"
                 }
               }
@@ -4487,7 +4689,10 @@
                       "is_super_admin",
                       "status",
                       "role_codes",
-                      "created_at"
+                      "role_names",
+                      "created_at",
+                      "ip_whitelist_enabled",
+                      "ip_whitelist"
                     ],
                     "properties": {
                       "created_at": {
@@ -4510,6 +4715,17 @@
                         "description": "User ID | 用户ID",
                         "type": "integer"
                       },
+                      "ip_whitelist": {
+                        "description": "IP whitelist | 登录 IP 白名单",
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "ip_whitelist_enabled": {
+                        "description": "IP whitelist enabled | 是否开启登录 IP 白名单",
+                        "type": "integer"
+                      },
                       "is_super_admin": {
                         "description": "Super admin | 是否超管",
                         "type": "boolean"
@@ -4528,6 +4744,13 @@
                       },
                       "role_codes": {
                         "description": "Role codes | 角色编码",
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "role_names": {
+                        "description": "Role names | 角色名称",
                         "type": "array",
                         "items": {
                           "type": "string"
@@ -4831,7 +5054,7 @@
       "Token": []
     }
   ],
-  "x-date": "2026-09-10 11:39:48",
+  "x-date": "2026-09-11 16:00:50",
   "x-description": "This is a goctls generated swagger file.",
   "x-github": "https://github.com/suyuan32/simple-admin-core",
   "x-goctl-version": "v1.14.8",

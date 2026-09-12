@@ -47,12 +47,5 @@
         "name": "其他",
         "status": 1,
         "channel": 1
-    },
-    {
-        "id": 13,
-        "code": "FH",
-        "name": "其他AAA",
-        "status": 1,
-        "channel": 1
     }
 ]

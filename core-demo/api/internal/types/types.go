@@ -41,6 +41,8 @@ type UserPublic struct {
 	Status int32 `json:"status"`
 	// Role codes | 角色编码
 	RoleCodes []string `json:"role_codes"`
+	// Role names | 角色名称
+	RoleNames []string `json:"role_names"`
 	// Home path | 首页路径
 	HomePath string `json:"home_path,optional"`
 	// Created at unix | 创建时间
@@ -51,6 +53,10 @@ type UserPublic struct {
 	Mobile string `json:"mobile,optional"`
 	// Email | 邮箱
 	Email string `json:"email,optional"`
+	// IP whitelist enabled | 是否开启登录 IP 白名单
+	IpWhitelistEnabled int32 `json:"ip_whitelist_enabled"`
+	// IP whitelist | 登录 IP 白名单
+	IpWhitelist []string `json:"ip_whitelist"`
 }
 
 // Login response | 登录响应
@@ -235,6 +241,16 @@ type BindRolesReq struct {
 	UserId int64 `json:"user_id"`
 	// Role IDs | 角色ID
 	RoleIds []int64 `json:"role_ids"`
+}
+
+// Update user IP whitelist request | 更新用户登录 IP 白名单
+type UpdateUserIpWhitelistReq struct {
+	// User ID | 用户ID
+	Id int64 `json:"id"`
+	// IP whitelist enabled | 是否开启，0 否 1 是
+	IpWhitelistEnabled int32 `json:"ip_whitelist_enabled"`
+	// IP whitelist | IP 或 CIDR 列表
+	IpWhitelist []string `json:"ip_whitelist"`
 }
 
 // Operator info | 分站信息
@@ -555,6 +571,10 @@ type I18nDictResp struct {
 
 // Update i18n by key request | 按词条key更新多语言
 type UpdateI18nByKeyReq struct {
+	// Site | 站点编码，空则不按站点过滤
+	I18nCode string `json:"i18n_code,optional"`
+	// Group | 分组，空则不按分组过滤
+	I18nGroup string `json:"i18n_group,optional"`
 	// Key | 词条key
 	TransKey string `json:"trans_key"`
 	// Data | 各语言译文

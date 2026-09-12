@@ -1,0 +1,66 @@
+syntax = "v1"
+
+import "types/common.api"
+
+type (
+	// 分站经营地区分配信息
+	RegionAllocationInfo {
+		// 国家地区编码
+		RegionCode string `json:"region_code"`
+		// 名称翻译Key
+		NameKey string `json:"name_key"`
+		// 当前语言名称, 开发阶段用于调试
+		Name string `json:"name"`
+		// 国家地区状态: 1启用, 2停用
+		Status int64 `json:"status"`
+		// 是否已分配
+		Allocated bool `json:"allocated"`
+		// 分配时间, 未分配时为空
+		AllocatedAt *int64 `json:"allocated_at,optional"`
+	}
+	// 获取经营地区分配列表请求
+	ListRegionAllocationsRequest {
+		// 分页参数
+		PageRequest
+		// 分站ID
+		OperatorId int64 `form:"operator_id" validate:"required,gt=0"`
+		// 搜索关键字, 匹配国家地区编码或名称
+		Keyword *string `form:"keyword,optional" validate:"omitempty,max=100"`
+		// 是否已分配
+		Allocated *bool `form:"allocated,optional"`
+		// 国家地区状态: 1启用, 2停用
+		Status *int64 `form:"status,optional" validate:"omitempty,oneof=1 2"`
+	}
+	// 获取经营地区分配列表响应
+	ListRegionAllocationsResponse {
+		// 数据总数
+		Total int64 `json:"total"`
+		// 经营地区分配列表
+		List []RegionAllocationInfo `json:"list"`
+	}
+	// 保存经营地区分配请求
+	SaveRegionAllocationsRequest {
+		// 分站ID
+		OperatorId int64 `json:"operator_id" validate:"required,gt=0"`
+		// 当前分配的国家地区编码
+		RegionCodes []string `json:"region_codes" validate:"omitempty,dive,len=2"`
+	}
+	// 保存经营地区分配响应
+	SaveRegionAllocationsResponse  {}
+)
+
+@server (
+	group:      region_allocation
+	prefix:     /admin/operator/region-allocation
+	middleware: Jwt,ActionLog,Authority
+)
+service platform_operator {
+	// 获取经营地区分配列表
+	@handler ListRegionAllocations
+	get /list (ListRegionAllocationsRequest) returns (ListRegionAllocationsResponse)
+
+	// 保存经营地区分配
+	@handler SaveRegionAllocations
+	post /save (SaveRegionAllocationsRequest) returns (SaveRegionAllocationsResponse)
+}
+

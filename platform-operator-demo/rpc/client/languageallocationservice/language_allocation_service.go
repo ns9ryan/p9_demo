@@ -19,10 +19,8 @@ type (
 	LanguageAllocationService interface {
 		// 获取语言分配列表
 		List(ctx context.Context, in *languageallocation.ListLanguageAllocationsRequest, opts ...grpc.CallOption) (*languageallocation.ListLanguageAllocationsResponse, error)
-		// 分配语言
-		Assign(ctx context.Context, in *languageallocation.AssignLanguageRequest, opts ...grpc.CallOption) (*languageallocation.AssignLanguageResponse, error)
-		// 取消语言分配
-		Unassign(ctx context.Context, in *languageallocation.UnassignLanguageRequest, opts ...grpc.CallOption) (*languageallocation.UnassignLanguageResponse, error)
+		// 保存语言分配
+		Save(ctx context.Context, in *languageallocation.SaveLanguageAllocationsRequest, opts ...grpc.CallOption) (*languageallocation.SaveLanguageAllocationsResponse, error)
 	}
 
 	defaultLanguageAllocationService struct {
@@ -42,14 +40,8 @@ func (m *defaultLanguageAllocationService) List(ctx context.Context, in *languag
 	return client.List(ctx, in, opts...)
 }
 
-// 分配语言
-func (m *defaultLanguageAllocationService) Assign(ctx context.Context, in *languageallocation.AssignLanguageRequest, opts ...grpc.CallOption) (*languageallocation.AssignLanguageResponse, error) {
+// 保存语言分配
+func (m *defaultLanguageAllocationService) Save(ctx context.Context, in *languageallocation.SaveLanguageAllocationsRequest, opts ...grpc.CallOption) (*languageallocation.SaveLanguageAllocationsResponse, error) {
 	client := operator.NewLanguageAllocationServiceClient(m.cli.Conn())
-	return client.Assign(ctx, in, opts...)
-}
-
-// 取消语言分配
-func (m *defaultLanguageAllocationService) Unassign(ctx context.Context, in *languageallocation.UnassignLanguageRequest, opts ...grpc.CallOption) (*languageallocation.UnassignLanguageResponse, error) {
-	client := operator.NewLanguageAllocationServiceClient(m.cli.Conn())
-	return client.Unassign(ctx, in, opts...)
+	return client.Save(ctx, in, opts...)
 }

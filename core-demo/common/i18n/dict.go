@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	CodePlatform = "platform" // 平台站点
+	CodePlatform = "platform" // 总网站点
 	CodeOperator = "operator" // 分站站点
 	CodeAgent    = "agent"    // 代理站点
 	CodeUser     = "user"     // 用户站点
@@ -20,6 +20,14 @@ const (
 	GroupLogin = "login" // 登录多语言组
 )
 
+// CodeByPartnerMode 按 PartnerMode 选择站点 i18n_code。on → operator，其余 → platform。
+func CodeByPartnerMode(mode string) string {
+	if strings.EqualFold(strings.TrimSpace(mode), "on") {
+		return CodeOperator
+	}
+	return CodePlatform
+}
+
 type DictLoader func(ctx context.Context, code, group, lang string) (map[string]string, error)
 
 var (
@@ -27,7 +35,7 @@ var (
 	dictMu     sync.RWMutex
 )
 
-// SetDictLoader 设置数据加载器
+// SetDictLoader 设置词典加载器
 func SetDictLoader(l DictLoader) {
 	dictMu.Lock()
 	defer dictMu.Unlock()

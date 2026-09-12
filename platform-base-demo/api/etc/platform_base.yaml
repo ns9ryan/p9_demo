@@ -1,8 +1,8 @@
 # API服务配置
-Name: platform-base-api   # API服务名称
-Host: 0.0.0.0             # API监听地址
-Port: 18001               # API监听端口
-Mode: dev                 # 运行模式
+Name: platform-base-api     # API服务名称
+Host: 0.0.0.0               # API监听地址
+Port: 18001                 # API监听端口
+Mode: dev                   # 运行模式
 
 # Platform Base RPC配置
 PlatformBaseRpc:
@@ -14,10 +14,10 @@ PlatformBaseRpc:
 # Core RPC配置
 CoreRpc:
   Endpoints:
-    - 127.0.0.1:19000   # Core RPC地址
-  NonBlock: true        # 非阻塞连接
-  Timeout: 10000        # 请求超时时间, 毫秒
+    - 127.0.0.1:19000       # Core RPC地址
+  NonBlock: true            # 非阻塞连接
+  Timeout: 10000            # 请求超时时间, 毫秒
 
 # 国际化配置
 I18n:
-  DefaultLanguage: zh-CN  # 默认语言
+  DefaultLanguage: zh-CN    # 默认语言

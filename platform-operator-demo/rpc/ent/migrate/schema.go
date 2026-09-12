@@ -68,7 +68,7 @@ var (
 		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间", SchemaType: map[string]string{"postgres": "timestamptz(3)"}},
 		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间", SchemaType: map[string]string{"postgres": "timestamptz(3)"}},
 		{Name: "domain_name", Type: field.TypeString, Size: 253, Comment: "域名"},
-		{Name: "domain_type", Type: field.TypeInt64, Comment: "域名类型: 1分站后台, 2代理后台, 3H5", SchemaType: map[string]string{"postgres": "smallint"}},
+		{Name: "domain_type", Type: field.TypeInt64, Comment: "域名类型: 1分站后台, 2代理后台, 3会员H5", SchemaType: map[string]string{"postgres": "smallint"}},
 		{Name: "remark", Type: field.TypeString, Nullable: true, Size: 1000, Comment: "总网内部备注"},
 		{Name: "operator_id", Type: field.TypeInt64, Comment: "所属 operator 本地主键", SchemaType: map[string]string{"postgres": "bigint"}},
 	}

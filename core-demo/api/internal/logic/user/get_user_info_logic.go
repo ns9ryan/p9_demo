@@ -30,5 +30,5 @@ func (l *GetUserInfoLogic) GetUserInfo() (resp *types.UserPublic, err error) {
 	if err != nil {
 		return nil, err
 	}
-	return convert.UserPublic(out), nil
+	return convert.UserPublic(l.ctx, out), nil
 }

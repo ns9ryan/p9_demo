@@ -70,21 +70,21 @@ func WithLang(ctx context.Context, lang string) context.Context {
 	return context.WithValue(ctx, langKey{}, lang)
 }
 
-// Lang 获取语言
+// Lang 获取语言，默认返回英文
 func Lang(ctx context.Context) string {
 	if ctx == nil {
-		return LangZH
+		return LangEN
 	}
 	if v, ok := ctx.Value(langKey{}).(string); ok && v != "" {
 		return v
 	}
-	return LangZH
+	return LangEN
 }
 
 // ParseLang 解析语言
 func ParseLang(header string) string {
 	if header == "" {
-		return LangZH
+		return LangEN
 	}
 	first := strings.TrimSpace(strings.Split(header, ",")[0])
 	first = strings.TrimSpace(strings.Split(first, ";")[0])

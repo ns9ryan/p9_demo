@@ -113,19 +113,31 @@ func TestMenuInfoTranslatesTitleFromDict(t *testing.T) {
 		if group != i18n.GroupMenu || lang != i18n.LangZH {
 			return map[string]string{}, nil
 		}
+		if code == i18n.CodeOperator {
+			return map[string]string{"menu.route.dashboard": "分站工作台"}, nil
+		}
 		return map[string]string{"menu.route.dashboard": "工作台"}, nil
 	})
-	got := MenuInfo(i18n.WithLang(context.Background(), i18n.LangZH), &coreclient.MenuInfo{
+	got := MenuInfo(i18n.WithLang(context.Background(), i18n.LangZH), i18n.CodePlatform, &coreclient.MenuInfo{
 		Id: 1, Title: "menu.route.dashboard", Name: "Dashboard",
 	})
-	if got.Title != "工作台" {
+	if got.Title != "menu.route.dashboard" {
 		t.Fatalf("title=%q", got.Title)
 	}
-	miss := MenuInfo(i18n.WithLang(context.Background(), i18n.LangZH), &coreclient.MenuInfo{
+	if got.TransTitle != "工作台" {
+		t.Fatalf("transTitle=%q", got.TransTitle)
+	}
+	op := MenuInfo(i18n.WithLang(context.Background(), i18n.LangZH), i18n.CodeOperator, &coreclient.MenuInfo{
+		Id: 1, Title: "menu.route.dashboard", Name: "Dashboard",
+	})
+	if op.TransTitle != "分站工作台" {
+		t.Fatalf("operator transTitle=%q", op.TransTitle)
+	}
+	miss := MenuInfo(i18n.WithLang(context.Background(), i18n.LangZH), i18n.CodePlatform, &coreclient.MenuInfo{
 		Id: 2, Title: "custom", Name: "Custom",
 	})
-	if miss.Title != "custom" {
-		t.Fatalf("passthrough=%q", miss.Title)
+	if miss.TransTitle != "custom" {
+		t.Fatalf("passthrough=%q", miss.TransTitle)
 	}
 }
 
@@ -141,16 +153,60 @@ func TestApiInfoTranslatesDescriptionFromDict(t *testing.T) {
 		}
 		return map[string]string{"api.userCreate": "创建后台用户"}, nil
 	})
-	got := ApiInfo(i18n.WithLang(context.Background(), i18n.LangZH), &coreclient.ApiInfo{
+	got := ApiInfo(i18n.WithLang(context.Background(), i18n.LangZH), i18n.CodePlatform, &coreclient.ApiInfo{
 		Id: 1, Description: "api.userCreate", Path: "/admin/user/create", Method: "POST",
 	})
-	if got.Description != "创建后台用户" {
+	if got.Description != "api.userCreate" {
 		t.Fatalf("description=%q", got.Description)
 	}
-	miss := ApiInfo(i18n.WithLang(context.Background(), i18n.LangZH), &coreclient.ApiInfo{
+	if got.TransDescription != "创建后台用户" {
+		t.Fatalf("transDescription=%q", got.TransDescription)
+	}
+	miss := ApiInfo(i18n.WithLang(context.Background(), i18n.LangZH), i18n.CodePlatform, &coreclient.ApiInfo{
 		Id: 2, Description: "custom", Path: "/admin/custom", Method: "GET",
 	})
-	if miss.Description != "custom" {
-		t.Fatalf("passthrough=%q", miss.Description)
+	if miss.TransDescription != "custom" {
+		t.Fatalf("passthrough=%q", miss.TransDescription)
 	}
+}
+
+func TestUserPublicTranslatesRoleNames(t *testing.T) {
+	zh := UserPublic(i18n.WithLang(context.Background(), i18n.LangZH), &coreclient.UserPublic{
+		Id: 1, RoleCodes: []string{"super_admin", "editor"},
+		RoleNames: []string{i18n.RoleSuperAdmin, "运营"},
+	})
+	if zh.RoleNames[0] != "超级管理员" {
+		t.Fatalf("zh super=%q", zh.RoleNames[0])
+	}
+	if zh.RoleNames[1] != "运营" {
+		t.Fatalf("zh custom=%q", zh.RoleNames[1])
+	}
+	if !equalStrings(zh.RoleCodes, []string{"super_admin", "editor"}) {
+		t.Fatalf("codes=%v", zh.RoleCodes)
+	}
+	en := UserPublic(i18n.WithLang(context.Background(), i18n.LangEN), &coreclient.UserPublic{
+		Id: 1, RoleNames: []string{i18n.RoleSuperAdmin},
+	})
+	if en.RoleNames[0] != "Super Admin" {
+		t.Fatalf("en=%q", en.RoleNames[0])
+	}
+	empty := UserPublic(context.Background(), &coreclient.UserPublic{Id: 2})
+	if empty.RoleCodes == nil || empty.RoleNames == nil || empty.IpWhitelist == nil {
+		t.Fatal("empty slices should not be nil")
+	}
+	if empty.IpWhitelistEnabled != 0 {
+		t.Fatalf("default enabled=%d", empty.IpWhitelistEnabled)
+	}
+}
+
+func equalStrings(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
 }

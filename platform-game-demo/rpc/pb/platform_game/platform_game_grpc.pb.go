@@ -19,947 +19,1384 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	PlatformGameService_Ping_FullMethodName                      = "/platform_game.PlatformGameService/Ping"
-	PlatformGameService_GetGameList_FullMethodName               = "/platform_game.PlatformGameService/GetGameList"
-	PlatformGameService_GetGame_FullMethodName                   = "/platform_game.PlatformGameService/GetGame"
-	PlatformGameService_GetGameCategoryList_FullMethodName       = "/platform_game.PlatformGameService/GetGameCategoryList"
-	PlatformGameService_GetGameCategory_FullMethodName           = "/platform_game.PlatformGameService/GetGameCategory"
-	PlatformGameService_GetGameProviderList_FullMethodName       = "/platform_game.PlatformGameService/GetGameProviderList"
-	PlatformGameService_GetGameProvider_FullMethodName           = "/platform_game.PlatformGameService/GetGameProvider"
-	PlatformGameService_GetGameChannel_FullMethodName            = "/platform_game.PlatformGameService/GetGameChannel"
-	PlatformGameService_GetGameChannelList_FullMethodName        = "/platform_game.PlatformGameService/GetGameChannelList"
-	PlatformGameService_GetGameCurrencyList_FullMethodName       = "/platform_game.PlatformGameService/GetGameCurrencyList"
-	PlatformGameService_GetGameCurrency_FullMethodName           = "/platform_game.PlatformGameService/GetGameCurrency"
-	PlatformGameService_GetGameSyncCheckpoint_FullMethodName     = "/platform_game.PlatformGameService/GetGameSyncCheckpoint"
-	PlatformGameService_GetGameSyncCheckpointList_FullMethodName = "/platform_game.PlatformGameService/GetGameSyncCheckpointList"
-	PlatformGameService_UpdateGameCategory_FullMethodName        = "/platform_game.PlatformGameService/UpdateGameCategory"
-	PlatformGameService_UpdateGameProvider_FullMethodName        = "/platform_game.PlatformGameService/UpdateGameProvider"
-	PlatformGameService_UpdateGameChannel_FullMethodName         = "/platform_game.PlatformGameService/UpdateGameChannel"
-	PlatformGameService_UpdateGameCurrency_FullMethodName        = "/platform_game.PlatformGameService/UpdateGameCurrency"
-	PlatformGameService_UpdateGame_FullMethodName                = "/platform_game.PlatformGameService/UpdateGame"
-	PlatformGameService_SyncPreview_FullMethodName               = "/platform_game.PlatformGameService/SyncPreview"
-	PlatformGameService_SyncRun_FullMethodName                   = "/platform_game.PlatformGameService/SyncRun"
-	PlatformGameService_SyncAll_FullMethodName                   = "/platform_game.PlatformGameService/SyncAll"
-	PlatformGameService_ExecuteV2Sql_FullMethodName              = "/platform_game.PlatformGameService/ExecuteV2Sql"
+	PingService_Ping_FullMethodName = "/platform_game.PingService/Ping"
 )
 
-// PlatformGameServiceClient is the client API for PlatformGameService service.
+// PingServiceClient is the client API for PingService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// PlatformGameService - 平台游戏服务
-type PlatformGameServiceClient interface {
-	// Ping 健康检查
+// PingService - Ping健康检查服务
+type PingServiceClient interface {
+	// 健康检查
 	Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error)
-	// 获取游戏列表
-	GetGameList(ctx context.Context, in *GetGameListRequest, opts ...grpc.CallOption) (*GetGameListResp, error)
-	// 获取单个游戏详情
-	GetGame(ctx context.Context, in *GetGameRequest, opts ...grpc.CallOption) (*GetGameResp, error)
-	// 获取游戏分类列表
-	GetGameCategoryList(ctx context.Context, in *GetGameCategoryListRequest, opts ...grpc.CallOption) (*GetGameCategoryListResp, error)
-	// 获取单个游戏分类
-	GetGameCategory(ctx context.Context, in *GetGameCategoryRequest, opts ...grpc.CallOption) (*GetGameCategoryListResp, error)
-	// 获取游戏供应商列表
-	GetGameProviderList(ctx context.Context, in *GetGameProviderListRequest, opts ...grpc.CallOption) (*GetGameProviderListResp, error)
-	// 获取单个游戏供应商
-	GetGameProvider(ctx context.Context, in *GetGameProviderRequest, opts ...grpc.CallOption) (*GetGameProviderListResp, error)
-	// 获取单个游戏渠道
-	GetGameChannel(ctx context.Context, in *GetGameChannelRequest, opts ...grpc.CallOption) (*GetGameChannelResp, error)
-	// 获取游戏渠道列表
-	GetGameChannelList(ctx context.Context, in *GetGameChannelListRequest, opts ...grpc.CallOption) (*GetGameChannelListResp, error)
-	// 获取游戏货币列表
-	GetGameCurrencyList(ctx context.Context, in *GetGameCurrencyListRequest, opts ...grpc.CallOption) (*GetGameCurrencyListResp, error)
-	// 获取单个游戏货币
-	GetGameCurrency(ctx context.Context, in *GetGameCurrencyRequest, opts ...grpc.CallOption) (*GetGameCurrencyListResp, error)
-	// 获取单个同步检查点
-	GetGameSyncCheckpoint(ctx context.Context, in *GetGameSyncCheckpointRequest, opts ...grpc.CallOption) (*GetGameSyncCheckpointResp, error)
-	// 获取同步检查点列表
-	GetGameSyncCheckpointList(ctx context.Context, in *GetGameSyncCheckpointListRequest, opts ...grpc.CallOption) (*GetGameSyncCheckpointListResp, error)
-	// 更新游戏分类
-	UpdateGameCategory(ctx context.Context, in *UpdateGameCategoryRequest, opts ...grpc.CallOption) (*GetGameCategoryListResp, error)
-	// 更新游戏供应商
-	UpdateGameProvider(ctx context.Context, in *UpdateGameProviderRequest, opts ...grpc.CallOption) (*GetGameProviderListResp, error)
-	// 更新游戏渠道
-	UpdateGameChannel(ctx context.Context, in *UpdateGameChannelRequest, opts ...grpc.CallOption) (*GetGameChannelResp, error)
-	// 更新游戏货币
-	UpdateGameCurrency(ctx context.Context, in *UpdateGameCurrencyRequest, opts ...grpc.CallOption) (*GetGameCurrencyListResp, error)
-	// 更新游戏
-	UpdateGame(ctx context.Context, in *UpdateGameRequest, opts ...grpc.CallOption) (*GetGameResp, error)
-	// 同步预检查（查看差异，不修改数据）
-	SyncPreview(ctx context.Context, in *SyncPreviewRequest, opts ...grpc.CallOption) (*SyncPreviewResp, error)
-	// 同步执行（执行同步操作）
-	SyncRun(ctx context.Context, in *SyncRunRequest, opts ...grpc.CallOption) (*SyncRunResp, error)
-	// 全量同步（同步所有对象类型）
-	SyncAll(ctx context.Context, in *SyncAllRequest, opts ...grpc.CallOption) (*SyncRunResp, error)
-	// 执行 v2sql 下的 SQL 初始化脚本（供运维/初始化使用）
-	ExecuteV2Sql(ctx context.Context, in *ExecuteV2SqlRequest, opts ...grpc.CallOption) (*ExecuteV2SqlResp, error)
 }
 
-type platformGameServiceClient struct {
+type pingServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewPlatformGameServiceClient(cc grpc.ClientConnInterface) PlatformGameServiceClient {
-	return &platformGameServiceClient{cc}
+func NewPingServiceClient(cc grpc.ClientConnInterface) PingServiceClient {
+	return &pingServiceClient{cc}
 }
 
-func (c *platformGameServiceClient) Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error) {
+func (c *pingServiceClient) Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(PingResponse)
-	err := c.cc.Invoke(ctx, PlatformGameService_Ping_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, PingService_Ping_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *platformGameServiceClient) GetGameList(ctx context.Context, in *GetGameListRequest, opts ...grpc.CallOption) (*GetGameListResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetGameListResp)
-	err := c.cc.Invoke(ctx, PlatformGameService_GetGameList_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *platformGameServiceClient) GetGame(ctx context.Context, in *GetGameRequest, opts ...grpc.CallOption) (*GetGameResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetGameResp)
-	err := c.cc.Invoke(ctx, PlatformGameService_GetGame_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *platformGameServiceClient) GetGameCategoryList(ctx context.Context, in *GetGameCategoryListRequest, opts ...grpc.CallOption) (*GetGameCategoryListResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetGameCategoryListResp)
-	err := c.cc.Invoke(ctx, PlatformGameService_GetGameCategoryList_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *platformGameServiceClient) GetGameCategory(ctx context.Context, in *GetGameCategoryRequest, opts ...grpc.CallOption) (*GetGameCategoryListResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetGameCategoryListResp)
-	err := c.cc.Invoke(ctx, PlatformGameService_GetGameCategory_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *platformGameServiceClient) GetGameProviderList(ctx context.Context, in *GetGameProviderListRequest, opts ...grpc.CallOption) (*GetGameProviderListResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetGameProviderListResp)
-	err := c.cc.Invoke(ctx, PlatformGameService_GetGameProviderList_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *platformGameServiceClient) GetGameProvider(ctx context.Context, in *GetGameProviderRequest, opts ...grpc.CallOption) (*GetGameProviderListResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetGameProviderListResp)
-	err := c.cc.Invoke(ctx, PlatformGameService_GetGameProvider_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *platformGameServiceClient) GetGameChannel(ctx context.Context, in *GetGameChannelRequest, opts ...grpc.CallOption) (*GetGameChannelResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetGameChannelResp)
-	err := c.cc.Invoke(ctx, PlatformGameService_GetGameChannel_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *platformGameServiceClient) GetGameChannelList(ctx context.Context, in *GetGameChannelListRequest, opts ...grpc.CallOption) (*GetGameChannelListResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetGameChannelListResp)
-	err := c.cc.Invoke(ctx, PlatformGameService_GetGameChannelList_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *platformGameServiceClient) GetGameCurrencyList(ctx context.Context, in *GetGameCurrencyListRequest, opts ...grpc.CallOption) (*GetGameCurrencyListResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetGameCurrencyListResp)
-	err := c.cc.Invoke(ctx, PlatformGameService_GetGameCurrencyList_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *platformGameServiceClient) GetGameCurrency(ctx context.Context, in *GetGameCurrencyRequest, opts ...grpc.CallOption) (*GetGameCurrencyListResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetGameCurrencyListResp)
-	err := c.cc.Invoke(ctx, PlatformGameService_GetGameCurrency_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *platformGameServiceClient) GetGameSyncCheckpoint(ctx context.Context, in *GetGameSyncCheckpointRequest, opts ...grpc.CallOption) (*GetGameSyncCheckpointResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetGameSyncCheckpointResp)
-	err := c.cc.Invoke(ctx, PlatformGameService_GetGameSyncCheckpoint_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *platformGameServiceClient) GetGameSyncCheckpointList(ctx context.Context, in *GetGameSyncCheckpointListRequest, opts ...grpc.CallOption) (*GetGameSyncCheckpointListResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetGameSyncCheckpointListResp)
-	err := c.cc.Invoke(ctx, PlatformGameService_GetGameSyncCheckpointList_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *platformGameServiceClient) UpdateGameCategory(ctx context.Context, in *UpdateGameCategoryRequest, opts ...grpc.CallOption) (*GetGameCategoryListResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetGameCategoryListResp)
-	err := c.cc.Invoke(ctx, PlatformGameService_UpdateGameCategory_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *platformGameServiceClient) UpdateGameProvider(ctx context.Context, in *UpdateGameProviderRequest, opts ...grpc.CallOption) (*GetGameProviderListResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetGameProviderListResp)
-	err := c.cc.Invoke(ctx, PlatformGameService_UpdateGameProvider_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *platformGameServiceClient) UpdateGameChannel(ctx context.Context, in *UpdateGameChannelRequest, opts ...grpc.CallOption) (*GetGameChannelResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetGameChannelResp)
-	err := c.cc.Invoke(ctx, PlatformGameService_UpdateGameChannel_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *platformGameServiceClient) UpdateGameCurrency(ctx context.Context, in *UpdateGameCurrencyRequest, opts ...grpc.CallOption) (*GetGameCurrencyListResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetGameCurrencyListResp)
-	err := c.cc.Invoke(ctx, PlatformGameService_UpdateGameCurrency_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *platformGameServiceClient) UpdateGame(ctx context.Context, in *UpdateGameRequest, opts ...grpc.CallOption) (*GetGameResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetGameResp)
-	err := c.cc.Invoke(ctx, PlatformGameService_UpdateGame_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *platformGameServiceClient) SyncPreview(ctx context.Context, in *SyncPreviewRequest, opts ...grpc.CallOption) (*SyncPreviewResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SyncPreviewResp)
-	err := c.cc.Invoke(ctx, PlatformGameService_SyncPreview_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *platformGameServiceClient) SyncRun(ctx context.Context, in *SyncRunRequest, opts ...grpc.CallOption) (*SyncRunResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SyncRunResp)
-	err := c.cc.Invoke(ctx, PlatformGameService_SyncRun_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *platformGameServiceClient) SyncAll(ctx context.Context, in *SyncAllRequest, opts ...grpc.CallOption) (*SyncRunResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SyncRunResp)
-	err := c.cc.Invoke(ctx, PlatformGameService_SyncAll_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *platformGameServiceClient) ExecuteV2Sql(ctx context.Context, in *ExecuteV2SqlRequest, opts ...grpc.CallOption) (*ExecuteV2SqlResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ExecuteV2SqlResp)
-	err := c.cc.Invoke(ctx, PlatformGameService_ExecuteV2Sql_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// PlatformGameServiceServer is the server API for PlatformGameService service.
-// All implementations must embed UnimplementedPlatformGameServiceServer
+// PingServiceServer is the server API for PingService service.
+// All implementations must embed UnimplementedPingServiceServer
 // for forward compatibility.
 //
-// PlatformGameService - 平台游戏服务
-type PlatformGameServiceServer interface {
-	// Ping 健康检查
+// PingService - Ping健康检查服务
+type PingServiceServer interface {
+	// 健康检查
 	Ping(context.Context, *PingRequest) (*PingResponse, error)
-	// 获取游戏列表
-	GetGameList(context.Context, *GetGameListRequest) (*GetGameListResp, error)
-	// 获取单个游戏详情
-	GetGame(context.Context, *GetGameRequest) (*GetGameResp, error)
-	// 获取游戏分类列表
-	GetGameCategoryList(context.Context, *GetGameCategoryListRequest) (*GetGameCategoryListResp, error)
-	// 获取单个游戏分类
-	GetGameCategory(context.Context, *GetGameCategoryRequest) (*GetGameCategoryListResp, error)
-	// 获取游戏供应商列表
-	GetGameProviderList(context.Context, *GetGameProviderListRequest) (*GetGameProviderListResp, error)
-	// 获取单个游戏供应商
-	GetGameProvider(context.Context, *GetGameProviderRequest) (*GetGameProviderListResp, error)
-	// 获取单个游戏渠道
-	GetGameChannel(context.Context, *GetGameChannelRequest) (*GetGameChannelResp, error)
-	// 获取游戏渠道列表
-	GetGameChannelList(context.Context, *GetGameChannelListRequest) (*GetGameChannelListResp, error)
-	// 获取游戏货币列表
-	GetGameCurrencyList(context.Context, *GetGameCurrencyListRequest) (*GetGameCurrencyListResp, error)
-	// 获取单个游戏货币
-	GetGameCurrency(context.Context, *GetGameCurrencyRequest) (*GetGameCurrencyListResp, error)
-	// 获取单个同步检查点
-	GetGameSyncCheckpoint(context.Context, *GetGameSyncCheckpointRequest) (*GetGameSyncCheckpointResp, error)
-	// 获取同步检查点列表
-	GetGameSyncCheckpointList(context.Context, *GetGameSyncCheckpointListRequest) (*GetGameSyncCheckpointListResp, error)
-	// 更新游戏分类
-	UpdateGameCategory(context.Context, *UpdateGameCategoryRequest) (*GetGameCategoryListResp, error)
-	// 更新游戏供应商
-	UpdateGameProvider(context.Context, *UpdateGameProviderRequest) (*GetGameProviderListResp, error)
-	// 更新游戏渠道
-	UpdateGameChannel(context.Context, *UpdateGameChannelRequest) (*GetGameChannelResp, error)
-	// 更新游戏货币
-	UpdateGameCurrency(context.Context, *UpdateGameCurrencyRequest) (*GetGameCurrencyListResp, error)
-	// 更新游戏
-	UpdateGame(context.Context, *UpdateGameRequest) (*GetGameResp, error)
-	// 同步预检查（查看差异，不修改数据）
-	SyncPreview(context.Context, *SyncPreviewRequest) (*SyncPreviewResp, error)
-	// 同步执行（执行同步操作）
-	SyncRun(context.Context, *SyncRunRequest) (*SyncRunResp, error)
-	// 全量同步（同步所有对象类型）
-	SyncAll(context.Context, *SyncAllRequest) (*SyncRunResp, error)
-	// 执行 v2sql 下的 SQL 初始化脚本（供运维/初始化使用）
-	ExecuteV2Sql(context.Context, *ExecuteV2SqlRequest) (*ExecuteV2SqlResp, error)
-	mustEmbedUnimplementedPlatformGameServiceServer()
+	mustEmbedUnimplementedPingServiceServer()
 }
 
-// UnimplementedPlatformGameServiceServer must be embedded to have
+// UnimplementedPingServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedPlatformGameServiceServer struct{}
+type UnimplementedPingServiceServer struct{}
 
-func (UnimplementedPlatformGameServiceServer) Ping(context.Context, *PingRequest) (*PingResponse, error) {
+func (UnimplementedPingServiceServer) Ping(context.Context, *PingRequest) (*PingResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Ping not implemented")
 }
-func (UnimplementedPlatformGameServiceServer) GetGameList(context.Context, *GetGameListRequest) (*GetGameListResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetGameList not implemented")
-}
-func (UnimplementedPlatformGameServiceServer) GetGame(context.Context, *GetGameRequest) (*GetGameResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetGame not implemented")
-}
-func (UnimplementedPlatformGameServiceServer) GetGameCategoryList(context.Context, *GetGameCategoryListRequest) (*GetGameCategoryListResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetGameCategoryList not implemented")
-}
-func (UnimplementedPlatformGameServiceServer) GetGameCategory(context.Context, *GetGameCategoryRequest) (*GetGameCategoryListResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetGameCategory not implemented")
-}
-func (UnimplementedPlatformGameServiceServer) GetGameProviderList(context.Context, *GetGameProviderListRequest) (*GetGameProviderListResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetGameProviderList not implemented")
-}
-func (UnimplementedPlatformGameServiceServer) GetGameProvider(context.Context, *GetGameProviderRequest) (*GetGameProviderListResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetGameProvider not implemented")
-}
-func (UnimplementedPlatformGameServiceServer) GetGameChannel(context.Context, *GetGameChannelRequest) (*GetGameChannelResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetGameChannel not implemented")
-}
-func (UnimplementedPlatformGameServiceServer) GetGameChannelList(context.Context, *GetGameChannelListRequest) (*GetGameChannelListResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetGameChannelList not implemented")
-}
-func (UnimplementedPlatformGameServiceServer) GetGameCurrencyList(context.Context, *GetGameCurrencyListRequest) (*GetGameCurrencyListResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetGameCurrencyList not implemented")
-}
-func (UnimplementedPlatformGameServiceServer) GetGameCurrency(context.Context, *GetGameCurrencyRequest) (*GetGameCurrencyListResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetGameCurrency not implemented")
-}
-func (UnimplementedPlatformGameServiceServer) GetGameSyncCheckpoint(context.Context, *GetGameSyncCheckpointRequest) (*GetGameSyncCheckpointResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetGameSyncCheckpoint not implemented")
-}
-func (UnimplementedPlatformGameServiceServer) GetGameSyncCheckpointList(context.Context, *GetGameSyncCheckpointListRequest) (*GetGameSyncCheckpointListResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetGameSyncCheckpointList not implemented")
-}
-func (UnimplementedPlatformGameServiceServer) UpdateGameCategory(context.Context, *UpdateGameCategoryRequest) (*GetGameCategoryListResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdateGameCategory not implemented")
-}
-func (UnimplementedPlatformGameServiceServer) UpdateGameProvider(context.Context, *UpdateGameProviderRequest) (*GetGameProviderListResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdateGameProvider not implemented")
-}
-func (UnimplementedPlatformGameServiceServer) UpdateGameChannel(context.Context, *UpdateGameChannelRequest) (*GetGameChannelResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdateGameChannel not implemented")
-}
-func (UnimplementedPlatformGameServiceServer) UpdateGameCurrency(context.Context, *UpdateGameCurrencyRequest) (*GetGameCurrencyListResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdateGameCurrency not implemented")
-}
-func (UnimplementedPlatformGameServiceServer) UpdateGame(context.Context, *UpdateGameRequest) (*GetGameResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdateGame not implemented")
-}
-func (UnimplementedPlatformGameServiceServer) SyncPreview(context.Context, *SyncPreviewRequest) (*SyncPreviewResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method SyncPreview not implemented")
-}
-func (UnimplementedPlatformGameServiceServer) SyncRun(context.Context, *SyncRunRequest) (*SyncRunResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method SyncRun not implemented")
-}
-func (UnimplementedPlatformGameServiceServer) SyncAll(context.Context, *SyncAllRequest) (*SyncRunResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method SyncAll not implemented")
-}
-func (UnimplementedPlatformGameServiceServer) ExecuteV2Sql(context.Context, *ExecuteV2SqlRequest) (*ExecuteV2SqlResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ExecuteV2Sql not implemented")
-}
-func (UnimplementedPlatformGameServiceServer) mustEmbedUnimplementedPlatformGameServiceServer() {}
-func (UnimplementedPlatformGameServiceServer) testEmbeddedByValue()                             {}
+func (UnimplementedPingServiceServer) mustEmbedUnimplementedPingServiceServer() {}
+func (UnimplementedPingServiceServer) testEmbeddedByValue()                     {}
 
-// UnsafePlatformGameServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to PlatformGameServiceServer will
+// UnsafePingServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to PingServiceServer will
 // result in compilation errors.
-type UnsafePlatformGameServiceServer interface {
-	mustEmbedUnimplementedPlatformGameServiceServer()
+type UnsafePingServiceServer interface {
+	mustEmbedUnimplementedPingServiceServer()
 }
 
-func RegisterPlatformGameServiceServer(s grpc.ServiceRegistrar, srv PlatformGameServiceServer) {
-	// If the following call panics, it indicates UnimplementedPlatformGameServiceServer was
+func RegisterPingServiceServer(s grpc.ServiceRegistrar, srv PingServiceServer) {
+	// If the following call panics, it indicates UnimplementedPingServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&PlatformGameService_ServiceDesc, srv)
+	s.RegisterService(&PingService_ServiceDesc, srv)
 }
 
-func _PlatformGameService_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _PingService_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PingRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PlatformGameServiceServer).Ping(ctx, in)
+		return srv.(PingServiceServer).Ping(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PlatformGameService_Ping_FullMethodName,
+		FullMethod: PingService_Ping_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlatformGameServiceServer).Ping(ctx, req.(*PingRequest))
+		return srv.(PingServiceServer).Ping(ctx, req.(*PingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PlatformGameService_GetGameList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+// PingService_ServiceDesc is the grpc.ServiceDesc for PingService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var PingService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "platform_game.PingService",
+	HandlerType: (*PingServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Ping",
+			Handler:    _PingService_Ping_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "platform_game.proto",
+}
+
+const (
+	GameService_GetGameList_FullMethodName = "/platform_game.GameService/GetGameList"
+	GameService_GetGame_FullMethodName     = "/platform_game.GameService/GetGame"
+	GameService_UpdateGame_FullMethodName  = "/platform_game.GameService/UpdateGame"
+)
+
+// GameServiceClient is the client API for GameService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// GameService - 游戏服务
+type GameServiceClient interface {
+	// 获取游戏列表
+	GetGameList(ctx context.Context, in *GetGameListRequest, opts ...grpc.CallOption) (*GetGameListResp, error)
+	// 获取单个游戏详情
+	GetGame(ctx context.Context, in *GetGameRequest, opts ...grpc.CallOption) (*GetGameResp, error)
+	// 更新游戏
+	UpdateGame(ctx context.Context, in *UpdateGameRequest, opts ...grpc.CallOption) (*UpdateGameResp, error)
+}
+
+type gameServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewGameServiceClient(cc grpc.ClientConnInterface) GameServiceClient {
+	return &gameServiceClient{cc}
+}
+
+func (c *gameServiceClient) GetGameList(ctx context.Context, in *GetGameListRequest, opts ...grpc.CallOption) (*GetGameListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetGameListResp)
+	err := c.cc.Invoke(ctx, GameService_GetGameList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gameServiceClient) GetGame(ctx context.Context, in *GetGameRequest, opts ...grpc.CallOption) (*GetGameResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetGameResp)
+	err := c.cc.Invoke(ctx, GameService_GetGame_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gameServiceClient) UpdateGame(ctx context.Context, in *UpdateGameRequest, opts ...grpc.CallOption) (*UpdateGameResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateGameResp)
+	err := c.cc.Invoke(ctx, GameService_UpdateGame_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// GameServiceServer is the server API for GameService service.
+// All implementations must embed UnimplementedGameServiceServer
+// for forward compatibility.
+//
+// GameService - 游戏服务
+type GameServiceServer interface {
+	// 获取游戏列表
+	GetGameList(context.Context, *GetGameListRequest) (*GetGameListResp, error)
+	// 获取单个游戏详情
+	GetGame(context.Context, *GetGameRequest) (*GetGameResp, error)
+	// 更新游戏
+	UpdateGame(context.Context, *UpdateGameRequest) (*UpdateGameResp, error)
+	mustEmbedUnimplementedGameServiceServer()
+}
+
+// UnimplementedGameServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedGameServiceServer struct{}
+
+func (UnimplementedGameServiceServer) GetGameList(context.Context, *GetGameListRequest) (*GetGameListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetGameList not implemented")
+}
+func (UnimplementedGameServiceServer) GetGame(context.Context, *GetGameRequest) (*GetGameResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetGame not implemented")
+}
+func (UnimplementedGameServiceServer) UpdateGame(context.Context, *UpdateGameRequest) (*UpdateGameResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateGame not implemented")
+}
+func (UnimplementedGameServiceServer) mustEmbedUnimplementedGameServiceServer() {}
+func (UnimplementedGameServiceServer) testEmbeddedByValue()                     {}
+
+// UnsafeGameServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to GameServiceServer will
+// result in compilation errors.
+type UnsafeGameServiceServer interface {
+	mustEmbedUnimplementedGameServiceServer()
+}
+
+func RegisterGameServiceServer(s grpc.ServiceRegistrar, srv GameServiceServer) {
+	// If the following call panics, it indicates UnimplementedGameServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&GameService_ServiceDesc, srv)
+}
+
+func _GameService_GetGameList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetGameListRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PlatformGameServiceServer).GetGameList(ctx, in)
+		return srv.(GameServiceServer).GetGameList(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PlatformGameService_GetGameList_FullMethodName,
+		FullMethod: GameService_GetGameList_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlatformGameServiceServer).GetGameList(ctx, req.(*GetGameListRequest))
+		return srv.(GameServiceServer).GetGameList(ctx, req.(*GetGameListRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PlatformGameService_GetGame_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _GameService_GetGame_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetGameRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PlatformGameServiceServer).GetGame(ctx, in)
+		return srv.(GameServiceServer).GetGame(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PlatformGameService_GetGame_FullMethodName,
+		FullMethod: GameService_GetGame_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlatformGameServiceServer).GetGame(ctx, req.(*GetGameRequest))
+		return srv.(GameServiceServer).GetGame(ctx, req.(*GetGameRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PlatformGameService_GetGameCategoryList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetGameCategoryListRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PlatformGameServiceServer).GetGameCategoryList(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PlatformGameService_GetGameCategoryList_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlatformGameServiceServer).GetGameCategoryList(ctx, req.(*GetGameCategoryListRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PlatformGameService_GetGameCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetGameCategoryRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PlatformGameServiceServer).GetGameCategory(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PlatformGameService_GetGameCategory_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlatformGameServiceServer).GetGameCategory(ctx, req.(*GetGameCategoryRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PlatformGameService_GetGameProviderList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetGameProviderListRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PlatformGameServiceServer).GetGameProviderList(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PlatformGameService_GetGameProviderList_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlatformGameServiceServer).GetGameProviderList(ctx, req.(*GetGameProviderListRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PlatformGameService_GetGameProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetGameProviderRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PlatformGameServiceServer).GetGameProvider(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PlatformGameService_GetGameProvider_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlatformGameServiceServer).GetGameProvider(ctx, req.(*GetGameProviderRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PlatformGameService_GetGameChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetGameChannelRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PlatformGameServiceServer).GetGameChannel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PlatformGameService_GetGameChannel_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlatformGameServiceServer).GetGameChannel(ctx, req.(*GetGameChannelRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PlatformGameService_GetGameChannelList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetGameChannelListRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PlatformGameServiceServer).GetGameChannelList(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PlatformGameService_GetGameChannelList_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlatformGameServiceServer).GetGameChannelList(ctx, req.(*GetGameChannelListRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PlatformGameService_GetGameCurrencyList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetGameCurrencyListRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PlatformGameServiceServer).GetGameCurrencyList(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PlatformGameService_GetGameCurrencyList_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlatformGameServiceServer).GetGameCurrencyList(ctx, req.(*GetGameCurrencyListRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PlatformGameService_GetGameCurrency_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetGameCurrencyRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PlatformGameServiceServer).GetGameCurrency(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PlatformGameService_GetGameCurrency_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlatformGameServiceServer).GetGameCurrency(ctx, req.(*GetGameCurrencyRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PlatformGameService_GetGameSyncCheckpoint_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetGameSyncCheckpointRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PlatformGameServiceServer).GetGameSyncCheckpoint(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PlatformGameService_GetGameSyncCheckpoint_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlatformGameServiceServer).GetGameSyncCheckpoint(ctx, req.(*GetGameSyncCheckpointRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PlatformGameService_GetGameSyncCheckpointList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetGameSyncCheckpointListRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PlatformGameServiceServer).GetGameSyncCheckpointList(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PlatformGameService_GetGameSyncCheckpointList_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlatformGameServiceServer).GetGameSyncCheckpointList(ctx, req.(*GetGameSyncCheckpointListRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PlatformGameService_UpdateGameCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateGameCategoryRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PlatformGameServiceServer).UpdateGameCategory(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PlatformGameService_UpdateGameCategory_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlatformGameServiceServer).UpdateGameCategory(ctx, req.(*UpdateGameCategoryRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PlatformGameService_UpdateGameProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateGameProviderRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PlatformGameServiceServer).UpdateGameProvider(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PlatformGameService_UpdateGameProvider_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlatformGameServiceServer).UpdateGameProvider(ctx, req.(*UpdateGameProviderRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PlatformGameService_UpdateGameChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateGameChannelRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PlatformGameServiceServer).UpdateGameChannel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PlatformGameService_UpdateGameChannel_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlatformGameServiceServer).UpdateGameChannel(ctx, req.(*UpdateGameChannelRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PlatformGameService_UpdateGameCurrency_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateGameCurrencyRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PlatformGameServiceServer).UpdateGameCurrency(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PlatformGameService_UpdateGameCurrency_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlatformGameServiceServer).UpdateGameCurrency(ctx, req.(*UpdateGameCurrencyRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PlatformGameService_UpdateGame_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _GameService_UpdateGame_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateGameRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PlatformGameServiceServer).UpdateGame(ctx, in)
+		return srv.(GameServiceServer).UpdateGame(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PlatformGameService_UpdateGame_FullMethodName,
+		FullMethod: GameService_UpdateGame_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlatformGameServiceServer).UpdateGame(ctx, req.(*UpdateGameRequest))
+		return srv.(GameServiceServer).UpdateGame(ctx, req.(*UpdateGameRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PlatformGameService_SyncPreview_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+// GameService_ServiceDesc is the grpc.ServiceDesc for GameService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var GameService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "platform_game.GameService",
+	HandlerType: (*GameServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetGameList",
+			Handler:    _GameService_GetGameList_Handler,
+		},
+		{
+			MethodName: "GetGame",
+			Handler:    _GameService_GetGame_Handler,
+		},
+		{
+			MethodName: "UpdateGame",
+			Handler:    _GameService_UpdateGame_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "platform_game.proto",
+}
+
+const (
+	GameCategoryService_GetGameCategoryList_FullMethodName = "/platform_game.GameCategoryService/GetGameCategoryList"
+	GameCategoryService_GetGameCategory_FullMethodName     = "/platform_game.GameCategoryService/GetGameCategory"
+	GameCategoryService_UpdateGameCategory_FullMethodName  = "/platform_game.GameCategoryService/UpdateGameCategory"
+)
+
+// GameCategoryServiceClient is the client API for GameCategoryService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// GameCategoryService - 游戏分类服务
+type GameCategoryServiceClient interface {
+	// 获取游戏分类列表
+	GetGameCategoryList(ctx context.Context, in *GetGameCategoryListRequest, opts ...grpc.CallOption) (*GetGameCategoryListResp, error)
+	// 获取单个游戏分类
+	GetGameCategory(ctx context.Context, in *GetGameCategoryRequest, opts ...grpc.CallOption) (*GetGameCategoryResp, error)
+	// 更新游戏分类
+	UpdateGameCategory(ctx context.Context, in *UpdateGameCategoryRequest, opts ...grpc.CallOption) (*UpdateGameCategoryResp, error)
+}
+
+type gameCategoryServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewGameCategoryServiceClient(cc grpc.ClientConnInterface) GameCategoryServiceClient {
+	return &gameCategoryServiceClient{cc}
+}
+
+func (c *gameCategoryServiceClient) GetGameCategoryList(ctx context.Context, in *GetGameCategoryListRequest, opts ...grpc.CallOption) (*GetGameCategoryListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetGameCategoryListResp)
+	err := c.cc.Invoke(ctx, GameCategoryService_GetGameCategoryList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gameCategoryServiceClient) GetGameCategory(ctx context.Context, in *GetGameCategoryRequest, opts ...grpc.CallOption) (*GetGameCategoryResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetGameCategoryResp)
+	err := c.cc.Invoke(ctx, GameCategoryService_GetGameCategory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gameCategoryServiceClient) UpdateGameCategory(ctx context.Context, in *UpdateGameCategoryRequest, opts ...grpc.CallOption) (*UpdateGameCategoryResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateGameCategoryResp)
+	err := c.cc.Invoke(ctx, GameCategoryService_UpdateGameCategory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// GameCategoryServiceServer is the server API for GameCategoryService service.
+// All implementations must embed UnimplementedGameCategoryServiceServer
+// for forward compatibility.
+//
+// GameCategoryService - 游戏分类服务
+type GameCategoryServiceServer interface {
+	// 获取游戏分类列表
+	GetGameCategoryList(context.Context, *GetGameCategoryListRequest) (*GetGameCategoryListResp, error)
+	// 获取单个游戏分类
+	GetGameCategory(context.Context, *GetGameCategoryRequest) (*GetGameCategoryResp, error)
+	// 更新游戏分类
+	UpdateGameCategory(context.Context, *UpdateGameCategoryRequest) (*UpdateGameCategoryResp, error)
+	mustEmbedUnimplementedGameCategoryServiceServer()
+}
+
+// UnimplementedGameCategoryServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedGameCategoryServiceServer struct{}
+
+func (UnimplementedGameCategoryServiceServer) GetGameCategoryList(context.Context, *GetGameCategoryListRequest) (*GetGameCategoryListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetGameCategoryList not implemented")
+}
+func (UnimplementedGameCategoryServiceServer) GetGameCategory(context.Context, *GetGameCategoryRequest) (*GetGameCategoryResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetGameCategory not implemented")
+}
+func (UnimplementedGameCategoryServiceServer) UpdateGameCategory(context.Context, *UpdateGameCategoryRequest) (*UpdateGameCategoryResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateGameCategory not implemented")
+}
+func (UnimplementedGameCategoryServiceServer) mustEmbedUnimplementedGameCategoryServiceServer() {}
+func (UnimplementedGameCategoryServiceServer) testEmbeddedByValue()                             {}
+
+// UnsafeGameCategoryServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to GameCategoryServiceServer will
+// result in compilation errors.
+type UnsafeGameCategoryServiceServer interface {
+	mustEmbedUnimplementedGameCategoryServiceServer()
+}
+
+func RegisterGameCategoryServiceServer(s grpc.ServiceRegistrar, srv GameCategoryServiceServer) {
+	// If the following call panics, it indicates UnimplementedGameCategoryServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&GameCategoryService_ServiceDesc, srv)
+}
+
+func _GameCategoryService_GetGameCategoryList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGameCategoryListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameCategoryServiceServer).GetGameCategoryList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GameCategoryService_GetGameCategoryList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameCategoryServiceServer).GetGameCategoryList(ctx, req.(*GetGameCategoryListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GameCategoryService_GetGameCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGameCategoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameCategoryServiceServer).GetGameCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GameCategoryService_GetGameCategory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameCategoryServiceServer).GetGameCategory(ctx, req.(*GetGameCategoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GameCategoryService_UpdateGameCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateGameCategoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameCategoryServiceServer).UpdateGameCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GameCategoryService_UpdateGameCategory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameCategoryServiceServer).UpdateGameCategory(ctx, req.(*UpdateGameCategoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// GameCategoryService_ServiceDesc is the grpc.ServiceDesc for GameCategoryService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var GameCategoryService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "platform_game.GameCategoryService",
+	HandlerType: (*GameCategoryServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetGameCategoryList",
+			Handler:    _GameCategoryService_GetGameCategoryList_Handler,
+		},
+		{
+			MethodName: "GetGameCategory",
+			Handler:    _GameCategoryService_GetGameCategory_Handler,
+		},
+		{
+			MethodName: "UpdateGameCategory",
+			Handler:    _GameCategoryService_UpdateGameCategory_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "platform_game.proto",
+}
+
+const (
+	GameProviderService_GetGameProviderList_FullMethodName = "/platform_game.GameProviderService/GetGameProviderList"
+	GameProviderService_GetGameProvider_FullMethodName     = "/platform_game.GameProviderService/GetGameProvider"
+	GameProviderService_UpdateGameProvider_FullMethodName  = "/platform_game.GameProviderService/UpdateGameProvider"
+)
+
+// GameProviderServiceClient is the client API for GameProviderService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// GameProviderService - 游戏供应商服务
+type GameProviderServiceClient interface {
+	// 获取游戏供应商列表
+	GetGameProviderList(ctx context.Context, in *GetGameProviderListRequest, opts ...grpc.CallOption) (*GetGameProviderListResp, error)
+	// 获取单个游戏供应商
+	GetGameProvider(ctx context.Context, in *GetGameProviderRequest, opts ...grpc.CallOption) (*GetGameProviderResp, error)
+	// 更新游戏供应商
+	UpdateGameProvider(ctx context.Context, in *UpdateGameProviderRequest, opts ...grpc.CallOption) (*UpdateGameProviderResp, error)
+}
+
+type gameProviderServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewGameProviderServiceClient(cc grpc.ClientConnInterface) GameProviderServiceClient {
+	return &gameProviderServiceClient{cc}
+}
+
+func (c *gameProviderServiceClient) GetGameProviderList(ctx context.Context, in *GetGameProviderListRequest, opts ...grpc.CallOption) (*GetGameProviderListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetGameProviderListResp)
+	err := c.cc.Invoke(ctx, GameProviderService_GetGameProviderList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gameProviderServiceClient) GetGameProvider(ctx context.Context, in *GetGameProviderRequest, opts ...grpc.CallOption) (*GetGameProviderResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetGameProviderResp)
+	err := c.cc.Invoke(ctx, GameProviderService_GetGameProvider_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gameProviderServiceClient) UpdateGameProvider(ctx context.Context, in *UpdateGameProviderRequest, opts ...grpc.CallOption) (*UpdateGameProviderResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateGameProviderResp)
+	err := c.cc.Invoke(ctx, GameProviderService_UpdateGameProvider_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// GameProviderServiceServer is the server API for GameProviderService service.
+// All implementations must embed UnimplementedGameProviderServiceServer
+// for forward compatibility.
+//
+// GameProviderService - 游戏供应商服务
+type GameProviderServiceServer interface {
+	// 获取游戏供应商列表
+	GetGameProviderList(context.Context, *GetGameProviderListRequest) (*GetGameProviderListResp, error)
+	// 获取单个游戏供应商
+	GetGameProvider(context.Context, *GetGameProviderRequest) (*GetGameProviderResp, error)
+	// 更新游戏供应商
+	UpdateGameProvider(context.Context, *UpdateGameProviderRequest) (*UpdateGameProviderResp, error)
+	mustEmbedUnimplementedGameProviderServiceServer()
+}
+
+// UnimplementedGameProviderServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedGameProviderServiceServer struct{}
+
+func (UnimplementedGameProviderServiceServer) GetGameProviderList(context.Context, *GetGameProviderListRequest) (*GetGameProviderListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetGameProviderList not implemented")
+}
+func (UnimplementedGameProviderServiceServer) GetGameProvider(context.Context, *GetGameProviderRequest) (*GetGameProviderResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetGameProvider not implemented")
+}
+func (UnimplementedGameProviderServiceServer) UpdateGameProvider(context.Context, *UpdateGameProviderRequest) (*UpdateGameProviderResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateGameProvider not implemented")
+}
+func (UnimplementedGameProviderServiceServer) mustEmbedUnimplementedGameProviderServiceServer() {}
+func (UnimplementedGameProviderServiceServer) testEmbeddedByValue()                             {}
+
+// UnsafeGameProviderServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to GameProviderServiceServer will
+// result in compilation errors.
+type UnsafeGameProviderServiceServer interface {
+	mustEmbedUnimplementedGameProviderServiceServer()
+}
+
+func RegisterGameProviderServiceServer(s grpc.ServiceRegistrar, srv GameProviderServiceServer) {
+	// If the following call panics, it indicates UnimplementedGameProviderServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&GameProviderService_ServiceDesc, srv)
+}
+
+func _GameProviderService_GetGameProviderList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGameProviderListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameProviderServiceServer).GetGameProviderList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GameProviderService_GetGameProviderList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameProviderServiceServer).GetGameProviderList(ctx, req.(*GetGameProviderListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GameProviderService_GetGameProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGameProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameProviderServiceServer).GetGameProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GameProviderService_GetGameProvider_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameProviderServiceServer).GetGameProvider(ctx, req.(*GetGameProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GameProviderService_UpdateGameProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateGameProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameProviderServiceServer).UpdateGameProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GameProviderService_UpdateGameProvider_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameProviderServiceServer).UpdateGameProvider(ctx, req.(*UpdateGameProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// GameProviderService_ServiceDesc is the grpc.ServiceDesc for GameProviderService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var GameProviderService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "platform_game.GameProviderService",
+	HandlerType: (*GameProviderServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetGameProviderList",
+			Handler:    _GameProviderService_GetGameProviderList_Handler,
+		},
+		{
+			MethodName: "GetGameProvider",
+			Handler:    _GameProviderService_GetGameProvider_Handler,
+		},
+		{
+			MethodName: "UpdateGameProvider",
+			Handler:    _GameProviderService_UpdateGameProvider_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "platform_game.proto",
+}
+
+const (
+	GameChannelService_GetGameChannel_FullMethodName     = "/platform_game.GameChannelService/GetGameChannel"
+	GameChannelService_GetGameChannelList_FullMethodName = "/platform_game.GameChannelService/GetGameChannelList"
+	GameChannelService_UpdateGameChannel_FullMethodName  = "/platform_game.GameChannelService/UpdateGameChannel"
+)
+
+// GameChannelServiceClient is the client API for GameChannelService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// GameChannelService - 游戏渠道服务
+type GameChannelServiceClient interface {
+	// 获取单个游戏渠道
+	GetGameChannel(ctx context.Context, in *GetGameChannelRequest, opts ...grpc.CallOption) (*GetGameChannelResp, error)
+	// 获取游戏渠道列表
+	GetGameChannelList(ctx context.Context, in *GetGameChannelListRequest, opts ...grpc.CallOption) (*GetGameChannelListResp, error)
+	// 更新游戏渠道
+	UpdateGameChannel(ctx context.Context, in *UpdateGameChannelRequest, opts ...grpc.CallOption) (*UpdateGameChannelResp, error)
+}
+
+type gameChannelServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewGameChannelServiceClient(cc grpc.ClientConnInterface) GameChannelServiceClient {
+	return &gameChannelServiceClient{cc}
+}
+
+func (c *gameChannelServiceClient) GetGameChannel(ctx context.Context, in *GetGameChannelRequest, opts ...grpc.CallOption) (*GetGameChannelResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetGameChannelResp)
+	err := c.cc.Invoke(ctx, GameChannelService_GetGameChannel_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gameChannelServiceClient) GetGameChannelList(ctx context.Context, in *GetGameChannelListRequest, opts ...grpc.CallOption) (*GetGameChannelListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetGameChannelListResp)
+	err := c.cc.Invoke(ctx, GameChannelService_GetGameChannelList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gameChannelServiceClient) UpdateGameChannel(ctx context.Context, in *UpdateGameChannelRequest, opts ...grpc.CallOption) (*UpdateGameChannelResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateGameChannelResp)
+	err := c.cc.Invoke(ctx, GameChannelService_UpdateGameChannel_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// GameChannelServiceServer is the server API for GameChannelService service.
+// All implementations must embed UnimplementedGameChannelServiceServer
+// for forward compatibility.
+//
+// GameChannelService - 游戏渠道服务
+type GameChannelServiceServer interface {
+	// 获取单个游戏渠道
+	GetGameChannel(context.Context, *GetGameChannelRequest) (*GetGameChannelResp, error)
+	// 获取游戏渠道列表
+	GetGameChannelList(context.Context, *GetGameChannelListRequest) (*GetGameChannelListResp, error)
+	// 更新游戏渠道
+	UpdateGameChannel(context.Context, *UpdateGameChannelRequest) (*UpdateGameChannelResp, error)
+	mustEmbedUnimplementedGameChannelServiceServer()
+}
+
+// UnimplementedGameChannelServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedGameChannelServiceServer struct{}
+
+func (UnimplementedGameChannelServiceServer) GetGameChannel(context.Context, *GetGameChannelRequest) (*GetGameChannelResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetGameChannel not implemented")
+}
+func (UnimplementedGameChannelServiceServer) GetGameChannelList(context.Context, *GetGameChannelListRequest) (*GetGameChannelListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetGameChannelList not implemented")
+}
+func (UnimplementedGameChannelServiceServer) UpdateGameChannel(context.Context, *UpdateGameChannelRequest) (*UpdateGameChannelResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateGameChannel not implemented")
+}
+func (UnimplementedGameChannelServiceServer) mustEmbedUnimplementedGameChannelServiceServer() {}
+func (UnimplementedGameChannelServiceServer) testEmbeddedByValue()                            {}
+
+// UnsafeGameChannelServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to GameChannelServiceServer will
+// result in compilation errors.
+type UnsafeGameChannelServiceServer interface {
+	mustEmbedUnimplementedGameChannelServiceServer()
+}
+
+func RegisterGameChannelServiceServer(s grpc.ServiceRegistrar, srv GameChannelServiceServer) {
+	// If the following call panics, it indicates UnimplementedGameChannelServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&GameChannelService_ServiceDesc, srv)
+}
+
+func _GameChannelService_GetGameChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGameChannelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameChannelServiceServer).GetGameChannel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GameChannelService_GetGameChannel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameChannelServiceServer).GetGameChannel(ctx, req.(*GetGameChannelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GameChannelService_GetGameChannelList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGameChannelListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameChannelServiceServer).GetGameChannelList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GameChannelService_GetGameChannelList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameChannelServiceServer).GetGameChannelList(ctx, req.(*GetGameChannelListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GameChannelService_UpdateGameChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateGameChannelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameChannelServiceServer).UpdateGameChannel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GameChannelService_UpdateGameChannel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameChannelServiceServer).UpdateGameChannel(ctx, req.(*UpdateGameChannelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// GameChannelService_ServiceDesc is the grpc.ServiceDesc for GameChannelService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var GameChannelService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "platform_game.GameChannelService",
+	HandlerType: (*GameChannelServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetGameChannel",
+			Handler:    _GameChannelService_GetGameChannel_Handler,
+		},
+		{
+			MethodName: "GetGameChannelList",
+			Handler:    _GameChannelService_GetGameChannelList_Handler,
+		},
+		{
+			MethodName: "UpdateGameChannel",
+			Handler:    _GameChannelService_UpdateGameChannel_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "platform_game.proto",
+}
+
+const (
+	GameCurrencyService_GetGameCurrencyList_FullMethodName = "/platform_game.GameCurrencyService/GetGameCurrencyList"
+	GameCurrencyService_GetGameCurrency_FullMethodName     = "/platform_game.GameCurrencyService/GetGameCurrency"
+	GameCurrencyService_UpdateGameCurrency_FullMethodName  = "/platform_game.GameCurrencyService/UpdateGameCurrency"
+)
+
+// GameCurrencyServiceClient is the client API for GameCurrencyService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// GameCurrencyService - 游戏货币服务
+type GameCurrencyServiceClient interface {
+	// 获取游戏货币列表
+	GetGameCurrencyList(ctx context.Context, in *GetGameCurrencyListRequest, opts ...grpc.CallOption) (*GetGameCurrencyListResp, error)
+	// 获取单个游戏货币
+	GetGameCurrency(ctx context.Context, in *GetGameCurrencyRequest, opts ...grpc.CallOption) (*GetGameCurrencyResp, error)
+	// 更新游戏货币
+	UpdateGameCurrency(ctx context.Context, in *UpdateGameCurrencyRequest, opts ...grpc.CallOption) (*UpdateGameCurrencyResp, error)
+}
+
+type gameCurrencyServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewGameCurrencyServiceClient(cc grpc.ClientConnInterface) GameCurrencyServiceClient {
+	return &gameCurrencyServiceClient{cc}
+}
+
+func (c *gameCurrencyServiceClient) GetGameCurrencyList(ctx context.Context, in *GetGameCurrencyListRequest, opts ...grpc.CallOption) (*GetGameCurrencyListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetGameCurrencyListResp)
+	err := c.cc.Invoke(ctx, GameCurrencyService_GetGameCurrencyList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gameCurrencyServiceClient) GetGameCurrency(ctx context.Context, in *GetGameCurrencyRequest, opts ...grpc.CallOption) (*GetGameCurrencyResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetGameCurrencyResp)
+	err := c.cc.Invoke(ctx, GameCurrencyService_GetGameCurrency_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gameCurrencyServiceClient) UpdateGameCurrency(ctx context.Context, in *UpdateGameCurrencyRequest, opts ...grpc.CallOption) (*UpdateGameCurrencyResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateGameCurrencyResp)
+	err := c.cc.Invoke(ctx, GameCurrencyService_UpdateGameCurrency_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// GameCurrencyServiceServer is the server API for GameCurrencyService service.
+// All implementations must embed UnimplementedGameCurrencyServiceServer
+// for forward compatibility.
+//
+// GameCurrencyService - 游戏货币服务
+type GameCurrencyServiceServer interface {
+	// 获取游戏货币列表
+	GetGameCurrencyList(context.Context, *GetGameCurrencyListRequest) (*GetGameCurrencyListResp, error)
+	// 获取单个游戏货币
+	GetGameCurrency(context.Context, *GetGameCurrencyRequest) (*GetGameCurrencyResp, error)
+	// 更新游戏货币
+	UpdateGameCurrency(context.Context, *UpdateGameCurrencyRequest) (*UpdateGameCurrencyResp, error)
+	mustEmbedUnimplementedGameCurrencyServiceServer()
+}
+
+// UnimplementedGameCurrencyServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedGameCurrencyServiceServer struct{}
+
+func (UnimplementedGameCurrencyServiceServer) GetGameCurrencyList(context.Context, *GetGameCurrencyListRequest) (*GetGameCurrencyListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetGameCurrencyList not implemented")
+}
+func (UnimplementedGameCurrencyServiceServer) GetGameCurrency(context.Context, *GetGameCurrencyRequest) (*GetGameCurrencyResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetGameCurrency not implemented")
+}
+func (UnimplementedGameCurrencyServiceServer) UpdateGameCurrency(context.Context, *UpdateGameCurrencyRequest) (*UpdateGameCurrencyResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateGameCurrency not implemented")
+}
+func (UnimplementedGameCurrencyServiceServer) mustEmbedUnimplementedGameCurrencyServiceServer() {}
+func (UnimplementedGameCurrencyServiceServer) testEmbeddedByValue()                             {}
+
+// UnsafeGameCurrencyServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to GameCurrencyServiceServer will
+// result in compilation errors.
+type UnsafeGameCurrencyServiceServer interface {
+	mustEmbedUnimplementedGameCurrencyServiceServer()
+}
+
+func RegisterGameCurrencyServiceServer(s grpc.ServiceRegistrar, srv GameCurrencyServiceServer) {
+	// If the following call panics, it indicates UnimplementedGameCurrencyServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&GameCurrencyService_ServiceDesc, srv)
+}
+
+func _GameCurrencyService_GetGameCurrencyList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGameCurrencyListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameCurrencyServiceServer).GetGameCurrencyList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GameCurrencyService_GetGameCurrencyList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameCurrencyServiceServer).GetGameCurrencyList(ctx, req.(*GetGameCurrencyListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GameCurrencyService_GetGameCurrency_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGameCurrencyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameCurrencyServiceServer).GetGameCurrency(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GameCurrencyService_GetGameCurrency_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameCurrencyServiceServer).GetGameCurrency(ctx, req.(*GetGameCurrencyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GameCurrencyService_UpdateGameCurrency_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateGameCurrencyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameCurrencyServiceServer).UpdateGameCurrency(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GameCurrencyService_UpdateGameCurrency_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameCurrencyServiceServer).UpdateGameCurrency(ctx, req.(*UpdateGameCurrencyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// GameCurrencyService_ServiceDesc is the grpc.ServiceDesc for GameCurrencyService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var GameCurrencyService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "platform_game.GameCurrencyService",
+	HandlerType: (*GameCurrencyServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetGameCurrencyList",
+			Handler:    _GameCurrencyService_GetGameCurrencyList_Handler,
+		},
+		{
+			MethodName: "GetGameCurrency",
+			Handler:    _GameCurrencyService_GetGameCurrency_Handler,
+		},
+		{
+			MethodName: "UpdateGameCurrency",
+			Handler:    _GameCurrencyService_UpdateGameCurrency_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "platform_game.proto",
+}
+
+const (
+	GameSyncCheckpointService_GetGameSyncCheckpoint_FullMethodName     = "/platform_game.GameSyncCheckpointService/GetGameSyncCheckpoint"
+	GameSyncCheckpointService_GetGameSyncCheckpointList_FullMethodName = "/platform_game.GameSyncCheckpointService/GetGameSyncCheckpointList"
+)
+
+// GameSyncCheckpointServiceClient is the client API for GameSyncCheckpointService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// GameSyncCheckpointService - 游戏同步检查点服务
+type GameSyncCheckpointServiceClient interface {
+	// 获取单个同步检查点
+	GetGameSyncCheckpoint(ctx context.Context, in *GetGameSyncCheckpointRequest, opts ...grpc.CallOption) (*GetGameSyncCheckpointResp, error)
+	// 获取同步检查点列表
+	GetGameSyncCheckpointList(ctx context.Context, in *GetGameSyncCheckpointListRequest, opts ...grpc.CallOption) (*GetGameSyncCheckpointListResp, error)
+}
+
+type gameSyncCheckpointServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewGameSyncCheckpointServiceClient(cc grpc.ClientConnInterface) GameSyncCheckpointServiceClient {
+	return &gameSyncCheckpointServiceClient{cc}
+}
+
+func (c *gameSyncCheckpointServiceClient) GetGameSyncCheckpoint(ctx context.Context, in *GetGameSyncCheckpointRequest, opts ...grpc.CallOption) (*GetGameSyncCheckpointResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetGameSyncCheckpointResp)
+	err := c.cc.Invoke(ctx, GameSyncCheckpointService_GetGameSyncCheckpoint_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gameSyncCheckpointServiceClient) GetGameSyncCheckpointList(ctx context.Context, in *GetGameSyncCheckpointListRequest, opts ...grpc.CallOption) (*GetGameSyncCheckpointListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetGameSyncCheckpointListResp)
+	err := c.cc.Invoke(ctx, GameSyncCheckpointService_GetGameSyncCheckpointList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// GameSyncCheckpointServiceServer is the server API for GameSyncCheckpointService service.
+// All implementations must embed UnimplementedGameSyncCheckpointServiceServer
+// for forward compatibility.
+//
+// GameSyncCheckpointService - 游戏同步检查点服务
+type GameSyncCheckpointServiceServer interface {
+	// 获取单个同步检查点
+	GetGameSyncCheckpoint(context.Context, *GetGameSyncCheckpointRequest) (*GetGameSyncCheckpointResp, error)
+	// 获取同步检查点列表
+	GetGameSyncCheckpointList(context.Context, *GetGameSyncCheckpointListRequest) (*GetGameSyncCheckpointListResp, error)
+	mustEmbedUnimplementedGameSyncCheckpointServiceServer()
+}
+
+// UnimplementedGameSyncCheckpointServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedGameSyncCheckpointServiceServer struct{}
+
+func (UnimplementedGameSyncCheckpointServiceServer) GetGameSyncCheckpoint(context.Context, *GetGameSyncCheckpointRequest) (*GetGameSyncCheckpointResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetGameSyncCheckpoint not implemented")
+}
+func (UnimplementedGameSyncCheckpointServiceServer) GetGameSyncCheckpointList(context.Context, *GetGameSyncCheckpointListRequest) (*GetGameSyncCheckpointListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetGameSyncCheckpointList not implemented")
+}
+func (UnimplementedGameSyncCheckpointServiceServer) mustEmbedUnimplementedGameSyncCheckpointServiceServer() {
+}
+func (UnimplementedGameSyncCheckpointServiceServer) testEmbeddedByValue() {}
+
+// UnsafeGameSyncCheckpointServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to GameSyncCheckpointServiceServer will
+// result in compilation errors.
+type UnsafeGameSyncCheckpointServiceServer interface {
+	mustEmbedUnimplementedGameSyncCheckpointServiceServer()
+}
+
+func RegisterGameSyncCheckpointServiceServer(s grpc.ServiceRegistrar, srv GameSyncCheckpointServiceServer) {
+	// If the following call panics, it indicates UnimplementedGameSyncCheckpointServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&GameSyncCheckpointService_ServiceDesc, srv)
+}
+
+func _GameSyncCheckpointService_GetGameSyncCheckpoint_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGameSyncCheckpointRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameSyncCheckpointServiceServer).GetGameSyncCheckpoint(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GameSyncCheckpointService_GetGameSyncCheckpoint_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameSyncCheckpointServiceServer).GetGameSyncCheckpoint(ctx, req.(*GetGameSyncCheckpointRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GameSyncCheckpointService_GetGameSyncCheckpointList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGameSyncCheckpointListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameSyncCheckpointServiceServer).GetGameSyncCheckpointList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GameSyncCheckpointService_GetGameSyncCheckpointList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameSyncCheckpointServiceServer).GetGameSyncCheckpointList(ctx, req.(*GetGameSyncCheckpointListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// GameSyncCheckpointService_ServiceDesc is the grpc.ServiceDesc for GameSyncCheckpointService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var GameSyncCheckpointService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "platform_game.GameSyncCheckpointService",
+	HandlerType: (*GameSyncCheckpointServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetGameSyncCheckpoint",
+			Handler:    _GameSyncCheckpointService_GetGameSyncCheckpoint_Handler,
+		},
+		{
+			MethodName: "GetGameSyncCheckpointList",
+			Handler:    _GameSyncCheckpointService_GetGameSyncCheckpointList_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "platform_game.proto",
+}
+
+const (
+	SyncService_SyncPreview_FullMethodName  = "/platform_game.SyncService/SyncPreview"
+	SyncService_SyncRun_FullMethodName      = "/platform_game.SyncService/SyncRun"
+	SyncService_ExecuteV2Sql_FullMethodName = "/platform_game.SyncService/ExecuteV2Sql"
+)
+
+// SyncServiceClient is the client API for SyncService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// SyncService - 数据同步服务
+type SyncServiceClient interface {
+	// 同步预检查（查看差异，不修改数据）
+	SyncPreview(ctx context.Context, in *SyncPreviewRequest, opts ...grpc.CallOption) (*SyncPreviewResp, error)
+	// 同步执行（执行同步操作）
+	SyncRun(ctx context.Context, in *SyncRunRequest, opts ...grpc.CallOption) (*SyncRunResp, error)
+	// 执行 v2sql 下的 SQL 初始化脚本（供运维/初始化使用）
+	ExecuteV2Sql(ctx context.Context, in *ExecuteV2SqlRequest, opts ...grpc.CallOption) (*ExecuteV2SqlResp, error)
+}
+
+type syncServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewSyncServiceClient(cc grpc.ClientConnInterface) SyncServiceClient {
+	return &syncServiceClient{cc}
+}
+
+func (c *syncServiceClient) SyncPreview(ctx context.Context, in *SyncPreviewRequest, opts ...grpc.CallOption) (*SyncPreviewResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SyncPreviewResp)
+	err := c.cc.Invoke(ctx, SyncService_SyncPreview_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *syncServiceClient) SyncRun(ctx context.Context, in *SyncRunRequest, opts ...grpc.CallOption) (*SyncRunResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SyncRunResp)
+	err := c.cc.Invoke(ctx, SyncService_SyncRun_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *syncServiceClient) ExecuteV2Sql(ctx context.Context, in *ExecuteV2SqlRequest, opts ...grpc.CallOption) (*ExecuteV2SqlResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ExecuteV2SqlResp)
+	err := c.cc.Invoke(ctx, SyncService_ExecuteV2Sql_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// SyncServiceServer is the server API for SyncService service.
+// All implementations must embed UnimplementedSyncServiceServer
+// for forward compatibility.
+//
+// SyncService - 数据同步服务
+type SyncServiceServer interface {
+	// 同步预检查（查看差异，不修改数据）
+	SyncPreview(context.Context, *SyncPreviewRequest) (*SyncPreviewResp, error)
+	// 同步执行（执行同步操作）
+	SyncRun(context.Context, *SyncRunRequest) (*SyncRunResp, error)
+	// 执行 v2sql 下的 SQL 初始化脚本（供运维/初始化使用）
+	ExecuteV2Sql(context.Context, *ExecuteV2SqlRequest) (*ExecuteV2SqlResp, error)
+	mustEmbedUnimplementedSyncServiceServer()
+}
+
+// UnimplementedSyncServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedSyncServiceServer struct{}
+
+func (UnimplementedSyncServiceServer) SyncPreview(context.Context, *SyncPreviewRequest) (*SyncPreviewResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SyncPreview not implemented")
+}
+func (UnimplementedSyncServiceServer) SyncRun(context.Context, *SyncRunRequest) (*SyncRunResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SyncRun not implemented")
+}
+func (UnimplementedSyncServiceServer) ExecuteV2Sql(context.Context, *ExecuteV2SqlRequest) (*ExecuteV2SqlResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ExecuteV2Sql not implemented")
+}
+func (UnimplementedSyncServiceServer) mustEmbedUnimplementedSyncServiceServer() {}
+func (UnimplementedSyncServiceServer) testEmbeddedByValue()                     {}
+
+// UnsafeSyncServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to SyncServiceServer will
+// result in compilation errors.
+type UnsafeSyncServiceServer interface {
+	mustEmbedUnimplementedSyncServiceServer()
+}
+
+func RegisterSyncServiceServer(s grpc.ServiceRegistrar, srv SyncServiceServer) {
+	// If the following call panics, it indicates UnimplementedSyncServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&SyncService_ServiceDesc, srv)
+}
+
+func _SyncService_SyncPreview_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SyncPreviewRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PlatformGameServiceServer).SyncPreview(ctx, in)
+		return srv.(SyncServiceServer).SyncPreview(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PlatformGameService_SyncPreview_FullMethodName,
+		FullMethod: SyncService_SyncPreview_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlatformGameServiceServer).SyncPreview(ctx, req.(*SyncPreviewRequest))
+		return srv.(SyncServiceServer).SyncPreview(ctx, req.(*SyncPreviewRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PlatformGameService_SyncRun_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _SyncService_SyncRun_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SyncRunRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PlatformGameServiceServer).SyncRun(ctx, in)
+		return srv.(SyncServiceServer).SyncRun(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PlatformGameService_SyncRun_FullMethodName,
+		FullMethod: SyncService_SyncRun_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlatformGameServiceServer).SyncRun(ctx, req.(*SyncRunRequest))
+		return srv.(SyncServiceServer).SyncRun(ctx, req.(*SyncRunRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PlatformGameService_SyncAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SyncAllRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PlatformGameServiceServer).SyncAll(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PlatformGameService_SyncAll_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlatformGameServiceServer).SyncAll(ctx, req.(*SyncAllRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PlatformGameService_ExecuteV2Sql_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _SyncService_ExecuteV2Sql_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ExecuteV2SqlRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PlatformGameServiceServer).ExecuteV2Sql(ctx, in)
+		return srv.(SyncServiceServer).ExecuteV2Sql(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PlatformGameService_ExecuteV2Sql_FullMethodName,
+		FullMethod: SyncService_ExecuteV2Sql_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlatformGameServiceServer).ExecuteV2Sql(ctx, req.(*ExecuteV2SqlRequest))
+		return srv.(SyncServiceServer).ExecuteV2Sql(ctx, req.(*ExecuteV2SqlRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// PlatformGameService_ServiceDesc is the grpc.ServiceDesc for PlatformGameService service.
+// SyncService_ServiceDesc is the grpc.ServiceDesc for SyncService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var PlatformGameService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "platform_game.PlatformGameService",
-	HandlerType: (*PlatformGameServiceServer)(nil),
+var SyncService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "platform_game.SyncService",
+	HandlerType: (*SyncServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Ping",
-			Handler:    _PlatformGameService_Ping_Handler,
-		},
-		{
-			MethodName: "GetGameList",
-			Handler:    _PlatformGameService_GetGameList_Handler,
-		},
-		{
-			MethodName: "GetGame",
-			Handler:    _PlatformGameService_GetGame_Handler,
-		},
-		{
-			MethodName: "GetGameCategoryList",
-			Handler:    _PlatformGameService_GetGameCategoryList_Handler,
-		},
-		{
-			MethodName: "GetGameCategory",
-			Handler:    _PlatformGameService_GetGameCategory_Handler,
-		},
-		{
-			MethodName: "GetGameProviderList",
-			Handler:    _PlatformGameService_GetGameProviderList_Handler,
-		},
-		{
-			MethodName: "GetGameProvider",
-			Handler:    _PlatformGameService_GetGameProvider_Handler,
-		},
-		{
-			MethodName: "GetGameChannel",
-			Handler:    _PlatformGameService_GetGameChannel_Handler,
-		},
-		{
-			MethodName: "GetGameChannelList",
-			Handler:    _PlatformGameService_GetGameChannelList_Handler,
-		},
-		{
-			MethodName: "GetGameCurrencyList",
-			Handler:    _PlatformGameService_GetGameCurrencyList_Handler,
-		},
-		{
-			MethodName: "GetGameCurrency",
-			Handler:    _PlatformGameService_GetGameCurrency_Handler,
-		},
-		{
-			MethodName: "GetGameSyncCheckpoint",
-			Handler:    _PlatformGameService_GetGameSyncCheckpoint_Handler,
-		},
-		{
-			MethodName: "GetGameSyncCheckpointList",
-			Handler:    _PlatformGameService_GetGameSyncCheckpointList_Handler,
-		},
-		{
-			MethodName: "UpdateGameCategory",
-			Handler:    _PlatformGameService_UpdateGameCategory_Handler,
-		},
-		{
-			MethodName: "UpdateGameProvider",
-			Handler:    _PlatformGameService_UpdateGameProvider_Handler,
-		},
-		{
-			MethodName: "UpdateGameChannel",
-			Handler:    _PlatformGameService_UpdateGameChannel_Handler,
-		},
-		{
-			MethodName: "UpdateGameCurrency",
-			Handler:    _PlatformGameService_UpdateGameCurrency_Handler,
-		},
-		{
-			MethodName: "UpdateGame",
-			Handler:    _PlatformGameService_UpdateGame_Handler,
-		},
-		{
 			MethodName: "SyncPreview",
-			Handler:    _PlatformGameService_SyncPreview_Handler,
+			Handler:    _SyncService_SyncPreview_Handler,
 		},
 		{
 			MethodName: "SyncRun",
-			Handler:    _PlatformGameService_SyncRun_Handler,
-		},
-		{
-			MethodName: "SyncAll",
-			Handler:    _PlatformGameService_SyncAll_Handler,
+			Handler:    _SyncService_SyncRun_Handler,
 		},
 		{
 			MethodName: "ExecuteV2Sql",
-			Handler:    _PlatformGameService_ExecuteV2Sql_Handler,
+			Handler:    _SyncService_ExecuteV2Sql_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

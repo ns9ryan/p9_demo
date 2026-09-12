@@ -3,10 +3,13 @@ package operatorservicelogic
 import (
 	"context"
 
+	"github.com/zeromicro/go-zero/core/logx"
+
+	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
+	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
+	"oa.98ent.com/p9/platform-operator/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
 	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/operator"
-
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type GetLogic struct {
@@ -23,9 +26,22 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 	}
 }
 
-// 获取分站
+// Get 获取分站
 func (l *GetLogic) Get(in *operator.GetOperatorRequest) (*operator.GetOperatorResponse, error) {
-	// todo: add your logic here and delete this line
+	// 分站ID必须大于0
+	if in.Id <= 0 {
+		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
+	}
 
-	return &operator.GetOperatorResponse{}, nil
+	// 获取分站
+	result, err := l.svcCtx.DB.Operator.Get(l.ctx, in.Id)
+	if err != nil {
+		// 转换Ent错误为gRPC错误
+		return nil, enterror.Handle(l.Logger, err)
+	}
+
+	// 返回分站信息
+	return &operator.GetOperatorResponse{
+		Operator: toOperatorInfo(result), // 分站信息
+	}, nil
 }

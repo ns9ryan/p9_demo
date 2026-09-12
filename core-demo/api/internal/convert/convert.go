@@ -30,7 +30,7 @@ func i64Ptr(v int64) *int64 {
 	return &v
 }
 
-func UserPublic(in *coreclient.UserPublic) *types.UserPublic {
+func UserPublic(ctx context.Context, in *coreclient.UserPublic) *types.UserPublic {
 	if in == nil {
 		return nil
 	}
@@ -38,16 +38,34 @@ func UserPublic(in *coreclient.UserPublic) *types.UserPublic {
 	if codes == nil {
 		codes = []string{}
 	}
+	roleNames := in.RoleNames
+	if roleNames == nil {
+		roleNames = []string{}
+	}
+	trans := make([]string, 0, len(roleNames))
+	for _, name := range roleNames {
+		trans = append(trans, i18n.T(ctx, name))
+	}
 	return &types.UserPublic{
 		Id: in.Id, UserCode: in.UserCode, Username: in.Username, DisplayName: in.DisplayName,
 		OperatorId: in.GetOperatorId(), IsSuperAdmin: in.IsSuperAdmin, Status: in.Status,
-		RoleCodes: codes, HomePath: in.HomePath,
+		RoleCodes: codes, RoleNames: trans, HomePath: in.HomePath,
 		CreatedAt: in.CreatedAt, LastLoginAt: in.GetLastLoginAt(),
 		Mobile: in.GetMobile(), Email: in.GetEmail(),
+		IpWhitelistEnabled: in.IpWhitelistEnabled, IpWhitelist: copyStrSlice(in.IpWhitelist),
 	}
 }
 
-func LoginResp(in *coreclient.LoginResp) *types.LoginResp {
+func copyStrSlice(in []string) []string {
+	if in == nil {
+		return []string{}
+	}
+	out := make([]string, len(in))
+	copy(out, in)
+	return out
+}
+
+func LoginResp(ctx context.Context, in *coreclient.LoginResp) *types.LoginResp {
 	if in == nil {
 		return nil
 	}
@@ -58,7 +76,7 @@ func LoginResp(in *coreclient.LoginResp) *types.LoginResp {
 			Expire: in.Token.Expire, RefreshExpire: in.Token.RefreshExpire,
 		}
 	}
-	if u := UserPublic(in.User); u != nil {
+	if u := UserPublic(ctx, in.User); u != nil {
 		out.User = *u
 	}
 	return out
@@ -84,22 +102,22 @@ func PermResp(in *coreclient.PermResp) *types.PermResp {
 	return &types.PermResp{Permissions: codes}
 }
 
-func MenuNodes(ctx context.Context, in []*coreclient.MenuNode) []types.MenuNode {
+func MenuNodes(ctx context.Context, code string, in []*coreclient.MenuNode) []types.MenuNode {
 	out := make([]types.MenuNode, 0, len(in))
 	for _, n := range in {
-		out = append(out, menuNode(ctx, n))
+		out = append(out, menuNode(ctx, code, n))
 	}
 	return out
 }
 
-func menuNode(ctx context.Context, n *coreclient.MenuNode) types.MenuNode {
+func menuNode(ctx context.Context, code string, n *coreclient.MenuNode) types.MenuNode {
 	if n == nil {
 		return types.MenuNode{Children: []types.MenuNode{}}
 	}
 	return types.MenuNode{
 		Id: n.Id, ParentId: n.ParentId, MenuType: n.MenuType, Path: n.Path, Name: n.Name,
-		Component: n.Component, Redirect: n.Redirect, Title: i18n.TG(ctx, i18n.CodePlatform, i18n.GroupMenu, n.Title),
-		Icon: n.Icon, Permission: n.Permission, HideMenu: n.HideMenu, Sort: n.Sort, Children: MenuNodes(ctx, n.Children),
+		Component: n.Component, Redirect: n.Redirect, Title: i18n.TG(ctx, code, i18n.GroupMenu, n.Title),
+		Icon: n.Icon, Permission: n.Permission, HideMenu: n.HideMenu, Sort: n.Sort, Children: MenuNodes(ctx, code, n.Children),
 	}
 }
 
@@ -126,32 +144,32 @@ func RoleInfo(ctx context.Context, in *coreclient.RoleInfo) *types.RoleInfo {
 	}
 }
 
-func MenuInfo(ctx context.Context, in *coreclient.MenuInfo) *types.MenuInfo {
+func MenuInfo(ctx context.Context, code string, in *coreclient.MenuInfo) *types.MenuInfo {
 	if in == nil {
 		return nil
 	}
 	return &types.MenuInfo{
 		Id: in.Id, ParentId: in.ParentId, MenuType: in.MenuType, Path: in.Path, Name: in.Name, Component: in.Component,
-		Redirect: in.Redirect, TransTitle: i18n.TG(ctx, i18n.CodePlatform, i18n.GroupMenu, in.Title), Title: in.Title, Icon: in.Icon,
+		Redirect: in.Redirect, TransTitle: i18n.TG(ctx, code, i18n.GroupMenu, in.Title), Title: in.Title, Icon: in.Icon,
 		Permission: in.Permission, HideMenu: in.HideMenu, Sort: in.Sort, Disabled: in.Disabled,
 		CreatedAt: in.CreatedAt, UpdatedAt: in.UpdatedAt,
 	}
 }
 
-func ApiInfo(ctx context.Context, in *coreclient.ApiInfo) *types.ApiInfo {
+func ApiInfo(ctx context.Context, code string, in *coreclient.ApiInfo) *types.ApiInfo {
 	if in == nil {
 		return nil
 	}
 	return &types.ApiInfo{
-		Id: in.Id, TransDescription: i18n.TG(ctx, i18n.CodePlatform, i18n.GroupAPI, in.Description), Description: in.Description, ApiGroup: in.ApiGroup,
+		Id: in.Id, TransDescription: i18n.TG(ctx, code, i18n.GroupAPI, in.Description), Description: in.Description, ApiGroup: in.ApiGroup,
 		Method: in.Method, Path: in.Path, IsRequired: in.IsRequired, ServiceName: in.ServiceName, CreatedAt: in.CreatedAt, UpdatedAt: in.UpdatedAt,
 	}
 }
 
-func UserList(in *coreclient.UserListResp) *types.UserListResp {
+func UserList(ctx context.Context, in *coreclient.UserListResp) *types.UserListResp {
 	list := make([]types.UserPublic, 0, len(in.GetList()))
 	for _, u := range in.GetList() {
-		if p := UserPublic(u); p != nil {
+		if p := UserPublic(ctx, u); p != nil {
 			list = append(list, *p)
 		}
 	}
@@ -168,28 +186,28 @@ func RoleList(ctx context.Context, in *coreclient.RoleListResp) *types.RoleListR
 	return &types.RoleListResp{List: list, Total: in.GetTotal()}
 }
 
-func MenuInfos(ctx context.Context, in []*coreclient.MenuInfo) []types.MenuInfo {
+func MenuInfos(ctx context.Context, code string, in []*coreclient.MenuInfo) []types.MenuInfo {
 	out := make([]types.MenuInfo, 0, len(in))
 	for _, m := range in {
-		if p := MenuInfo(ctx, m); p != nil {
+		if p := MenuInfo(ctx, code, m); p != nil {
 			out = append(out, *p)
 		}
 	}
 	return out
 }
 
-func ApiInfos(ctx context.Context, in []*coreclient.ApiInfo) []types.ApiInfo {
+func ApiInfos(ctx context.Context, code string, in []*coreclient.ApiInfo) []types.ApiInfo {
 	out := make([]types.ApiInfo, 0, len(in))
 	for _, a := range in {
-		if p := ApiInfo(ctx, a); p != nil {
+		if p := ApiInfo(ctx, code, a); p != nil {
 			out = append(out, *p)
 		}
 	}
 	return out
 }
 
-func ApiList(ctx context.Context, in *coreclient.ApiListResp) *types.ApiListResp {
-	return &types.ApiListResp{List: ApiInfos(ctx, in.GetList()), Total: in.GetTotal()}
+func ApiList(ctx context.Context, code string, in *coreclient.ApiListResp) *types.ApiListResp {
+	return &types.ApiListResp{List: ApiInfos(ctx, code, in.GetList()), Total: in.GetTotal()}
 }
 
 func ApiListReq(in *types.ApiListReq) *coreclient.ApiListReq {
@@ -229,6 +247,16 @@ func UpdateUserReq(in *types.UpdateUserReq) *coreclient.UpdateUserReq {
 	return &coreclient.UpdateUserReq{
 		Id: in.Id, DisplayName: strPtr(in.DisplayName), Mobile: strPtr(in.Mobile),
 		Email: strPtr(in.Email), Status: i32Ptr(in.Status),
+	}
+}
+
+func UpdateUserIpWhitelistReq(in *types.UpdateUserIpWhitelistReq) *coreclient.UpdateUserIpWhitelistReq {
+	list := in.IpWhitelist
+	if list == nil {
+		list = []string{}
+	}
+	return &coreclient.UpdateUserIpWhitelistReq{
+		Id: in.Id, IpWhitelistEnabled: in.IpWhitelistEnabled, IpWhitelist: list,
 	}
 }
 
@@ -474,7 +502,7 @@ func UpdateI18nReq(in *types.UpdateI18nReq) *coreclient.UpdateI18NReq {
 }
 
 func UpdateI18nByKeyReq(in *types.UpdateI18nByKeyReq) *coreclient.UpdateI18NByKeyReq {
-	return &coreclient.UpdateI18NByKeyReq{TransKey: in.TransKey, Data: in.Data}
+	return &coreclient.UpdateI18NByKeyReq{I18NCode: in.I18nCode, I18NGroup: in.I18nGroup, TransKey: in.TransKey, Data: in.Data}
 }
 
 func I18nListReq(in *types.I18nListReq) *coreclient.I18NListReq {

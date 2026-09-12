@@ -7,6 +7,7 @@ import (
 	"oa.98ent.com/p9/core/common/ctxdata"
 	"oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/common/jwt"
+	"oa.98ent.com/p9/core/common/utils"
 	"oa.98ent.com/p9/core/common/xerr"
 	"oa.98ent.com/p9/core/rpc/ent"
 	"oa.98ent.com/p9/core/rpc/ent/operator"
@@ -106,6 +107,7 @@ func (d *Deps) IssuePreviewToken(ctx context.Context, req IssuePreviewTokenReq) 
 		Salt:         admin.Salt,
 		TokenType:    jwt.TokenPreview,
 		IsPlatform:   true,
+		ClientIP:     utils.NormalizeIP(ctxdata.ClientIPFromCtx(ctx)),
 	})
 	if err != nil {
 		return nil, err

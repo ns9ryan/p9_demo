@@ -24,31 +24,31 @@ func NewDomainServiceServer(svcCtx *svc.ServiceContext) *DomainServiceServer {
 	}
 }
 
-// 创建域名
+// 创建分站域名
 func (s *DomainServiceServer) Create(ctx context.Context, in *domain.CreateDomainRequest) (*domain.CreateDomainResponse, error) {
 	l := domainservicelogic.NewCreateLogic(ctx, s.svcCtx)
 	return l.Create(in)
 }
 
-// 修改域名
+// 修改分站域名
 func (s *DomainServiceServer) Update(ctx context.Context, in *domain.UpdateDomainRequest) (*domain.UpdateDomainResponse, error) {
 	l := domainservicelogic.NewUpdateLogic(ctx, s.svcCtx)
 	return l.Update(in)
 }
 
-// 获取域名
+// 获取分站域名
 func (s *DomainServiceServer) Get(ctx context.Context, in *domain.GetDomainRequest) (*domain.GetDomainResponse, error) {
 	l := domainservicelogic.NewGetLogic(ctx, s.svcCtx)
 	return l.Get(in)
 }
 
-// 获取域名管理列表
+// 获取分站域名管理列表
 func (s *DomainServiceServer) List(ctx context.Context, in *domain.ListDomainsRequest) (*domain.ListDomainsResponse, error) {
 	l := domainservicelogic.NewListLogic(ctx, s.svcCtx)
 	return l.List(in)
 }
 
-// 删除域名
+// 删除分站域名
 func (s *DomainServiceServer) Delete(ctx context.Context, in *domain.DeleteDomainRequest) (*domain.DeleteDomainResponse, error) {
 	l := domainservicelogic.NewDeleteLogic(ctx, s.svcCtx)
 	return l.Delete(in)

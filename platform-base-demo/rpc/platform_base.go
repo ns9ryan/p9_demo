@@ -34,11 +34,16 @@ func main() {
 	ctx.MustMigrate()
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
+		// Ping 服务
 		base.RegisterPingServiceServer(grpcServer, pingserviceServer.NewPingServiceServer(ctx))
+		// 时区服务
 		base.RegisterTimezoneServiceServer(grpcServer, timezoneserviceServer.NewTimezoneServiceServer(ctx))
+		// 货币服务
 		base.RegisterCurrencyServiceServer(grpcServer, currencyserviceServer.NewCurrencyServiceServer(ctx))
+		// 国家地区服务
 		base.RegisterRegionServiceServer(grpcServer, regionserviceServer.NewRegionServiceServer(ctx))
 
+		// 开发和测试环境额外开启服务反射
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)
 		}

@@ -13,84 +13,85 @@ import (
 )
 
 type (
-	AdminActionLogInfo      = core.AdminActionLogInfo
-	AdminActionLogListReq   = core.AdminActionLogListReq
-	AdminActionLogListResp  = core.AdminActionLogListResp
-	ApiAuthItem             = core.ApiAuthItem
-	ApiAuthReq              = core.ApiAuthReq
-	ApiAuthResp             = core.ApiAuthResp
-	ApiInfo                 = core.ApiInfo
-	ApiListReq              = core.ApiListReq
-	ApiListResp             = core.ApiListResp
-	BindRolesReq            = core.BindRolesReq
-	BootstrapAdminReq       = core.BootstrapAdminReq
-	BootstrapOperatorReq    = core.BootstrapOperatorReq
-	CheckTokenReq           = core.CheckTokenReq
-	CheckTokenResp          = core.CheckTokenResp
-	CreateAdminActionLogReq = core.CreateAdminActionLogReq
-	CreateApiReq            = core.CreateApiReq
-	CreateErrorLogReq       = core.CreateErrorLogReq
-	CreateI18NLangReq       = core.CreateI18NLangReq
-	CreateI18NReq           = core.CreateI18NReq
-	CreateMenuReq           = core.CreateMenuReq
-	CreateRoleReq           = core.CreateRoleReq
-	CreateUserReq           = core.CreateUserReq
-	Empty                   = core.Empty
-	EnforceReq              = core.EnforceReq
-	EnforceResp             = core.EnforceResp
-	ErrorLogInfo            = core.ErrorLogInfo
-	ErrorLogListReq         = core.ErrorLogListReq
-	ErrorLogListResp        = core.ErrorLogListResp
-	GetI18NDictReq          = core.GetI18NDictReq
-	I18NDictResp            = core.I18NDictResp
-	I18NInfo                = core.I18NInfo
-	I18NItem                = core.I18NItem
-	I18NLangInfo            = core.I18NLangInfo
-	I18NLangListReq         = core.I18NLangListReq
-	I18NLangListResp        = core.I18NLangListResp
-	I18NListReq             = core.I18NListReq
-	I18NListResp            = core.I18NListResp
-	IDReq                   = core.IDReq
-	IDsReq                  = core.IDsReq
-	IssuePreviewTokenReq    = core.IssuePreviewTokenReq
-	IssuePreviewTokenResp   = core.IssuePreviewTokenResp
-	LoginLogInfo            = core.LoginLogInfo
-	LoginLogListReq         = core.LoginLogListReq
-	LoginLogListResp        = core.LoginLogListResp
-	LoginReq                = core.LoginReq
-	LoginResp               = core.LoginResp
-	LogoutReq               = core.LogoutReq
-	MenuAuthReq             = core.MenuAuthReq
-	MenuAuthResp            = core.MenuAuthResp
-	MenuInfo                = core.MenuInfo
-	MenuListResp            = core.MenuListResp
-	MenuNode                = core.MenuNode
-	MenuTreeResp            = core.MenuTreeResp
-	OperatorInfo            = core.OperatorInfo
-	PageReq                 = core.PageReq
-	PasswordReq             = core.PasswordReq
-	PermResp                = core.PermResp
-	RefreshReq              = core.RefreshReq
-	RegisterCatalogReq      = core.RegisterCatalogReq
-	RegisterMenuReq         = core.RegisterMenuReq
-	ReorderI18NLangReq      = core.ReorderI18NLangReq
-	RoleIdReq               = core.RoleIdReq
-	RoleInfo                = core.RoleInfo
-	RoleListReq             = core.RoleListReq
-	RoleListResp            = core.RoleListResp
-	SelfPasswordReq         = core.SelfPasswordReq
-	TokenInfo               = core.TokenInfo
-	UpdateApiReq            = core.UpdateApiReq
-	UpdateI18NByKeyReq      = core.UpdateI18NByKeyReq
-	UpdateI18NLangReq       = core.UpdateI18NLangReq
-	UpdateI18NReq           = core.UpdateI18NReq
-	UpdateMenuReq           = core.UpdateMenuReq
-	UpdateOperatorReq       = core.UpdateOperatorReq
-	UpdateRoleReq           = core.UpdateRoleReq
-	UpdateUserReq           = core.UpdateUserReq
-	UserListReq             = core.UserListReq
-	UserListResp            = core.UserListResp
-	UserPublic              = core.UserPublic
+	AdminActionLogInfo       = core.AdminActionLogInfo
+	AdminActionLogListReq    = core.AdminActionLogListReq
+	AdminActionLogListResp   = core.AdminActionLogListResp
+	ApiAuthItem              = core.ApiAuthItem
+	ApiAuthReq               = core.ApiAuthReq
+	ApiAuthResp              = core.ApiAuthResp
+	ApiInfo                  = core.ApiInfo
+	ApiListReq               = core.ApiListReq
+	ApiListResp              = core.ApiListResp
+	BindRolesReq             = core.BindRolesReq
+	BootstrapAdminReq        = core.BootstrapAdminReq
+	BootstrapOperatorReq     = core.BootstrapOperatorReq
+	CheckTokenReq            = core.CheckTokenReq
+	CheckTokenResp           = core.CheckTokenResp
+	CreateAdminActionLogReq  = core.CreateAdminActionLogReq
+	CreateApiReq             = core.CreateApiReq
+	CreateErrorLogReq        = core.CreateErrorLogReq
+	CreateI18NLangReq        = core.CreateI18NLangReq
+	CreateI18NReq            = core.CreateI18NReq
+	CreateMenuReq            = core.CreateMenuReq
+	CreateRoleReq            = core.CreateRoleReq
+	CreateUserReq            = core.CreateUserReq
+	Empty                    = core.Empty
+	EnforceReq               = core.EnforceReq
+	EnforceResp              = core.EnforceResp
+	ErrorLogInfo             = core.ErrorLogInfo
+	ErrorLogListReq          = core.ErrorLogListReq
+	ErrorLogListResp         = core.ErrorLogListResp
+	GetI18NDictReq           = core.GetI18NDictReq
+	I18NDictResp             = core.I18NDictResp
+	I18NInfo                 = core.I18NInfo
+	I18NItem                 = core.I18NItem
+	I18NLangInfo             = core.I18NLangInfo
+	I18NLangListReq          = core.I18NLangListReq
+	I18NLangListResp         = core.I18NLangListResp
+	I18NListReq              = core.I18NListReq
+	I18NListResp             = core.I18NListResp
+	IDReq                    = core.IDReq
+	IDsReq                   = core.IDsReq
+	IssuePreviewTokenReq     = core.IssuePreviewTokenReq
+	IssuePreviewTokenResp    = core.IssuePreviewTokenResp
+	LoginLogInfo             = core.LoginLogInfo
+	LoginLogListReq          = core.LoginLogListReq
+	LoginLogListResp         = core.LoginLogListResp
+	LoginReq                 = core.LoginReq
+	LoginResp                = core.LoginResp
+	LogoutReq                = core.LogoutReq
+	MenuAuthReq              = core.MenuAuthReq
+	MenuAuthResp             = core.MenuAuthResp
+	MenuInfo                 = core.MenuInfo
+	MenuListResp             = core.MenuListResp
+	MenuNode                 = core.MenuNode
+	MenuTreeResp             = core.MenuTreeResp
+	OperatorInfo             = core.OperatorInfo
+	PageReq                  = core.PageReq
+	PasswordReq              = core.PasswordReq
+	PermResp                 = core.PermResp
+	RefreshReq               = core.RefreshReq
+	RegisterCatalogReq       = core.RegisterCatalogReq
+	RegisterMenuReq          = core.RegisterMenuReq
+	ReorderI18NLangReq       = core.ReorderI18NLangReq
+	RoleIdReq                = core.RoleIdReq
+	RoleInfo                 = core.RoleInfo
+	RoleListReq              = core.RoleListReq
+	RoleListResp             = core.RoleListResp
+	SelfPasswordReq          = core.SelfPasswordReq
+	TokenInfo                = core.TokenInfo
+	UpdateApiReq             = core.UpdateApiReq
+	UpdateI18NByKeyReq       = core.UpdateI18NByKeyReq
+	UpdateI18NLangReq        = core.UpdateI18NLangReq
+	UpdateI18NReq            = core.UpdateI18NReq
+	UpdateMenuReq            = core.UpdateMenuReq
+	UpdateOperatorReq        = core.UpdateOperatorReq
+	UpdateRoleReq            = core.UpdateRoleReq
+	UpdateUserIpWhitelistReq = core.UpdateUserIpWhitelistReq
+	UpdateUserReq            = core.UpdateUserReq
+	UserListReq              = core.UserListReq
+	UserListResp             = core.UserListResp
+	UserPublic               = core.UserPublic
 
 	Core interface {
 		// API management
@@ -159,6 +160,7 @@ type (
 		GetUserById(ctx context.Context, in *IDReq, opts ...grpc.CallOption) (*UserPublic, error)
 		UpdateUserPassword(ctx context.Context, in *PasswordReq, opts ...grpc.CallOption) (*Empty, error)
 		BindUserRoles(ctx context.Context, in *BindRolesReq, opts ...grpc.CallOption) (*Empty, error)
+		UpdateUserIpWhitelist(ctx context.Context, in *UpdateUserIpWhitelistReq, opts ...grpc.CallOption) (*Empty, error)
 	}
 
 	defaultCore struct {
@@ -472,4 +474,9 @@ func (m *defaultCore) UpdateUserPassword(ctx context.Context, in *PasswordReq, o
 func (m *defaultCore) BindUserRoles(ctx context.Context, in *BindRolesReq, opts ...grpc.CallOption) (*Empty, error) {
 	client := core.NewCoreClient(m.cli.Conn())
 	return client.BindUserRoles(ctx, in, opts...)
+}
+
+func (m *defaultCore) UpdateUserIpWhitelist(ctx context.Context, in *UpdateUserIpWhitelistReq, opts ...grpc.CallOption) (*Empty, error) {
+	client := core.NewCoreClient(m.cli.Conn())
+	return client.UpdateUserIpWhitelist(ctx, in, opts...)
 }

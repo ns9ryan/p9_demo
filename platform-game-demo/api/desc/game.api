@@ -1,0 +1,87 @@
+syntax = "v1"
+
+@server (
+	group: game
+	middleware: Auth
+	prefix: /admin/game
+)
+service platform_game {
+	// ===== Game APIs =====
+	@handler GameList
+	get /list (GameListReq) returns (GameListResp)
+
+	@handler GameGet
+	get /get (GameGetReq) returns (GameResp)
+
+	@handler GameUpdate
+	post /update (GameUpdateReq) returns (GameResp)
+}
+
+// ========== Game ==========
+type GameCurrencyInfo {
+	CurrencyID       int64  `json:"currency_id" comment:"币种ID"`
+	CurrencyNameI18n string `json:"currency_name_i18n" comment:"币种名称（多语言JSON）"`
+}
+
+type GameResp {
+	ID                int64              `json:"id" comment:"游戏ID"`
+	SourceID          int64              `json:"source_id" comment:"上游游戏ID"`
+	GameCode          string             `json:"game_code" comment:"游戏编码"`
+	SourceGameCode    string             `json:"source_game_code" comment:"上游游戏编码"`
+	SourceProviderKey string             `json:"source_provider_key,omitempty" comment:"上游厂商Key"`
+	SourceNameI18n    string             `json:"source_name_i18n" comment:"上游游戏名称（多语言JSON）"`
+	SourceImageUrl    string             `json:"source_image_url,omitempty" comment:"上游游戏图片URL"`
+	SourceSortNo      int32              `json:"source_sort_no,omitempty" comment:"上游排序号"`
+	SourceStatus      int16              `json:"source_status" comment:"上游状态：1启用/2禁用"`
+	CategoryID        int64              `json:"category_id" comment:"分类ID"`
+	ProviderID        int64              `json:"provider_id" comment:"厂商ID"`
+	ChannelID         int64              `json:"channel_id,omitempty" comment:"渠道ID"`
+	CategoryNameI18n  string             `json:"category_name_i18n,omitempty" comment:"分类名称（多语言JSON）"`
+	ProviderNameI18n  string             `json:"provider_name_i18n,omitempty" comment:"厂商名称（多语言JSON）"`
+	ChannelNameI18n   string             `json:"channel_name_i18n,omitempty" comment:"渠道名称（多语言JSON）"`
+	ProviderKey       string             `json:"provider_key,omitempty" comment:"厂商Key"`
+	NameI18n          string             `json:"name_i18n" comment:"游戏名称（多语言JSON）"`
+	GameCurrencyInfo  []GameCurrencyInfo `json:"game_currency_info" comment:"游戏币种信息"`
+	ImageUrl          string             `json:"image_url,omitempty" comment:"游戏图片URL"`
+	SortNo            int32              `json:"sort_no" comment:"排序号"`
+	SupportsEmbed     bool               `json:"supports_embed" comment:"是否支持嵌入"`
+	SupportsRedirect  bool               `json:"supports_redirect" comment:"是否支持重定向"`
+	Status            int16              `json:"status" comment:"状态：1启用/2禁用"`
+	IsDeleted         int16              `json:"is_deleted" comment:"软删除：0正常/1已删除"`
+	CreatedAt         int64              `json:"created_at" comment:"创建时间戳"`
+	UpdatedAt         int64              `json:"updated_at" comment:"更新时间戳"`
+}
+
+type GameListReq {
+	Page       int64  `form:"page,optional" comment:"页码（默认1）"`
+	PageSize   int64  `form:"page_size,optional" comment:"每页大小（默认15）"`
+	GameCode   string `form:"game_code,optional" comment:"游戏编码"`
+	Name       string `form:"name,optional" comment:"游戏名称（查询 source_name_i18n.default）"`
+	CategoryID int64  `form:"category_id,optional" comment:"分类ID筛选"`
+	ProviderID int64  `form:"provider_id,optional" comment:"厂商ID筛选"`
+	ChannelID  int64  `form:"channel_id,optional" comment:"渠道ID筛选"`
+	Status     int16  `form:"status,optional" comment:"状态筛选：1启用/2禁用"`
+	IsDeleted  int16  `form:"is_deleted,optional" comment:"软删除筛选：0未删除/1已删除（默认0-未删除）"`
+	SortBy     string `form:"sort_by,optional" comment:"排序字段（id/sort_no/created_at）"`
+	SortOrder  string `form:"sort_order,optional" comment:"排序顺序（asc/desc）"`
+}
+
+type GameListResp {
+	List []GameResp `json:"list" comment:"游戏列表"`
+	Total int64      `json:"total" comment:"总数"`
+}
+
+type GameGetReq {
+	ID int64 `form:"id" binding:"required" comment:"游戏ID"`
+}
+
+type GameUpdateReq {
+	ID               int64  `json:"id" binding:"required" comment:"游戏ID"`
+	NameI18n         string `json:"name_i18n,optional" comment:"游戏名称（多语言JSON）"`
+	ImageUrl         string `json:"image_url,optional" comment:"游戏图片URL"`
+	SortNo           int32  `json:"sort_no,optional" comment:"排序号"`
+	SupportsEmbed    *bool   `json:"supports_embed,optional" comment:"是否支持嵌入"`
+	SupportsRedirect *bool   `json:"supports_redirect,optional" comment:"是否支持重定向"`
+	Status           int16  `json:"status,optional" comment:"状态：1启用/2禁用"`
+	ForceLogout      bool   `json:"force_logout,optional" comment:"状态变更为停用时是否强制踢线"`
+}

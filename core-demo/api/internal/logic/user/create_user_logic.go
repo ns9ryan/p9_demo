@@ -29,5 +29,5 @@ func (l *CreateUserLogic) CreateUser(req *types.CreateUserReq) (resp *types.User
 	if err != nil {
 		return nil, err
 	}
-	return convert.UserPublic(out), nil
+	return convert.UserPublic(l.ctx, out), nil
 }

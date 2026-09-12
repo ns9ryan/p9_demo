@@ -194,6 +194,26 @@ func (_c *UserCreate) SetNillableLastLoginIP(v *string) *UserCreate {
 	return _c
 }
 
+// SetIPWhitelistEnabled sets the "ip_whitelist_enabled" field.
+func (_c *UserCreate) SetIPWhitelistEnabled(v int16) *UserCreate {
+	_c.mutation.SetIPWhitelistEnabled(v)
+	return _c
+}
+
+// SetNillableIPWhitelistEnabled sets the "ip_whitelist_enabled" field if the given value is not nil.
+func (_c *UserCreate) SetNillableIPWhitelistEnabled(v *int16) *UserCreate {
+	if v != nil {
+		_c.SetIPWhitelistEnabled(*v)
+	}
+	return _c
+}
+
+// SetIPWhitelist sets the "ip_whitelist" field.
+func (_c *UserCreate) SetIPWhitelist(v []string) *UserCreate {
+	_c.mutation.SetIPWhitelist(v)
+	return _c
+}
+
 // SetID sets the "id" field.
 func (_c *UserCreate) SetID(v int64) *UserCreate {
 	_c.mutation.SetID(v)
@@ -319,6 +339,14 @@ func (_c *UserCreate) defaults() error {
 		v := user.DefaultIsSuperAdmin
 		_c.mutation.SetIsSuperAdmin(v)
 	}
+	if _, ok := _c.mutation.IPWhitelistEnabled(); !ok {
+		v := user.DefaultIPWhitelistEnabled
+		_c.mutation.SetIPWhitelistEnabled(v)
+	}
+	if _, ok := _c.mutation.IPWhitelist(); !ok {
+		v := user.DefaultIPWhitelist
+		_c.mutation.SetIPWhitelist(v)
+	}
 	return nil
 }
 
@@ -379,6 +407,9 @@ func (_c *UserCreate) check() error {
 	}
 	if _, ok := _c.mutation.IsSuperAdmin(); !ok {
 		return &ValidationError{Name: "is_super_admin", err: errors.New(`ent: missing required field "User.is_super_admin"`)}
+	}
+	if _, ok := _c.mutation.IPWhitelistEnabled(); !ok {
+		return &ValidationError{Name: "ip_whitelist_enabled", err: errors.New(`ent: missing required field "User.ip_whitelist_enabled"`)}
 	}
 	return nil
 }
@@ -471,6 +502,14 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.LastLoginIP(); ok {
 		_spec.SetField(user.FieldLastLoginIP, field.TypeString, value)
 		_node.LastLoginIP = &value
+	}
+	if value, ok := _c.mutation.IPWhitelistEnabled(); ok {
+		_spec.SetField(user.FieldIPWhitelistEnabled, field.TypeInt16, value)
+		_node.IPWhitelistEnabled = value
+	}
+	if value, ok := _c.mutation.IPWhitelist(); ok {
+		_spec.SetField(user.FieldIPWhitelist, field.TypeJSON, value)
+		_node.IPWhitelist = value
 	}
 	if nodes := _c.mutation.RolesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

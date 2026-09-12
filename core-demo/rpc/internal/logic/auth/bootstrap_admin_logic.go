@@ -38,5 +38,9 @@ func (l *BootstrapAdminLogic) BootstrapAdmin(in *core.BootstrapAdminReq) (*core.
 	if err != nil {
 		return nil, xerr.RpcErr(err)
 	}
-	return logic.ToUserPublic(service.PublicUser(u, []string{service.RoleSuperAdmin})), nil
+	roles, err := l.svcCtx.Deps.RolesOfUser(l.ctx, u.ID)
+	if err != nil {
+		return nil, xerr.RpcErr(err)
+	}
+	return logic.ToUserPublic(service.PublicUser(u, roles)), nil
 }

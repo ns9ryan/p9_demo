@@ -23,7 +23,9 @@
     "partnerModeMismatch": "partner mode mismatch",
     "rootUserExists": "root user already exists",
     "bootstrapFieldsRequired": "operator_code, username and password required",
-    "previewReadOnly": "preview token is read-only"
+    "previewReadOnly": "preview token is read-only",
+    "ipNotAllowed": "current IP is not in the whitelist",
+    "ipMismatch": "login IP has changed, please sign in again"
   },
   "user": {
     "createFieldsRequired": "username, password and display_name required",
@@ -33,7 +35,8 @@
     "passwordRequired": "password required",
     "oldPasswordMismatch": "old password mismatch",
     "notFound": "user not found",
-    "roleNotFound": "role not found"
+    "roleNotFound": "role not found",
+    "invalidIpWhitelist": "invalid IP whitelist"
   },
   "role": {
     "codeNameRequired": "role_code and role_name required",

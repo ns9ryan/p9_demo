@@ -8,6 +8,10 @@ Log:
 # 开发模式
 Mode: dev
 
+# 模式 on分站，off总网
+PartnerMode: "on"
+
+# CORS配置
 CROSConf:
   Address: '*'
 

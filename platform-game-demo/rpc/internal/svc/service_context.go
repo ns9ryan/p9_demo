@@ -3,7 +3,6 @@ package svc
 import (
 	"fmt"
 
-	"oa.98ent.com/p9/platform-game/pkg/game"
 	"oa.98ent.com/p9/platform-game/rpc/internal/config"
 
 	"gorm.io/driver/mysql"
@@ -12,9 +11,9 @@ import (
 )
 
 type ServiceContext struct {
-	Config      config.Config
-	GameService game.GameService
-	DB          *gorm.DB
+	Config config.Config
+	// GameService game.GameService
+	DB *gorm.DB
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -51,8 +50,8 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	}
 
 	return &ServiceContext{
-		Config:      c,
-		GameService: game.NewGameService(),
-		DB:          db,
+		Config: c,
+		// GameService: game.NewGameService(),
+		DB: db,
 	}
 }

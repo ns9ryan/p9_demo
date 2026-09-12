@@ -13,15 +13,15 @@ func TestWithClaimsWritesOutgoingAndValue(t *testing.T) {
 		OperatorID: 3, OperatorCode: "A",
 		RoleCodes: []string{"admin", "ops"},
 		Salt:      "s", ExpiresAt: 99,
-		IsPlatform: true, TokenType: "preview",
+		IsPlatform: true, TokenType: "preview", ClientIP: "10.0.0.1",
 	}
 	ctx := WithClaims(context.Background(), in)
 	got := ClaimsFromCtx(ctx)
-	if got == nil || got.Username != "alice" || got.OperatorCode != "A" || !got.IsPlatform || got.TokenType != "preview" {
+	if got == nil || got.Username != "alice" || got.OperatorCode != "A" || !got.IsPlatform || got.TokenType != "preview" || got.ClientIP != "10.0.0.1" {
 		t.Fatalf("value claims: %+v", got)
 	}
 	md, ok := metadata.FromOutgoingContext(ctx)
-	if !ok || first(md, headerUsername) != "alice" || first(md, headerOperatorCode) != "A" || first(md, headerIsPlatform) != "1" || first(md, headerTokenType) != "preview" {
+	if !ok || first(md, headerUsername) != "alice" || first(md, headerOperatorCode) != "A" || first(md, headerIsPlatform) != "1" || first(md, headerTokenType) != "preview" || first(md, headerClientIP) != "10.0.0.1" {
 		t.Fatalf("outgoing md: %v", md)
 	}
 }
@@ -36,13 +36,14 @@ func TestClaimsFromIncomingMetadata(t *testing.T) {
 		headerRoleCodes, "admin,ops",
 		headerSalt, "s",
 		headerExpiresAt, "99",
+		headerClientIP, "10.0.0.1",
 	)
 	ctx := metadata.NewIncomingContext(context.Background(), md)
 	got := ClaimsFromCtx(ctx)
 	if got == nil {
 		t.Fatal("nil claims")
 	}
-	if got.UserID != 7 || got.Username != "alice" || got.OperatorCode != "A" {
+	if got.UserID != 7 || got.Username != "alice" || got.OperatorCode != "A" || got.ClientIP != "10.0.0.1" {
 		t.Fatalf("%+v", got)
 	}
 	if len(got.RoleCodes) != 2 || got.RoleCodes[0] != "admin" {
@@ -62,6 +63,24 @@ func TestRawTokenRoundTrip(t *testing.T) {
 	in := metadata.NewIncomingContext(context.Background(), metadata.Pairs(headerRawToken, "tok2"))
 	if RawTokenFromCtx(in) != "tok2" {
 		t.Fatal("incoming")
+	}
+}
+
+func TestClientIPRoundTrip(t *testing.T) {
+	ctx := WithClientIP(context.Background(), "10.0.0.1")
+	if ClientIPFromCtx(ctx) != "10.0.0.1" {
+		t.Fatal("value")
+	}
+	md, ok := metadata.FromOutgoingContext(ctx)
+	if !ok || first(md, headerClientIP) != "10.0.0.1" {
+		t.Fatalf("outgoing %v", md)
+	}
+	in := metadata.NewIncomingContext(context.Background(), metadata.Pairs(headerClientIP, "192.168.0.1"))
+	if ClientIPFromCtx(in) != "192.168.0.1" {
+		t.Fatal("incoming")
+	}
+	if ClientIPFromCtx(WithClientIP(context.Background(), "")) != "" {
+		t.Fatal("empty")
 	}
 }
 

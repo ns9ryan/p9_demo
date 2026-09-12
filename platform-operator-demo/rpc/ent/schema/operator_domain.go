@@ -33,7 +33,7 @@ func (OperatorDomain) Fields() []ent.Field {
 			SchemaType(map[string]string{
 				dialect.Postgres: "smallint",
 			}).
-			Comment("域名类型: 1分站后台, 2代理后台, 3H5"),
+			Comment("域名类型: 1分站后台, 2代理后台, 3会员H5"),
 
 		field.String("remark").
 			MaxLen(1000).

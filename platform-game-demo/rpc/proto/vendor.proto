@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package vendors;
+
+option go_package = "oa.98ent.com/p9/platform-game/rpc/pb/vendors";
+
+import "vendor/game_category.proto";
+import "vendor/game_provider.proto";
+import "vendor/game_channel.proto";
+import "vendor/game.proto";
+import "vendor/game_currency.proto";
+
+// VendorGameService - 游戏供应商服务（对接 game-vendor-gateway）
+service VendorGameService {
+    // 获取游戏分类
+    rpc GetGameCategory(Empty) returns (GetGameCategoryResponse);
+    
+    // 获取游戏提供商
+    rpc GetVendor(Empty) returns (GetVendorResponse);
+    
+    // 获取游戏渠道
+    rpc GetChannel(Empty) returns (GetChannelResponse);
+    
+    // 获取游戏
+    rpc GetGame(GetGameRequest) returns (GetGameResponse);
+    
+    // 获取游戏货币
+    rpc GetGameCurrency(Empty) returns (GetGameCurrencyResponse);
+}
+
+message Empty {}

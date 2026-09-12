@@ -1,0 +1,17 @@
+syntax = "v1"
+
+@server (
+	group: execute
+	middleware: Auth
+	prefix: /admin/execute
+)
+service platform_game {
+	@handler ExecuteV2sqlGet
+	get /v2sql returns (ExecuteV2SqlResp)
+}
+
+type ExecuteV2SqlResp {
+	Success bool        `json:"success" comment:"执行是否成功"`
+	Message string      `json:"message,omitempty" comment:"执行消息"`
+	Data    interface{} `json:"data,omitempty" comment:"执行结果数据"`
+}

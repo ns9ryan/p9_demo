@@ -35,5 +35,9 @@ func (l *CreateUserLogic) CreateUser(in *core.CreateUserReq) (*core.UserPublic, 
 	if err != nil {
 		return nil, xerr.RpcErr(err)
 	}
-	return logic.ToUserPublic(service.PublicUser(u, nil)), nil
+	roles, err := l.svcCtx.Deps.RolesOfUser(l.ctx, u.ID)
+	if err != nil {
+		return nil, xerr.RpcErr(err)
+	}
+	return logic.ToUserPublic(service.PublicUser(u, roles)), nil
 }

@@ -2,7 +2,10 @@ package middleware
 
 import (
 	"net/http"
+	"net/http/httptest"
 	"testing"
+
+	"oa.98ent.com/p9/core/common/ctxdata"
 )
 
 func TestPreviewWriteDenied(t *testing.T) {
@@ -27,6 +30,7 @@ func TestPreviewWriteDenied(t *testing.T) {
 		{http.MethodPost, "/admin/user/password"},
 		{http.MethodPost, "/admin/user/password/self"},
 		{http.MethodPost, "/admin/user/roles"},
+		{http.MethodPost, "/admin/user/ipWhitelist"},
 		{http.MethodPost, "/admin/logout"},
 		{http.MethodPost, "/admin/logout/all"},
 		{http.MethodPost, "/admin/operator/update"},
@@ -46,5 +50,21 @@ func TestPreviewWriteDenied(t *testing.T) {
 		if !previewWriteDenied(c[0], c[1]) {
 			t.Fatalf("deny %s %s", c[0], c[1])
 		}
+	}
+}
+
+func TestClientIPMiddleware(t *testing.T) {
+	called := false
+	h := ClientIP(func(w http.ResponseWriter, r *http.Request) {
+		called = true
+		if got := ctxdata.ClientIPFromCtx(r.Context()); got != "10.0.0.1" {
+			t.Fatalf("ip %q", got)
+		}
+	})
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	req.Header.Set("X-Forwarded-For", "10.0.0.1")
+	h(httptest.NewRecorder(), req)
+	if !called {
+		t.Fatal("next not called")
 	}
 }

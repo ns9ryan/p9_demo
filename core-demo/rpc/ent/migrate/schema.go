@@ -179,7 +179,7 @@ var (
 		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "created_at", Type: field.TypeTime, Default: schema.Expr("CURRENT_TIMESTAMP")},
 		{Name: "updated_at", Type: field.TypeTime, Default: schema.Expr("CURRENT_TIMESTAMP")},
-		{Name: "i18n_code", Type: field.TypeString, Size: 64, Default: "platform"},
+		{Name: "i18n_code", Type: field.TypeString, Size: 32, Default: "platform"},
 		{Name: "i18n_group", Type: field.TypeString, Size: 64},
 		{Name: "trans_key", Type: field.TypeString, Size: 255},
 		{Name: "lang", Type: field.TypeString, Size: 16},
@@ -399,6 +399,8 @@ var (
 		{Name: "is_super_admin", Type: field.TypeBool, Default: false},
 		{Name: "last_login_at", Type: field.TypeTime, Nullable: true},
 		{Name: "last_login_ip", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"postgres": "inet"}},
+		{Name: "ip_whitelist_enabled", Type: field.TypeInt16, Default: 0},
+		{Name: "ip_whitelist", Type: field.TypeJSON, Default: schema.Expr("'[]'"), SchemaType: map[string]string{"postgres": "jsonb"}},
 	}
 	// SysUserTable holds the schema information for the "sys_user" table.
 	SysUserTable = &schema.Table{

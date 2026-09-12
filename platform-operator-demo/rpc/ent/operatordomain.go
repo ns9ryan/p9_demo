@@ -29,7 +29,7 @@ type OperatorDomain struct {
 	OperatorID int64 `json:"operator_id,omitempty"`
 	// 域名
 	DomainName string `json:"domain_name,omitempty"`
-	// 域名类型: 1分站后台, 2代理后台, 3H5
+	// 域名类型: 1分站后台, 2代理后台, 3会员H5
 	DomainType int64 `json:"domain_type,omitempty"`
 	// 总网内部备注
 	Remark *string `json:"remark,omitempty"`

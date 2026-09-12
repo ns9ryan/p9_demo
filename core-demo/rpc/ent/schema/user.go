@@ -37,6 +37,11 @@ func (User) Fields() []ent.Field {
 		field.Time("last_login_at").Optional().Nillable(),
 		field.String("last_login_ip").Optional().Nillable().
 			SchemaType(map[string]string{dialect.Postgres: "inet"}),
+		field.Int16("ip_whitelist_enabled").Default(0),
+		field.JSON("ip_whitelist", []string{}).
+			Default([]string{}).
+			SchemaType(map[string]string{dialect.Postgres: "jsonb"}).
+			Annotations(entsql.DefaultExpr("'[]'")),
 	}
 }
 

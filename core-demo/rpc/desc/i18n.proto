@@ -63,6 +63,8 @@ message I18nItem {
 message UpdateI18nByKeyReq {
   string trans_key = 1;
   map<string, string> data = 2;
+  string i18n_code = 3;
+  string i18n_group = 4;
 }
 
 message I18nLangInfo {

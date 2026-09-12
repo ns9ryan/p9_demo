@@ -6,6 +6,7 @@ import (
 	"oa.98ent.com/p9/core/api/internal/convert"
 	"oa.98ent.com/p9/core/api/internal/svc"
 	"oa.98ent.com/p9/core/api/internal/types"
+	"oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/rpc/coreclient"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -30,5 +31,5 @@ func (l *GetMenuListLogic) GetMenuList() (resp []types.MenuInfo, err error) {
 	if err != nil {
 		return nil, err
 	}
-	return convert.MenuInfos(l.ctx, out.GetList()), nil
+	return convert.MenuInfos(l.ctx, i18n.CodeByPartnerMode(l.svcCtx.Config.PartnerMode), out.GetList()), nil
 }

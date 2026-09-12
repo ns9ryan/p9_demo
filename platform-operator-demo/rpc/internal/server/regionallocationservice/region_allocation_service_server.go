@@ -30,14 +30,8 @@ func (s *RegionAllocationServiceServer) List(ctx context.Context, in *regionallo
 	return l.List(in)
 }
 
-// 分配经营地区
-func (s *RegionAllocationServiceServer) Assign(ctx context.Context, in *regionallocation.AssignRegionRequest) (*regionallocation.AssignRegionResponse, error) {
-	l := regionallocationservicelogic.NewAssignLogic(ctx, s.svcCtx)
-	return l.Assign(in)
-}
-
-// 取消经营地区分配
-func (s *RegionAllocationServiceServer) Unassign(ctx context.Context, in *regionallocation.UnassignRegionRequest) (*regionallocation.UnassignRegionResponse, error) {
-	l := regionallocationservicelogic.NewUnassignLogic(ctx, s.svcCtx)
-	return l.Unassign(in)
+// 保存经营地区分配
+func (s *RegionAllocationServiceServer) Save(ctx context.Context, in *regionallocation.SaveRegionAllocationsRequest) (*regionallocation.SaveRegionAllocationsResponse, error) {
+	l := regionallocationservicelogic.NewSaveLogic(ctx, s.svcCtx)
+	return l.Save(in)
 }

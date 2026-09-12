@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package platform_game;
+
+option go_package = "oa.98ent.com/p9/platform-game/rpc/pb/platform_game";
+
+// GameCurrencyInfo 货币信息
+message GameCurrencyInfo {
+    int64 id = 1;
+    int64 game_id = 2;
+    string game_code = 3;
+    string game_name_i18n = 4;
+    int64 currency_id = 5;
+    string currency_code = 6;
+    string currency_name_i18n = 7;
+    int32 status = 8;
+    int32 source_status = 9;
+    int32 is_deleted = 10;
+    int64 created_at = 11;
+    int64 updated_at = 12;
+}
+
+// GetGameCurrencyListRequest 获取游戏货币列表请求
+message GetGameCurrencyListRequest {
+    int32 page = 1;
+    int32 page_size = 2;
+    int64 game_id = 3;
+    int64 currency_id = 4;
+    int32 status = 5;
+    int32 is_deleted = 6;
+    string sort_by = 7;     // id/created_at
+    string sort_order = 8;  // asc/desc
+}
+
+// GetGameCurrencyListResp 游戏货币列表响应
+message GetGameCurrencyListResp {
+    int32 code = 1;
+    string message = 2;
+    repeated GameCurrencyInfo data = 3;
+    int64 total = 4;
+    int32 page = 5;
+    int32 page_size = 6;
+}
+
+// GetGameCurrencyRequest 获取单个游戏货币请求
+message GetGameCurrencyRequest {
+    int64 id = 1;
+}
+
+// GetGameCurrencyResp 获取单个游戏货币响应
+message GetGameCurrencyResp {
+    int32 code = 1;
+    string message = 2;
+    GameCurrencyInfo data = 3;
+}
+
+// UpdateGameCurrencyRequest 更新游戏货币请求
+message UpdateGameCurrencyRequest {
+    int64 id = 1;
+    int32 status = 2;
+    bool force_logout = 3;
+}
+
+// UpdateGameCurrencyResp 更新游戏货币响应
+message UpdateGameCurrencyResp {
+    int32 code = 1;
+    string message = 2;
+    GameCurrencyInfo data = 3;
+}

@@ -1,0 +1,2 @@
+# Local ACL (unused while allow_anonymous is true)
+# topic readwrite #

@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package platform_game;
+
+option go_package = "oa.98ent.com/p9/platform-game/rpc/pb/platform_game";
+
+// GameSyncCheckpointInfo 游戏同步检查点信息
+message GameSyncCheckpointInfo {
+    int64 id = 1;
+    string sync_scope = 2;
+    string checkpoint_value = 3;
+    int64 remote_total = 4;
+    int64 local_total = 5;
+    int64 created_count = 6;
+    int64 updated_count = 7;
+    int64 deleted_count = 8;
+    int64 failed_count = 9;
+    int32 sync_status =10;
+    int32 progress = 11;  // 进度百分比 0-100
+    int64 last_sync_at = 12;
+    int64 last_success_at = 13;
+    string last_error = 14;
+    int64 created_at = 15;
+    int64 updated_at = 16;
+}
+
+// GetGameSyncCheckpointRequest 获取单个同步检查点请求
+message GetGameSyncCheckpointRequest {
+    int64 id = 1;
+    string sync_scope = 2;  // 同步范围，为空则获取最近一条
+}
+
+// GetGameSyncCheckpointResp 获取单个同步检查点响应
+message GetGameSyncCheckpointResp {
+    int32 code = 1;
+    string message = 2;
+    GameSyncCheckpointInfo data = 3;
+}
+
+// GetGameSyncCheckpointListRequest 获取同步检查点列表请求
+message GetGameSyncCheckpointListRequest {
+    int32 page = 1;
+    int32 page_size = 2;
+    string sync_scope = 3;     // 可选：按 sync_scope 筛选
+    int64 start_time = 4;      // 可选：按时间区间筛选（秒）
+    int64 end_time = 5;        // 可选：按时间区间筛选（秒）
+}
+
+// GetGameSyncCheckpointListResp 获取同步检查点列表响应
+message GetGameSyncCheckpointListResp {
+    int32 code = 1;
+    string message = 2;
+    repeated GameSyncCheckpointInfo items = 3;
+    int64 total = 4;
+    int32 page = 5;
+    int32 page_size = 6;
+}

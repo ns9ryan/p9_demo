@@ -17,15 +17,15 @@ import (
 
 type (
 	DomainService interface {
-		// 创建域名
+		// 创建分站域名
 		Create(ctx context.Context, in *domain.CreateDomainRequest, opts ...grpc.CallOption) (*domain.CreateDomainResponse, error)
-		// 修改域名
+		// 修改分站域名
 		Update(ctx context.Context, in *domain.UpdateDomainRequest, opts ...grpc.CallOption) (*domain.UpdateDomainResponse, error)
-		// 获取域名
+		// 获取分站域名
 		Get(ctx context.Context, in *domain.GetDomainRequest, opts ...grpc.CallOption) (*domain.GetDomainResponse, error)
-		// 获取域名管理列表
+		// 获取分站域名管理列表
 		List(ctx context.Context, in *domain.ListDomainsRequest, opts ...grpc.CallOption) (*domain.ListDomainsResponse, error)
-		// 删除域名
+		// 删除分站域名
 		Delete(ctx context.Context, in *domain.DeleteDomainRequest, opts ...grpc.CallOption) (*domain.DeleteDomainResponse, error)
 	}
 
@@ -40,31 +40,31 @@ func NewDomainService(cli zrpc.Client) DomainService {
 	}
 }
 
-// 创建域名
+// 创建分站域名
 func (m *defaultDomainService) Create(ctx context.Context, in *domain.CreateDomainRequest, opts ...grpc.CallOption) (*domain.CreateDomainResponse, error) {
 	client := operator.NewDomainServiceClient(m.cli.Conn())
 	return client.Create(ctx, in, opts...)
 }
 
-// 修改域名
+// 修改分站域名
 func (m *defaultDomainService) Update(ctx context.Context, in *domain.UpdateDomainRequest, opts ...grpc.CallOption) (*domain.UpdateDomainResponse, error) {
 	client := operator.NewDomainServiceClient(m.cli.Conn())
 	return client.Update(ctx, in, opts...)
 }
 
-// 获取域名
+// 获取分站域名
 func (m *defaultDomainService) Get(ctx context.Context, in *domain.GetDomainRequest, opts ...grpc.CallOption) (*domain.GetDomainResponse, error) {
 	client := operator.NewDomainServiceClient(m.cli.Conn())
 	return client.Get(ctx, in, opts...)
 }
 
-// 获取域名管理列表
+// 获取分站域名管理列表
 func (m *defaultDomainService) List(ctx context.Context, in *domain.ListDomainsRequest, opts ...grpc.CallOption) (*domain.ListDomainsResponse, error) {
 	client := operator.NewDomainServiceClient(m.cli.Conn())
 	return client.List(ctx, in, opts...)
 }
 
-// 删除域名
+// 删除分站域名
 func (m *defaultDomainService) Delete(ctx context.Context, in *domain.DeleteDomainRequest, opts ...grpc.CallOption) (*domain.DeleteDomainResponse, error) {
 	client := operator.NewDomainServiceClient(m.cli.Conn())
 	return client.Delete(ctx, in, opts...)

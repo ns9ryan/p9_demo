@@ -78,6 +78,7 @@ const (
 	Core_GetUserById_FullMethodName           = "/core.Core/getUserById"
 	Core_UpdateUserPassword_FullMethodName    = "/core.Core/updateUserPassword"
 	Core_BindUserRoles_FullMethodName         = "/core.Core/bindUserRoles"
+	Core_UpdateUserIpWhitelist_FullMethodName = "/core.Core/updateUserIpWhitelist"
 )
 
 // CoreClient is the client API for Core service.
@@ -209,6 +210,8 @@ type CoreClient interface {
 	UpdateUserPassword(ctx context.Context, in *PasswordReq, opts ...grpc.CallOption) (*Empty, error)
 	// group: user
 	BindUserRoles(ctx context.Context, in *BindRolesReq, opts ...grpc.CallOption) (*Empty, error)
+	// group: user
+	UpdateUserIpWhitelist(ctx context.Context, in *UpdateUserIpWhitelistReq, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type coreClient struct {
@@ -809,6 +812,16 @@ func (c *coreClient) BindUserRoles(ctx context.Context, in *BindRolesReq, opts .
 	return out, nil
 }
 
+func (c *coreClient) UpdateUserIpWhitelist(ctx context.Context, in *UpdateUserIpWhitelistReq, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, Core_UpdateUserIpWhitelist_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CoreServer is the server API for Core service.
 // All implementations must embed UnimplementedCoreServer
 // for forward compatibility.
@@ -938,6 +951,8 @@ type CoreServer interface {
 	UpdateUserPassword(context.Context, *PasswordReq) (*Empty, error)
 	// group: user
 	BindUserRoles(context.Context, *BindRolesReq) (*Empty, error)
+	// group: user
+	UpdateUserIpWhitelist(context.Context, *UpdateUserIpWhitelistReq) (*Empty, error)
 	mustEmbedUnimplementedCoreServer()
 }
 
@@ -1124,6 +1139,9 @@ func (UnimplementedCoreServer) UpdateUserPassword(context.Context, *PasswordReq)
 }
 func (UnimplementedCoreServer) BindUserRoles(context.Context, *BindRolesReq) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BindUserRoles not implemented")
+}
+func (UnimplementedCoreServer) UpdateUserIpWhitelist(context.Context, *UpdateUserIpWhitelistReq) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserIpWhitelist not implemented")
 }
 func (UnimplementedCoreServer) mustEmbedUnimplementedCoreServer() {}
 func (UnimplementedCoreServer) testEmbeddedByValue()              {}
@@ -2208,6 +2226,24 @@ func _Core_BindUserRoles_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Core_UpdateUserIpWhitelist_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserIpWhitelistReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoreServer).UpdateUserIpWhitelist(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Core_UpdateUserIpWhitelist_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoreServer).UpdateUserIpWhitelist(ctx, req.(*UpdateUserIpWhitelistReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Core_ServiceDesc is the grpc.ServiceDesc for Core service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -2450,6 +2486,10 @@ var Core_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "bindUserRoles",
 			Handler:    _Core_BindUserRoles_Handler,
+		},
+		{
+			MethodName: "updateUserIpWhitelist",
+			Handler:    _Core_UpdateUserIpWhitelist_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

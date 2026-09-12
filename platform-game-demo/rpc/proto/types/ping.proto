@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package platform_game;
+
+option go_package = "oa.98ent.com/p9/platform-game/rpc/pb/platform_game";
+
+// PingRequest Ping请求
+message PingRequest {
+}
+
+// PingResponse Ping响应
+message PingResponse {
+    string message = 1;
+}

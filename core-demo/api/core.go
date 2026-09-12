@@ -37,11 +37,13 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 	// 注册I18n中间件
 	server.Use(middleware.I18n)
+	// 注册客户端 IP 中间件
+	server.Use(middleware.ClientIP)
 	// 注册错误日志中间件
 	server.Use(ctx.ErrorLog)
 
 	// 注册菜单、API目录、多语言数据
-	logx.Must(catalog.Register(ctx.Core))
+	logx.Must(catalog.Register(ctx))
 	// 注册API路由
 	handler.RegisterHandlers(server, ctx)
 	// 开发环境或测试环境注册swagger接口文档路由

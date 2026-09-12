@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package vendors;
+
+option go_package = "oa.98ent.com/p9/platform-game/rpc/pb/vendors";
+
+// NameEntry 用于 names 多语言字段
+message NameEntry {
+  map<string, string> values = 1;
+}
+
+// ===============================
+// 游戏分类
+// ===============================
+
+// GameCategoryInfo 游戏分类（来自 game-vendor-gateway 返回值）
+message GameCategoryInfo {
+  int64 id = 1;
+  string code = 2;
+  string name = 3;
+  repeated NameEntry names = 4;
+  int64 weight = 5;
+  uint32 status = 6;        // 1.Normal 2.Paused
+  uint32 channel = 7;
+  uint32 update_utype = 8;
+  int64 update_uid = 9;
+  int64 updates = 10;
+  int64 update_at = 11;
+  uint32 create_utype = 12;
+  int64 create_uid = 13;
+  int64 create_at = 14;
+}
+
+// GetGameCategoryResponse 获取游戏分类列表响应
+message GetGameCategoryResponse {
+  int64 code = 1;
+  string msg = 2;
+  repeated GameCategoryInfo category_list = 3;
+}

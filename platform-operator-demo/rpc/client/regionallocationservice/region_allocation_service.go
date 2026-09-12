@@ -19,10 +19,8 @@ type (
 	RegionAllocationService interface {
 		// 获取经营地区分配列表
 		List(ctx context.Context, in *regionallocation.ListRegionAllocationsRequest, opts ...grpc.CallOption) (*regionallocation.ListRegionAllocationsResponse, error)
-		// 分配经营地区
-		Assign(ctx context.Context, in *regionallocation.AssignRegionRequest, opts ...grpc.CallOption) (*regionallocation.AssignRegionResponse, error)
-		// 取消经营地区分配
-		Unassign(ctx context.Context, in *regionallocation.UnassignRegionRequest, opts ...grpc.CallOption) (*regionallocation.UnassignRegionResponse, error)
+		// 保存经营地区分配
+		Save(ctx context.Context, in *regionallocation.SaveRegionAllocationsRequest, opts ...grpc.CallOption) (*regionallocation.SaveRegionAllocationsResponse, error)
 	}
 
 	defaultRegionAllocationService struct {
@@ -42,14 +40,8 @@ func (m *defaultRegionAllocationService) List(ctx context.Context, in *regionall
 	return client.List(ctx, in, opts...)
 }
 
-// 分配经营地区
-func (m *defaultRegionAllocationService) Assign(ctx context.Context, in *regionallocation.AssignRegionRequest, opts ...grpc.CallOption) (*regionallocation.AssignRegionResponse, error) {
+// 保存经营地区分配
+func (m *defaultRegionAllocationService) Save(ctx context.Context, in *regionallocation.SaveRegionAllocationsRequest, opts ...grpc.CallOption) (*regionallocation.SaveRegionAllocationsResponse, error) {
 	client := operator.NewRegionAllocationServiceClient(m.cli.Conn())
-	return client.Assign(ctx, in, opts...)
-}
-
-// 取消经营地区分配
-func (m *defaultRegionAllocationService) Unassign(ctx context.Context, in *regionallocation.UnassignRegionRequest, opts ...grpc.CallOption) (*regionallocation.UnassignRegionResponse, error) {
-	client := operator.NewRegionAllocationServiceClient(m.cli.Conn())
-	return client.Unassign(ctx, in, opts...)
+	return client.Save(ctx, in, opts...)
 }

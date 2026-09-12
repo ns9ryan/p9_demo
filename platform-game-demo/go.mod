@@ -3,6 +3,7 @@ module oa.98ent.com/p9/platform-game
 go 1.26.0
 
 require (
+	github.com/bytedance/gopkg v0.1.3
 	github.com/gin-gonic/gin v1.12.0
 	github.com/zeromicro/go-zero v1.10.3
 	go.etcd.io/etcd/client/v3 v3.5.21
@@ -16,7 +17,6 @@ require (
 
 require (
 	filippo.io/edwards25519 v1.2.0 // indirect
-	github.com/bytedance/gopkg v0.1.3 // indirect
 	github.com/bytedance/sonic v1.15.0 // indirect
 	github.com/bytedance/sonic/loader v0.5.0 // indirect
 	github.com/cloudwego/base64x v0.1.6 // indirect

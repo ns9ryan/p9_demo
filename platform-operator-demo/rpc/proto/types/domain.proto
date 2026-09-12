@@ -12,7 +12,7 @@ message DomainInfo {
   int64 operator_id = 2;
   // 域名, 不包含协议和端口
   string domain_name = 3;
-  // 域名类型: 1分站后台, 2代理后台, 3H5
+  // 域名类型: 1分站后台, 2代理后台, 3会员H5
   int64 domain_type = 4;
   // 域名状态: 1启用, 2停用
   int64 status = 5;
@@ -30,7 +30,7 @@ message CreateDomainRequest {
   int64 operator_id = 1;
   // 域名, 不包含协议和端口
   string domain_name = 2;
-  // 域名类型: 1分站后台, 2代理后台, 3H5
+  // 域名类型: 1分站后台, 2代理后台, 3会员H5
   int64 domain_type = 3;
   // 域名状态: 1启用, 2停用
   optional int64 status = 4;
@@ -50,7 +50,7 @@ message UpdateDomainRequest {
   int64 id = 1;
   // 域名, 不包含协议和端口
   optional string domain_name = 2;
-  // 域名类型: 1分站后台, 2代理后台, 3H5
+  // 域名类型: 1分站后台, 2代理后台, 3会员H5
   optional int64 domain_type = 3;
   // 域名状态: 1启用, 2停用
   optional int64 status = 4;
@@ -83,7 +83,7 @@ message ListDomainsRequest {
   optional int64 operator_id = 3;
   // 搜索关键字, 匹配域名
   optional string keyword = 4;
-  // 域名类型: 1分站后台, 2代理后台, 3H5
+  // 域名类型: 1分站后台, 2代理后台, 3会员H5
   optional int64 domain_type = 5;
   // 域名状态: 1启用, 2停用
   optional int64 status = 6;

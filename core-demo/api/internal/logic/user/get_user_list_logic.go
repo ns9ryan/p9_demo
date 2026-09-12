@@ -29,5 +29,5 @@ func (l *GetUserListLogic) GetUserList(req *types.UserListReq) (resp *types.User
 	if err != nil {
 		return nil, err
 	}
-	return convert.UserList(out), nil
+	return convert.UserList(l.ctx, out), nil
 }

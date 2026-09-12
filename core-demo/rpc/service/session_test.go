@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"oa.98ent.com/p9/core/common/ctxdata"
 	"oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/common/jwt"
 	"oa.98ent.com/p9/core/common/xerr"
@@ -50,6 +51,32 @@ func TestCheckTokenPreviewMissingOperator(t *testing.T) {
 	_, err = d.CheckToken(context.Background(), tok)
 	if got := xerr.AsError(err); got.Status != 401 {
 		t.Fatalf("preview without operator %+v", got)
+	}
+}
+
+func TestCheckTokenClientIP(t *testing.T) {
+	d := &Deps{JWTSecret: "secret"}
+	tok, _, err := jwt.Sign("secret", 60, jwt.Claims{
+		UserID: 1, Salt: "s1", TokenType: jwt.TokenAccess, ClientIP: "10.0.0.1",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = d.CheckToken(context.Background(), tok)
+	if got := xerr.AsError(err); got.Status != 401 || got.Message != i18n.AuthIPMismatch {
+		t.Fatalf("empty ctx %+v", got)
+	}
+	_, err = d.CheckToken(ctxdata.WithClientIP(context.Background(), "11.0.0.1"), tok)
+	if got := xerr.AsError(err); got.Status != 401 || got.Message != i18n.AuthIPMismatch {
+		t.Fatalf("mismatch %+v", got)
+	}
+	old, _, err := jwt.Sign("secret", 60, jwt.Claims{UserID: 1, Salt: "s1", TokenType: jwt.TokenAccess})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = d.CheckToken(ctxdata.WithClientIP(context.Background(), "10.0.0.1"), old)
+	if got := xerr.AsError(err); got.Status != 401 || got.Message != i18n.AuthIPMismatch {
+		t.Fatalf("old token %+v", got)
 	}
 }
 

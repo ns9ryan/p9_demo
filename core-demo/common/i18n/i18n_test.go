@@ -5,6 +5,22 @@ import (
 	"testing"
 )
 
+func TestCodeByPartnerMode(t *testing.T) {
+	cases := map[string]string{
+		"on":       CodeOperator,
+		"ON":       CodeOperator,
+		" on ":     CodeOperator,
+		"off":      CodePlatform,
+		"":         CodePlatform,
+		"platform": CodePlatform,
+	}
+	for in, want := range cases {
+		if got := CodeByPartnerMode(in); got != want {
+			t.Fatalf("CodeByPartnerMode(%q)=%q want %q", in, got, want)
+		}
+	}
+}
+
 func TestParseLang(t *testing.T) {
 	cases := map[string]string{
 		"":               LangZH,
@@ -36,6 +52,12 @@ func TestT(t *testing.T) {
 	}
 	if got := T(zh, "运营"); got != "运营" {
 		t.Fatalf("passthrough=%q", got)
+	}
+	if got := T(zh, AuthIPMismatch); got != "登录 IP 已变化，请重新登录" {
+		t.Fatalf("zh ipMismatch=%q", got)
+	}
+	if got := T(en, AuthIPMismatch); got != "login IP has changed, please sign in again" {
+		t.Fatalf("en ipMismatch=%q", got)
 	}
 }
 

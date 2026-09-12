@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -47,6 +48,10 @@ type User struct {
 	LastLoginAt *time.Time `json:"last_login_at,omitempty"`
 	// LastLoginIP holds the value of the "last_login_ip" field.
 	LastLoginIP *string `json:"last_login_ip,omitempty"`
+	// IPWhitelistEnabled holds the value of the "ip_whitelist_enabled" field.
+	IPWhitelistEnabled int16 `json:"ip_whitelist_enabled,omitempty"`
+	// IPWhitelist holds the value of the "ip_whitelist" field.
+	IPWhitelist []string `json:"ip_whitelist,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserQuery when eager-loading is set.
 	Edges        UserEdges `json:"edges"`
@@ -109,9 +114,11 @@ func (*User) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case user.FieldIPWhitelist:
+			values[i] = new([]byte)
 		case user.FieldIsSuperAdmin:
 			values[i] = new(sql.NullBool)
-		case user.FieldID, user.FieldOperatorID, user.FieldStatus:
+		case user.FieldID, user.FieldOperatorID, user.FieldStatus, user.FieldIPWhitelistEnabled:
 			values[i] = new(sql.NullInt64)
 		case user.FieldUserCode, user.FieldUsername, user.FieldPasswordHash, user.FieldSalt, user.FieldDisplayName, user.FieldMobile, user.FieldEmail, user.FieldLastLoginIP:
 			values[i] = new(sql.NullString)
@@ -234,6 +241,20 @@ func (_m *User) assignValues(columns []string, values []any) error {
 				_m.LastLoginIP = new(string)
 				*_m.LastLoginIP = value.String
 			}
+		case user.FieldIPWhitelistEnabled:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field ip_whitelist_enabled", values[i])
+			} else if value.Valid {
+				_m.IPWhitelistEnabled = int16(value.Int64)
+			}
+		case user.FieldIPWhitelist:
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field ip_whitelist", values[i])
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &_m.IPWhitelist); err != nil {
+					return fmt.Errorf("unmarshal field ip_whitelist: %w", err)
+				}
+			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
 		}
@@ -344,6 +365,12 @@ func (_m *User) String() string {
 		builder.WriteString("last_login_ip=")
 		builder.WriteString(*v)
 	}
+	builder.WriteString(", ")
+	builder.WriteString("ip_whitelist_enabled=")
+	builder.WriteString(fmt.Sprintf("%v", _m.IPWhitelistEnabled))
+	builder.WriteString(", ")
+	builder.WriteString("ip_whitelist=")
+	builder.WriteString(fmt.Sprintf("%v", _m.IPWhitelist))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -30,14 +30,8 @@ func (s *AgentLineAllocationServiceServer) List(ctx context.Context, in *agentli
 	return l.List(in)
 }
 
-// 分配代理子线路
-func (s *AgentLineAllocationServiceServer) Assign(ctx context.Context, in *agentlineallocation.AssignAgentLineRequest) (*agentlineallocation.AssignAgentLineResponse, error) {
-	l := agentlineallocationservicelogic.NewAssignLogic(ctx, s.svcCtx)
-	return l.Assign(in)
-}
-
-// 取消代理子线路分配
-func (s *AgentLineAllocationServiceServer) Unassign(ctx context.Context, in *agentlineallocation.UnassignAgentLineRequest) (*agentlineallocation.UnassignAgentLineResponse, error) {
-	l := agentlineallocationservicelogic.NewUnassignLogic(ctx, s.svcCtx)
-	return l.Unassign(in)
+// 保存代理子线路分配
+func (s *AgentLineAllocationServiceServer) Save(ctx context.Context, in *agentlineallocation.SaveAgentLineAllocationsRequest) (*agentlineallocation.SaveAgentLineAllocationsResponse, error) {
+	l := agentlineallocationservicelogic.NewSaveLogic(ctx, s.svcCtx)
+	return l.Save(in)
 }

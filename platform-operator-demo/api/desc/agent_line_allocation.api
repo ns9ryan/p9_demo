@@ -1,0 +1,50 @@
+syntax = "v1"
+
+type (
+	// 分站代理子线路分配信息
+	AgentLineAllocationInfo {
+		// 代理子线路编码
+		AgentLineCode string `json:"agent_line_code"`
+		// 代理子线路名称
+		Name string `json:"name"`
+		// 是否已分配
+		Allocated bool `json:"allocated"`
+		// 分配时间, 未分配时为空
+		AllocatedAt *int64 `json:"allocated_at,optional"`
+	}
+	// 获取代理子线路分配列表请求
+	ListAgentLineAllocationsRequest {
+		// 分站ID
+		OperatorId int64 `form:"operator_id" validate:"required,gt=0"`
+	}
+	// 获取代理子线路分配列表响应
+	ListAgentLineAllocationsResponse {
+		// 代理子线路分配列表
+		List []AgentLineAllocationInfo `json:"list"`
+	}
+	// 保存代理子线路分配请求
+	SaveAgentLineAllocationsRequest {
+		// 分站ID
+		OperatorId int64 `json:"operator_id" validate:"required,gt=0"`
+		// 当前分配的代理子线路编码
+		AgentLineCodes []string `json:"agent_line_codes" validate:"omitempty,dive,required,max=32"`
+	}
+	// 保存代理子线路分配响应
+	SaveAgentLineAllocationsResponse  {}
+)
+
+@server (
+	group:      agent_line_allocation
+	prefix:     /admin/operator
+	middleware: Jwt,ActionLog,Authority
+)
+service platform_operator {
+	// 获取代理子线路分配列表
+	@handler ListAgentLineAllocations
+	get /agent-line-allocation/list (ListAgentLineAllocationsRequest) returns (ListAgentLineAllocationsResponse)
+
+	// 保存代理子线路分配
+	@handler SaveAgentLineAllocations
+	post /agent-line-allocation/save (SaveAgentLineAllocationsRequest) returns (SaveAgentLineAllocationsResponse)
+}
+

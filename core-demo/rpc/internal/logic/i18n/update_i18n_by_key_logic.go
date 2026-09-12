@@ -27,7 +27,7 @@ func NewUpdateI18nByKeyLogic(ctx context.Context, svcCtx *svc.ServiceContext) *U
 
 func (l *UpdateI18nByKeyLogic) UpdateI18NByKey(in *core.UpdateI18NByKeyReq) (*core.Empty, error) {
 	err := l.svcCtx.Deps.UpdateI18nByKey(l.ctx, service.UpdateI18nByKeyReq{
-		TransKey: in.GetTransKey(), Data: in.GetData(),
+		I18nCode: in.GetI18NCode(), I18nGroup: in.GetI18NGroup(), TransKey: in.GetTransKey(), Data: in.GetData(),
 	})
 	if err != nil {
 		return nil, xerr.RpcErr(err)

@@ -1,11 +1,12 @@
 syntax = "v1"
 
-type PingResponse {
-	Message string `json:"message"`
-}
-
-service platform_operator {
-	@handler Ping
-	get /ping returns (PingResponse)
-}
-
+import "ping.api"
+import "operator.api"
+import "profile.api"
+import "domain.api"
+import "basic_resource_allocation.api"
+import "language_allocation.api"
+import "region_allocation.api"
+import "agent_line_allocation.api"
+import "operator_admin.api"
+import "game_allocation.api"
