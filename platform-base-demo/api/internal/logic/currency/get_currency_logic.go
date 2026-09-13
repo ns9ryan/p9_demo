@@ -53,9 +53,9 @@ func (l *GetCurrencyLogic) GetCurrency(req *types.GetCurrencyRequest) (resp *typ
 			Name:         name,                         // 当前语言名称
 			CurrencyType: result.Currency.CurrencyType, // 货币类型: 1法定货币, 2虚拟货币
 			Symbol:       result.Currency.Symbol,       // 货币符号
-			AmountFactor: result.Currency.AmountFactor, // 金额换算倍率
+			AmountFactor: result.Currency.AmountFactor, // 金额换算倍率, 如 USD=100, VND=1
 			Status:       result.Currency.Status,       // 状态: 1启用, 2停用
-			SortNo:       result.Currency.SortNo,       // 排序值
+			SortNo:       result.Currency.SortNo,       // 排序值, 数值越小越靠前
 		},
 	}, nil
 }

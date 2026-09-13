@@ -52,7 +52,7 @@ func (l *GetTimezoneLogic) GetTimezone(req *types.GetTimezoneRequest) (resp *typ
 			NameKey: result.Timezone.NameKey, // 名称翻译Key
 			Name:    name,                    // 当前语言名称
 			Status:  result.Timezone.Status,  // 状态: 1启用, 2停用
-			SortNo:  result.Timezone.SortNo,  // 排序值
+			SortNo:  result.Timezone.SortNo,  // 排序值, 数值越小越靠前
 		},
 	}, nil
 }

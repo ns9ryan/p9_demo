@@ -49,11 +49,11 @@ func (l *GetRegionLogic) GetRegion(req *types.GetRegionRequest) (resp *types.Get
 		RegionInfo: types.RegionInfo{
 			Id:          result.Region.Id,          // 国家地区ID
 			Code:        result.Region.Code,        // 国家地区编码
-			CallingCode: result.Region.CallingCode, // 国际电话区号
+			CallingCode: result.Region.CallingCode, // 国际电话区号, 不包含加号
 			NameKey:     result.Region.NameKey,     // 名称翻译Key
 			Name:        name,                      // 当前语言名称
 			Status:      result.Region.Status,      // 状态: 1启用, 2停用
-			SortNo:      result.Region.SortNo,      // 排序值
+			SortNo:      result.Region.SortNo,      // 排序值, 数值越小越靠前
 		},
 	}, nil
 }

@@ -55,7 +55,7 @@ func (l *ListTimezonesLogic) ListTimezones(req *types.ListTimezonesRequest) (res
 			NameKey: item.NameKey, // 名称翻译Key
 			Name:    name,         // 当前语言名称
 			Status:  item.Status,  // 状态: 1启用, 2停用
-			SortNo:  item.SortNo,  // 排序值
+			SortNo:  item.SortNo,  // 排序值, 数值越小越靠前
 		})
 	}
 

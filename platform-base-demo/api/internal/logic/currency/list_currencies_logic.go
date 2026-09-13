@@ -56,9 +56,9 @@ func (l *ListCurrenciesLogic) ListCurrencies(req *types.ListCurrenciesRequest) (
 			Name:         name,              // 当前语言名称
 			CurrencyType: item.CurrencyType, // 货币类型: 1法定货币, 2虚拟货币
 			Symbol:       item.Symbol,       // 货币符号
-			AmountFactor: item.AmountFactor, // 金额换算倍率
+			AmountFactor: item.AmountFactor, // 金额换算倍率, 如 USD=100, VND=1
 			Status:       item.Status,       // 状态: 1启用, 2停用
-			SortNo:       item.SortNo,       // 排序值
+			SortNo:       item.SortNo,       // 排序值, 数值越小越靠前
 		})
 	}
 
