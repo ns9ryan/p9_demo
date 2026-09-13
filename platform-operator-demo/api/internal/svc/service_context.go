@@ -7,6 +7,7 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
+	"oa.98ent.com/p9/platform-operator/rpc/client/operatordomainservice"
 
 	"oa.98ent.com/p9/core/common/coreadapt"
 	coremiddleware "oa.98ent.com/p9/core/common/middleware"
@@ -21,7 +22,6 @@ import (
 	"oa.98ent.com/p9/platform-operator/pkg/i18n"
 	"oa.98ent.com/p9/platform-operator/rpc/client/agentlineallocationservice"
 	"oa.98ent.com/p9/platform-operator/rpc/client/basicresourceallocationservice"
-	"oa.98ent.com/p9/platform-operator/rpc/client/domainservice"
 	"oa.98ent.com/p9/platform-operator/rpc/client/languageallocationservice"
 	"oa.98ent.com/p9/platform-operator/rpc/client/operatorprofileservice"
 	"oa.98ent.com/p9/platform-operator/rpc/client/operatorservice"
@@ -41,7 +41,7 @@ type ServiceContext struct {
 	PingRpc                    pingservice.PingService                                       // Ping RPC
 	OperatorRpc                operatorservice.OperatorService                               // 分站RPC
 	OperatorProfileRpc         operatorprofileservice.OperatorProfileService                 // 分站档案RPC
-	DomainRpc                  domainservice.DomainService                                   // 分站域名RPC
+	OperatorDomainRpc          operatordomainservice.OperatorDomainService                   // 分站域名RPC
 	BasicResourceAllocationRpc basicresourceallocationservice.BasicResourceAllocationService // 基础资源分配RPC
 	LanguageAllocationRpc      languageallocationservice.LanguageAllocationService           // 语言分配RPC
 	RegionAllocationRpc        regionallocationservice.RegionAllocationService               // 经营地区分配RPC
@@ -113,7 +113,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		PingRpc:                    pingservice.NewPingService(platformOperatorClient),                                       // Ping RPC
 		OperatorRpc:                operatorservice.NewOperatorService(platformOperatorClient),                               // 分站RPC
 		OperatorProfileRpc:         operatorprofileservice.NewOperatorProfileService(platformOperatorClient),                 // 分站档案RPC
-		DomainRpc:                  domainservice.NewDomainService(platformOperatorClient),                                   // 分站域名RPC
+		OperatorDomainRpc:          operatordomainservice.NewOperatorDomainService(platformOperatorClient),                   // 分站域名RPC
 		BasicResourceAllocationRpc: basicresourceallocationservice.NewBasicResourceAllocationService(platformOperatorClient), // 基础资源分配RPC
 		LanguageAllocationRpc:      languageallocationservice.NewLanguageAllocationService(platformOperatorClient),           // 语言分配RPC
 		RegionAllocationRpc:        regionallocationservice.NewRegionAllocationService(platformOperatorClient),               // 经营地区分配RPC

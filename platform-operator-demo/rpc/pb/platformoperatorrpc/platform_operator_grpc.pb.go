@@ -632,19 +632,19 @@ var OperatorProfileService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	DomainService_Create_FullMethodName = "/platform_operator.DomainService/Create"
-	DomainService_Update_FullMethodName = "/platform_operator.DomainService/Update"
-	DomainService_Get_FullMethodName    = "/platform_operator.DomainService/Get"
-	DomainService_List_FullMethodName   = "/platform_operator.DomainService/List"
-	DomainService_Delete_FullMethodName = "/platform_operator.DomainService/Delete"
+	OperatorDomainService_Create_FullMethodName = "/platform_operator.OperatorDomainService/Create"
+	OperatorDomainService_Update_FullMethodName = "/platform_operator.OperatorDomainService/Update"
+	OperatorDomainService_Get_FullMethodName    = "/platform_operator.OperatorDomainService/Get"
+	OperatorDomainService_List_FullMethodName   = "/platform_operator.OperatorDomainService/List"
+	OperatorDomainService_Delete_FullMethodName = "/platform_operator.OperatorDomainService/Delete"
 )
 
-// DomainServiceClient is the client API for DomainService service.
+// OperatorDomainServiceClient is the client API for OperatorDomainService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // 分站域名服务
-type DomainServiceClient interface {
+type OperatorDomainServiceClient interface {
 	// 创建分站域名
 	Create(ctx context.Context, in *domainpb.CreateDomainRequest, opts ...grpc.CallOption) (*domainpb.CreateDomainResponse, error)
 	// 修改分站域名
@@ -657,70 +657,70 @@ type DomainServiceClient interface {
 	Delete(ctx context.Context, in *domainpb.DeleteDomainRequest, opts ...grpc.CallOption) (*domainpb.DeleteDomainResponse, error)
 }
 
-type domainServiceClient struct {
+type operatorDomainServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewDomainServiceClient(cc grpc.ClientConnInterface) DomainServiceClient {
-	return &domainServiceClient{cc}
+func NewOperatorDomainServiceClient(cc grpc.ClientConnInterface) OperatorDomainServiceClient {
+	return &operatorDomainServiceClient{cc}
 }
 
-func (c *domainServiceClient) Create(ctx context.Context, in *domainpb.CreateDomainRequest, opts ...grpc.CallOption) (*domainpb.CreateDomainResponse, error) {
+func (c *operatorDomainServiceClient) Create(ctx context.Context, in *domainpb.CreateDomainRequest, opts ...grpc.CallOption) (*domainpb.CreateDomainResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(domainpb.CreateDomainResponse)
-	err := c.cc.Invoke(ctx, DomainService_Create_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, OperatorDomainService_Create_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *domainServiceClient) Update(ctx context.Context, in *domainpb.UpdateDomainRequest, opts ...grpc.CallOption) (*domainpb.UpdateDomainResponse, error) {
+func (c *operatorDomainServiceClient) Update(ctx context.Context, in *domainpb.UpdateDomainRequest, opts ...grpc.CallOption) (*domainpb.UpdateDomainResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(domainpb.UpdateDomainResponse)
-	err := c.cc.Invoke(ctx, DomainService_Update_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, OperatorDomainService_Update_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *domainServiceClient) Get(ctx context.Context, in *domainpb.GetDomainRequest, opts ...grpc.CallOption) (*domainpb.GetDomainResponse, error) {
+func (c *operatorDomainServiceClient) Get(ctx context.Context, in *domainpb.GetDomainRequest, opts ...grpc.CallOption) (*domainpb.GetDomainResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(domainpb.GetDomainResponse)
-	err := c.cc.Invoke(ctx, DomainService_Get_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, OperatorDomainService_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *domainServiceClient) List(ctx context.Context, in *domainpb.ListDomainsRequest, opts ...grpc.CallOption) (*domainpb.ListDomainsResponse, error) {
+func (c *operatorDomainServiceClient) List(ctx context.Context, in *domainpb.ListDomainsRequest, opts ...grpc.CallOption) (*domainpb.ListDomainsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(domainpb.ListDomainsResponse)
-	err := c.cc.Invoke(ctx, DomainService_List_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, OperatorDomainService_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *domainServiceClient) Delete(ctx context.Context, in *domainpb.DeleteDomainRequest, opts ...grpc.CallOption) (*domainpb.DeleteDomainResponse, error) {
+func (c *operatorDomainServiceClient) Delete(ctx context.Context, in *domainpb.DeleteDomainRequest, opts ...grpc.CallOption) (*domainpb.DeleteDomainResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(domainpb.DeleteDomainResponse)
-	err := c.cc.Invoke(ctx, DomainService_Delete_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, OperatorDomainService_Delete_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// DomainServiceServer is the server API for DomainService service.
-// All implementations must embed UnimplementedDomainServiceServer
+// OperatorDomainServiceServer is the server API for OperatorDomainService service.
+// All implementations must embed UnimplementedOperatorDomainServiceServer
 // for forward compatibility.
 //
 // 分站域名服务
-type DomainServiceServer interface {
+type OperatorDomainServiceServer interface {
 	// 创建分站域名
 	Create(context.Context, *domainpb.CreateDomainRequest) (*domainpb.CreateDomainResponse, error)
 	// 修改分站域名
@@ -731,168 +731,168 @@ type DomainServiceServer interface {
 	List(context.Context, *domainpb.ListDomainsRequest) (*domainpb.ListDomainsResponse, error)
 	// 删除分站域名
 	Delete(context.Context, *domainpb.DeleteDomainRequest) (*domainpb.DeleteDomainResponse, error)
-	mustEmbedUnimplementedDomainServiceServer()
+	mustEmbedUnimplementedOperatorDomainServiceServer()
 }
 
-// UnimplementedDomainServiceServer must be embedded to have
+// UnimplementedOperatorDomainServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedDomainServiceServer struct{}
+type UnimplementedOperatorDomainServiceServer struct{}
 
-func (UnimplementedDomainServiceServer) Create(context.Context, *domainpb.CreateDomainRequest) (*domainpb.CreateDomainResponse, error) {
+func (UnimplementedOperatorDomainServiceServer) Create(context.Context, *domainpb.CreateDomainRequest) (*domainpb.CreateDomainResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedDomainServiceServer) Update(context.Context, *domainpb.UpdateDomainRequest) (*domainpb.UpdateDomainResponse, error) {
+func (UnimplementedOperatorDomainServiceServer) Update(context.Context, *domainpb.UpdateDomainRequest) (*domainpb.UpdateDomainResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
-func (UnimplementedDomainServiceServer) Get(context.Context, *domainpb.GetDomainRequest) (*domainpb.GetDomainResponse, error) {
+func (UnimplementedOperatorDomainServiceServer) Get(context.Context, *domainpb.GetDomainRequest) (*domainpb.GetDomainResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedDomainServiceServer) List(context.Context, *domainpb.ListDomainsRequest) (*domainpb.ListDomainsResponse, error) {
+func (UnimplementedOperatorDomainServiceServer) List(context.Context, *domainpb.ListDomainsRequest) (*domainpb.ListDomainsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedDomainServiceServer) Delete(context.Context, *domainpb.DeleteDomainRequest) (*domainpb.DeleteDomainResponse, error) {
+func (UnimplementedOperatorDomainServiceServer) Delete(context.Context, *domainpb.DeleteDomainRequest) (*domainpb.DeleteDomainResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
 }
-func (UnimplementedDomainServiceServer) mustEmbedUnimplementedDomainServiceServer() {}
-func (UnimplementedDomainServiceServer) testEmbeddedByValue()                       {}
+func (UnimplementedOperatorDomainServiceServer) mustEmbedUnimplementedOperatorDomainServiceServer() {}
+func (UnimplementedOperatorDomainServiceServer) testEmbeddedByValue()                               {}
 
-// UnsafeDomainServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to DomainServiceServer will
+// UnsafeOperatorDomainServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to OperatorDomainServiceServer will
 // result in compilation errors.
-type UnsafeDomainServiceServer interface {
-	mustEmbedUnimplementedDomainServiceServer()
+type UnsafeOperatorDomainServiceServer interface {
+	mustEmbedUnimplementedOperatorDomainServiceServer()
 }
 
-func RegisterDomainServiceServer(s grpc.ServiceRegistrar, srv DomainServiceServer) {
-	// If the following call panics, it indicates UnimplementedDomainServiceServer was
+func RegisterOperatorDomainServiceServer(s grpc.ServiceRegistrar, srv OperatorDomainServiceServer) {
+	// If the following call panics, it indicates UnimplementedOperatorDomainServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&DomainService_ServiceDesc, srv)
+	s.RegisterService(&OperatorDomainService_ServiceDesc, srv)
 }
 
-func _DomainService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _OperatorDomainService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(domainpb.CreateDomainRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DomainServiceServer).Create(ctx, in)
+		return srv.(OperatorDomainServiceServer).Create(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DomainService_Create_FullMethodName,
+		FullMethod: OperatorDomainService_Create_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DomainServiceServer).Create(ctx, req.(*domainpb.CreateDomainRequest))
+		return srv.(OperatorDomainServiceServer).Create(ctx, req.(*domainpb.CreateDomainRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DomainService_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _OperatorDomainService_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(domainpb.UpdateDomainRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DomainServiceServer).Update(ctx, in)
+		return srv.(OperatorDomainServiceServer).Update(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DomainService_Update_FullMethodName,
+		FullMethod: OperatorDomainService_Update_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DomainServiceServer).Update(ctx, req.(*domainpb.UpdateDomainRequest))
+		return srv.(OperatorDomainServiceServer).Update(ctx, req.(*domainpb.UpdateDomainRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DomainService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _OperatorDomainService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(domainpb.GetDomainRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DomainServiceServer).Get(ctx, in)
+		return srv.(OperatorDomainServiceServer).Get(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DomainService_Get_FullMethodName,
+		FullMethod: OperatorDomainService_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DomainServiceServer).Get(ctx, req.(*domainpb.GetDomainRequest))
+		return srv.(OperatorDomainServiceServer).Get(ctx, req.(*domainpb.GetDomainRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DomainService_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _OperatorDomainService_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(domainpb.ListDomainsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DomainServiceServer).List(ctx, in)
+		return srv.(OperatorDomainServiceServer).List(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DomainService_List_FullMethodName,
+		FullMethod: OperatorDomainService_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DomainServiceServer).List(ctx, req.(*domainpb.ListDomainsRequest))
+		return srv.(OperatorDomainServiceServer).List(ctx, req.(*domainpb.ListDomainsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DomainService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _OperatorDomainService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(domainpb.DeleteDomainRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DomainServiceServer).Delete(ctx, in)
+		return srv.(OperatorDomainServiceServer).Delete(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DomainService_Delete_FullMethodName,
+		FullMethod: OperatorDomainService_Delete_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DomainServiceServer).Delete(ctx, req.(*domainpb.DeleteDomainRequest))
+		return srv.(OperatorDomainServiceServer).Delete(ctx, req.(*domainpb.DeleteDomainRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// DomainService_ServiceDesc is the grpc.ServiceDesc for DomainService service.
+// OperatorDomainService_ServiceDesc is the grpc.ServiceDesc for OperatorDomainService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var DomainService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "platform_operator.DomainService",
-	HandlerType: (*DomainServiceServer)(nil),
+var OperatorDomainService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "platform_operator.OperatorDomainService",
+	HandlerType: (*OperatorDomainServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Create",
-			Handler:    _DomainService_Create_Handler,
+			Handler:    _OperatorDomainService_Create_Handler,
 		},
 		{
 			MethodName: "Update",
-			Handler:    _DomainService_Update_Handler,
+			Handler:    _OperatorDomainService_Update_Handler,
 		},
 		{
 			MethodName: "Get",
-			Handler:    _DomainService_Get_Handler,
+			Handler:    _OperatorDomainService_Get_Handler,
 		},
 		{
 			MethodName: "List",
-			Handler:    _DomainService_List_Handler,
+			Handler:    _OperatorDomainService_List_Handler,
 		},
 		{
 			MethodName: "Delete",
-			Handler:    _DomainService_Delete_Handler,
+			Handler:    _OperatorDomainService_Delete_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -45,8 +45,8 @@ const file_platform_operator_proto_rawDesc = "" +
 	"\x16OperatorProfileService\x12{\n" +
 	"\x06Create\x127.platform_operator_profile.CreateOperatorProfileRequest\x1a8.platform_operator_profile.CreateOperatorProfileResponse\x12{\n" +
 	"\x06Update\x127.platform_operator_profile.UpdateOperatorProfileRequest\x1a8.platform_operator_profile.UpdateOperatorProfileResponse\x12r\n" +
-	"\x03Get\x124.platform_operator_profile.GetOperatorProfileRequest\x1a5.platform_operator_profile.GetOperatorProfileResponse2\x8f\x04\n" +
-	"\rDomainService\x12g\n" +
+	"\x03Get\x124.platform_operator_profile.GetOperatorProfileRequest\x1a5.platform_operator_profile.GetOperatorProfileResponse2\x97\x04\n" +
+	"\x15OperatorDomainService\x12g\n" +
 	"\x06Create\x12-.platform_operator_domain.CreateDomainRequest\x1a..platform_operator_domain.CreateDomainResponse\x12g\n" +
 	"\x06Update\x12-.platform_operator_domain.UpdateDomainRequest\x1a..platform_operator_domain.UpdateDomainResponse\x12^\n" +
 	"\x03Get\x12*.platform_operator_domain.GetDomainRequest\x1a+.platform_operator_domain.GetDomainResponse\x12c\n" +
@@ -121,11 +121,11 @@ var file_platform_operator_proto_depIdxs = []int32{
 	7,  // 7: platform_operator.OperatorProfileService.Create:input_type -> platform_operator_profile.CreateOperatorProfileRequest
 	8,  // 8: platform_operator.OperatorProfileService.Update:input_type -> platform_operator_profile.UpdateOperatorProfileRequest
 	9,  // 9: platform_operator.OperatorProfileService.Get:input_type -> platform_operator_profile.GetOperatorProfileRequest
-	10, // 10: platform_operator.DomainService.Create:input_type -> platform_operator_domain.CreateDomainRequest
-	11, // 11: platform_operator.DomainService.Update:input_type -> platform_operator_domain.UpdateDomainRequest
-	12, // 12: platform_operator.DomainService.Get:input_type -> platform_operator_domain.GetDomainRequest
-	13, // 13: platform_operator.DomainService.List:input_type -> platform_operator_domain.ListDomainsRequest
-	14, // 14: platform_operator.DomainService.Delete:input_type -> platform_operator_domain.DeleteDomainRequest
+	10, // 10: platform_operator.OperatorDomainService.Create:input_type -> platform_operator_domain.CreateDomainRequest
+	11, // 11: platform_operator.OperatorDomainService.Update:input_type -> platform_operator_domain.UpdateDomainRequest
+	12, // 12: platform_operator.OperatorDomainService.Get:input_type -> platform_operator_domain.GetDomainRequest
+	13, // 13: platform_operator.OperatorDomainService.List:input_type -> platform_operator_domain.ListDomainsRequest
+	14, // 14: platform_operator.OperatorDomainService.Delete:input_type -> platform_operator_domain.DeleteDomainRequest
 	15, // 15: platform_operator.BasicResourceAllocationService.List:input_type -> platform_operator_basic_resource_allocation.ListBasicResourceAllocationsRequest
 	16, // 16: platform_operator.LanguageAllocationService.List:input_type -> platform_operator_language_allocation.ListLanguageAllocationsRequest
 	17, // 17: platform_operator.LanguageAllocationService.Save:input_type -> platform_operator_language_allocation.SaveLanguageAllocationsRequest
@@ -143,11 +143,11 @@ var file_platform_operator_proto_depIdxs = []int32{
 	29, // 29: platform_operator.OperatorProfileService.Create:output_type -> platform_operator_profile.CreateOperatorProfileResponse
 	30, // 30: platform_operator.OperatorProfileService.Update:output_type -> platform_operator_profile.UpdateOperatorProfileResponse
 	31, // 31: platform_operator.OperatorProfileService.Get:output_type -> platform_operator_profile.GetOperatorProfileResponse
-	32, // 32: platform_operator.DomainService.Create:output_type -> platform_operator_domain.CreateDomainResponse
-	33, // 33: platform_operator.DomainService.Update:output_type -> platform_operator_domain.UpdateDomainResponse
-	34, // 34: platform_operator.DomainService.Get:output_type -> platform_operator_domain.GetDomainResponse
-	35, // 35: platform_operator.DomainService.List:output_type -> platform_operator_domain.ListDomainsResponse
-	36, // 36: platform_operator.DomainService.Delete:output_type -> platform_operator_domain.DeleteDomainResponse
+	32, // 32: platform_operator.OperatorDomainService.Create:output_type -> platform_operator_domain.CreateDomainResponse
+	33, // 33: platform_operator.OperatorDomainService.Update:output_type -> platform_operator_domain.UpdateDomainResponse
+	34, // 34: platform_operator.OperatorDomainService.Get:output_type -> platform_operator_domain.GetDomainResponse
+	35, // 35: platform_operator.OperatorDomainService.List:output_type -> platform_operator_domain.ListDomainsResponse
+	36, // 36: platform_operator.OperatorDomainService.Delete:output_type -> platform_operator_domain.DeleteDomainResponse
 	37, // 37: platform_operator.BasicResourceAllocationService.List:output_type -> platform_operator_basic_resource_allocation.ListBasicResourceAllocationsResponse
 	38, // 38: platform_operator.LanguageAllocationService.List:output_type -> platform_operator_language_allocation.ListLanguageAllocationsResponse
 	39, // 39: platform_operator.LanguageAllocationService.Save:output_type -> platform_operator_language_allocation.SaveLanguageAllocationsResponse

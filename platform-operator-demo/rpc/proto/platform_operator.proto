@@ -53,7 +53,7 @@ service OperatorProfileService {
 }
 
 // 分站域名服务
-service DomainService {
+service OperatorDomainService {
   // 创建分站域名
   rpc Create(platform_operator_domain.CreateDomainRequest) returns (platform_operator_domain.CreateDomainResponse);
 

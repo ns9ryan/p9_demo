@@ -7,8 +7,8 @@ import (
 	"oa.98ent.com/p9/platform-operator/rpc/internal/config"
 	agentlineallocationserviceServer "oa.98ent.com/p9/platform-operator/rpc/internal/server/agentlineallocationservice"
 	basicresourceallocationserviceServer "oa.98ent.com/p9/platform-operator/rpc/internal/server/basicresourceallocationservice"
-	domainserviceServer "oa.98ent.com/p9/platform-operator/rpc/internal/server/domainservice"
 	languageallocationserviceServer "oa.98ent.com/p9/platform-operator/rpc/internal/server/languageallocationservice"
+	operatordomainserviceServer "oa.98ent.com/p9/platform-operator/rpc/internal/server/operatordomainservice"
 	operatorprofileserviceServer "oa.98ent.com/p9/platform-operator/rpc/internal/server/operatorprofileservice"
 	operatorserviceServer "oa.98ent.com/p9/platform-operator/rpc/internal/server/operatorservice"
 	pingserviceServer "oa.98ent.com/p9/platform-operator/rpc/internal/server/pingservice"
@@ -48,7 +48,7 @@ func main() {
 		platformoperatorrpc.RegisterOperatorProfileServiceServer(grpcServer, operatorprofileserviceServer.NewOperatorProfileServiceServer(ctx))
 
 		// 分站域名服务
-		platformoperatorrpc.RegisterDomainServiceServer(grpcServer, domainserviceServer.NewDomainServiceServer(ctx))
+		platformoperatorrpc.RegisterOperatorDomainServiceServer(grpcServer, operatordomainserviceServer.NewOperatorDomainServiceServer(ctx))
 
 		// 分站基础资源分配服务
 		platformoperatorrpc.RegisterBasicResourceAllocationServiceServer(grpcServer, basicresourceallocationserviceServer.NewBasicResourceAllocationServiceServer(ctx))
