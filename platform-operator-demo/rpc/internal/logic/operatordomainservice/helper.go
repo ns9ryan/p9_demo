@@ -1,9 +1,20 @@
 package operatordomainservicelogic
 
 import (
+	"strings"
+
 	"oa.98ent.com/p9/platform-operator/rpc/ent"
 	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/domainpb"
 )
+
+// trimOptionalString 整理可选字符串
+func trimOptionalString(value *string) *string {
+	if value == nil {
+		return nil
+	}
+
+	return new(strings.TrimSpace(*value))
+}
 
 // toDomainInfo 转换分站域名信息
 func toDomainInfo(data *ent.OperatorDomain) *domainpb.DomainInfo {

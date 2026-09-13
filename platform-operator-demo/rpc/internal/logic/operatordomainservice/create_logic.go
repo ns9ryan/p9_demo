@@ -47,11 +47,11 @@ func (l *CreateLogic) Create(in *domainpb.CreateDomainRequest) (*domainpb.Create
 	// 创建分站域名
 	data, err := l.svcCtx.DB.OperatorDomain.
 		Create().
-		SetOperatorID(in.OperatorId). // 分站ID
-		SetDomainName(domainName).    // 域名, 不包含协议和端口
-		SetDomainType(in.DomainType). // 域名类型: 1分站后台, 2代理后台, 3会员H5
-		SetNillableStatus(in.Status). // 域名状态: 1启用, 2停用
-		SetNillableRemark(in.Remark). // 总网内部备注
+		SetOperatorID(in.OperatorId).                     // 分站ID
+		SetDomainName(domainName).                        // 域名, 不包含协议和端口
+		SetDomainType(in.DomainType).                     // 域名类型: 1分站后台, 2代理后台, 3会员H5
+		SetNillableStatus(in.Status).                     // 域名状态: 1启用, 2停用
+		SetNillableRemark(trimOptionalString(in.Remark)). // 总网内部备注
 		Save(l.ctx)
 	if err != nil {
 		// 转换Ent错误为gRPC错误

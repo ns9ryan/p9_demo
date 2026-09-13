@@ -26,22 +26,22 @@ type CompleteOperatorRequest struct {
 type CompleteOperatorResponse struct {
 }
 
-type CreateDomainRequest struct {
+type CreateOperatorAdminRequest struct {
+}
+
+type CreateOperatorAdminResponse struct {
+}
+
+type CreateOperatorDomainRequest struct {
 	OperatorId int64   `json:"operator_id" validate:"required,gt=0"`
-	DomainName string  `json:"domain_name" validate:"required,max=253"`
+	DomainName string  `json:"domain_name" validate:"required,notblank,fqdn,max=253"`
 	DomainType int64   `json:"domain_type" validate:"required,oneof=1 2 3"`
 	Status     *int64  `json:"status,optional" validate:"omitempty,oneof=1 2"`
 	Remark     *string `json:"remark,optional" validate:"omitempty,max=1000"`
 }
 
-type CreateDomainResponse struct {
+type CreateOperatorDomainResponse struct {
 	Id int64 `json:"id"`
-}
-
-type CreateOperatorAdminRequest struct {
-}
-
-type CreateOperatorAdminResponse struct {
 }
 
 type CreateOperatorProfileRequest struct {
@@ -69,30 +69,19 @@ type CreateOperatorResponse struct {
 	Code string `json:"code"`
 }
 
-type DeleteDomainRequest struct {
+type DeleteOperatorDomainRequest struct {
 	Id int64 `json:"id" validate:"required,gt=0"`
 }
 
-type DeleteDomainResponse struct {
+type DeleteOperatorDomainResponse struct {
 }
 
-type DomainInfo struct {
-	Id         int64   `json:"id"`
-	OperatorId int64   `json:"operator_id"`
-	DomainName string  `json:"domain_name"`
-	DomainType int64   `json:"domain_type"`
-	Status     int64   `json:"status"`
-	Remark     *string `json:"remark,optional"`
-	CreatedAt  int64   `json:"created_at"`
-	UpdatedAt  int64   `json:"updated_at"`
-}
-
-type GetDomainRequest struct {
+type GetOperatorDomainRequest struct {
 	Id int64 `form:"id" validate:"required,gt=0"`
 }
 
-type GetDomainResponse struct {
-	DomainInfo
+type GetOperatorDomainResponse struct {
+	OperatorDomainInfo
 }
 
 type GetOperatorProfileRequest struct {
@@ -138,19 +127,6 @@ type ListBasicResourceAllocationsResponse struct {
 	List  []BasicResourceAllocationInfo `json:"list"`
 }
 
-type ListDomainsRequest struct {
-	PageRequest
-	OperatorId *int64  `form:"operator_id,optional" validate:"omitempty,gt=0"`
-	Keyword    *string `form:"keyword,optional" validate:"omitempty,max=253"`
-	DomainType *int64  `form:"domain_type,optional" validate:"omitempty,oneof=1 2 3"`
-	Status     *int64  `form:"status,optional" validate:"omitempty,oneof=1 2"`
-}
-
-type ListDomainsResponse struct {
-	Total int64        `json:"total"`
-	List  []DomainInfo `json:"list"`
-}
-
 type ListGameAllocationsRequest struct {
 }
 
@@ -174,6 +150,19 @@ type ListOperatorAdminsRequest struct {
 }
 
 type ListOperatorAdminsResponse struct {
+}
+
+type ListOperatorDomainsRequest struct {
+	PageRequest
+	OperatorId *int64  `form:"operator_id,optional" validate:"omitempty,gt=0"`
+	Keyword    *string `form:"keyword,optional" validate:"omitempty,max=253"`
+	DomainType *int64  `form:"domain_type,optional" validate:"omitempty,oneof=1 2 3"`
+	Status     *int64  `form:"status,optional" validate:"omitempty,oneof=1 2"`
+}
+
+type ListOperatorDomainsResponse struct {
+	Total int64                `json:"total"`
+	List  []OperatorDomainInfo `json:"list"`
 }
 
 type ListOperatorsRequest struct {
@@ -200,6 +189,17 @@ type ListRegionAllocationsRequest struct {
 type ListRegionAllocationsResponse struct {
 	Total int64                  `json:"total"`
 	List  []RegionAllocationInfo `json:"list"`
+}
+
+type OperatorDomainInfo struct {
+	Id         int64   `json:"id"`
+	OperatorId int64   `json:"operator_id"`
+	DomainName string  `json:"domain_name"`
+	DomainType int64   `json:"domain_type"`
+	Status     int64   `json:"status"`
+	Remark     *string `json:"remark,optional"`
+	CreatedAt  int64   `json:"created_at"`
+	UpdatedAt  int64   `json:"updated_at"`
 }
 
 type OperatorInfo struct {
@@ -282,15 +282,15 @@ type SaveRegionAllocationsRequest struct {
 type SaveRegionAllocationsResponse struct {
 }
 
-type UpdateDomainRequest struct {
+type UpdateOperatorDomainRequest struct {
 	Id         int64   `json:"id" validate:"required,gt=0"`
-	DomainName *string `json:"domain_name,optional" validate:"omitempty,max=253"`
+	DomainName *string `json:"domain_name,optional" validate:"omitempty,notblank,fqdn,max=253"`
 	DomainType *int64  `json:"domain_type,optional" validate:"omitempty,oneof=1 2 3"`
 	Status     *int64  `json:"status,optional" validate:"omitempty,oneof=1 2"`
 	Remark     *string `json:"remark,optional" validate:"omitempty,max=1000"`
 }
 
-type UpdateDomainResponse struct {
+type UpdateOperatorDomainResponse struct {
 }
 
 type UpdateOperatorProfileRequest struct {

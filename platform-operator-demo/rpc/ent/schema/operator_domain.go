@@ -1,6 +1,10 @@
 package schema
 
 import (
+	"regexp"
+
+	"oa.98ent.com/p9/platform-operator/rpc/ent/schema/mixins"
+
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/entsql"
@@ -8,8 +12,10 @@ import (
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+)
 
-	"oa.98ent.com/p9/platform-operator/rpc/ent/schema/mixins"
+var operatorDomainNameRegexp = regexp.MustCompile(
+	`(?i)^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z](?:[a-z0-9-]{0,61}[a-z0-9])?$`,
 )
 
 // OperatorDomain 定义 operator 域名表结构
@@ -26,6 +32,7 @@ func (OperatorDomain) Fields() []ent.Field {
 		field.String("domain_name").
 			NotEmpty().
 			MaxLen(253).
+			Match(operatorDomainNameRegexp).
 			Comment("域名"),
 
 		field.Int64("domain_type").

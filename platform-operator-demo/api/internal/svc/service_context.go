@@ -4,11 +4,6 @@
 package svc
 
 import (
-	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/rest"
-	"github.com/zeromicro/go-zero/zrpc"
-	"oa.98ent.com/p9/platform-operator/rpc/client/operatordomainservice"
-
 	"oa.98ent.com/p9/core/common/coreadapt"
 	coremiddleware "oa.98ent.com/p9/core/common/middleware"
 	"oa.98ent.com/p9/core/rpc/coreclient"
@@ -23,10 +18,15 @@ import (
 	"oa.98ent.com/p9/platform-operator/rpc/client/agentlineallocationservice"
 	"oa.98ent.com/p9/platform-operator/rpc/client/basicresourceallocationservice"
 	"oa.98ent.com/p9/platform-operator/rpc/client/languageallocationservice"
+	"oa.98ent.com/p9/platform-operator/rpc/client/operatordomainservice"
 	"oa.98ent.com/p9/platform-operator/rpc/client/operatorprofileservice"
 	"oa.98ent.com/p9/platform-operator/rpc/client/operatorservice"
 	"oa.98ent.com/p9/platform-operator/rpc/client/pingservice"
 	"oa.98ent.com/p9/platform-operator/rpc/client/regionallocationservice"
+
+	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/rest"
+	"github.com/zeromicro/go-zero/zrpc"
 )
 
 // ServiceContext 服务上下文

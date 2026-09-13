@@ -58,10 +58,10 @@ func (l *UpdateLogic) Update(in *domainpb.UpdateDomainRequest) (*domainpb.Update
 	// 修改分站域名
 	err = current.
 		Update().
-		SetNillableDomainName(domainName).    // 域名, 不包含协议和端口
-		SetNillableDomainType(in.DomainType). // 域名类型: 1分站后台, 2代理后台, 3会员H5
-		SetNillableStatus(in.Status).         // 域名状态: 1启用, 2停用
-		SetNillableRemark(in.Remark).         // 总网内部备注
+		SetNillableDomainName(domainName).                // 域名, 不包含协议和端口
+		SetNillableDomainType(in.DomainType).             // 域名类型: 1分站后台, 2代理后台, 3会员H5
+		SetNillableStatus(in.Status).                     // 域名状态: 1启用, 2停用
+		SetNillableRemark(trimOptionalString(in.Remark)). // 总网内部备注
 		Exec(l.ctx)
 	if err != nil {
 		// 转换Ent错误为gRPC错误
