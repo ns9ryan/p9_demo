@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package ping;
+package platform_base_ping;
 
 option go_package = "oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/pingpb";
 

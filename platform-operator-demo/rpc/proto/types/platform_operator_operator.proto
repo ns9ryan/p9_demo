@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package operator;
+package platform_operator_operator;
 
 option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/operatorpb";
 

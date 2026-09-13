@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package language_allocation;
+package platform_operator_language_allocation;
 
 option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/languageallocationpb";
 

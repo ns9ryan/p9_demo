@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.12
 // 	protoc        v6.32.0
-// source: types/domain.proto
+// source: types/platform_operator_domain.proto
 
 package domainpb
 
@@ -46,7 +46,7 @@ type DomainInfo struct {
 
 func (x *DomainInfo) Reset() {
 	*x = DomainInfo{}
-	mi := &file_types_domain_proto_msgTypes[0]
+	mi := &file_types_platform_operator_domain_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -58,7 +58,7 @@ func (x *DomainInfo) String() string {
 func (*DomainInfo) ProtoMessage() {}
 
 func (x *DomainInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_types_domain_proto_msgTypes[0]
+	mi := &file_types_platform_operator_domain_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -71,7 +71,7 @@ func (x *DomainInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DomainInfo.ProtoReflect.Descriptor instead.
 func (*DomainInfo) Descriptor() ([]byte, []int) {
-	return file_types_domain_proto_rawDescGZIP(), []int{0}
+	return file_types_platform_operator_domain_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *DomainInfo) GetId() int64 {
@@ -149,7 +149,7 @@ type CreateDomainRequest struct {
 
 func (x *CreateDomainRequest) Reset() {
 	*x = CreateDomainRequest{}
-	mi := &file_types_domain_proto_msgTypes[1]
+	mi := &file_types_platform_operator_domain_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -161,7 +161,7 @@ func (x *CreateDomainRequest) String() string {
 func (*CreateDomainRequest) ProtoMessage() {}
 
 func (x *CreateDomainRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_domain_proto_msgTypes[1]
+	mi := &file_types_platform_operator_domain_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -174,7 +174,7 @@ func (x *CreateDomainRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateDomainRequest.ProtoReflect.Descriptor instead.
 func (*CreateDomainRequest) Descriptor() ([]byte, []int) {
-	return file_types_domain_proto_rawDescGZIP(), []int{1}
+	return file_types_platform_operator_domain_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *CreateDomainRequest) GetOperatorId() int64 {
@@ -223,7 +223,7 @@ type CreateDomainResponse struct {
 
 func (x *CreateDomainResponse) Reset() {
 	*x = CreateDomainResponse{}
-	mi := &file_types_domain_proto_msgTypes[2]
+	mi := &file_types_platform_operator_domain_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -235,7 +235,7 @@ func (x *CreateDomainResponse) String() string {
 func (*CreateDomainResponse) ProtoMessage() {}
 
 func (x *CreateDomainResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_domain_proto_msgTypes[2]
+	mi := &file_types_platform_operator_domain_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -248,7 +248,7 @@ func (x *CreateDomainResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateDomainResponse.ProtoReflect.Descriptor instead.
 func (*CreateDomainResponse) Descriptor() ([]byte, []int) {
-	return file_types_domain_proto_rawDescGZIP(), []int{2}
+	return file_types_platform_operator_domain_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *CreateDomainResponse) GetId() int64 {
@@ -277,7 +277,7 @@ type UpdateDomainRequest struct {
 
 func (x *UpdateDomainRequest) Reset() {
 	*x = UpdateDomainRequest{}
-	mi := &file_types_domain_proto_msgTypes[3]
+	mi := &file_types_platform_operator_domain_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -289,7 +289,7 @@ func (x *UpdateDomainRequest) String() string {
 func (*UpdateDomainRequest) ProtoMessage() {}
 
 func (x *UpdateDomainRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_domain_proto_msgTypes[3]
+	mi := &file_types_platform_operator_domain_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -302,7 +302,7 @@ func (x *UpdateDomainRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDomainRequest.ProtoReflect.Descriptor instead.
 func (*UpdateDomainRequest) Descriptor() ([]byte, []int) {
-	return file_types_domain_proto_rawDescGZIP(), []int{3}
+	return file_types_platform_operator_domain_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *UpdateDomainRequest) GetId() int64 {
@@ -349,7 +349,7 @@ type UpdateDomainResponse struct {
 
 func (x *UpdateDomainResponse) Reset() {
 	*x = UpdateDomainResponse{}
-	mi := &file_types_domain_proto_msgTypes[4]
+	mi := &file_types_platform_operator_domain_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -361,7 +361,7 @@ func (x *UpdateDomainResponse) String() string {
 func (*UpdateDomainResponse) ProtoMessage() {}
 
 func (x *UpdateDomainResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_domain_proto_msgTypes[4]
+	mi := &file_types_platform_operator_domain_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -374,7 +374,7 @@ func (x *UpdateDomainResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDomainResponse.ProtoReflect.Descriptor instead.
 func (*UpdateDomainResponse) Descriptor() ([]byte, []int) {
-	return file_types_domain_proto_rawDescGZIP(), []int{4}
+	return file_types_platform_operator_domain_proto_rawDescGZIP(), []int{4}
 }
 
 // 获取分站域名请求
@@ -388,7 +388,7 @@ type GetDomainRequest struct {
 
 func (x *GetDomainRequest) Reset() {
 	*x = GetDomainRequest{}
-	mi := &file_types_domain_proto_msgTypes[5]
+	mi := &file_types_platform_operator_domain_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -400,7 +400,7 @@ func (x *GetDomainRequest) String() string {
 func (*GetDomainRequest) ProtoMessage() {}
 
 func (x *GetDomainRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_domain_proto_msgTypes[5]
+	mi := &file_types_platform_operator_domain_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -413,7 +413,7 @@ func (x *GetDomainRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDomainRequest.ProtoReflect.Descriptor instead.
 func (*GetDomainRequest) Descriptor() ([]byte, []int) {
-	return file_types_domain_proto_rawDescGZIP(), []int{5}
+	return file_types_platform_operator_domain_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetDomainRequest) GetId() int64 {
@@ -434,7 +434,7 @@ type GetDomainResponse struct {
 
 func (x *GetDomainResponse) Reset() {
 	*x = GetDomainResponse{}
-	mi := &file_types_domain_proto_msgTypes[6]
+	mi := &file_types_platform_operator_domain_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -446,7 +446,7 @@ func (x *GetDomainResponse) String() string {
 func (*GetDomainResponse) ProtoMessage() {}
 
 func (x *GetDomainResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_domain_proto_msgTypes[6]
+	mi := &file_types_platform_operator_domain_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -459,7 +459,7 @@ func (x *GetDomainResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDomainResponse.ProtoReflect.Descriptor instead.
 func (*GetDomainResponse) Descriptor() ([]byte, []int) {
-	return file_types_domain_proto_rawDescGZIP(), []int{6}
+	return file_types_platform_operator_domain_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GetDomainResponse) GetDomain() *DomainInfo {
@@ -490,7 +490,7 @@ type ListDomainsRequest struct {
 
 func (x *ListDomainsRequest) Reset() {
 	*x = ListDomainsRequest{}
-	mi := &file_types_domain_proto_msgTypes[7]
+	mi := &file_types_platform_operator_domain_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -502,7 +502,7 @@ func (x *ListDomainsRequest) String() string {
 func (*ListDomainsRequest) ProtoMessage() {}
 
 func (x *ListDomainsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_domain_proto_msgTypes[7]
+	mi := &file_types_platform_operator_domain_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -515,7 +515,7 @@ func (x *ListDomainsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListDomainsRequest.ProtoReflect.Descriptor instead.
 func (*ListDomainsRequest) Descriptor() ([]byte, []int) {
-	return file_types_domain_proto_rawDescGZIP(), []int{7}
+	return file_types_platform_operator_domain_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ListDomainsRequest) GetPage() int64 {
@@ -573,7 +573,7 @@ type ListDomainsResponse struct {
 
 func (x *ListDomainsResponse) Reset() {
 	*x = ListDomainsResponse{}
-	mi := &file_types_domain_proto_msgTypes[8]
+	mi := &file_types_platform_operator_domain_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -585,7 +585,7 @@ func (x *ListDomainsResponse) String() string {
 func (*ListDomainsResponse) ProtoMessage() {}
 
 func (x *ListDomainsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_domain_proto_msgTypes[8]
+	mi := &file_types_platform_operator_domain_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -598,7 +598,7 @@ func (x *ListDomainsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListDomainsResponse.ProtoReflect.Descriptor instead.
 func (*ListDomainsResponse) Descriptor() ([]byte, []int) {
-	return file_types_domain_proto_rawDescGZIP(), []int{8}
+	return file_types_platform_operator_domain_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ListDomainsResponse) GetTotal() int64 {
@@ -626,7 +626,7 @@ type DeleteDomainRequest struct {
 
 func (x *DeleteDomainRequest) Reset() {
 	*x = DeleteDomainRequest{}
-	mi := &file_types_domain_proto_msgTypes[9]
+	mi := &file_types_platform_operator_domain_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -638,7 +638,7 @@ func (x *DeleteDomainRequest) String() string {
 func (*DeleteDomainRequest) ProtoMessage() {}
 
 func (x *DeleteDomainRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_domain_proto_msgTypes[9]
+	mi := &file_types_platform_operator_domain_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -651,7 +651,7 @@ func (x *DeleteDomainRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteDomainRequest.ProtoReflect.Descriptor instead.
 func (*DeleteDomainRequest) Descriptor() ([]byte, []int) {
-	return file_types_domain_proto_rawDescGZIP(), []int{9}
+	return file_types_platform_operator_domain_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *DeleteDomainRequest) GetId() int64 {
@@ -670,7 +670,7 @@ type DeleteDomainResponse struct {
 
 func (x *DeleteDomainResponse) Reset() {
 	*x = DeleteDomainResponse{}
-	mi := &file_types_domain_proto_msgTypes[10]
+	mi := &file_types_platform_operator_domain_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -682,7 +682,7 @@ func (x *DeleteDomainResponse) String() string {
 func (*DeleteDomainResponse) ProtoMessage() {}
 
 func (x *DeleteDomainResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_domain_proto_msgTypes[10]
+	mi := &file_types_platform_operator_domain_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -695,14 +695,14 @@ func (x *DeleteDomainResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteDomainResponse.ProtoReflect.Descriptor instead.
 func (*DeleteDomainResponse) Descriptor() ([]byte, []int) {
-	return file_types_domain_proto_rawDescGZIP(), []int{10}
+	return file_types_platform_operator_domain_proto_rawDescGZIP(), []int{10}
 }
 
-var File_types_domain_proto protoreflect.FileDescriptor
+var File_types_platform_operator_domain_proto protoreflect.FileDescriptor
 
-const file_types_domain_proto_rawDesc = "" +
+const file_types_platform_operator_domain_proto_rawDesc = "" +
 	"\n" +
-	"\x12types/domain.proto\x12\x06domain\"\xfd\x01\n" +
+	"$types/platform_operator_domain.proto\x12\x18platform_operator_domain\"\xfd\x01\n" +
 	"\n" +
 	"DomainInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1f\n" +
@@ -746,9 +746,9 @@ const file_types_domain_proto_rawDesc = "" +
 	"\a_remark\"\x16\n" +
 	"\x14UpdateDomainResponse\"\"\n" +
 	"\x10GetDomainRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"?\n" +
-	"\x11GetDomainResponse\x12*\n" +
-	"\x06domain\x18\x01 \x01(\v2\x12.domain.DomainInfoR\x06domain\"\x84\x02\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"Q\n" +
+	"\x11GetDomainResponse\x12<\n" +
+	"\x06domain\x18\x01 \x01(\v2$.platform_operator_domain.DomainInfoR\x06domain\"\x84\x02\n" +
 	"\x12ListDomainsRequest\x12\x12\n" +
 	"\x04page\x18\x01 \x01(\x03R\x04page\x12\x1b\n" +
 	"\tpage_size\x18\x02 \x01(\x03R\bpageSize\x12$\n" +
@@ -762,43 +762,43 @@ const file_types_domain_proto_rawDesc = "" +
 	"\n" +
 	"\b_keywordB\x0e\n" +
 	"\f_domain_typeB\t\n" +
-	"\a_status\"S\n" +
+	"\a_status\"e\n" +
 	"\x13ListDomainsResponse\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x03R\x05total\x12&\n" +
-	"\x04list\x18\x02 \x03(\v2\x12.domain.DomainInfoR\x04list\"%\n" +
+	"\x05total\x18\x01 \x01(\x03R\x05total\x128\n" +
+	"\x04list\x18\x02 \x03(\v2$.platform_operator_domain.DomainInfoR\x04list\"%\n" +
 	"\x13DeleteDomainRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"\x16\n" +
 	"\x14DeleteDomainResponseBGZEoa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/domainpbb\x06proto3"
 
 var (
-	file_types_domain_proto_rawDescOnce sync.Once
-	file_types_domain_proto_rawDescData []byte
+	file_types_platform_operator_domain_proto_rawDescOnce sync.Once
+	file_types_platform_operator_domain_proto_rawDescData []byte
 )
 
-func file_types_domain_proto_rawDescGZIP() []byte {
-	file_types_domain_proto_rawDescOnce.Do(func() {
-		file_types_domain_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_types_domain_proto_rawDesc), len(file_types_domain_proto_rawDesc)))
+func file_types_platform_operator_domain_proto_rawDescGZIP() []byte {
+	file_types_platform_operator_domain_proto_rawDescOnce.Do(func() {
+		file_types_platform_operator_domain_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_types_platform_operator_domain_proto_rawDesc), len(file_types_platform_operator_domain_proto_rawDesc)))
 	})
-	return file_types_domain_proto_rawDescData
+	return file_types_platform_operator_domain_proto_rawDescData
 }
 
-var file_types_domain_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
-var file_types_domain_proto_goTypes = []any{
-	(*DomainInfo)(nil),           // 0: domain.DomainInfo
-	(*CreateDomainRequest)(nil),  // 1: domain.CreateDomainRequest
-	(*CreateDomainResponse)(nil), // 2: domain.CreateDomainResponse
-	(*UpdateDomainRequest)(nil),  // 3: domain.UpdateDomainRequest
-	(*UpdateDomainResponse)(nil), // 4: domain.UpdateDomainResponse
-	(*GetDomainRequest)(nil),     // 5: domain.GetDomainRequest
-	(*GetDomainResponse)(nil),    // 6: domain.GetDomainResponse
-	(*ListDomainsRequest)(nil),   // 7: domain.ListDomainsRequest
-	(*ListDomainsResponse)(nil),  // 8: domain.ListDomainsResponse
-	(*DeleteDomainRequest)(nil),  // 9: domain.DeleteDomainRequest
-	(*DeleteDomainResponse)(nil), // 10: domain.DeleteDomainResponse
+var file_types_platform_operator_domain_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_types_platform_operator_domain_proto_goTypes = []any{
+	(*DomainInfo)(nil),           // 0: platform_operator_domain.DomainInfo
+	(*CreateDomainRequest)(nil),  // 1: platform_operator_domain.CreateDomainRequest
+	(*CreateDomainResponse)(nil), // 2: platform_operator_domain.CreateDomainResponse
+	(*UpdateDomainRequest)(nil),  // 3: platform_operator_domain.UpdateDomainRequest
+	(*UpdateDomainResponse)(nil), // 4: platform_operator_domain.UpdateDomainResponse
+	(*GetDomainRequest)(nil),     // 5: platform_operator_domain.GetDomainRequest
+	(*GetDomainResponse)(nil),    // 6: platform_operator_domain.GetDomainResponse
+	(*ListDomainsRequest)(nil),   // 7: platform_operator_domain.ListDomainsRequest
+	(*ListDomainsResponse)(nil),  // 8: platform_operator_domain.ListDomainsResponse
+	(*DeleteDomainRequest)(nil),  // 9: platform_operator_domain.DeleteDomainRequest
+	(*DeleteDomainResponse)(nil), // 10: platform_operator_domain.DeleteDomainResponse
 }
-var file_types_domain_proto_depIdxs = []int32{
-	0, // 0: domain.GetDomainResponse.domain:type_name -> domain.DomainInfo
-	0, // 1: domain.ListDomainsResponse.list:type_name -> domain.DomainInfo
+var file_types_platform_operator_domain_proto_depIdxs = []int32{
+	0, // 0: platform_operator_domain.GetDomainResponse.domain:type_name -> platform_operator_domain.DomainInfo
+	0, // 1: platform_operator_domain.ListDomainsResponse.list:type_name -> platform_operator_domain.DomainInfo
 	2, // [2:2] is the sub-list for method output_type
 	2, // [2:2] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
@@ -806,30 +806,30 @@ var file_types_domain_proto_depIdxs = []int32{
 	0, // [0:2] is the sub-list for field type_name
 }
 
-func init() { file_types_domain_proto_init() }
-func file_types_domain_proto_init() {
-	if File_types_domain_proto != nil {
+func init() { file_types_platform_operator_domain_proto_init() }
+func file_types_platform_operator_domain_proto_init() {
+	if File_types_platform_operator_domain_proto != nil {
 		return
 	}
-	file_types_domain_proto_msgTypes[0].OneofWrappers = []any{}
-	file_types_domain_proto_msgTypes[1].OneofWrappers = []any{}
-	file_types_domain_proto_msgTypes[3].OneofWrappers = []any{}
-	file_types_domain_proto_msgTypes[7].OneofWrappers = []any{}
+	file_types_platform_operator_domain_proto_msgTypes[0].OneofWrappers = []any{}
+	file_types_platform_operator_domain_proto_msgTypes[1].OneofWrappers = []any{}
+	file_types_platform_operator_domain_proto_msgTypes[3].OneofWrappers = []any{}
+	file_types_platform_operator_domain_proto_msgTypes[7].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_domain_proto_rawDesc), len(file_types_domain_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_platform_operator_domain_proto_rawDesc), len(file_types_platform_operator_domain_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_types_domain_proto_goTypes,
-		DependencyIndexes: file_types_domain_proto_depIdxs,
-		MessageInfos:      file_types_domain_proto_msgTypes,
+		GoTypes:           file_types_platform_operator_domain_proto_goTypes,
+		DependencyIndexes: file_types_platform_operator_domain_proto_depIdxs,
+		MessageInfos:      file_types_platform_operator_domain_proto_msgTypes,
 	}.Build()
-	File_types_domain_proto = out.File
-	file_types_domain_proto_goTypes = nil
-	file_types_domain_proto_depIdxs = nil
+	File_types_platform_operator_domain_proto = out.File
+	file_types_platform_operator_domain_proto_goTypes = nil
+	file_types_platform_operator_domain_proto_depIdxs = nil
 }

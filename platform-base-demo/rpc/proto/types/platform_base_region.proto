@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package region;
+package platform_base_region;
 
 option go_package = "oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/regionpb";
 
@@ -63,7 +63,6 @@ message ListRegionsRequest {
   int64 page = 1;
   // 每页数量
   int64 page_size = 2;
-
   // 状态: 1启用, 2停用
   optional int64 status = 3;
 }

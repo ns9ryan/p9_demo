@@ -5,11 +5,19 @@ package operator
 
 import (
 	"context"
+	"strings"
 
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/currencypb"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/timezonepb"
+	"oa.98ent.com/p9/platform-operator/api/internal/i18nkey"
 	"oa.98ent.com/p9/platform-operator/api/internal/svc"
 	"oa.98ent.com/p9/platform-operator/api/internal/types"
+	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/operatorpb"
 
 	"github.com/zeromicro/go-zero/core/logx"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type CreateOperatorLogic struct {
@@ -26,8 +34,79 @@ func NewCreateOperatorLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cr
 	}
 }
 
+// CreateOperator 创建分站
 func (l *CreateOperatorLogic) CreateOperator(req *types.CreateOperatorRequest) (resp *types.CreateOperatorResponse, err error) {
-	// todo: add your logic here and delete this line
+	// 整理创建参数
+	name := strings.TrimSpace(req.Name)
+	timezoneCode := strings.TrimSpace(req.TimezoneCode)
+	settlementCurrencyCode := strings.ToUpper(strings.TrimSpace(req.SettlementCurrencyCode))
 
-	return
+	var remark *string
+	if req.Remark != nil {
+		value := strings.TrimSpace(*req.Remark)
+		remark = &value
+	}
+
+	// 获取并校验时区
+	timezoneResult, err := l.svcCtx.TimezoneRpc.GetByCode(
+		l.ctx,
+		&timezonepb.GetTimezoneByCodeRequest{
+			Code: timezoneCode, // IANA时区编码
+		},
+	)
+	if err != nil {
+		// 时区不存在时统一按不可用处理
+		if status.Code(err) == codes.NotFound {
+			return nil, grpcerror.InvalidArgument(i18nkey.TimezoneUnavailable)
+		}
+
+		return nil, err
+	}
+
+	// 停用的时区不可用于创建分站
+	if timezoneResult.Timezone.Status != 1 {
+		return nil, grpcerror.InvalidArgument(i18nkey.TimezoneUnavailable)
+	}
+
+	// 获取并校验结算币种
+	currencyResult, err := l.svcCtx.CurrencyRpc.GetByCode(
+		l.ctx,
+		&currencypb.GetCurrencyByCodeRequest{
+			Code: settlementCurrencyCode, // 货币编码
+		},
+	)
+	if err != nil {
+		// 结算币种不存在时统一按不可用处理
+		if status.Code(err) == codes.NotFound {
+			return nil, grpcerror.InvalidArgument(i18nkey.SettlementCurrencyUnavailable)
+		}
+
+		return nil, err
+	}
+
+	// 停用的结算币种不可用于创建分站
+	if currencyResult.Currency.Status != 1 {
+		return nil, grpcerror.InvalidArgument(i18nkey.SettlementCurrencyUnavailable)
+	}
+
+	// 创建分站
+	result, err := l.svcCtx.OperatorRpc.Create(
+		l.ctx,
+		&operatorpb.CreateOperatorRequest{
+			Name:                   name,                         // 分站名称
+			TimezoneCode:           timezoneResult.Timezone.Code, // 时区编码
+			SettlementCurrencyCode: currencyResult.Currency.Code, // 结算币种编码
+			Status:                 req.Status,                   // 分站状态: 1正常, 2暂停, 3关闭
+			Remark:                 remark,                       // 内部备注
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	// 返回创建结果
+	return &types.CreateOperatorResponse{
+		Id:   result.Id,   // 分站ID
+		Code: result.Code, // 分站业务编码
+	}, nil
 }

@@ -57,9 +57,9 @@ type CreateOperatorProfileResponse struct {
 }
 
 type CreateOperatorRequest struct {
-	Name                   string  `json:"name" validate:"required,max=100"`
-	TimezoneCode           string  `json:"timezone_code" validate:"required,max=64"`
-	SettlementCurrencyCode string  `json:"settlement_currency_code" validate:"required,max=16"`
+	Name                   string  `json:"name" validate:"required,notblank,max=100"`
+	TimezoneCode           string  `json:"timezone_code" validate:"required,notblank,max=64"`
+	SettlementCurrencyCode string  `json:"settlement_currency_code" validate:"required,notblank,max=16"`
 	Status                 *int64  `json:"status,optional" validate:"omitempty,oneof=1 2 3"`
 	Remark                 *string `json:"remark,optional" validate:"omitempty,max=1000"`
 }
@@ -306,9 +306,9 @@ type UpdateOperatorProfileResponse struct {
 
 type UpdateOperatorRequest struct {
 	Id                     int64   `json:"id" validate:"required,gt=0"`
-	Name                   *string `json:"name,optional" validate:"omitempty,max=100"`
-	TimezoneCode           *string `json:"timezone_code,optional" validate:"omitempty,max=64"`
-	SettlementCurrencyCode *string `json:"settlement_currency_code,optional" validate:"omitempty,max=16"`
+	Name                   *string `json:"name,optional" validate:"omitempty,notblank,max=100"`
+	TimezoneCode           *string `json:"timezone_code,optional" validate:"omitempty,notblank,max=64"`
+	SettlementCurrencyCode *string `json:"settlement_currency_code,optional" validate:"omitempty,notblank,max=16"`
 	Status                 *int64  `json:"status,optional" validate:"omitempty,oneof=1 2 3"`
 	Remark                 *string `json:"remark,optional" validate:"omitempty,max=1000"`
 }

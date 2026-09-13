@@ -32,6 +32,10 @@ func main() {
 	conf.MustLoad(*configFile, &c)
 
 	ctx := svc.NewServiceContext(c)
+	defer ctx.DB.Close()
+
+	// 执行数据库自动迁移
+	ctx.MustMigrate()
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
 		// Ping 服务

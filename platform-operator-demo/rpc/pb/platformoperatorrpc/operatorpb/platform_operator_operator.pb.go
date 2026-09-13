@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.12
 // 	protoc        v6.32.0
-// source: types/operator.proto
+// source: types/platform_operator_operator.proto
 
 package operatorpb
 
@@ -54,7 +54,7 @@ type OperatorInfo struct {
 
 func (x *OperatorInfo) Reset() {
 	*x = OperatorInfo{}
-	mi := &file_types_operator_proto_msgTypes[0]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -66,7 +66,7 @@ func (x *OperatorInfo) String() string {
 func (*OperatorInfo) ProtoMessage() {}
 
 func (x *OperatorInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_proto_msgTypes[0]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -79,7 +79,7 @@ func (x *OperatorInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OperatorInfo.ProtoReflect.Descriptor instead.
 func (*OperatorInfo) Descriptor() ([]byte, []int) {
-	return file_types_operator_proto_rawDescGZIP(), []int{0}
+	return file_types_platform_operator_operator_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *OperatorInfo) GetId() int64 {
@@ -185,7 +185,7 @@ type CreateOperatorRequest struct {
 
 func (x *CreateOperatorRequest) Reset() {
 	*x = CreateOperatorRequest{}
-	mi := &file_types_operator_proto_msgTypes[1]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -197,7 +197,7 @@ func (x *CreateOperatorRequest) String() string {
 func (*CreateOperatorRequest) ProtoMessage() {}
 
 func (x *CreateOperatorRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_proto_msgTypes[1]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -210,7 +210,7 @@ func (x *CreateOperatorRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateOperatorRequest.ProtoReflect.Descriptor instead.
 func (*CreateOperatorRequest) Descriptor() ([]byte, []int) {
-	return file_types_operator_proto_rawDescGZIP(), []int{1}
+	return file_types_platform_operator_operator_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *CreateOperatorRequest) GetName() string {
@@ -261,7 +261,7 @@ type CreateOperatorResponse struct {
 
 func (x *CreateOperatorResponse) Reset() {
 	*x = CreateOperatorResponse{}
-	mi := &file_types_operator_proto_msgTypes[2]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -273,7 +273,7 @@ func (x *CreateOperatorResponse) String() string {
 func (*CreateOperatorResponse) ProtoMessage() {}
 
 func (x *CreateOperatorResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_proto_msgTypes[2]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -286,7 +286,7 @@ func (x *CreateOperatorResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateOperatorResponse.ProtoReflect.Descriptor instead.
 func (*CreateOperatorResponse) Descriptor() ([]byte, []int) {
-	return file_types_operator_proto_rawDescGZIP(), []int{2}
+	return file_types_platform_operator_operator_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *CreateOperatorResponse) GetId() int64 {
@@ -324,7 +324,7 @@ type UpdateOperatorRequest struct {
 
 func (x *UpdateOperatorRequest) Reset() {
 	*x = UpdateOperatorRequest{}
-	mi := &file_types_operator_proto_msgTypes[3]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -336,7 +336,7 @@ func (x *UpdateOperatorRequest) String() string {
 func (*UpdateOperatorRequest) ProtoMessage() {}
 
 func (x *UpdateOperatorRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_proto_msgTypes[3]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -349,7 +349,7 @@ func (x *UpdateOperatorRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateOperatorRequest.ProtoReflect.Descriptor instead.
 func (*UpdateOperatorRequest) Descriptor() ([]byte, []int) {
-	return file_types_operator_proto_rawDescGZIP(), []int{3}
+	return file_types_platform_operator_operator_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *UpdateOperatorRequest) GetId() int64 {
@@ -403,7 +403,7 @@ type UpdateOperatorResponse struct {
 
 func (x *UpdateOperatorResponse) Reset() {
 	*x = UpdateOperatorResponse{}
-	mi := &file_types_operator_proto_msgTypes[4]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -415,7 +415,7 @@ func (x *UpdateOperatorResponse) String() string {
 func (*UpdateOperatorResponse) ProtoMessage() {}
 
 func (x *UpdateOperatorResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_proto_msgTypes[4]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -428,7 +428,7 @@ func (x *UpdateOperatorResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateOperatorResponse.ProtoReflect.Descriptor instead.
 func (*UpdateOperatorResponse) Descriptor() ([]byte, []int) {
-	return file_types_operator_proto_rawDescGZIP(), []int{4}
+	return file_types_platform_operator_operator_proto_rawDescGZIP(), []int{4}
 }
 
 // 获取分站请求
@@ -442,7 +442,7 @@ type GetOperatorRequest struct {
 
 func (x *GetOperatorRequest) Reset() {
 	*x = GetOperatorRequest{}
-	mi := &file_types_operator_proto_msgTypes[5]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -454,7 +454,7 @@ func (x *GetOperatorRequest) String() string {
 func (*GetOperatorRequest) ProtoMessage() {}
 
 func (x *GetOperatorRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_proto_msgTypes[5]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -467,7 +467,7 @@ func (x *GetOperatorRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetOperatorRequest.ProtoReflect.Descriptor instead.
 func (*GetOperatorRequest) Descriptor() ([]byte, []int) {
-	return file_types_operator_proto_rawDescGZIP(), []int{5}
+	return file_types_platform_operator_operator_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetOperatorRequest) GetId() int64 {
@@ -488,7 +488,7 @@ type GetOperatorResponse struct {
 
 func (x *GetOperatorResponse) Reset() {
 	*x = GetOperatorResponse{}
-	mi := &file_types_operator_proto_msgTypes[6]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -500,7 +500,7 @@ func (x *GetOperatorResponse) String() string {
 func (*GetOperatorResponse) ProtoMessage() {}
 
 func (x *GetOperatorResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_proto_msgTypes[6]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -513,7 +513,7 @@ func (x *GetOperatorResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetOperatorResponse.ProtoReflect.Descriptor instead.
 func (*GetOperatorResponse) Descriptor() ([]byte, []int) {
-	return file_types_operator_proto_rawDescGZIP(), []int{6}
+	return file_types_platform_operator_operator_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GetOperatorResponse) GetOperator() *OperatorInfo {
@@ -544,7 +544,7 @@ type ListOperatorsRequest struct {
 
 func (x *ListOperatorsRequest) Reset() {
 	*x = ListOperatorsRequest{}
-	mi := &file_types_operator_proto_msgTypes[7]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -556,7 +556,7 @@ func (x *ListOperatorsRequest) String() string {
 func (*ListOperatorsRequest) ProtoMessage() {}
 
 func (x *ListOperatorsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_proto_msgTypes[7]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -569,7 +569,7 @@ func (x *ListOperatorsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListOperatorsRequest.ProtoReflect.Descriptor instead.
 func (*ListOperatorsRequest) Descriptor() ([]byte, []int) {
-	return file_types_operator_proto_rawDescGZIP(), []int{7}
+	return file_types_platform_operator_operator_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ListOperatorsRequest) GetPage() int64 {
@@ -627,7 +627,7 @@ type ListOperatorsResponse struct {
 
 func (x *ListOperatorsResponse) Reset() {
 	*x = ListOperatorsResponse{}
-	mi := &file_types_operator_proto_msgTypes[8]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -639,7 +639,7 @@ func (x *ListOperatorsResponse) String() string {
 func (*ListOperatorsResponse) ProtoMessage() {}
 
 func (x *ListOperatorsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_proto_msgTypes[8]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -652,7 +652,7 @@ func (x *ListOperatorsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListOperatorsResponse.ProtoReflect.Descriptor instead.
 func (*ListOperatorsResponse) Descriptor() ([]byte, []int) {
-	return file_types_operator_proto_rawDescGZIP(), []int{8}
+	return file_types_platform_operator_operator_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ListOperatorsResponse) GetTotal() int64 {
@@ -680,7 +680,7 @@ type CompleteOperatorRequest struct {
 
 func (x *CompleteOperatorRequest) Reset() {
 	*x = CompleteOperatorRequest{}
-	mi := &file_types_operator_proto_msgTypes[9]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -692,7 +692,7 @@ func (x *CompleteOperatorRequest) String() string {
 func (*CompleteOperatorRequest) ProtoMessage() {}
 
 func (x *CompleteOperatorRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_proto_msgTypes[9]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -705,7 +705,7 @@ func (x *CompleteOperatorRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CompleteOperatorRequest.ProtoReflect.Descriptor instead.
 func (*CompleteOperatorRequest) Descriptor() ([]byte, []int) {
-	return file_types_operator_proto_rawDescGZIP(), []int{9}
+	return file_types_platform_operator_operator_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *CompleteOperatorRequest) GetId() int64 {
@@ -724,7 +724,7 @@ type CompleteOperatorResponse struct {
 
 func (x *CompleteOperatorResponse) Reset() {
 	*x = CompleteOperatorResponse{}
-	mi := &file_types_operator_proto_msgTypes[10]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -736,7 +736,7 @@ func (x *CompleteOperatorResponse) String() string {
 func (*CompleteOperatorResponse) ProtoMessage() {}
 
 func (x *CompleteOperatorResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_proto_msgTypes[10]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -749,7 +749,7 @@ func (x *CompleteOperatorResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CompleteOperatorResponse.ProtoReflect.Descriptor instead.
 func (*CompleteOperatorResponse) Descriptor() ([]byte, []int) {
-	return file_types_operator_proto_rawDescGZIP(), []int{10}
+	return file_types_platform_operator_operator_proto_rawDescGZIP(), []int{10}
 }
 
 // 发布分站请求
@@ -763,7 +763,7 @@ type PublishOperatorRequest struct {
 
 func (x *PublishOperatorRequest) Reset() {
 	*x = PublishOperatorRequest{}
-	mi := &file_types_operator_proto_msgTypes[11]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -775,7 +775,7 @@ func (x *PublishOperatorRequest) String() string {
 func (*PublishOperatorRequest) ProtoMessage() {}
 
 func (x *PublishOperatorRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_proto_msgTypes[11]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -788,7 +788,7 @@ func (x *PublishOperatorRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PublishOperatorRequest.ProtoReflect.Descriptor instead.
 func (*PublishOperatorRequest) Descriptor() ([]byte, []int) {
-	return file_types_operator_proto_rawDescGZIP(), []int{11}
+	return file_types_platform_operator_operator_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *PublishOperatorRequest) GetId() int64 {
@@ -807,7 +807,7 @@ type PublishOperatorResponse struct {
 
 func (x *PublishOperatorResponse) Reset() {
 	*x = PublishOperatorResponse{}
-	mi := &file_types_operator_proto_msgTypes[12]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -819,7 +819,7 @@ func (x *PublishOperatorResponse) String() string {
 func (*PublishOperatorResponse) ProtoMessage() {}
 
 func (x *PublishOperatorResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_proto_msgTypes[12]
+	mi := &file_types_platform_operator_operator_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -832,14 +832,14 @@ func (x *PublishOperatorResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PublishOperatorResponse.ProtoReflect.Descriptor instead.
 func (*PublishOperatorResponse) Descriptor() ([]byte, []int) {
-	return file_types_operator_proto_rawDescGZIP(), []int{12}
+	return file_types_platform_operator_operator_proto_rawDescGZIP(), []int{12}
 }
 
-var File_types_operator_proto protoreflect.FileDescriptor
+var File_types_platform_operator_operator_proto protoreflect.FileDescriptor
 
-const file_types_operator_proto_rawDesc = "" +
+const file_types_platform_operator_operator_proto_rawDesc = "" +
 	"\n" +
-	"\x14types/operator.proto\x12\boperator\"\xac\x03\n" +
+	"&types/platform_operator_operator.proto\x12\x1aplatform_operator_operator\"\xac\x03\n" +
 	"\fOperatorInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04code\x18\x02 \x01(\tR\x04code\x12\x12\n" +
@@ -883,9 +883,9 @@ const file_types_operator_proto_rawDesc = "" +
 	"\a_remark\"\x18\n" +
 	"\x16UpdateOperatorResponse\"$\n" +
 	"\x12GetOperatorRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"I\n" +
-	"\x13GetOperatorResponse\x122\n" +
-	"\boperator\x18\x01 \x01(\v2\x16.operator.OperatorInfoR\boperator\"\x9b\x02\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"[\n" +
+	"\x13GetOperatorResponse\x12D\n" +
+	"\boperator\x18\x01 \x01(\v2(.platform_operator_operator.OperatorInfoR\boperator\"\x9b\x02\n" +
 	"\x14ListOperatorsRequest\x12\x12\n" +
 	"\x04page\x18\x01 \x01(\x03R\x04page\x12\x1b\n" +
 	"\tpage_size\x18\x02 \x01(\x03R\bpageSize\x12\x1d\n" +
@@ -897,10 +897,10 @@ const file_types_operator_proto_rawDesc = "" +
 	"\b_keywordB\x12\n" +
 	"\x10_creation_statusB\x11\n" +
 	"\x0f_publish_statusB\t\n" +
-	"\a_status\"Y\n" +
+	"\a_status\"k\n" +
 	"\x15ListOperatorsResponse\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x03R\x05total\x12*\n" +
-	"\x04list\x18\x02 \x03(\v2\x16.operator.OperatorInfoR\x04list\")\n" +
+	"\x05total\x18\x01 \x01(\x03R\x05total\x12<\n" +
+	"\x04list\x18\x02 \x03(\v2(.platform_operator_operator.OperatorInfoR\x04list\")\n" +
 	"\x17CompleteOperatorRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"\x1a\n" +
 	"\x18CompleteOperatorResponse\"(\n" +
@@ -909,36 +909,36 @@ const file_types_operator_proto_rawDesc = "" +
 	"\x17PublishOperatorResponseBIZGoa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/operatorpbb\x06proto3"
 
 var (
-	file_types_operator_proto_rawDescOnce sync.Once
-	file_types_operator_proto_rawDescData []byte
+	file_types_platform_operator_operator_proto_rawDescOnce sync.Once
+	file_types_platform_operator_operator_proto_rawDescData []byte
 )
 
-func file_types_operator_proto_rawDescGZIP() []byte {
-	file_types_operator_proto_rawDescOnce.Do(func() {
-		file_types_operator_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_types_operator_proto_rawDesc), len(file_types_operator_proto_rawDesc)))
+func file_types_platform_operator_operator_proto_rawDescGZIP() []byte {
+	file_types_platform_operator_operator_proto_rawDescOnce.Do(func() {
+		file_types_platform_operator_operator_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_types_platform_operator_operator_proto_rawDesc), len(file_types_platform_operator_operator_proto_rawDesc)))
 	})
-	return file_types_operator_proto_rawDescData
+	return file_types_platform_operator_operator_proto_rawDescData
 }
 
-var file_types_operator_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
-var file_types_operator_proto_goTypes = []any{
-	(*OperatorInfo)(nil),             // 0: operator.OperatorInfo
-	(*CreateOperatorRequest)(nil),    // 1: operator.CreateOperatorRequest
-	(*CreateOperatorResponse)(nil),   // 2: operator.CreateOperatorResponse
-	(*UpdateOperatorRequest)(nil),    // 3: operator.UpdateOperatorRequest
-	(*UpdateOperatorResponse)(nil),   // 4: operator.UpdateOperatorResponse
-	(*GetOperatorRequest)(nil),       // 5: operator.GetOperatorRequest
-	(*GetOperatorResponse)(nil),      // 6: operator.GetOperatorResponse
-	(*ListOperatorsRequest)(nil),     // 7: operator.ListOperatorsRequest
-	(*ListOperatorsResponse)(nil),    // 8: operator.ListOperatorsResponse
-	(*CompleteOperatorRequest)(nil),  // 9: operator.CompleteOperatorRequest
-	(*CompleteOperatorResponse)(nil), // 10: operator.CompleteOperatorResponse
-	(*PublishOperatorRequest)(nil),   // 11: operator.PublishOperatorRequest
-	(*PublishOperatorResponse)(nil),  // 12: operator.PublishOperatorResponse
+var file_types_platform_operator_operator_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_types_platform_operator_operator_proto_goTypes = []any{
+	(*OperatorInfo)(nil),             // 0: platform_operator_operator.OperatorInfo
+	(*CreateOperatorRequest)(nil),    // 1: platform_operator_operator.CreateOperatorRequest
+	(*CreateOperatorResponse)(nil),   // 2: platform_operator_operator.CreateOperatorResponse
+	(*UpdateOperatorRequest)(nil),    // 3: platform_operator_operator.UpdateOperatorRequest
+	(*UpdateOperatorResponse)(nil),   // 4: platform_operator_operator.UpdateOperatorResponse
+	(*GetOperatorRequest)(nil),       // 5: platform_operator_operator.GetOperatorRequest
+	(*GetOperatorResponse)(nil),      // 6: platform_operator_operator.GetOperatorResponse
+	(*ListOperatorsRequest)(nil),     // 7: platform_operator_operator.ListOperatorsRequest
+	(*ListOperatorsResponse)(nil),    // 8: platform_operator_operator.ListOperatorsResponse
+	(*CompleteOperatorRequest)(nil),  // 9: platform_operator_operator.CompleteOperatorRequest
+	(*CompleteOperatorResponse)(nil), // 10: platform_operator_operator.CompleteOperatorResponse
+	(*PublishOperatorRequest)(nil),   // 11: platform_operator_operator.PublishOperatorRequest
+	(*PublishOperatorResponse)(nil),  // 12: platform_operator_operator.PublishOperatorResponse
 }
-var file_types_operator_proto_depIdxs = []int32{
-	0, // 0: operator.GetOperatorResponse.operator:type_name -> operator.OperatorInfo
-	0, // 1: operator.ListOperatorsResponse.list:type_name -> operator.OperatorInfo
+var file_types_platform_operator_operator_proto_depIdxs = []int32{
+	0, // 0: platform_operator_operator.GetOperatorResponse.operator:type_name -> platform_operator_operator.OperatorInfo
+	0, // 1: platform_operator_operator.ListOperatorsResponse.list:type_name -> platform_operator_operator.OperatorInfo
 	2, // [2:2] is the sub-list for method output_type
 	2, // [2:2] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
@@ -946,30 +946,30 @@ var file_types_operator_proto_depIdxs = []int32{
 	0, // [0:2] is the sub-list for field type_name
 }
 
-func init() { file_types_operator_proto_init() }
-func file_types_operator_proto_init() {
-	if File_types_operator_proto != nil {
+func init() { file_types_platform_operator_operator_proto_init() }
+func file_types_platform_operator_operator_proto_init() {
+	if File_types_platform_operator_operator_proto != nil {
 		return
 	}
-	file_types_operator_proto_msgTypes[0].OneofWrappers = []any{}
-	file_types_operator_proto_msgTypes[1].OneofWrappers = []any{}
-	file_types_operator_proto_msgTypes[3].OneofWrappers = []any{}
-	file_types_operator_proto_msgTypes[7].OneofWrappers = []any{}
+	file_types_platform_operator_operator_proto_msgTypes[0].OneofWrappers = []any{}
+	file_types_platform_operator_operator_proto_msgTypes[1].OneofWrappers = []any{}
+	file_types_platform_operator_operator_proto_msgTypes[3].OneofWrappers = []any{}
+	file_types_platform_operator_operator_proto_msgTypes[7].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_operator_proto_rawDesc), len(file_types_operator_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_platform_operator_operator_proto_rawDesc), len(file_types_platform_operator_operator_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_types_operator_proto_goTypes,
-		DependencyIndexes: file_types_operator_proto_depIdxs,
-		MessageInfos:      file_types_operator_proto_msgTypes,
+		GoTypes:           file_types_platform_operator_operator_proto_goTypes,
+		DependencyIndexes: file_types_platform_operator_operator_proto_depIdxs,
+		MessageInfos:      file_types_platform_operator_operator_proto_msgTypes,
 	}.Build()
-	File_types_operator_proto = out.File
-	file_types_operator_proto_goTypes = nil
-	file_types_operator_proto_depIdxs = nil
+	File_types_platform_operator_operator_proto = out.File
+	file_types_platform_operator_operator_proto_goTypes = nil
+	file_types_platform_operator_operator_proto_depIdxs = nil
 }

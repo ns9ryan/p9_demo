@@ -28,110 +28,110 @@ var File_platform_base_proto protoreflect.FileDescriptor
 
 const file_platform_base_proto_rawDesc = "" +
 	"\n" +
-	"\x13platform_base.proto\x12\rplatform_base\x1a\x10types/ping.proto\x1a\x14types/timezone.proto\x1a\x14types/currency.proto\x1a\x12types/region.proto2<\n" +
-	"\vPingService\x12-\n" +
-	"\x04Ping\x12\x11.ping.PingRequest\x1a\x12.ping.PingResponse2\xe3\x03\n" +
-	"\x0fTimezoneService\x12K\n" +
-	"\x06Update\x12\x1f.timezone.UpdateTimezoneRequest\x1a .timezone.UpdateTimezoneResponse\x12B\n" +
-	"\x03Get\x12\x1c.timezone.GetTimezoneRequest\x1a\x1d.timezone.GetTimezoneResponse\x12T\n" +
-	"\tGetByCode\x12\".timezone.GetTimezoneByCodeRequest\x1a#.timezone.GetTimezoneByCodeResponse\x12G\n" +
-	"\x04List\x12\x1e.timezone.ListTimezonesRequest\x1a\x1f.timezone.ListTimezonesResponse\x12P\n" +
-	"\aListAll\x12!.timezone.ListAllTimezonesRequest\x1a\".timezone.ListAllTimezonesResponse\x12N\n" +
-	"\aReorder\x12 .timezone.ReorderTimezoneRequest\x1a!.timezone.ReorderTimezoneResponse2\xe7\x03\n" +
-	"\x0fCurrencyService\x12K\n" +
-	"\x06Update\x12\x1f.currency.UpdateCurrencyRequest\x1a .currency.UpdateCurrencyResponse\x12B\n" +
-	"\x03Get\x12\x1c.currency.GetCurrencyRequest\x1a\x1d.currency.GetCurrencyResponse\x12T\n" +
-	"\tGetByCode\x12\".currency.GetCurrencyByCodeRequest\x1a#.currency.GetCurrencyByCodeResponse\x12I\n" +
-	"\x04List\x12\x1f.currency.ListCurrenciesRequest\x1a .currency.ListCurrenciesResponse\x12R\n" +
-	"\aListAll\x12\".currency.ListAllCurrenciesRequest\x1a#.currency.ListAllCurrenciesResponse\x12N\n" +
-	"\aReorder\x12 .currency.ReorderCurrencyRequest\x1a!.currency.ReorderCurrencyResponse2\xb1\x03\n" +
-	"\rRegionService\x12C\n" +
-	"\x06Update\x12\x1b.region.UpdateRegionRequest\x1a\x1c.region.UpdateRegionResponse\x12:\n" +
-	"\x03Get\x12\x18.region.GetRegionRequest\x1a\x19.region.GetRegionResponse\x12L\n" +
-	"\tGetByCode\x12\x1e.region.GetRegionByCodeRequest\x1a\x1f.region.GetRegionByCodeResponse\x12?\n" +
-	"\x04List\x12\x1a.region.ListRegionsRequest\x1a\x1b.region.ListRegionsResponse\x12H\n" +
-	"\aListAll\x12\x1d.region.ListAllRegionsRequest\x1a\x1e.region.ListAllRegionsResponse\x12F\n" +
-	"\aReorder\x12\x1c.region.ReorderRegionRequest\x1a\x1d.region.ReorderRegionResponseB6Z4oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpcb\x06proto3"
+	"\x13platform_base.proto\x12\rplatform_base\x1a\x1etypes/platform_base_ping.proto\x1a\"types/platform_base_timezone.proto\x1a\"types/platform_base_currency.proto\x1a types/platform_base_region.proto2X\n" +
+	"\vPingService\x12I\n" +
+	"\x04Ping\x12\x1f.platform_base_ping.PingRequest\x1a .platform_base_ping.PingResponse2\x8b\x05\n" +
+	"\x0fTimezoneService\x12g\n" +
+	"\x06Update\x12-.platform_base_timezone.UpdateTimezoneRequest\x1a..platform_base_timezone.UpdateTimezoneResponse\x12^\n" +
+	"\x03Get\x12*.platform_base_timezone.GetTimezoneRequest\x1a+.platform_base_timezone.GetTimezoneResponse\x12p\n" +
+	"\tGetByCode\x120.platform_base_timezone.GetTimezoneByCodeRequest\x1a1.platform_base_timezone.GetTimezoneByCodeResponse\x12c\n" +
+	"\x04List\x12,.platform_base_timezone.ListTimezonesRequest\x1a-.platform_base_timezone.ListTimezonesResponse\x12l\n" +
+	"\aListAll\x12/.platform_base_timezone.ListAllTimezonesRequest\x1a0.platform_base_timezone.ListAllTimezonesResponse\x12j\n" +
+	"\aReorder\x12..platform_base_timezone.ReorderTimezoneRequest\x1a/.platform_base_timezone.ReorderTimezoneResponse2\x8f\x05\n" +
+	"\x0fCurrencyService\x12g\n" +
+	"\x06Update\x12-.platform_base_currency.UpdateCurrencyRequest\x1a..platform_base_currency.UpdateCurrencyResponse\x12^\n" +
+	"\x03Get\x12*.platform_base_currency.GetCurrencyRequest\x1a+.platform_base_currency.GetCurrencyResponse\x12p\n" +
+	"\tGetByCode\x120.platform_base_currency.GetCurrencyByCodeRequest\x1a1.platform_base_currency.GetCurrencyByCodeResponse\x12e\n" +
+	"\x04List\x12-.platform_base_currency.ListCurrenciesRequest\x1a..platform_base_currency.ListCurrenciesResponse\x12n\n" +
+	"\aListAll\x120.platform_base_currency.ListAllCurrenciesRequest\x1a1.platform_base_currency.ListAllCurrenciesResponse\x12j\n" +
+	"\aReorder\x12..platform_base_currency.ReorderCurrencyRequest\x1a/.platform_base_currency.ReorderCurrencyResponse2\xd9\x04\n" +
+	"\rRegionService\x12_\n" +
+	"\x06Update\x12).platform_base_region.UpdateRegionRequest\x1a*.platform_base_region.UpdateRegionResponse\x12V\n" +
+	"\x03Get\x12&.platform_base_region.GetRegionRequest\x1a'.platform_base_region.GetRegionResponse\x12h\n" +
+	"\tGetByCode\x12,.platform_base_region.GetRegionByCodeRequest\x1a-.platform_base_region.GetRegionByCodeResponse\x12[\n" +
+	"\x04List\x12(.platform_base_region.ListRegionsRequest\x1a).platform_base_region.ListRegionsResponse\x12d\n" +
+	"\aListAll\x12+.platform_base_region.ListAllRegionsRequest\x1a,.platform_base_region.ListAllRegionsResponse\x12b\n" +
+	"\aReorder\x12*.platform_base_region.ReorderRegionRequest\x1a+.platform_base_region.ReorderRegionResponseB6Z4oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpcb\x06proto3"
 
 var file_platform_base_proto_goTypes = []any{
-	(*pingpb.PingRequest)(nil),                   // 0: ping.PingRequest
-	(*timezonepb.UpdateTimezoneRequest)(nil),     // 1: timezone.UpdateTimezoneRequest
-	(*timezonepb.GetTimezoneRequest)(nil),        // 2: timezone.GetTimezoneRequest
-	(*timezonepb.GetTimezoneByCodeRequest)(nil),  // 3: timezone.GetTimezoneByCodeRequest
-	(*timezonepb.ListTimezonesRequest)(nil),      // 4: timezone.ListTimezonesRequest
-	(*timezonepb.ListAllTimezonesRequest)(nil),   // 5: timezone.ListAllTimezonesRequest
-	(*timezonepb.ReorderTimezoneRequest)(nil),    // 6: timezone.ReorderTimezoneRequest
-	(*currencypb.UpdateCurrencyRequest)(nil),     // 7: currency.UpdateCurrencyRequest
-	(*currencypb.GetCurrencyRequest)(nil),        // 8: currency.GetCurrencyRequest
-	(*currencypb.GetCurrencyByCodeRequest)(nil),  // 9: currency.GetCurrencyByCodeRequest
-	(*currencypb.ListCurrenciesRequest)(nil),     // 10: currency.ListCurrenciesRequest
-	(*currencypb.ListAllCurrenciesRequest)(nil),  // 11: currency.ListAllCurrenciesRequest
-	(*currencypb.ReorderCurrencyRequest)(nil),    // 12: currency.ReorderCurrencyRequest
-	(*regionpb.UpdateRegionRequest)(nil),         // 13: region.UpdateRegionRequest
-	(*regionpb.GetRegionRequest)(nil),            // 14: region.GetRegionRequest
-	(*regionpb.GetRegionByCodeRequest)(nil),      // 15: region.GetRegionByCodeRequest
-	(*regionpb.ListRegionsRequest)(nil),          // 16: region.ListRegionsRequest
-	(*regionpb.ListAllRegionsRequest)(nil),       // 17: region.ListAllRegionsRequest
-	(*regionpb.ReorderRegionRequest)(nil),        // 18: region.ReorderRegionRequest
-	(*pingpb.PingResponse)(nil),                  // 19: ping.PingResponse
-	(*timezonepb.UpdateTimezoneResponse)(nil),    // 20: timezone.UpdateTimezoneResponse
-	(*timezonepb.GetTimezoneResponse)(nil),       // 21: timezone.GetTimezoneResponse
-	(*timezonepb.GetTimezoneByCodeResponse)(nil), // 22: timezone.GetTimezoneByCodeResponse
-	(*timezonepb.ListTimezonesResponse)(nil),     // 23: timezone.ListTimezonesResponse
-	(*timezonepb.ListAllTimezonesResponse)(nil),  // 24: timezone.ListAllTimezonesResponse
-	(*timezonepb.ReorderTimezoneResponse)(nil),   // 25: timezone.ReorderTimezoneResponse
-	(*currencypb.UpdateCurrencyResponse)(nil),    // 26: currency.UpdateCurrencyResponse
-	(*currencypb.GetCurrencyResponse)(nil),       // 27: currency.GetCurrencyResponse
-	(*currencypb.GetCurrencyByCodeResponse)(nil), // 28: currency.GetCurrencyByCodeResponse
-	(*currencypb.ListCurrenciesResponse)(nil),    // 29: currency.ListCurrenciesResponse
-	(*currencypb.ListAllCurrenciesResponse)(nil), // 30: currency.ListAllCurrenciesResponse
-	(*currencypb.ReorderCurrencyResponse)(nil),   // 31: currency.ReorderCurrencyResponse
-	(*regionpb.UpdateRegionResponse)(nil),        // 32: region.UpdateRegionResponse
-	(*regionpb.GetRegionResponse)(nil),           // 33: region.GetRegionResponse
-	(*regionpb.GetRegionByCodeResponse)(nil),     // 34: region.GetRegionByCodeResponse
-	(*regionpb.ListRegionsResponse)(nil),         // 35: region.ListRegionsResponse
-	(*regionpb.ListAllRegionsResponse)(nil),      // 36: region.ListAllRegionsResponse
-	(*regionpb.ReorderRegionResponse)(nil),       // 37: region.ReorderRegionResponse
+	(*pingpb.PingRequest)(nil),                   // 0: platform_base_ping.PingRequest
+	(*timezonepb.UpdateTimezoneRequest)(nil),     // 1: platform_base_timezone.UpdateTimezoneRequest
+	(*timezonepb.GetTimezoneRequest)(nil),        // 2: platform_base_timezone.GetTimezoneRequest
+	(*timezonepb.GetTimezoneByCodeRequest)(nil),  // 3: platform_base_timezone.GetTimezoneByCodeRequest
+	(*timezonepb.ListTimezonesRequest)(nil),      // 4: platform_base_timezone.ListTimezonesRequest
+	(*timezonepb.ListAllTimezonesRequest)(nil),   // 5: platform_base_timezone.ListAllTimezonesRequest
+	(*timezonepb.ReorderTimezoneRequest)(nil),    // 6: platform_base_timezone.ReorderTimezoneRequest
+	(*currencypb.UpdateCurrencyRequest)(nil),     // 7: platform_base_currency.UpdateCurrencyRequest
+	(*currencypb.GetCurrencyRequest)(nil),        // 8: platform_base_currency.GetCurrencyRequest
+	(*currencypb.GetCurrencyByCodeRequest)(nil),  // 9: platform_base_currency.GetCurrencyByCodeRequest
+	(*currencypb.ListCurrenciesRequest)(nil),     // 10: platform_base_currency.ListCurrenciesRequest
+	(*currencypb.ListAllCurrenciesRequest)(nil),  // 11: platform_base_currency.ListAllCurrenciesRequest
+	(*currencypb.ReorderCurrencyRequest)(nil),    // 12: platform_base_currency.ReorderCurrencyRequest
+	(*regionpb.UpdateRegionRequest)(nil),         // 13: platform_base_region.UpdateRegionRequest
+	(*regionpb.GetRegionRequest)(nil),            // 14: platform_base_region.GetRegionRequest
+	(*regionpb.GetRegionByCodeRequest)(nil),      // 15: platform_base_region.GetRegionByCodeRequest
+	(*regionpb.ListRegionsRequest)(nil),          // 16: platform_base_region.ListRegionsRequest
+	(*regionpb.ListAllRegionsRequest)(nil),       // 17: platform_base_region.ListAllRegionsRequest
+	(*regionpb.ReorderRegionRequest)(nil),        // 18: platform_base_region.ReorderRegionRequest
+	(*pingpb.PingResponse)(nil),                  // 19: platform_base_ping.PingResponse
+	(*timezonepb.UpdateTimezoneResponse)(nil),    // 20: platform_base_timezone.UpdateTimezoneResponse
+	(*timezonepb.GetTimezoneResponse)(nil),       // 21: platform_base_timezone.GetTimezoneResponse
+	(*timezonepb.GetTimezoneByCodeResponse)(nil), // 22: platform_base_timezone.GetTimezoneByCodeResponse
+	(*timezonepb.ListTimezonesResponse)(nil),     // 23: platform_base_timezone.ListTimezonesResponse
+	(*timezonepb.ListAllTimezonesResponse)(nil),  // 24: platform_base_timezone.ListAllTimezonesResponse
+	(*timezonepb.ReorderTimezoneResponse)(nil),   // 25: platform_base_timezone.ReorderTimezoneResponse
+	(*currencypb.UpdateCurrencyResponse)(nil),    // 26: platform_base_currency.UpdateCurrencyResponse
+	(*currencypb.GetCurrencyResponse)(nil),       // 27: platform_base_currency.GetCurrencyResponse
+	(*currencypb.GetCurrencyByCodeResponse)(nil), // 28: platform_base_currency.GetCurrencyByCodeResponse
+	(*currencypb.ListCurrenciesResponse)(nil),    // 29: platform_base_currency.ListCurrenciesResponse
+	(*currencypb.ListAllCurrenciesResponse)(nil), // 30: platform_base_currency.ListAllCurrenciesResponse
+	(*currencypb.ReorderCurrencyResponse)(nil),   // 31: platform_base_currency.ReorderCurrencyResponse
+	(*regionpb.UpdateRegionResponse)(nil),        // 32: platform_base_region.UpdateRegionResponse
+	(*regionpb.GetRegionResponse)(nil),           // 33: platform_base_region.GetRegionResponse
+	(*regionpb.GetRegionByCodeResponse)(nil),     // 34: platform_base_region.GetRegionByCodeResponse
+	(*regionpb.ListRegionsResponse)(nil),         // 35: platform_base_region.ListRegionsResponse
+	(*regionpb.ListAllRegionsResponse)(nil),      // 36: platform_base_region.ListAllRegionsResponse
+	(*regionpb.ReorderRegionResponse)(nil),       // 37: platform_base_region.ReorderRegionResponse
 }
 var file_platform_base_proto_depIdxs = []int32{
-	0,  // 0: platform_base.PingService.Ping:input_type -> ping.PingRequest
-	1,  // 1: platform_base.TimezoneService.Update:input_type -> timezone.UpdateTimezoneRequest
-	2,  // 2: platform_base.TimezoneService.Get:input_type -> timezone.GetTimezoneRequest
-	3,  // 3: platform_base.TimezoneService.GetByCode:input_type -> timezone.GetTimezoneByCodeRequest
-	4,  // 4: platform_base.TimezoneService.List:input_type -> timezone.ListTimezonesRequest
-	5,  // 5: platform_base.TimezoneService.ListAll:input_type -> timezone.ListAllTimezonesRequest
-	6,  // 6: platform_base.TimezoneService.Reorder:input_type -> timezone.ReorderTimezoneRequest
-	7,  // 7: platform_base.CurrencyService.Update:input_type -> currency.UpdateCurrencyRequest
-	8,  // 8: platform_base.CurrencyService.Get:input_type -> currency.GetCurrencyRequest
-	9,  // 9: platform_base.CurrencyService.GetByCode:input_type -> currency.GetCurrencyByCodeRequest
-	10, // 10: platform_base.CurrencyService.List:input_type -> currency.ListCurrenciesRequest
-	11, // 11: platform_base.CurrencyService.ListAll:input_type -> currency.ListAllCurrenciesRequest
-	12, // 12: platform_base.CurrencyService.Reorder:input_type -> currency.ReorderCurrencyRequest
-	13, // 13: platform_base.RegionService.Update:input_type -> region.UpdateRegionRequest
-	14, // 14: platform_base.RegionService.Get:input_type -> region.GetRegionRequest
-	15, // 15: platform_base.RegionService.GetByCode:input_type -> region.GetRegionByCodeRequest
-	16, // 16: platform_base.RegionService.List:input_type -> region.ListRegionsRequest
-	17, // 17: platform_base.RegionService.ListAll:input_type -> region.ListAllRegionsRequest
-	18, // 18: platform_base.RegionService.Reorder:input_type -> region.ReorderRegionRequest
-	19, // 19: platform_base.PingService.Ping:output_type -> ping.PingResponse
-	20, // 20: platform_base.TimezoneService.Update:output_type -> timezone.UpdateTimezoneResponse
-	21, // 21: platform_base.TimezoneService.Get:output_type -> timezone.GetTimezoneResponse
-	22, // 22: platform_base.TimezoneService.GetByCode:output_type -> timezone.GetTimezoneByCodeResponse
-	23, // 23: platform_base.TimezoneService.List:output_type -> timezone.ListTimezonesResponse
-	24, // 24: platform_base.TimezoneService.ListAll:output_type -> timezone.ListAllTimezonesResponse
-	25, // 25: platform_base.TimezoneService.Reorder:output_type -> timezone.ReorderTimezoneResponse
-	26, // 26: platform_base.CurrencyService.Update:output_type -> currency.UpdateCurrencyResponse
-	27, // 27: platform_base.CurrencyService.Get:output_type -> currency.GetCurrencyResponse
-	28, // 28: platform_base.CurrencyService.GetByCode:output_type -> currency.GetCurrencyByCodeResponse
-	29, // 29: platform_base.CurrencyService.List:output_type -> currency.ListCurrenciesResponse
-	30, // 30: platform_base.CurrencyService.ListAll:output_type -> currency.ListAllCurrenciesResponse
-	31, // 31: platform_base.CurrencyService.Reorder:output_type -> currency.ReorderCurrencyResponse
-	32, // 32: platform_base.RegionService.Update:output_type -> region.UpdateRegionResponse
-	33, // 33: platform_base.RegionService.Get:output_type -> region.GetRegionResponse
-	34, // 34: platform_base.RegionService.GetByCode:output_type -> region.GetRegionByCodeResponse
-	35, // 35: platform_base.RegionService.List:output_type -> region.ListRegionsResponse
-	36, // 36: platform_base.RegionService.ListAll:output_type -> region.ListAllRegionsResponse
-	37, // 37: platform_base.RegionService.Reorder:output_type -> region.ReorderRegionResponse
+	0,  // 0: platform_base.PingService.Ping:input_type -> platform_base_ping.PingRequest
+	1,  // 1: platform_base.TimezoneService.Update:input_type -> platform_base_timezone.UpdateTimezoneRequest
+	2,  // 2: platform_base.TimezoneService.Get:input_type -> platform_base_timezone.GetTimezoneRequest
+	3,  // 3: platform_base.TimezoneService.GetByCode:input_type -> platform_base_timezone.GetTimezoneByCodeRequest
+	4,  // 4: platform_base.TimezoneService.List:input_type -> platform_base_timezone.ListTimezonesRequest
+	5,  // 5: platform_base.TimezoneService.ListAll:input_type -> platform_base_timezone.ListAllTimezonesRequest
+	6,  // 6: platform_base.TimezoneService.Reorder:input_type -> platform_base_timezone.ReorderTimezoneRequest
+	7,  // 7: platform_base.CurrencyService.Update:input_type -> platform_base_currency.UpdateCurrencyRequest
+	8,  // 8: platform_base.CurrencyService.Get:input_type -> platform_base_currency.GetCurrencyRequest
+	9,  // 9: platform_base.CurrencyService.GetByCode:input_type -> platform_base_currency.GetCurrencyByCodeRequest
+	10, // 10: platform_base.CurrencyService.List:input_type -> platform_base_currency.ListCurrenciesRequest
+	11, // 11: platform_base.CurrencyService.ListAll:input_type -> platform_base_currency.ListAllCurrenciesRequest
+	12, // 12: platform_base.CurrencyService.Reorder:input_type -> platform_base_currency.ReorderCurrencyRequest
+	13, // 13: platform_base.RegionService.Update:input_type -> platform_base_region.UpdateRegionRequest
+	14, // 14: platform_base.RegionService.Get:input_type -> platform_base_region.GetRegionRequest
+	15, // 15: platform_base.RegionService.GetByCode:input_type -> platform_base_region.GetRegionByCodeRequest
+	16, // 16: platform_base.RegionService.List:input_type -> platform_base_region.ListRegionsRequest
+	17, // 17: platform_base.RegionService.ListAll:input_type -> platform_base_region.ListAllRegionsRequest
+	18, // 18: platform_base.RegionService.Reorder:input_type -> platform_base_region.ReorderRegionRequest
+	19, // 19: platform_base.PingService.Ping:output_type -> platform_base_ping.PingResponse
+	20, // 20: platform_base.TimezoneService.Update:output_type -> platform_base_timezone.UpdateTimezoneResponse
+	21, // 21: platform_base.TimezoneService.Get:output_type -> platform_base_timezone.GetTimezoneResponse
+	22, // 22: platform_base.TimezoneService.GetByCode:output_type -> platform_base_timezone.GetTimezoneByCodeResponse
+	23, // 23: platform_base.TimezoneService.List:output_type -> platform_base_timezone.ListTimezonesResponse
+	24, // 24: platform_base.TimezoneService.ListAll:output_type -> platform_base_timezone.ListAllTimezonesResponse
+	25, // 25: platform_base.TimezoneService.Reorder:output_type -> platform_base_timezone.ReorderTimezoneResponse
+	26, // 26: platform_base.CurrencyService.Update:output_type -> platform_base_currency.UpdateCurrencyResponse
+	27, // 27: platform_base.CurrencyService.Get:output_type -> platform_base_currency.GetCurrencyResponse
+	28, // 28: platform_base.CurrencyService.GetByCode:output_type -> platform_base_currency.GetCurrencyByCodeResponse
+	29, // 29: platform_base.CurrencyService.List:output_type -> platform_base_currency.ListCurrenciesResponse
+	30, // 30: platform_base.CurrencyService.ListAll:output_type -> platform_base_currency.ListAllCurrenciesResponse
+	31, // 31: platform_base.CurrencyService.Reorder:output_type -> platform_base_currency.ReorderCurrencyResponse
+	32, // 32: platform_base.RegionService.Update:output_type -> platform_base_region.UpdateRegionResponse
+	33, // 33: platform_base.RegionService.Get:output_type -> platform_base_region.GetRegionResponse
+	34, // 34: platform_base.RegionService.GetByCode:output_type -> platform_base_region.GetRegionByCodeResponse
+	35, // 35: platform_base.RegionService.List:output_type -> platform_base_region.ListRegionsResponse
+	36, // 36: platform_base.RegionService.ListAll:output_type -> platform_base_region.ListAllRegionsResponse
+	37, // 37: platform_base.RegionService.Reorder:output_type -> platform_base_region.ReorderRegionResponse
 	19, // [19:38] is the sub-list for method output_type
 	0,  // [0:19] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name

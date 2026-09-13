@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.12
 // 	protoc        v6.32.0
-// source: types/profile.proto
+// source: types/platform_operator_profile.proto
 
 package profilepb
 
@@ -46,7 +46,7 @@ type OperatorProfileInfo struct {
 
 func (x *OperatorProfileInfo) Reset() {
 	*x = OperatorProfileInfo{}
-	mi := &file_types_profile_proto_msgTypes[0]
+	mi := &file_types_platform_operator_profile_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -58,7 +58,7 @@ func (x *OperatorProfileInfo) String() string {
 func (*OperatorProfileInfo) ProtoMessage() {}
 
 func (x *OperatorProfileInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_types_profile_proto_msgTypes[0]
+	mi := &file_types_platform_operator_profile_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -71,7 +71,7 @@ func (x *OperatorProfileInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OperatorProfileInfo.ProtoReflect.Descriptor instead.
 func (*OperatorProfileInfo) Descriptor() ([]byte, []int) {
-	return file_types_profile_proto_rawDescGZIP(), []int{0}
+	return file_types_platform_operator_profile_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *OperatorProfileInfo) GetId() int64 {
@@ -149,7 +149,7 @@ type CreateOperatorProfileRequest struct {
 
 func (x *CreateOperatorProfileRequest) Reset() {
 	*x = CreateOperatorProfileRequest{}
-	mi := &file_types_profile_proto_msgTypes[1]
+	mi := &file_types_platform_operator_profile_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -161,7 +161,7 @@ func (x *CreateOperatorProfileRequest) String() string {
 func (*CreateOperatorProfileRequest) ProtoMessage() {}
 
 func (x *CreateOperatorProfileRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_profile_proto_msgTypes[1]
+	mi := &file_types_platform_operator_profile_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -174,7 +174,7 @@ func (x *CreateOperatorProfileRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateOperatorProfileRequest.ProtoReflect.Descriptor instead.
 func (*CreateOperatorProfileRequest) Descriptor() ([]byte, []int) {
-	return file_types_profile_proto_rawDescGZIP(), []int{1}
+	return file_types_platform_operator_profile_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *CreateOperatorProfileRequest) GetOperatorId() int64 {
@@ -223,7 +223,7 @@ type CreateOperatorProfileResponse struct {
 
 func (x *CreateOperatorProfileResponse) Reset() {
 	*x = CreateOperatorProfileResponse{}
-	mi := &file_types_profile_proto_msgTypes[2]
+	mi := &file_types_platform_operator_profile_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -235,7 +235,7 @@ func (x *CreateOperatorProfileResponse) String() string {
 func (*CreateOperatorProfileResponse) ProtoMessage() {}
 
 func (x *CreateOperatorProfileResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_profile_proto_msgTypes[2]
+	mi := &file_types_platform_operator_profile_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -248,7 +248,7 @@ func (x *CreateOperatorProfileResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateOperatorProfileResponse.ProtoReflect.Descriptor instead.
 func (*CreateOperatorProfileResponse) Descriptor() ([]byte, []int) {
-	return file_types_profile_proto_rawDescGZIP(), []int{2}
+	return file_types_platform_operator_profile_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *CreateOperatorProfileResponse) GetId() int64 {
@@ -277,7 +277,7 @@ type UpdateOperatorProfileRequest struct {
 
 func (x *UpdateOperatorProfileRequest) Reset() {
 	*x = UpdateOperatorProfileRequest{}
-	mi := &file_types_profile_proto_msgTypes[3]
+	mi := &file_types_platform_operator_profile_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -289,7 +289,7 @@ func (x *UpdateOperatorProfileRequest) String() string {
 func (*UpdateOperatorProfileRequest) ProtoMessage() {}
 
 func (x *UpdateOperatorProfileRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_profile_proto_msgTypes[3]
+	mi := &file_types_platform_operator_profile_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -302,7 +302,7 @@ func (x *UpdateOperatorProfileRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateOperatorProfileRequest.ProtoReflect.Descriptor instead.
 func (*UpdateOperatorProfileRequest) Descriptor() ([]byte, []int) {
-	return file_types_profile_proto_rawDescGZIP(), []int{3}
+	return file_types_platform_operator_profile_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *UpdateOperatorProfileRequest) GetOperatorId() int64 {
@@ -349,7 +349,7 @@ type UpdateOperatorProfileResponse struct {
 
 func (x *UpdateOperatorProfileResponse) Reset() {
 	*x = UpdateOperatorProfileResponse{}
-	mi := &file_types_profile_proto_msgTypes[4]
+	mi := &file_types_platform_operator_profile_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -361,7 +361,7 @@ func (x *UpdateOperatorProfileResponse) String() string {
 func (*UpdateOperatorProfileResponse) ProtoMessage() {}
 
 func (x *UpdateOperatorProfileResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_profile_proto_msgTypes[4]
+	mi := &file_types_platform_operator_profile_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -374,7 +374,7 @@ func (x *UpdateOperatorProfileResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateOperatorProfileResponse.ProtoReflect.Descriptor instead.
 func (*UpdateOperatorProfileResponse) Descriptor() ([]byte, []int) {
-	return file_types_profile_proto_rawDescGZIP(), []int{4}
+	return file_types_platform_operator_profile_proto_rawDescGZIP(), []int{4}
 }
 
 // 获取分站档案请求
@@ -388,7 +388,7 @@ type GetOperatorProfileRequest struct {
 
 func (x *GetOperatorProfileRequest) Reset() {
 	*x = GetOperatorProfileRequest{}
-	mi := &file_types_profile_proto_msgTypes[5]
+	mi := &file_types_platform_operator_profile_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -400,7 +400,7 @@ func (x *GetOperatorProfileRequest) String() string {
 func (*GetOperatorProfileRequest) ProtoMessage() {}
 
 func (x *GetOperatorProfileRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_profile_proto_msgTypes[5]
+	mi := &file_types_platform_operator_profile_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -413,7 +413,7 @@ func (x *GetOperatorProfileRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetOperatorProfileRequest.ProtoReflect.Descriptor instead.
 func (*GetOperatorProfileRequest) Descriptor() ([]byte, []int) {
-	return file_types_profile_proto_rawDescGZIP(), []int{5}
+	return file_types_platform_operator_profile_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetOperatorProfileRequest) GetOperatorId() int64 {
@@ -434,7 +434,7 @@ type GetOperatorProfileResponse struct {
 
 func (x *GetOperatorProfileResponse) Reset() {
 	*x = GetOperatorProfileResponse{}
-	mi := &file_types_profile_proto_msgTypes[6]
+	mi := &file_types_platform_operator_profile_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -446,7 +446,7 @@ func (x *GetOperatorProfileResponse) String() string {
 func (*GetOperatorProfileResponse) ProtoMessage() {}
 
 func (x *GetOperatorProfileResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_profile_proto_msgTypes[6]
+	mi := &file_types_platform_operator_profile_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -459,7 +459,7 @@ func (x *GetOperatorProfileResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetOperatorProfileResponse.ProtoReflect.Descriptor instead.
 func (*GetOperatorProfileResponse) Descriptor() ([]byte, []int) {
-	return file_types_profile_proto_rawDescGZIP(), []int{6}
+	return file_types_platform_operator_profile_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GetOperatorProfileResponse) GetProfile() *OperatorProfileInfo {
@@ -469,11 +469,11 @@ func (x *GetOperatorProfileResponse) GetProfile() *OperatorProfileInfo {
 	return nil
 }
 
-var File_types_profile_proto protoreflect.FileDescriptor
+var File_types_platform_operator_profile_proto protoreflect.FileDescriptor
 
-const file_types_profile_proto_rawDesc = "" +
+const file_types_platform_operator_profile_proto_rawDesc = "" +
 	"\n" +
-	"\x13types/profile.proto\x12\aprofile\"\xda\x02\n" +
+	"%types/platform_operator_profile.proto\x12\x19platform_operator_profile\"\xda\x02\n" +
 	"\x13OperatorProfileInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\x03R\n" +
@@ -517,34 +517,34 @@ const file_types_profile_proto_rawDesc = "" +
 	"\x1dUpdateOperatorProfileResponse\"<\n" +
 	"\x19GetOperatorProfileRequest\x12\x1f\n" +
 	"\voperator_id\x18\x01 \x01(\x03R\n" +
-	"operatorId\"T\n" +
-	"\x1aGetOperatorProfileResponse\x126\n" +
-	"\aprofile\x18\x01 \x01(\v2\x1c.profile.OperatorProfileInfoR\aprofileBHZFoa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/profilepbb\x06proto3"
+	"operatorId\"f\n" +
+	"\x1aGetOperatorProfileResponse\x12H\n" +
+	"\aprofile\x18\x01 \x01(\v2..platform_operator_profile.OperatorProfileInfoR\aprofileBHZFoa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/profilepbb\x06proto3"
 
 var (
-	file_types_profile_proto_rawDescOnce sync.Once
-	file_types_profile_proto_rawDescData []byte
+	file_types_platform_operator_profile_proto_rawDescOnce sync.Once
+	file_types_platform_operator_profile_proto_rawDescData []byte
 )
 
-func file_types_profile_proto_rawDescGZIP() []byte {
-	file_types_profile_proto_rawDescOnce.Do(func() {
-		file_types_profile_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_types_profile_proto_rawDesc), len(file_types_profile_proto_rawDesc)))
+func file_types_platform_operator_profile_proto_rawDescGZIP() []byte {
+	file_types_platform_operator_profile_proto_rawDescOnce.Do(func() {
+		file_types_platform_operator_profile_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_types_platform_operator_profile_proto_rawDesc), len(file_types_platform_operator_profile_proto_rawDesc)))
 	})
-	return file_types_profile_proto_rawDescData
+	return file_types_platform_operator_profile_proto_rawDescData
 }
 
-var file_types_profile_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
-var file_types_profile_proto_goTypes = []any{
-	(*OperatorProfileInfo)(nil),           // 0: profile.OperatorProfileInfo
-	(*CreateOperatorProfileRequest)(nil),  // 1: profile.CreateOperatorProfileRequest
-	(*CreateOperatorProfileResponse)(nil), // 2: profile.CreateOperatorProfileResponse
-	(*UpdateOperatorProfileRequest)(nil),  // 3: profile.UpdateOperatorProfileRequest
-	(*UpdateOperatorProfileResponse)(nil), // 4: profile.UpdateOperatorProfileResponse
-	(*GetOperatorProfileRequest)(nil),     // 5: profile.GetOperatorProfileRequest
-	(*GetOperatorProfileResponse)(nil),    // 6: profile.GetOperatorProfileResponse
+var file_types_platform_operator_profile_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_types_platform_operator_profile_proto_goTypes = []any{
+	(*OperatorProfileInfo)(nil),           // 0: platform_operator_profile.OperatorProfileInfo
+	(*CreateOperatorProfileRequest)(nil),  // 1: platform_operator_profile.CreateOperatorProfileRequest
+	(*CreateOperatorProfileResponse)(nil), // 2: platform_operator_profile.CreateOperatorProfileResponse
+	(*UpdateOperatorProfileRequest)(nil),  // 3: platform_operator_profile.UpdateOperatorProfileRequest
+	(*UpdateOperatorProfileResponse)(nil), // 4: platform_operator_profile.UpdateOperatorProfileResponse
+	(*GetOperatorProfileRequest)(nil),     // 5: platform_operator_profile.GetOperatorProfileRequest
+	(*GetOperatorProfileResponse)(nil),    // 6: platform_operator_profile.GetOperatorProfileResponse
 }
-var file_types_profile_proto_depIdxs = []int32{
-	0, // 0: profile.GetOperatorProfileResponse.profile:type_name -> profile.OperatorProfileInfo
+var file_types_platform_operator_profile_proto_depIdxs = []int32{
+	0, // 0: platform_operator_profile.GetOperatorProfileResponse.profile:type_name -> platform_operator_profile.OperatorProfileInfo
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
@@ -552,29 +552,29 @@ var file_types_profile_proto_depIdxs = []int32{
 	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_types_profile_proto_init() }
-func file_types_profile_proto_init() {
-	if File_types_profile_proto != nil {
+func init() { file_types_platform_operator_profile_proto_init() }
+func file_types_platform_operator_profile_proto_init() {
+	if File_types_platform_operator_profile_proto != nil {
 		return
 	}
-	file_types_profile_proto_msgTypes[0].OneofWrappers = []any{}
-	file_types_profile_proto_msgTypes[1].OneofWrappers = []any{}
-	file_types_profile_proto_msgTypes[3].OneofWrappers = []any{}
+	file_types_platform_operator_profile_proto_msgTypes[0].OneofWrappers = []any{}
+	file_types_platform_operator_profile_proto_msgTypes[1].OneofWrappers = []any{}
+	file_types_platform_operator_profile_proto_msgTypes[3].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_profile_proto_rawDesc), len(file_types_profile_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_platform_operator_profile_proto_rawDesc), len(file_types_platform_operator_profile_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_types_profile_proto_goTypes,
-		DependencyIndexes: file_types_profile_proto_depIdxs,
-		MessageInfos:      file_types_profile_proto_msgTypes,
+		GoTypes:           file_types_platform_operator_profile_proto_goTypes,
+		DependencyIndexes: file_types_platform_operator_profile_proto_depIdxs,
+		MessageInfos:      file_types_platform_operator_profile_proto_msgTypes,
 	}.Build()
-	File_types_profile_proto = out.File
-	file_types_profile_proto_goTypes = nil
-	file_types_profile_proto_depIdxs = nil
+	File_types_platform_operator_profile_proto = out.File
+	file_types_platform_operator_profile_proto_goTypes = nil
+	file_types_platform_operator_profile_proto_depIdxs = nil
 }

@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.12
 // 	protoc        v6.32.0
-// source: types/basic_resource_allocation.proto
+// source: types/platform_operator_basic_resource_allocation.proto
 
 package basicresourceallocationpb
 
@@ -42,7 +42,7 @@ type BasicResourceAllocationInfo struct {
 
 func (x *BasicResourceAllocationInfo) Reset() {
 	*x = BasicResourceAllocationInfo{}
-	mi := &file_types_basic_resource_allocation_proto_msgTypes[0]
+	mi := &file_types_platform_operator_basic_resource_allocation_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -54,7 +54,7 @@ func (x *BasicResourceAllocationInfo) String() string {
 func (*BasicResourceAllocationInfo) ProtoMessage() {}
 
 func (x *BasicResourceAllocationInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_types_basic_resource_allocation_proto_msgTypes[0]
+	mi := &file_types_platform_operator_basic_resource_allocation_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -67,7 +67,7 @@ func (x *BasicResourceAllocationInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BasicResourceAllocationInfo.ProtoReflect.Descriptor instead.
 func (*BasicResourceAllocationInfo) Descriptor() ([]byte, []int) {
-	return file_types_basic_resource_allocation_proto_rawDescGZIP(), []int{0}
+	return file_types_platform_operator_basic_resource_allocation_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *BasicResourceAllocationInfo) GetOperatorId() int64 {
@@ -127,7 +127,7 @@ type ListBasicResourceAllocationsRequest struct {
 
 func (x *ListBasicResourceAllocationsRequest) Reset() {
 	*x = ListBasicResourceAllocationsRequest{}
-	mi := &file_types_basic_resource_allocation_proto_msgTypes[1]
+	mi := &file_types_platform_operator_basic_resource_allocation_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -139,7 +139,7 @@ func (x *ListBasicResourceAllocationsRequest) String() string {
 func (*ListBasicResourceAllocationsRequest) ProtoMessage() {}
 
 func (x *ListBasicResourceAllocationsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_basic_resource_allocation_proto_msgTypes[1]
+	mi := &file_types_platform_operator_basic_resource_allocation_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -152,7 +152,7 @@ func (x *ListBasicResourceAllocationsRequest) ProtoReflect() protoreflect.Messag
 
 // Deprecated: Use ListBasicResourceAllocationsRequest.ProtoReflect.Descriptor instead.
 func (*ListBasicResourceAllocationsRequest) Descriptor() ([]byte, []int) {
-	return file_types_basic_resource_allocation_proto_rawDescGZIP(), []int{1}
+	return file_types_platform_operator_basic_resource_allocation_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *ListBasicResourceAllocationsRequest) GetPage() int64 {
@@ -189,7 +189,7 @@ type ListBasicResourceAllocationsResponse struct {
 
 func (x *ListBasicResourceAllocationsResponse) Reset() {
 	*x = ListBasicResourceAllocationsResponse{}
-	mi := &file_types_basic_resource_allocation_proto_msgTypes[2]
+	mi := &file_types_platform_operator_basic_resource_allocation_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -201,7 +201,7 @@ func (x *ListBasicResourceAllocationsResponse) String() string {
 func (*ListBasicResourceAllocationsResponse) ProtoMessage() {}
 
 func (x *ListBasicResourceAllocationsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_basic_resource_allocation_proto_msgTypes[2]
+	mi := &file_types_platform_operator_basic_resource_allocation_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -214,7 +214,7 @@ func (x *ListBasicResourceAllocationsResponse) ProtoReflect() protoreflect.Messa
 
 // Deprecated: Use ListBasicResourceAllocationsResponse.ProtoReflect.Descriptor instead.
 func (*ListBasicResourceAllocationsResponse) Descriptor() ([]byte, []int) {
-	return file_types_basic_resource_allocation_proto_rawDescGZIP(), []int{2}
+	return file_types_platform_operator_basic_resource_allocation_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *ListBasicResourceAllocationsResponse) GetTotal() int64 {
@@ -231,11 +231,11 @@ func (x *ListBasicResourceAllocationsResponse) GetList() []*BasicResourceAllocat
 	return nil
 }
 
-var File_types_basic_resource_allocation_proto protoreflect.FileDescriptor
+var File_types_platform_operator_basic_resource_allocation_proto protoreflect.FileDescriptor
 
-const file_types_basic_resource_allocation_proto_rawDesc = "" +
+const file_types_platform_operator_basic_resource_allocation_proto_rawDesc = "" +
 	"\n" +
-	"%types/basic_resource_allocation.proto\x12\x19basic_resource_allocation\"\xfc\x01\n" +
+	"7types/platform_operator_basic_resource_allocation.proto\x12+platform_operator_basic_resource_allocation\"\xfc\x01\n" +
 	"\x1bBasicResourceAllocationInfo\x12\x1f\n" +
 	"\voperator_id\x18\x01 \x01(\x03R\n" +
 	"operatorId\x12#\n" +
@@ -249,31 +249,31 @@ const file_types_basic_resource_allocation_proto_rawDesc = "" +
 	"\tpage_size\x18\x02 \x01(\x03R\bpageSize\x12\x1d\n" +
 	"\akeyword\x18\x03 \x01(\tH\x00R\akeyword\x88\x01\x01B\n" +
 	"\n" +
-	"\b_keyword\"\x88\x01\n" +
+	"\b_keyword\"\x9a\x01\n" +
 	"$ListBasicResourceAllocationsResponse\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x03R\x05total\x12J\n" +
-	"\x04list\x18\x02 \x03(\v26.basic_resource_allocation.BasicResourceAllocationInfoR\x04listBXZVoa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/basicresourceallocationpbb\x06proto3"
+	"\x05total\x18\x01 \x01(\x03R\x05total\x12\\\n" +
+	"\x04list\x18\x02 \x03(\v2H.platform_operator_basic_resource_allocation.BasicResourceAllocationInfoR\x04listBXZVoa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/basicresourceallocationpbb\x06proto3"
 
 var (
-	file_types_basic_resource_allocation_proto_rawDescOnce sync.Once
-	file_types_basic_resource_allocation_proto_rawDescData []byte
+	file_types_platform_operator_basic_resource_allocation_proto_rawDescOnce sync.Once
+	file_types_platform_operator_basic_resource_allocation_proto_rawDescData []byte
 )
 
-func file_types_basic_resource_allocation_proto_rawDescGZIP() []byte {
-	file_types_basic_resource_allocation_proto_rawDescOnce.Do(func() {
-		file_types_basic_resource_allocation_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_types_basic_resource_allocation_proto_rawDesc), len(file_types_basic_resource_allocation_proto_rawDesc)))
+func file_types_platform_operator_basic_resource_allocation_proto_rawDescGZIP() []byte {
+	file_types_platform_operator_basic_resource_allocation_proto_rawDescOnce.Do(func() {
+		file_types_platform_operator_basic_resource_allocation_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_types_platform_operator_basic_resource_allocation_proto_rawDesc), len(file_types_platform_operator_basic_resource_allocation_proto_rawDesc)))
 	})
-	return file_types_basic_resource_allocation_proto_rawDescData
+	return file_types_platform_operator_basic_resource_allocation_proto_rawDescData
 }
 
-var file_types_basic_resource_allocation_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
-var file_types_basic_resource_allocation_proto_goTypes = []any{
-	(*BasicResourceAllocationInfo)(nil),          // 0: basic_resource_allocation.BasicResourceAllocationInfo
-	(*ListBasicResourceAllocationsRequest)(nil),  // 1: basic_resource_allocation.ListBasicResourceAllocationsRequest
-	(*ListBasicResourceAllocationsResponse)(nil), // 2: basic_resource_allocation.ListBasicResourceAllocationsResponse
+var file_types_platform_operator_basic_resource_allocation_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_types_platform_operator_basic_resource_allocation_proto_goTypes = []any{
+	(*BasicResourceAllocationInfo)(nil),          // 0: platform_operator_basic_resource_allocation.BasicResourceAllocationInfo
+	(*ListBasicResourceAllocationsRequest)(nil),  // 1: platform_operator_basic_resource_allocation.ListBasicResourceAllocationsRequest
+	(*ListBasicResourceAllocationsResponse)(nil), // 2: platform_operator_basic_resource_allocation.ListBasicResourceAllocationsResponse
 }
-var file_types_basic_resource_allocation_proto_depIdxs = []int32{
-	0, // 0: basic_resource_allocation.ListBasicResourceAllocationsResponse.list:type_name -> basic_resource_allocation.BasicResourceAllocationInfo
+var file_types_platform_operator_basic_resource_allocation_proto_depIdxs = []int32{
+	0, // 0: platform_operator_basic_resource_allocation.ListBasicResourceAllocationsResponse.list:type_name -> platform_operator_basic_resource_allocation.BasicResourceAllocationInfo
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
@@ -281,27 +281,27 @@ var file_types_basic_resource_allocation_proto_depIdxs = []int32{
 	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_types_basic_resource_allocation_proto_init() }
-func file_types_basic_resource_allocation_proto_init() {
-	if File_types_basic_resource_allocation_proto != nil {
+func init() { file_types_platform_operator_basic_resource_allocation_proto_init() }
+func file_types_platform_operator_basic_resource_allocation_proto_init() {
+	if File_types_platform_operator_basic_resource_allocation_proto != nil {
 		return
 	}
-	file_types_basic_resource_allocation_proto_msgTypes[1].OneofWrappers = []any{}
+	file_types_platform_operator_basic_resource_allocation_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_basic_resource_allocation_proto_rawDesc), len(file_types_basic_resource_allocation_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_platform_operator_basic_resource_allocation_proto_rawDesc), len(file_types_platform_operator_basic_resource_allocation_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_types_basic_resource_allocation_proto_goTypes,
-		DependencyIndexes: file_types_basic_resource_allocation_proto_depIdxs,
-		MessageInfos:      file_types_basic_resource_allocation_proto_msgTypes,
+		GoTypes:           file_types_platform_operator_basic_resource_allocation_proto_goTypes,
+		DependencyIndexes: file_types_platform_operator_basic_resource_allocation_proto_depIdxs,
+		MessageInfos:      file_types_platform_operator_basic_resource_allocation_proto_msgTypes,
 	}.Build()
-	File_types_basic_resource_allocation_proto = out.File
-	file_types_basic_resource_allocation_proto_goTypes = nil
-	file_types_basic_resource_allocation_proto_depIdxs = nil
+	File_types_platform_operator_basic_resource_allocation_proto = out.File
+	file_types_platform_operator_basic_resource_allocation_proto_goTypes = nil
+	file_types_platform_operator_basic_resource_allocation_proto_depIdxs = nil
 }

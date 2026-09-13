@@ -10,5 +10,10 @@
 		"too_many_requests": "Too many requests",
 		"service_unavailable": "Service unavailable",
 		"request_timeout": "Request timeout"
+	},
+
+	"operator": {
+		"timezone_unavailable": "Timezone unavailable",
+		"settlement_currency_unavailable": "Settlement currency unavailable"
 	}
 }

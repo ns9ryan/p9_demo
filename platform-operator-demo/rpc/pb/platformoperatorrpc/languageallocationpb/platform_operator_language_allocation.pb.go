@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.12
 // 	protoc        v6.32.0
-// source: types/language_allocation.proto
+// source: types/platform_operator_language_allocation.proto
 
 package languageallocationpb
 
@@ -38,7 +38,7 @@ type LanguageAllocationInfo struct {
 
 func (x *LanguageAllocationInfo) Reset() {
 	*x = LanguageAllocationInfo{}
-	mi := &file_types_language_allocation_proto_msgTypes[0]
+	mi := &file_types_platform_operator_language_allocation_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -50,7 +50,7 @@ func (x *LanguageAllocationInfo) String() string {
 func (*LanguageAllocationInfo) ProtoMessage() {}
 
 func (x *LanguageAllocationInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_types_language_allocation_proto_msgTypes[0]
+	mi := &file_types_platform_operator_language_allocation_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -63,7 +63,7 @@ func (x *LanguageAllocationInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LanguageAllocationInfo.ProtoReflect.Descriptor instead.
 func (*LanguageAllocationInfo) Descriptor() ([]byte, []int) {
-	return file_types_language_allocation_proto_rawDescGZIP(), []int{0}
+	return file_types_platform_operator_language_allocation_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *LanguageAllocationInfo) GetId() int64 {
@@ -111,7 +111,7 @@ type ListLanguageAllocationsRequest struct {
 
 func (x *ListLanguageAllocationsRequest) Reset() {
 	*x = ListLanguageAllocationsRequest{}
-	mi := &file_types_language_allocation_proto_msgTypes[1]
+	mi := &file_types_platform_operator_language_allocation_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -123,7 +123,7 @@ func (x *ListLanguageAllocationsRequest) String() string {
 func (*ListLanguageAllocationsRequest) ProtoMessage() {}
 
 func (x *ListLanguageAllocationsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_language_allocation_proto_msgTypes[1]
+	mi := &file_types_platform_operator_language_allocation_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -136,7 +136,7 @@ func (x *ListLanguageAllocationsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListLanguageAllocationsRequest.ProtoReflect.Descriptor instead.
 func (*ListLanguageAllocationsRequest) Descriptor() ([]byte, []int) {
-	return file_types_language_allocation_proto_rawDescGZIP(), []int{1}
+	return file_types_platform_operator_language_allocation_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *ListLanguageAllocationsRequest) GetPage() int64 {
@@ -180,7 +180,7 @@ type ListLanguageAllocationsResponse struct {
 
 func (x *ListLanguageAllocationsResponse) Reset() {
 	*x = ListLanguageAllocationsResponse{}
-	mi := &file_types_language_allocation_proto_msgTypes[2]
+	mi := &file_types_platform_operator_language_allocation_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -192,7 +192,7 @@ func (x *ListLanguageAllocationsResponse) String() string {
 func (*ListLanguageAllocationsResponse) ProtoMessage() {}
 
 func (x *ListLanguageAllocationsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_language_allocation_proto_msgTypes[2]
+	mi := &file_types_platform_operator_language_allocation_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -205,7 +205,7 @@ func (x *ListLanguageAllocationsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListLanguageAllocationsResponse.ProtoReflect.Descriptor instead.
 func (*ListLanguageAllocationsResponse) Descriptor() ([]byte, []int) {
-	return file_types_language_allocation_proto_rawDescGZIP(), []int{2}
+	return file_types_platform_operator_language_allocation_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *ListLanguageAllocationsResponse) GetTotal() int64 {
@@ -235,7 +235,7 @@ type SaveLanguageAllocationsRequest struct {
 
 func (x *SaveLanguageAllocationsRequest) Reset() {
 	*x = SaveLanguageAllocationsRequest{}
-	mi := &file_types_language_allocation_proto_msgTypes[3]
+	mi := &file_types_platform_operator_language_allocation_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -247,7 +247,7 @@ func (x *SaveLanguageAllocationsRequest) String() string {
 func (*SaveLanguageAllocationsRequest) ProtoMessage() {}
 
 func (x *SaveLanguageAllocationsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_language_allocation_proto_msgTypes[3]
+	mi := &file_types_platform_operator_language_allocation_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -260,7 +260,7 @@ func (x *SaveLanguageAllocationsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SaveLanguageAllocationsRequest.ProtoReflect.Descriptor instead.
 func (*SaveLanguageAllocationsRequest) Descriptor() ([]byte, []int) {
-	return file_types_language_allocation_proto_rawDescGZIP(), []int{3}
+	return file_types_platform_operator_language_allocation_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *SaveLanguageAllocationsRequest) GetOperatorId() int64 {
@@ -286,7 +286,7 @@ type SaveLanguageAllocationsResponse struct {
 
 func (x *SaveLanguageAllocationsResponse) Reset() {
 	*x = SaveLanguageAllocationsResponse{}
-	mi := &file_types_language_allocation_proto_msgTypes[4]
+	mi := &file_types_platform_operator_language_allocation_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -298,7 +298,7 @@ func (x *SaveLanguageAllocationsResponse) String() string {
 func (*SaveLanguageAllocationsResponse) ProtoMessage() {}
 
 func (x *SaveLanguageAllocationsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_types_language_allocation_proto_msgTypes[4]
+	mi := &file_types_platform_operator_language_allocation_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -311,14 +311,14 @@ func (x *SaveLanguageAllocationsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SaveLanguageAllocationsResponse.ProtoReflect.Descriptor instead.
 func (*SaveLanguageAllocationsResponse) Descriptor() ([]byte, []int) {
-	return file_types_language_allocation_proto_rawDescGZIP(), []int{4}
+	return file_types_platform_operator_language_allocation_proto_rawDescGZIP(), []int{4}
 }
 
-var File_types_language_allocation_proto protoreflect.FileDescriptor
+var File_types_platform_operator_language_allocation_proto protoreflect.FileDescriptor
 
-const file_types_language_allocation_proto_rawDesc = "" +
+const file_types_platform_operator_language_allocation_proto_rawDesc = "" +
 	"\n" +
-	"\x1ftypes/language_allocation.proto\x12\x13language_allocation\"\x8d\x01\n" +
+	"1types/platform_operator_language_allocation.proto\x12%platform_operator_language_allocation\"\x8d\x01\n" +
 	"\x16LanguageAllocationInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\x03R\n" +
@@ -332,10 +332,10 @@ const file_types_language_allocation_proto_rawDesc = "" +
 	"\voperator_id\x18\x03 \x01(\x03R\n" +
 	"operatorId\x12(\n" +
 	"\rlanguage_code\x18\x04 \x01(\tH\x00R\flanguageCode\x88\x01\x01B\x10\n" +
-	"\x0e_language_code\"x\n" +
+	"\x0e_language_code\"\x8a\x01\n" +
 	"\x1fListLanguageAllocationsResponse\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x03R\x05total\x12?\n" +
-	"\x04list\x18\x02 \x03(\v2+.language_allocation.LanguageAllocationInfoR\x04list\"h\n" +
+	"\x05total\x18\x01 \x01(\x03R\x05total\x12Q\n" +
+	"\x04list\x18\x02 \x03(\v2=.platform_operator_language_allocation.LanguageAllocationInfoR\x04list\"h\n" +
 	"\x1eSaveLanguageAllocationsRequest\x12\x1f\n" +
 	"\voperator_id\x18\x01 \x01(\x03R\n" +
 	"operatorId\x12%\n" +
@@ -343,27 +343,27 @@ const file_types_language_allocation_proto_rawDesc = "" +
 	"\x1fSaveLanguageAllocationsResponseBSZQoa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/languageallocationpbb\x06proto3"
 
 var (
-	file_types_language_allocation_proto_rawDescOnce sync.Once
-	file_types_language_allocation_proto_rawDescData []byte
+	file_types_platform_operator_language_allocation_proto_rawDescOnce sync.Once
+	file_types_platform_operator_language_allocation_proto_rawDescData []byte
 )
 
-func file_types_language_allocation_proto_rawDescGZIP() []byte {
-	file_types_language_allocation_proto_rawDescOnce.Do(func() {
-		file_types_language_allocation_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_types_language_allocation_proto_rawDesc), len(file_types_language_allocation_proto_rawDesc)))
+func file_types_platform_operator_language_allocation_proto_rawDescGZIP() []byte {
+	file_types_platform_operator_language_allocation_proto_rawDescOnce.Do(func() {
+		file_types_platform_operator_language_allocation_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_types_platform_operator_language_allocation_proto_rawDesc), len(file_types_platform_operator_language_allocation_proto_rawDesc)))
 	})
-	return file_types_language_allocation_proto_rawDescData
+	return file_types_platform_operator_language_allocation_proto_rawDescData
 }
 
-var file_types_language_allocation_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
-var file_types_language_allocation_proto_goTypes = []any{
-	(*LanguageAllocationInfo)(nil),          // 0: language_allocation.LanguageAllocationInfo
-	(*ListLanguageAllocationsRequest)(nil),  // 1: language_allocation.ListLanguageAllocationsRequest
-	(*ListLanguageAllocationsResponse)(nil), // 2: language_allocation.ListLanguageAllocationsResponse
-	(*SaveLanguageAllocationsRequest)(nil),  // 3: language_allocation.SaveLanguageAllocationsRequest
-	(*SaveLanguageAllocationsResponse)(nil), // 4: language_allocation.SaveLanguageAllocationsResponse
+var file_types_platform_operator_language_allocation_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_types_platform_operator_language_allocation_proto_goTypes = []any{
+	(*LanguageAllocationInfo)(nil),          // 0: platform_operator_language_allocation.LanguageAllocationInfo
+	(*ListLanguageAllocationsRequest)(nil),  // 1: platform_operator_language_allocation.ListLanguageAllocationsRequest
+	(*ListLanguageAllocationsResponse)(nil), // 2: platform_operator_language_allocation.ListLanguageAllocationsResponse
+	(*SaveLanguageAllocationsRequest)(nil),  // 3: platform_operator_language_allocation.SaveLanguageAllocationsRequest
+	(*SaveLanguageAllocationsResponse)(nil), // 4: platform_operator_language_allocation.SaveLanguageAllocationsResponse
 }
-var file_types_language_allocation_proto_depIdxs = []int32{
-	0, // 0: language_allocation.ListLanguageAllocationsResponse.list:type_name -> language_allocation.LanguageAllocationInfo
+var file_types_platform_operator_language_allocation_proto_depIdxs = []int32{
+	0, // 0: platform_operator_language_allocation.ListLanguageAllocationsResponse.list:type_name -> platform_operator_language_allocation.LanguageAllocationInfo
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
@@ -371,27 +371,27 @@ var file_types_language_allocation_proto_depIdxs = []int32{
 	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_types_language_allocation_proto_init() }
-func file_types_language_allocation_proto_init() {
-	if File_types_language_allocation_proto != nil {
+func init() { file_types_platform_operator_language_allocation_proto_init() }
+func file_types_platform_operator_language_allocation_proto_init() {
+	if File_types_platform_operator_language_allocation_proto != nil {
 		return
 	}
-	file_types_language_allocation_proto_msgTypes[1].OneofWrappers = []any{}
+	file_types_platform_operator_language_allocation_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_language_allocation_proto_rawDesc), len(file_types_language_allocation_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_platform_operator_language_allocation_proto_rawDesc), len(file_types_platform_operator_language_allocation_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_types_language_allocation_proto_goTypes,
-		DependencyIndexes: file_types_language_allocation_proto_depIdxs,
-		MessageInfos:      file_types_language_allocation_proto_msgTypes,
+		GoTypes:           file_types_platform_operator_language_allocation_proto_goTypes,
+		DependencyIndexes: file_types_platform_operator_language_allocation_proto_depIdxs,
+		MessageInfos:      file_types_platform_operator_language_allocation_proto_msgTypes,
 	}.Build()
-	File_types_language_allocation_proto = out.File
-	file_types_language_allocation_proto_goTypes = nil
-	file_types_language_allocation_proto_depIdxs = nil
+	File_types_platform_operator_language_allocation_proto = out.File
+	file_types_platform_operator_language_allocation_proto_goTypes = nil
+	file_types_platform_operator_language_allocation_proto_depIdxs = nil
 }

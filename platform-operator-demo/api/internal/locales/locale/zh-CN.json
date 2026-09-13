@@ -10,5 +10,10 @@
 		"too_many_requests": "请求过于频繁",
 		"service_unavailable": "服务暂不可用",
 		"request_timeout": "请求超时"
+	},
+
+	"operator": {
+		"timezone_unavailable": "时区不可用",
+		"settlement_currency_unavailable": "结算币种不可用"
 	}
 }
