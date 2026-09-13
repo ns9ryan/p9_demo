@@ -4,15 +4,15 @@ import (
 	"context"
 	"strings"
 
-	"entgo.io/ent/dialect/sql"
-	"github.com/zeromicro/go-zero/core/logx"
-
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
 	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatordomain"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/domain"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/domainpb"
+
+	"entgo.io/ent/dialect/sql"
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type ListLogic struct {
@@ -30,7 +30,7 @@ func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {
 }
 
 // List 获取分站域名管理列表
-func (l *ListLogic) List(in *domain.ListDomainsRequest) (*domain.ListDomainsResponse, error) {
+func (l *ListLogic) List(in *domainpb.ListDomainsRequest) (*domainpb.ListDomainsResponse, error) {
 	// 校验分页参数
 	if in.Page < 1 || in.PageSize < 1 || in.PageSize > 100 {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -102,13 +102,13 @@ func (l *ListLogic) List(in *domain.ListDomainsRequest) (*domain.ListDomainsResp
 	}
 
 	// 转换分站域名列表
-	list := make([]*domain.DomainInfo, 0, len(results))
+	list := make([]*domainpb.DomainInfo, 0, len(results))
 	for _, result := range results {
 		list = append(list, toDomainInfo(result))
 	}
 
 	// 返回分站域名列表
-	return &domain.ListDomainsResponse{
+	return &domainpb.ListDomainsResponse{
 		Total: int64(total), // 数据总数
 		List:  list,         // 分站域名列表
 	}, nil

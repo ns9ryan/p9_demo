@@ -4,15 +4,15 @@ import (
 	"context"
 	"strings"
 
-	"entgo.io/ent/dialect/sql"
-	"github.com/zeromicro/go-zero/core/logx"
-
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
 	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
 	entoperator "oa.98ent.com/p9/platform-operator/rpc/ent/operator"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/operator"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/operatorpb"
+
+	"entgo.io/ent/dialect/sql"
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type ListLogic struct {
@@ -30,7 +30,7 @@ func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {
 }
 
 // List 获取分站管理列表
-func (l *ListLogic) List(in *operator.ListOperatorsRequest) (*operator.ListOperatorsResponse, error) {
+func (l *ListLogic) List(in *operatorpb.ListOperatorsRequest) (*operatorpb.ListOperatorsResponse, error) {
 	// 校验分页参数
 	if in.Page < 1 || in.PageSize < 1 || in.PageSize > 100 {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -107,13 +107,13 @@ func (l *ListLogic) List(in *operator.ListOperatorsRequest) (*operator.ListOpera
 	}
 
 	// 转换分站列表
-	list := make([]*operator.OperatorInfo, 0, len(results))
+	list := make([]*operatorpb.OperatorInfo, 0, len(results))
 	for _, result := range results {
 		list = append(list, toOperatorInfo(result))
 	}
 
 	// 返回分站列表
-	return &operator.ListOperatorsResponse{
+	return &operatorpb.ListOperatorsResponse{
 		Total: int64(total), // 数据总数
 		List:  list,         // 分站列表
 	}, nil

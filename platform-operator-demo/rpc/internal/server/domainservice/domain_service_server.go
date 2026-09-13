@@ -9,13 +9,13 @@ import (
 
 	"oa.98ent.com/p9/platform-operator/rpc/internal/logic/domainservice"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/domain"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/domainpb"
 )
 
 type DomainServiceServer struct {
 	svcCtx *svc.ServiceContext
-	operator.UnimplementedDomainServiceServer
+	platformoperatorrpc.UnimplementedDomainServiceServer
 }
 
 func NewDomainServiceServer(svcCtx *svc.ServiceContext) *DomainServiceServer {
@@ -25,31 +25,31 @@ func NewDomainServiceServer(svcCtx *svc.ServiceContext) *DomainServiceServer {
 }
 
 // 创建分站域名
-func (s *DomainServiceServer) Create(ctx context.Context, in *domain.CreateDomainRequest) (*domain.CreateDomainResponse, error) {
+func (s *DomainServiceServer) Create(ctx context.Context, in *domainpb.CreateDomainRequest) (*domainpb.CreateDomainResponse, error) {
 	l := domainservicelogic.NewCreateLogic(ctx, s.svcCtx)
 	return l.Create(in)
 }
 
 // 修改分站域名
-func (s *DomainServiceServer) Update(ctx context.Context, in *domain.UpdateDomainRequest) (*domain.UpdateDomainResponse, error) {
+func (s *DomainServiceServer) Update(ctx context.Context, in *domainpb.UpdateDomainRequest) (*domainpb.UpdateDomainResponse, error) {
 	l := domainservicelogic.NewUpdateLogic(ctx, s.svcCtx)
 	return l.Update(in)
 }
 
 // 获取分站域名
-func (s *DomainServiceServer) Get(ctx context.Context, in *domain.GetDomainRequest) (*domain.GetDomainResponse, error) {
+func (s *DomainServiceServer) Get(ctx context.Context, in *domainpb.GetDomainRequest) (*domainpb.GetDomainResponse, error) {
 	l := domainservicelogic.NewGetLogic(ctx, s.svcCtx)
 	return l.Get(in)
 }
 
 // 获取分站域名管理列表
-func (s *DomainServiceServer) List(ctx context.Context, in *domain.ListDomainsRequest) (*domain.ListDomainsResponse, error) {
+func (s *DomainServiceServer) List(ctx context.Context, in *domainpb.ListDomainsRequest) (*domainpb.ListDomainsResponse, error) {
 	l := domainservicelogic.NewListLogic(ctx, s.svcCtx)
 	return l.List(in)
 }
 
 // 删除分站域名
-func (s *DomainServiceServer) Delete(ctx context.Context, in *domain.DeleteDomainRequest) (*domain.DeleteDomainResponse, error) {
+func (s *DomainServiceServer) Delete(ctx context.Context, in *domainpb.DeleteDomainRequest) (*domainpb.DeleteDomainResponse, error) {
 	l := domainservicelogic.NewDeleteLogic(ctx, s.svcCtx)
 	return l.Delete(in)
 }

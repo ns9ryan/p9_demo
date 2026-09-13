@@ -4,21 +4,21 @@
 // - protoc             v6.32.0
 // source: platform_operator.proto
 
-package operator
+package platformoperatorrpc
 
 import (
 	context "context"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	agentlineallocation "oa.98ent.com/p9/platform-operator/rpc/pb/operator/agentlineallocation"
-	basicresourceallocation "oa.98ent.com/p9/platform-operator/rpc/pb/operator/basicresourceallocation"
-	domain "oa.98ent.com/p9/platform-operator/rpc/pb/operator/domain"
-	languageallocation "oa.98ent.com/p9/platform-operator/rpc/pb/operator/languageallocation"
-	operator "oa.98ent.com/p9/platform-operator/rpc/pb/operator/operator"
-	ping "oa.98ent.com/p9/platform-operator/rpc/pb/operator/ping"
-	profile "oa.98ent.com/p9/platform-operator/rpc/pb/operator/profile"
-	regionallocation "oa.98ent.com/p9/platform-operator/rpc/pb/operator/regionallocation"
+	agentlineallocationpb "oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/agentlineallocationpb"
+	basicresourceallocationpb "oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/basicresourceallocationpb"
+	domainpb "oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/domainpb"
+	languageallocationpb "oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/languageallocationpb"
+	operatorpb "oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/operatorpb"
+	pingpb "oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/pingpb"
+	profilepb "oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/profilepb"
+	regionallocationpb "oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/regionallocationpb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -37,7 +37,7 @@ const (
 // Ping 服务
 type PingServiceClient interface {
 	// Ping
-	Ping(ctx context.Context, in *ping.PingRequest, opts ...grpc.CallOption) (*ping.PingResponse, error)
+	Ping(ctx context.Context, in *pingpb.PingRequest, opts ...grpc.CallOption) (*pingpb.PingResponse, error)
 }
 
 type pingServiceClient struct {
@@ -48,9 +48,9 @@ func NewPingServiceClient(cc grpc.ClientConnInterface) PingServiceClient {
 	return &pingServiceClient{cc}
 }
 
-func (c *pingServiceClient) Ping(ctx context.Context, in *ping.PingRequest, opts ...grpc.CallOption) (*ping.PingResponse, error) {
+func (c *pingServiceClient) Ping(ctx context.Context, in *pingpb.PingRequest, opts ...grpc.CallOption) (*pingpb.PingResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ping.PingResponse)
+	out := new(pingpb.PingResponse)
 	err := c.cc.Invoke(ctx, PingService_Ping_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -65,7 +65,7 @@ func (c *pingServiceClient) Ping(ctx context.Context, in *ping.PingRequest, opts
 // Ping 服务
 type PingServiceServer interface {
 	// Ping
-	Ping(context.Context, *ping.PingRequest) (*ping.PingResponse, error)
+	Ping(context.Context, *pingpb.PingRequest) (*pingpb.PingResponse, error)
 	mustEmbedUnimplementedPingServiceServer()
 }
 
@@ -76,7 +76,7 @@ type PingServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedPingServiceServer struct{}
 
-func (UnimplementedPingServiceServer) Ping(context.Context, *ping.PingRequest) (*ping.PingResponse, error) {
+func (UnimplementedPingServiceServer) Ping(context.Context, *pingpb.PingRequest) (*pingpb.PingResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Ping not implemented")
 }
 func (UnimplementedPingServiceServer) mustEmbedUnimplementedPingServiceServer() {}
@@ -101,7 +101,7 @@ func RegisterPingServiceServer(s grpc.ServiceRegistrar, srv PingServiceServer) {
 }
 
 func _PingService_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ping.PingRequest)
+	in := new(pingpb.PingRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -113,7 +113,7 @@ func _PingService_Ping_Handler(srv interface{}, ctx context.Context, dec func(in
 		FullMethod: PingService_Ping_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PingServiceServer).Ping(ctx, req.(*ping.PingRequest))
+		return srv.(PingServiceServer).Ping(ctx, req.(*pingpb.PingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -150,17 +150,17 @@ const (
 // 分站服务
 type OperatorServiceClient interface {
 	// 创建分站
-	Create(ctx context.Context, in *operator.CreateOperatorRequest, opts ...grpc.CallOption) (*operator.CreateOperatorResponse, error)
+	Create(ctx context.Context, in *operatorpb.CreateOperatorRequest, opts ...grpc.CallOption) (*operatorpb.CreateOperatorResponse, error)
 	// 修改分站
-	Update(ctx context.Context, in *operator.UpdateOperatorRequest, opts ...grpc.CallOption) (*operator.UpdateOperatorResponse, error)
+	Update(ctx context.Context, in *operatorpb.UpdateOperatorRequest, opts ...grpc.CallOption) (*operatorpb.UpdateOperatorResponse, error)
 	// 获取分站
-	Get(ctx context.Context, in *operator.GetOperatorRequest, opts ...grpc.CallOption) (*operator.GetOperatorResponse, error)
+	Get(ctx context.Context, in *operatorpb.GetOperatorRequest, opts ...grpc.CallOption) (*operatorpb.GetOperatorResponse, error)
 	// 获取分站管理列表
-	List(ctx context.Context, in *operator.ListOperatorsRequest, opts ...grpc.CallOption) (*operator.ListOperatorsResponse, error)
+	List(ctx context.Context, in *operatorpb.ListOperatorsRequest, opts ...grpc.CallOption) (*operatorpb.ListOperatorsResponse, error)
 	// 完成分站创建
-	Complete(ctx context.Context, in *operator.CompleteOperatorRequest, opts ...grpc.CallOption) (*operator.CompleteOperatorResponse, error)
+	Complete(ctx context.Context, in *operatorpb.CompleteOperatorRequest, opts ...grpc.CallOption) (*operatorpb.CompleteOperatorResponse, error)
 	// 发布分站
-	Publish(ctx context.Context, in *operator.PublishOperatorRequest, opts ...grpc.CallOption) (*operator.PublishOperatorResponse, error)
+	Publish(ctx context.Context, in *operatorpb.PublishOperatorRequest, opts ...grpc.CallOption) (*operatorpb.PublishOperatorResponse, error)
 }
 
 type operatorServiceClient struct {
@@ -171,9 +171,9 @@ func NewOperatorServiceClient(cc grpc.ClientConnInterface) OperatorServiceClient
 	return &operatorServiceClient{cc}
 }
 
-func (c *operatorServiceClient) Create(ctx context.Context, in *operator.CreateOperatorRequest, opts ...grpc.CallOption) (*operator.CreateOperatorResponse, error) {
+func (c *operatorServiceClient) Create(ctx context.Context, in *operatorpb.CreateOperatorRequest, opts ...grpc.CallOption) (*operatorpb.CreateOperatorResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(operator.CreateOperatorResponse)
+	out := new(operatorpb.CreateOperatorResponse)
 	err := c.cc.Invoke(ctx, OperatorService_Create_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -181,9 +181,9 @@ func (c *operatorServiceClient) Create(ctx context.Context, in *operator.CreateO
 	return out, nil
 }
 
-func (c *operatorServiceClient) Update(ctx context.Context, in *operator.UpdateOperatorRequest, opts ...grpc.CallOption) (*operator.UpdateOperatorResponse, error) {
+func (c *operatorServiceClient) Update(ctx context.Context, in *operatorpb.UpdateOperatorRequest, opts ...grpc.CallOption) (*operatorpb.UpdateOperatorResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(operator.UpdateOperatorResponse)
+	out := new(operatorpb.UpdateOperatorResponse)
 	err := c.cc.Invoke(ctx, OperatorService_Update_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -191,9 +191,9 @@ func (c *operatorServiceClient) Update(ctx context.Context, in *operator.UpdateO
 	return out, nil
 }
 
-func (c *operatorServiceClient) Get(ctx context.Context, in *operator.GetOperatorRequest, opts ...grpc.CallOption) (*operator.GetOperatorResponse, error) {
+func (c *operatorServiceClient) Get(ctx context.Context, in *operatorpb.GetOperatorRequest, opts ...grpc.CallOption) (*operatorpb.GetOperatorResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(operator.GetOperatorResponse)
+	out := new(operatorpb.GetOperatorResponse)
 	err := c.cc.Invoke(ctx, OperatorService_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -201,9 +201,9 @@ func (c *operatorServiceClient) Get(ctx context.Context, in *operator.GetOperato
 	return out, nil
 }
 
-func (c *operatorServiceClient) List(ctx context.Context, in *operator.ListOperatorsRequest, opts ...grpc.CallOption) (*operator.ListOperatorsResponse, error) {
+func (c *operatorServiceClient) List(ctx context.Context, in *operatorpb.ListOperatorsRequest, opts ...grpc.CallOption) (*operatorpb.ListOperatorsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(operator.ListOperatorsResponse)
+	out := new(operatorpb.ListOperatorsResponse)
 	err := c.cc.Invoke(ctx, OperatorService_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -211,9 +211,9 @@ func (c *operatorServiceClient) List(ctx context.Context, in *operator.ListOpera
 	return out, nil
 }
 
-func (c *operatorServiceClient) Complete(ctx context.Context, in *operator.CompleteOperatorRequest, opts ...grpc.CallOption) (*operator.CompleteOperatorResponse, error) {
+func (c *operatorServiceClient) Complete(ctx context.Context, in *operatorpb.CompleteOperatorRequest, opts ...grpc.CallOption) (*operatorpb.CompleteOperatorResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(operator.CompleteOperatorResponse)
+	out := new(operatorpb.CompleteOperatorResponse)
 	err := c.cc.Invoke(ctx, OperatorService_Complete_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -221,9 +221,9 @@ func (c *operatorServiceClient) Complete(ctx context.Context, in *operator.Compl
 	return out, nil
 }
 
-func (c *operatorServiceClient) Publish(ctx context.Context, in *operator.PublishOperatorRequest, opts ...grpc.CallOption) (*operator.PublishOperatorResponse, error) {
+func (c *operatorServiceClient) Publish(ctx context.Context, in *operatorpb.PublishOperatorRequest, opts ...grpc.CallOption) (*operatorpb.PublishOperatorResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(operator.PublishOperatorResponse)
+	out := new(operatorpb.PublishOperatorResponse)
 	err := c.cc.Invoke(ctx, OperatorService_Publish_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -238,17 +238,17 @@ func (c *operatorServiceClient) Publish(ctx context.Context, in *operator.Publis
 // 分站服务
 type OperatorServiceServer interface {
 	// 创建分站
-	Create(context.Context, *operator.CreateOperatorRequest) (*operator.CreateOperatorResponse, error)
+	Create(context.Context, *operatorpb.CreateOperatorRequest) (*operatorpb.CreateOperatorResponse, error)
 	// 修改分站
-	Update(context.Context, *operator.UpdateOperatorRequest) (*operator.UpdateOperatorResponse, error)
+	Update(context.Context, *operatorpb.UpdateOperatorRequest) (*operatorpb.UpdateOperatorResponse, error)
 	// 获取分站
-	Get(context.Context, *operator.GetOperatorRequest) (*operator.GetOperatorResponse, error)
+	Get(context.Context, *operatorpb.GetOperatorRequest) (*operatorpb.GetOperatorResponse, error)
 	// 获取分站管理列表
-	List(context.Context, *operator.ListOperatorsRequest) (*operator.ListOperatorsResponse, error)
+	List(context.Context, *operatorpb.ListOperatorsRequest) (*operatorpb.ListOperatorsResponse, error)
 	// 完成分站创建
-	Complete(context.Context, *operator.CompleteOperatorRequest) (*operator.CompleteOperatorResponse, error)
+	Complete(context.Context, *operatorpb.CompleteOperatorRequest) (*operatorpb.CompleteOperatorResponse, error)
 	// 发布分站
-	Publish(context.Context, *operator.PublishOperatorRequest) (*operator.PublishOperatorResponse, error)
+	Publish(context.Context, *operatorpb.PublishOperatorRequest) (*operatorpb.PublishOperatorResponse, error)
 	mustEmbedUnimplementedOperatorServiceServer()
 }
 
@@ -259,22 +259,22 @@ type OperatorServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedOperatorServiceServer struct{}
 
-func (UnimplementedOperatorServiceServer) Create(context.Context, *operator.CreateOperatorRequest) (*operator.CreateOperatorResponse, error) {
+func (UnimplementedOperatorServiceServer) Create(context.Context, *operatorpb.CreateOperatorRequest) (*operatorpb.CreateOperatorResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedOperatorServiceServer) Update(context.Context, *operator.UpdateOperatorRequest) (*operator.UpdateOperatorResponse, error) {
+func (UnimplementedOperatorServiceServer) Update(context.Context, *operatorpb.UpdateOperatorRequest) (*operatorpb.UpdateOperatorResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
-func (UnimplementedOperatorServiceServer) Get(context.Context, *operator.GetOperatorRequest) (*operator.GetOperatorResponse, error) {
+func (UnimplementedOperatorServiceServer) Get(context.Context, *operatorpb.GetOperatorRequest) (*operatorpb.GetOperatorResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedOperatorServiceServer) List(context.Context, *operator.ListOperatorsRequest) (*operator.ListOperatorsResponse, error) {
+func (UnimplementedOperatorServiceServer) List(context.Context, *operatorpb.ListOperatorsRequest) (*operatorpb.ListOperatorsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedOperatorServiceServer) Complete(context.Context, *operator.CompleteOperatorRequest) (*operator.CompleteOperatorResponse, error) {
+func (UnimplementedOperatorServiceServer) Complete(context.Context, *operatorpb.CompleteOperatorRequest) (*operatorpb.CompleteOperatorResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Complete not implemented")
 }
-func (UnimplementedOperatorServiceServer) Publish(context.Context, *operator.PublishOperatorRequest) (*operator.PublishOperatorResponse, error) {
+func (UnimplementedOperatorServiceServer) Publish(context.Context, *operatorpb.PublishOperatorRequest) (*operatorpb.PublishOperatorResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Publish not implemented")
 }
 func (UnimplementedOperatorServiceServer) mustEmbedUnimplementedOperatorServiceServer() {}
@@ -299,7 +299,7 @@ func RegisterOperatorServiceServer(s grpc.ServiceRegistrar, srv OperatorServiceS
 }
 
 func _OperatorService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(operator.CreateOperatorRequest)
+	in := new(operatorpb.CreateOperatorRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -311,13 +311,13 @@ func _OperatorService_Create_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: OperatorService_Create_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OperatorServiceServer).Create(ctx, req.(*operator.CreateOperatorRequest))
+		return srv.(OperatorServiceServer).Create(ctx, req.(*operatorpb.CreateOperatorRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _OperatorService_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(operator.UpdateOperatorRequest)
+	in := new(operatorpb.UpdateOperatorRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -329,13 +329,13 @@ func _OperatorService_Update_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: OperatorService_Update_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OperatorServiceServer).Update(ctx, req.(*operator.UpdateOperatorRequest))
+		return srv.(OperatorServiceServer).Update(ctx, req.(*operatorpb.UpdateOperatorRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _OperatorService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(operator.GetOperatorRequest)
+	in := new(operatorpb.GetOperatorRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -347,13 +347,13 @@ func _OperatorService_Get_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: OperatorService_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OperatorServiceServer).Get(ctx, req.(*operator.GetOperatorRequest))
+		return srv.(OperatorServiceServer).Get(ctx, req.(*operatorpb.GetOperatorRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _OperatorService_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(operator.ListOperatorsRequest)
+	in := new(operatorpb.ListOperatorsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -365,13 +365,13 @@ func _OperatorService_List_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: OperatorService_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OperatorServiceServer).List(ctx, req.(*operator.ListOperatorsRequest))
+		return srv.(OperatorServiceServer).List(ctx, req.(*operatorpb.ListOperatorsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _OperatorService_Complete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(operator.CompleteOperatorRequest)
+	in := new(operatorpb.CompleteOperatorRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -383,13 +383,13 @@ func _OperatorService_Complete_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: OperatorService_Complete_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OperatorServiceServer).Complete(ctx, req.(*operator.CompleteOperatorRequest))
+		return srv.(OperatorServiceServer).Complete(ctx, req.(*operatorpb.CompleteOperatorRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _OperatorService_Publish_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(operator.PublishOperatorRequest)
+	in := new(operatorpb.PublishOperatorRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -401,7 +401,7 @@ func _OperatorService_Publish_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: OperatorService_Publish_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OperatorServiceServer).Publish(ctx, req.(*operator.PublishOperatorRequest))
+		return srv.(OperatorServiceServer).Publish(ctx, req.(*operatorpb.PublishOperatorRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -455,11 +455,11 @@ const (
 // 分站档案服务
 type OperatorProfileServiceClient interface {
 	// 创建分站档案
-	Create(ctx context.Context, in *profile.CreateOperatorProfileRequest, opts ...grpc.CallOption) (*profile.CreateOperatorProfileResponse, error)
+	Create(ctx context.Context, in *profilepb.CreateOperatorProfileRequest, opts ...grpc.CallOption) (*profilepb.CreateOperatorProfileResponse, error)
 	// 修改分站档案
-	Update(ctx context.Context, in *profile.UpdateOperatorProfileRequest, opts ...grpc.CallOption) (*profile.UpdateOperatorProfileResponse, error)
+	Update(ctx context.Context, in *profilepb.UpdateOperatorProfileRequest, opts ...grpc.CallOption) (*profilepb.UpdateOperatorProfileResponse, error)
 	// 获取分站档案
-	Get(ctx context.Context, in *profile.GetOperatorProfileRequest, opts ...grpc.CallOption) (*profile.GetOperatorProfileResponse, error)
+	Get(ctx context.Context, in *profilepb.GetOperatorProfileRequest, opts ...grpc.CallOption) (*profilepb.GetOperatorProfileResponse, error)
 }
 
 type operatorProfileServiceClient struct {
@@ -470,9 +470,9 @@ func NewOperatorProfileServiceClient(cc grpc.ClientConnInterface) OperatorProfil
 	return &operatorProfileServiceClient{cc}
 }
 
-func (c *operatorProfileServiceClient) Create(ctx context.Context, in *profile.CreateOperatorProfileRequest, opts ...grpc.CallOption) (*profile.CreateOperatorProfileResponse, error) {
+func (c *operatorProfileServiceClient) Create(ctx context.Context, in *profilepb.CreateOperatorProfileRequest, opts ...grpc.CallOption) (*profilepb.CreateOperatorProfileResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(profile.CreateOperatorProfileResponse)
+	out := new(profilepb.CreateOperatorProfileResponse)
 	err := c.cc.Invoke(ctx, OperatorProfileService_Create_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -480,9 +480,9 @@ func (c *operatorProfileServiceClient) Create(ctx context.Context, in *profile.C
 	return out, nil
 }
 
-func (c *operatorProfileServiceClient) Update(ctx context.Context, in *profile.UpdateOperatorProfileRequest, opts ...grpc.CallOption) (*profile.UpdateOperatorProfileResponse, error) {
+func (c *operatorProfileServiceClient) Update(ctx context.Context, in *profilepb.UpdateOperatorProfileRequest, opts ...grpc.CallOption) (*profilepb.UpdateOperatorProfileResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(profile.UpdateOperatorProfileResponse)
+	out := new(profilepb.UpdateOperatorProfileResponse)
 	err := c.cc.Invoke(ctx, OperatorProfileService_Update_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -490,9 +490,9 @@ func (c *operatorProfileServiceClient) Update(ctx context.Context, in *profile.U
 	return out, nil
 }
 
-func (c *operatorProfileServiceClient) Get(ctx context.Context, in *profile.GetOperatorProfileRequest, opts ...grpc.CallOption) (*profile.GetOperatorProfileResponse, error) {
+func (c *operatorProfileServiceClient) Get(ctx context.Context, in *profilepb.GetOperatorProfileRequest, opts ...grpc.CallOption) (*profilepb.GetOperatorProfileResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(profile.GetOperatorProfileResponse)
+	out := new(profilepb.GetOperatorProfileResponse)
 	err := c.cc.Invoke(ctx, OperatorProfileService_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -507,11 +507,11 @@ func (c *operatorProfileServiceClient) Get(ctx context.Context, in *profile.GetO
 // 分站档案服务
 type OperatorProfileServiceServer interface {
 	// 创建分站档案
-	Create(context.Context, *profile.CreateOperatorProfileRequest) (*profile.CreateOperatorProfileResponse, error)
+	Create(context.Context, *profilepb.CreateOperatorProfileRequest) (*profilepb.CreateOperatorProfileResponse, error)
 	// 修改分站档案
-	Update(context.Context, *profile.UpdateOperatorProfileRequest) (*profile.UpdateOperatorProfileResponse, error)
+	Update(context.Context, *profilepb.UpdateOperatorProfileRequest) (*profilepb.UpdateOperatorProfileResponse, error)
 	// 获取分站档案
-	Get(context.Context, *profile.GetOperatorProfileRequest) (*profile.GetOperatorProfileResponse, error)
+	Get(context.Context, *profilepb.GetOperatorProfileRequest) (*profilepb.GetOperatorProfileResponse, error)
 	mustEmbedUnimplementedOperatorProfileServiceServer()
 }
 
@@ -522,13 +522,13 @@ type OperatorProfileServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedOperatorProfileServiceServer struct{}
 
-func (UnimplementedOperatorProfileServiceServer) Create(context.Context, *profile.CreateOperatorProfileRequest) (*profile.CreateOperatorProfileResponse, error) {
+func (UnimplementedOperatorProfileServiceServer) Create(context.Context, *profilepb.CreateOperatorProfileRequest) (*profilepb.CreateOperatorProfileResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedOperatorProfileServiceServer) Update(context.Context, *profile.UpdateOperatorProfileRequest) (*profile.UpdateOperatorProfileResponse, error) {
+func (UnimplementedOperatorProfileServiceServer) Update(context.Context, *profilepb.UpdateOperatorProfileRequest) (*profilepb.UpdateOperatorProfileResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
-func (UnimplementedOperatorProfileServiceServer) Get(context.Context, *profile.GetOperatorProfileRequest) (*profile.GetOperatorProfileResponse, error) {
+func (UnimplementedOperatorProfileServiceServer) Get(context.Context, *profilepb.GetOperatorProfileRequest) (*profilepb.GetOperatorProfileResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedOperatorProfileServiceServer) mustEmbedUnimplementedOperatorProfileServiceServer() {
@@ -554,7 +554,7 @@ func RegisterOperatorProfileServiceServer(s grpc.ServiceRegistrar, srv OperatorP
 }
 
 func _OperatorProfileService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(profile.CreateOperatorProfileRequest)
+	in := new(profilepb.CreateOperatorProfileRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -566,13 +566,13 @@ func _OperatorProfileService_Create_Handler(srv interface{}, ctx context.Context
 		FullMethod: OperatorProfileService_Create_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OperatorProfileServiceServer).Create(ctx, req.(*profile.CreateOperatorProfileRequest))
+		return srv.(OperatorProfileServiceServer).Create(ctx, req.(*profilepb.CreateOperatorProfileRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _OperatorProfileService_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(profile.UpdateOperatorProfileRequest)
+	in := new(profilepb.UpdateOperatorProfileRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -584,13 +584,13 @@ func _OperatorProfileService_Update_Handler(srv interface{}, ctx context.Context
 		FullMethod: OperatorProfileService_Update_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OperatorProfileServiceServer).Update(ctx, req.(*profile.UpdateOperatorProfileRequest))
+		return srv.(OperatorProfileServiceServer).Update(ctx, req.(*profilepb.UpdateOperatorProfileRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _OperatorProfileService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(profile.GetOperatorProfileRequest)
+	in := new(profilepb.GetOperatorProfileRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -602,7 +602,7 @@ func _OperatorProfileService_Get_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: OperatorProfileService_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OperatorProfileServiceServer).Get(ctx, req.(*profile.GetOperatorProfileRequest))
+		return srv.(OperatorProfileServiceServer).Get(ctx, req.(*profilepb.GetOperatorProfileRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -646,15 +646,15 @@ const (
 // 分站域名服务
 type DomainServiceClient interface {
 	// 创建分站域名
-	Create(ctx context.Context, in *domain.CreateDomainRequest, opts ...grpc.CallOption) (*domain.CreateDomainResponse, error)
+	Create(ctx context.Context, in *domainpb.CreateDomainRequest, opts ...grpc.CallOption) (*domainpb.CreateDomainResponse, error)
 	// 修改分站域名
-	Update(ctx context.Context, in *domain.UpdateDomainRequest, opts ...grpc.CallOption) (*domain.UpdateDomainResponse, error)
+	Update(ctx context.Context, in *domainpb.UpdateDomainRequest, opts ...grpc.CallOption) (*domainpb.UpdateDomainResponse, error)
 	// 获取分站域名
-	Get(ctx context.Context, in *domain.GetDomainRequest, opts ...grpc.CallOption) (*domain.GetDomainResponse, error)
+	Get(ctx context.Context, in *domainpb.GetDomainRequest, opts ...grpc.CallOption) (*domainpb.GetDomainResponse, error)
 	// 获取分站域名管理列表
-	List(ctx context.Context, in *domain.ListDomainsRequest, opts ...grpc.CallOption) (*domain.ListDomainsResponse, error)
+	List(ctx context.Context, in *domainpb.ListDomainsRequest, opts ...grpc.CallOption) (*domainpb.ListDomainsResponse, error)
 	// 删除分站域名
-	Delete(ctx context.Context, in *domain.DeleteDomainRequest, opts ...grpc.CallOption) (*domain.DeleteDomainResponse, error)
+	Delete(ctx context.Context, in *domainpb.DeleteDomainRequest, opts ...grpc.CallOption) (*domainpb.DeleteDomainResponse, error)
 }
 
 type domainServiceClient struct {
@@ -665,9 +665,9 @@ func NewDomainServiceClient(cc grpc.ClientConnInterface) DomainServiceClient {
 	return &domainServiceClient{cc}
 }
 
-func (c *domainServiceClient) Create(ctx context.Context, in *domain.CreateDomainRequest, opts ...grpc.CallOption) (*domain.CreateDomainResponse, error) {
+func (c *domainServiceClient) Create(ctx context.Context, in *domainpb.CreateDomainRequest, opts ...grpc.CallOption) (*domainpb.CreateDomainResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(domain.CreateDomainResponse)
+	out := new(domainpb.CreateDomainResponse)
 	err := c.cc.Invoke(ctx, DomainService_Create_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -675,9 +675,9 @@ func (c *domainServiceClient) Create(ctx context.Context, in *domain.CreateDomai
 	return out, nil
 }
 
-func (c *domainServiceClient) Update(ctx context.Context, in *domain.UpdateDomainRequest, opts ...grpc.CallOption) (*domain.UpdateDomainResponse, error) {
+func (c *domainServiceClient) Update(ctx context.Context, in *domainpb.UpdateDomainRequest, opts ...grpc.CallOption) (*domainpb.UpdateDomainResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(domain.UpdateDomainResponse)
+	out := new(domainpb.UpdateDomainResponse)
 	err := c.cc.Invoke(ctx, DomainService_Update_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -685,9 +685,9 @@ func (c *domainServiceClient) Update(ctx context.Context, in *domain.UpdateDomai
 	return out, nil
 }
 
-func (c *domainServiceClient) Get(ctx context.Context, in *domain.GetDomainRequest, opts ...grpc.CallOption) (*domain.GetDomainResponse, error) {
+func (c *domainServiceClient) Get(ctx context.Context, in *domainpb.GetDomainRequest, opts ...grpc.CallOption) (*domainpb.GetDomainResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(domain.GetDomainResponse)
+	out := new(domainpb.GetDomainResponse)
 	err := c.cc.Invoke(ctx, DomainService_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -695,9 +695,9 @@ func (c *domainServiceClient) Get(ctx context.Context, in *domain.GetDomainReque
 	return out, nil
 }
 
-func (c *domainServiceClient) List(ctx context.Context, in *domain.ListDomainsRequest, opts ...grpc.CallOption) (*domain.ListDomainsResponse, error) {
+func (c *domainServiceClient) List(ctx context.Context, in *domainpb.ListDomainsRequest, opts ...grpc.CallOption) (*domainpb.ListDomainsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(domain.ListDomainsResponse)
+	out := new(domainpb.ListDomainsResponse)
 	err := c.cc.Invoke(ctx, DomainService_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -705,9 +705,9 @@ func (c *domainServiceClient) List(ctx context.Context, in *domain.ListDomainsRe
 	return out, nil
 }
 
-func (c *domainServiceClient) Delete(ctx context.Context, in *domain.DeleteDomainRequest, opts ...grpc.CallOption) (*domain.DeleteDomainResponse, error) {
+func (c *domainServiceClient) Delete(ctx context.Context, in *domainpb.DeleteDomainRequest, opts ...grpc.CallOption) (*domainpb.DeleteDomainResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(domain.DeleteDomainResponse)
+	out := new(domainpb.DeleteDomainResponse)
 	err := c.cc.Invoke(ctx, DomainService_Delete_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -722,15 +722,15 @@ func (c *domainServiceClient) Delete(ctx context.Context, in *domain.DeleteDomai
 // 分站域名服务
 type DomainServiceServer interface {
 	// 创建分站域名
-	Create(context.Context, *domain.CreateDomainRequest) (*domain.CreateDomainResponse, error)
+	Create(context.Context, *domainpb.CreateDomainRequest) (*domainpb.CreateDomainResponse, error)
 	// 修改分站域名
-	Update(context.Context, *domain.UpdateDomainRequest) (*domain.UpdateDomainResponse, error)
+	Update(context.Context, *domainpb.UpdateDomainRequest) (*domainpb.UpdateDomainResponse, error)
 	// 获取分站域名
-	Get(context.Context, *domain.GetDomainRequest) (*domain.GetDomainResponse, error)
+	Get(context.Context, *domainpb.GetDomainRequest) (*domainpb.GetDomainResponse, error)
 	// 获取分站域名管理列表
-	List(context.Context, *domain.ListDomainsRequest) (*domain.ListDomainsResponse, error)
+	List(context.Context, *domainpb.ListDomainsRequest) (*domainpb.ListDomainsResponse, error)
 	// 删除分站域名
-	Delete(context.Context, *domain.DeleteDomainRequest) (*domain.DeleteDomainResponse, error)
+	Delete(context.Context, *domainpb.DeleteDomainRequest) (*domainpb.DeleteDomainResponse, error)
 	mustEmbedUnimplementedDomainServiceServer()
 }
 
@@ -741,19 +741,19 @@ type DomainServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedDomainServiceServer struct{}
 
-func (UnimplementedDomainServiceServer) Create(context.Context, *domain.CreateDomainRequest) (*domain.CreateDomainResponse, error) {
+func (UnimplementedDomainServiceServer) Create(context.Context, *domainpb.CreateDomainRequest) (*domainpb.CreateDomainResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedDomainServiceServer) Update(context.Context, *domain.UpdateDomainRequest) (*domain.UpdateDomainResponse, error) {
+func (UnimplementedDomainServiceServer) Update(context.Context, *domainpb.UpdateDomainRequest) (*domainpb.UpdateDomainResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
-func (UnimplementedDomainServiceServer) Get(context.Context, *domain.GetDomainRequest) (*domain.GetDomainResponse, error) {
+func (UnimplementedDomainServiceServer) Get(context.Context, *domainpb.GetDomainRequest) (*domainpb.GetDomainResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedDomainServiceServer) List(context.Context, *domain.ListDomainsRequest) (*domain.ListDomainsResponse, error) {
+func (UnimplementedDomainServiceServer) List(context.Context, *domainpb.ListDomainsRequest) (*domainpb.ListDomainsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedDomainServiceServer) Delete(context.Context, *domain.DeleteDomainRequest) (*domain.DeleteDomainResponse, error) {
+func (UnimplementedDomainServiceServer) Delete(context.Context, *domainpb.DeleteDomainRequest) (*domainpb.DeleteDomainResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedDomainServiceServer) mustEmbedUnimplementedDomainServiceServer() {}
@@ -778,7 +778,7 @@ func RegisterDomainServiceServer(s grpc.ServiceRegistrar, srv DomainServiceServe
 }
 
 func _DomainService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(domain.CreateDomainRequest)
+	in := new(domainpb.CreateDomainRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -790,13 +790,13 @@ func _DomainService_Create_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: DomainService_Create_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DomainServiceServer).Create(ctx, req.(*domain.CreateDomainRequest))
+		return srv.(DomainServiceServer).Create(ctx, req.(*domainpb.CreateDomainRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _DomainService_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(domain.UpdateDomainRequest)
+	in := new(domainpb.UpdateDomainRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -808,13 +808,13 @@ func _DomainService_Update_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: DomainService_Update_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DomainServiceServer).Update(ctx, req.(*domain.UpdateDomainRequest))
+		return srv.(DomainServiceServer).Update(ctx, req.(*domainpb.UpdateDomainRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _DomainService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(domain.GetDomainRequest)
+	in := new(domainpb.GetDomainRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -826,13 +826,13 @@ func _DomainService_Get_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: DomainService_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DomainServiceServer).Get(ctx, req.(*domain.GetDomainRequest))
+		return srv.(DomainServiceServer).Get(ctx, req.(*domainpb.GetDomainRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _DomainService_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(domain.ListDomainsRequest)
+	in := new(domainpb.ListDomainsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -844,13 +844,13 @@ func _DomainService_List_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: DomainService_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DomainServiceServer).List(ctx, req.(*domain.ListDomainsRequest))
+		return srv.(DomainServiceServer).List(ctx, req.(*domainpb.ListDomainsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _DomainService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(domain.DeleteDomainRequest)
+	in := new(domainpb.DeleteDomainRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -862,7 +862,7 @@ func _DomainService_Delete_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: DomainService_Delete_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DomainServiceServer).Delete(ctx, req.(*domain.DeleteDomainRequest))
+		return srv.(DomainServiceServer).Delete(ctx, req.(*domainpb.DeleteDomainRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -910,7 +910,7 @@ const (
 // 分站基础资源分配服务
 type BasicResourceAllocationServiceClient interface {
 	// 获取基础资源分配列表
-	List(ctx context.Context, in *basicresourceallocation.ListBasicResourceAllocationsRequest, opts ...grpc.CallOption) (*basicresourceallocation.ListBasicResourceAllocationsResponse, error)
+	List(ctx context.Context, in *basicresourceallocationpb.ListBasicResourceAllocationsRequest, opts ...grpc.CallOption) (*basicresourceallocationpb.ListBasicResourceAllocationsResponse, error)
 }
 
 type basicResourceAllocationServiceClient struct {
@@ -921,9 +921,9 @@ func NewBasicResourceAllocationServiceClient(cc grpc.ClientConnInterface) BasicR
 	return &basicResourceAllocationServiceClient{cc}
 }
 
-func (c *basicResourceAllocationServiceClient) List(ctx context.Context, in *basicresourceallocation.ListBasicResourceAllocationsRequest, opts ...grpc.CallOption) (*basicresourceallocation.ListBasicResourceAllocationsResponse, error) {
+func (c *basicResourceAllocationServiceClient) List(ctx context.Context, in *basicresourceallocationpb.ListBasicResourceAllocationsRequest, opts ...grpc.CallOption) (*basicresourceallocationpb.ListBasicResourceAllocationsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(basicresourceallocation.ListBasicResourceAllocationsResponse)
+	out := new(basicresourceallocationpb.ListBasicResourceAllocationsResponse)
 	err := c.cc.Invoke(ctx, BasicResourceAllocationService_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -938,7 +938,7 @@ func (c *basicResourceAllocationServiceClient) List(ctx context.Context, in *bas
 // 分站基础资源分配服务
 type BasicResourceAllocationServiceServer interface {
 	// 获取基础资源分配列表
-	List(context.Context, *basicresourceallocation.ListBasicResourceAllocationsRequest) (*basicresourceallocation.ListBasicResourceAllocationsResponse, error)
+	List(context.Context, *basicresourceallocationpb.ListBasicResourceAllocationsRequest) (*basicresourceallocationpb.ListBasicResourceAllocationsResponse, error)
 	mustEmbedUnimplementedBasicResourceAllocationServiceServer()
 }
 
@@ -949,7 +949,7 @@ type BasicResourceAllocationServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedBasicResourceAllocationServiceServer struct{}
 
-func (UnimplementedBasicResourceAllocationServiceServer) List(context.Context, *basicresourceallocation.ListBasicResourceAllocationsRequest) (*basicresourceallocation.ListBasicResourceAllocationsResponse, error) {
+func (UnimplementedBasicResourceAllocationServiceServer) List(context.Context, *basicresourceallocationpb.ListBasicResourceAllocationsRequest) (*basicresourceallocationpb.ListBasicResourceAllocationsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
 func (UnimplementedBasicResourceAllocationServiceServer) mustEmbedUnimplementedBasicResourceAllocationServiceServer() {
@@ -975,7 +975,7 @@ func RegisterBasicResourceAllocationServiceServer(s grpc.ServiceRegistrar, srv B
 }
 
 func _BasicResourceAllocationService_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(basicresourceallocation.ListBasicResourceAllocationsRequest)
+	in := new(basicresourceallocationpb.ListBasicResourceAllocationsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -987,7 +987,7 @@ func _BasicResourceAllocationService_List_Handler(srv interface{}, ctx context.C
 		FullMethod: BasicResourceAllocationService_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BasicResourceAllocationServiceServer).List(ctx, req.(*basicresourceallocation.ListBasicResourceAllocationsRequest))
+		return srv.(BasicResourceAllocationServiceServer).List(ctx, req.(*basicresourceallocationpb.ListBasicResourceAllocationsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1020,9 +1020,9 @@ const (
 // 分站语言分配服务
 type LanguageAllocationServiceClient interface {
 	// 获取语言分配列表
-	List(ctx context.Context, in *languageallocation.ListLanguageAllocationsRequest, opts ...grpc.CallOption) (*languageallocation.ListLanguageAllocationsResponse, error)
+	List(ctx context.Context, in *languageallocationpb.ListLanguageAllocationsRequest, opts ...grpc.CallOption) (*languageallocationpb.ListLanguageAllocationsResponse, error)
 	// 保存语言分配
-	Save(ctx context.Context, in *languageallocation.SaveLanguageAllocationsRequest, opts ...grpc.CallOption) (*languageallocation.SaveLanguageAllocationsResponse, error)
+	Save(ctx context.Context, in *languageallocationpb.SaveLanguageAllocationsRequest, opts ...grpc.CallOption) (*languageallocationpb.SaveLanguageAllocationsResponse, error)
 }
 
 type languageAllocationServiceClient struct {
@@ -1033,9 +1033,9 @@ func NewLanguageAllocationServiceClient(cc grpc.ClientConnInterface) LanguageAll
 	return &languageAllocationServiceClient{cc}
 }
 
-func (c *languageAllocationServiceClient) List(ctx context.Context, in *languageallocation.ListLanguageAllocationsRequest, opts ...grpc.CallOption) (*languageallocation.ListLanguageAllocationsResponse, error) {
+func (c *languageAllocationServiceClient) List(ctx context.Context, in *languageallocationpb.ListLanguageAllocationsRequest, opts ...grpc.CallOption) (*languageallocationpb.ListLanguageAllocationsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(languageallocation.ListLanguageAllocationsResponse)
+	out := new(languageallocationpb.ListLanguageAllocationsResponse)
 	err := c.cc.Invoke(ctx, LanguageAllocationService_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1043,9 +1043,9 @@ func (c *languageAllocationServiceClient) List(ctx context.Context, in *language
 	return out, nil
 }
 
-func (c *languageAllocationServiceClient) Save(ctx context.Context, in *languageallocation.SaveLanguageAllocationsRequest, opts ...grpc.CallOption) (*languageallocation.SaveLanguageAllocationsResponse, error) {
+func (c *languageAllocationServiceClient) Save(ctx context.Context, in *languageallocationpb.SaveLanguageAllocationsRequest, opts ...grpc.CallOption) (*languageallocationpb.SaveLanguageAllocationsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(languageallocation.SaveLanguageAllocationsResponse)
+	out := new(languageallocationpb.SaveLanguageAllocationsResponse)
 	err := c.cc.Invoke(ctx, LanguageAllocationService_Save_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1060,9 +1060,9 @@ func (c *languageAllocationServiceClient) Save(ctx context.Context, in *language
 // 分站语言分配服务
 type LanguageAllocationServiceServer interface {
 	// 获取语言分配列表
-	List(context.Context, *languageallocation.ListLanguageAllocationsRequest) (*languageallocation.ListLanguageAllocationsResponse, error)
+	List(context.Context, *languageallocationpb.ListLanguageAllocationsRequest) (*languageallocationpb.ListLanguageAllocationsResponse, error)
 	// 保存语言分配
-	Save(context.Context, *languageallocation.SaveLanguageAllocationsRequest) (*languageallocation.SaveLanguageAllocationsResponse, error)
+	Save(context.Context, *languageallocationpb.SaveLanguageAllocationsRequest) (*languageallocationpb.SaveLanguageAllocationsResponse, error)
 	mustEmbedUnimplementedLanguageAllocationServiceServer()
 }
 
@@ -1073,10 +1073,10 @@ type LanguageAllocationServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedLanguageAllocationServiceServer struct{}
 
-func (UnimplementedLanguageAllocationServiceServer) List(context.Context, *languageallocation.ListLanguageAllocationsRequest) (*languageallocation.ListLanguageAllocationsResponse, error) {
+func (UnimplementedLanguageAllocationServiceServer) List(context.Context, *languageallocationpb.ListLanguageAllocationsRequest) (*languageallocationpb.ListLanguageAllocationsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedLanguageAllocationServiceServer) Save(context.Context, *languageallocation.SaveLanguageAllocationsRequest) (*languageallocation.SaveLanguageAllocationsResponse, error) {
+func (UnimplementedLanguageAllocationServiceServer) Save(context.Context, *languageallocationpb.SaveLanguageAllocationsRequest) (*languageallocationpb.SaveLanguageAllocationsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Save not implemented")
 }
 func (UnimplementedLanguageAllocationServiceServer) mustEmbedUnimplementedLanguageAllocationServiceServer() {
@@ -1102,7 +1102,7 @@ func RegisterLanguageAllocationServiceServer(s grpc.ServiceRegistrar, srv Langua
 }
 
 func _LanguageAllocationService_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(languageallocation.ListLanguageAllocationsRequest)
+	in := new(languageallocationpb.ListLanguageAllocationsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1114,13 +1114,13 @@ func _LanguageAllocationService_List_Handler(srv interface{}, ctx context.Contex
 		FullMethod: LanguageAllocationService_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LanguageAllocationServiceServer).List(ctx, req.(*languageallocation.ListLanguageAllocationsRequest))
+		return srv.(LanguageAllocationServiceServer).List(ctx, req.(*languageallocationpb.ListLanguageAllocationsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _LanguageAllocationService_Save_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(languageallocation.SaveLanguageAllocationsRequest)
+	in := new(languageallocationpb.SaveLanguageAllocationsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1132,7 +1132,7 @@ func _LanguageAllocationService_Save_Handler(srv interface{}, ctx context.Contex
 		FullMethod: LanguageAllocationService_Save_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LanguageAllocationServiceServer).Save(ctx, req.(*languageallocation.SaveLanguageAllocationsRequest))
+		return srv.(LanguageAllocationServiceServer).Save(ctx, req.(*languageallocationpb.SaveLanguageAllocationsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1169,9 +1169,9 @@ const (
 // 分站经营地区分配服务
 type RegionAllocationServiceClient interface {
 	// 获取经营地区分配列表
-	List(ctx context.Context, in *regionallocation.ListRegionAllocationsRequest, opts ...grpc.CallOption) (*regionallocation.ListRegionAllocationsResponse, error)
+	List(ctx context.Context, in *regionallocationpb.ListRegionAllocationsRequest, opts ...grpc.CallOption) (*regionallocationpb.ListRegionAllocationsResponse, error)
 	// 保存经营地区分配
-	Save(ctx context.Context, in *regionallocation.SaveRegionAllocationsRequest, opts ...grpc.CallOption) (*regionallocation.SaveRegionAllocationsResponse, error)
+	Save(ctx context.Context, in *regionallocationpb.SaveRegionAllocationsRequest, opts ...grpc.CallOption) (*regionallocationpb.SaveRegionAllocationsResponse, error)
 }
 
 type regionAllocationServiceClient struct {
@@ -1182,9 +1182,9 @@ func NewRegionAllocationServiceClient(cc grpc.ClientConnInterface) RegionAllocat
 	return &regionAllocationServiceClient{cc}
 }
 
-func (c *regionAllocationServiceClient) List(ctx context.Context, in *regionallocation.ListRegionAllocationsRequest, opts ...grpc.CallOption) (*regionallocation.ListRegionAllocationsResponse, error) {
+func (c *regionAllocationServiceClient) List(ctx context.Context, in *regionallocationpb.ListRegionAllocationsRequest, opts ...grpc.CallOption) (*regionallocationpb.ListRegionAllocationsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(regionallocation.ListRegionAllocationsResponse)
+	out := new(regionallocationpb.ListRegionAllocationsResponse)
 	err := c.cc.Invoke(ctx, RegionAllocationService_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1192,9 +1192,9 @@ func (c *regionAllocationServiceClient) List(ctx context.Context, in *regionallo
 	return out, nil
 }
 
-func (c *regionAllocationServiceClient) Save(ctx context.Context, in *regionallocation.SaveRegionAllocationsRequest, opts ...grpc.CallOption) (*regionallocation.SaveRegionAllocationsResponse, error) {
+func (c *regionAllocationServiceClient) Save(ctx context.Context, in *regionallocationpb.SaveRegionAllocationsRequest, opts ...grpc.CallOption) (*regionallocationpb.SaveRegionAllocationsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(regionallocation.SaveRegionAllocationsResponse)
+	out := new(regionallocationpb.SaveRegionAllocationsResponse)
 	err := c.cc.Invoke(ctx, RegionAllocationService_Save_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1209,9 +1209,9 @@ func (c *regionAllocationServiceClient) Save(ctx context.Context, in *regionallo
 // 分站经营地区分配服务
 type RegionAllocationServiceServer interface {
 	// 获取经营地区分配列表
-	List(context.Context, *regionallocation.ListRegionAllocationsRequest) (*regionallocation.ListRegionAllocationsResponse, error)
+	List(context.Context, *regionallocationpb.ListRegionAllocationsRequest) (*regionallocationpb.ListRegionAllocationsResponse, error)
 	// 保存经营地区分配
-	Save(context.Context, *regionallocation.SaveRegionAllocationsRequest) (*regionallocation.SaveRegionAllocationsResponse, error)
+	Save(context.Context, *regionallocationpb.SaveRegionAllocationsRequest) (*regionallocationpb.SaveRegionAllocationsResponse, error)
 	mustEmbedUnimplementedRegionAllocationServiceServer()
 }
 
@@ -1222,10 +1222,10 @@ type RegionAllocationServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedRegionAllocationServiceServer struct{}
 
-func (UnimplementedRegionAllocationServiceServer) List(context.Context, *regionallocation.ListRegionAllocationsRequest) (*regionallocation.ListRegionAllocationsResponse, error) {
+func (UnimplementedRegionAllocationServiceServer) List(context.Context, *regionallocationpb.ListRegionAllocationsRequest) (*regionallocationpb.ListRegionAllocationsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedRegionAllocationServiceServer) Save(context.Context, *regionallocation.SaveRegionAllocationsRequest) (*regionallocation.SaveRegionAllocationsResponse, error) {
+func (UnimplementedRegionAllocationServiceServer) Save(context.Context, *regionallocationpb.SaveRegionAllocationsRequest) (*regionallocationpb.SaveRegionAllocationsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Save not implemented")
 }
 func (UnimplementedRegionAllocationServiceServer) mustEmbedUnimplementedRegionAllocationServiceServer() {
@@ -1251,7 +1251,7 @@ func RegisterRegionAllocationServiceServer(s grpc.ServiceRegistrar, srv RegionAl
 }
 
 func _RegionAllocationService_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(regionallocation.ListRegionAllocationsRequest)
+	in := new(regionallocationpb.ListRegionAllocationsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1263,13 +1263,13 @@ func _RegionAllocationService_List_Handler(srv interface{}, ctx context.Context,
 		FullMethod: RegionAllocationService_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RegionAllocationServiceServer).List(ctx, req.(*regionallocation.ListRegionAllocationsRequest))
+		return srv.(RegionAllocationServiceServer).List(ctx, req.(*regionallocationpb.ListRegionAllocationsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RegionAllocationService_Save_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(regionallocation.SaveRegionAllocationsRequest)
+	in := new(regionallocationpb.SaveRegionAllocationsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1281,7 +1281,7 @@ func _RegionAllocationService_Save_Handler(srv interface{}, ctx context.Context,
 		FullMethod: RegionAllocationService_Save_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RegionAllocationServiceServer).Save(ctx, req.(*regionallocation.SaveRegionAllocationsRequest))
+		return srv.(RegionAllocationServiceServer).Save(ctx, req.(*regionallocationpb.SaveRegionAllocationsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1318,9 +1318,9 @@ const (
 // 分站代理子线路分配服务
 type AgentLineAllocationServiceClient interface {
 	// 获取代理子线路分配列表
-	List(ctx context.Context, in *agentlineallocation.ListAgentLineAllocationsRequest, opts ...grpc.CallOption) (*agentlineallocation.ListAgentLineAllocationsResponse, error)
+	List(ctx context.Context, in *agentlineallocationpb.ListAgentLineAllocationsRequest, opts ...grpc.CallOption) (*agentlineallocationpb.ListAgentLineAllocationsResponse, error)
 	// 保存代理子线路分配
-	Save(ctx context.Context, in *agentlineallocation.SaveAgentLineAllocationsRequest, opts ...grpc.CallOption) (*agentlineallocation.SaveAgentLineAllocationsResponse, error)
+	Save(ctx context.Context, in *agentlineallocationpb.SaveAgentLineAllocationsRequest, opts ...grpc.CallOption) (*agentlineallocationpb.SaveAgentLineAllocationsResponse, error)
 }
 
 type agentLineAllocationServiceClient struct {
@@ -1331,9 +1331,9 @@ func NewAgentLineAllocationServiceClient(cc grpc.ClientConnInterface) AgentLineA
 	return &agentLineAllocationServiceClient{cc}
 }
 
-func (c *agentLineAllocationServiceClient) List(ctx context.Context, in *agentlineallocation.ListAgentLineAllocationsRequest, opts ...grpc.CallOption) (*agentlineallocation.ListAgentLineAllocationsResponse, error) {
+func (c *agentLineAllocationServiceClient) List(ctx context.Context, in *agentlineallocationpb.ListAgentLineAllocationsRequest, opts ...grpc.CallOption) (*agentlineallocationpb.ListAgentLineAllocationsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(agentlineallocation.ListAgentLineAllocationsResponse)
+	out := new(agentlineallocationpb.ListAgentLineAllocationsResponse)
 	err := c.cc.Invoke(ctx, AgentLineAllocationService_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1341,9 +1341,9 @@ func (c *agentLineAllocationServiceClient) List(ctx context.Context, in *agentli
 	return out, nil
 }
 
-func (c *agentLineAllocationServiceClient) Save(ctx context.Context, in *agentlineallocation.SaveAgentLineAllocationsRequest, opts ...grpc.CallOption) (*agentlineallocation.SaveAgentLineAllocationsResponse, error) {
+func (c *agentLineAllocationServiceClient) Save(ctx context.Context, in *agentlineallocationpb.SaveAgentLineAllocationsRequest, opts ...grpc.CallOption) (*agentlineallocationpb.SaveAgentLineAllocationsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(agentlineallocation.SaveAgentLineAllocationsResponse)
+	out := new(agentlineallocationpb.SaveAgentLineAllocationsResponse)
 	err := c.cc.Invoke(ctx, AgentLineAllocationService_Save_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1358,9 +1358,9 @@ func (c *agentLineAllocationServiceClient) Save(ctx context.Context, in *agentli
 // 分站代理子线路分配服务
 type AgentLineAllocationServiceServer interface {
 	// 获取代理子线路分配列表
-	List(context.Context, *agentlineallocation.ListAgentLineAllocationsRequest) (*agentlineallocation.ListAgentLineAllocationsResponse, error)
+	List(context.Context, *agentlineallocationpb.ListAgentLineAllocationsRequest) (*agentlineallocationpb.ListAgentLineAllocationsResponse, error)
 	// 保存代理子线路分配
-	Save(context.Context, *agentlineallocation.SaveAgentLineAllocationsRequest) (*agentlineallocation.SaveAgentLineAllocationsResponse, error)
+	Save(context.Context, *agentlineallocationpb.SaveAgentLineAllocationsRequest) (*agentlineallocationpb.SaveAgentLineAllocationsResponse, error)
 	mustEmbedUnimplementedAgentLineAllocationServiceServer()
 }
 
@@ -1371,10 +1371,10 @@ type AgentLineAllocationServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAgentLineAllocationServiceServer struct{}
 
-func (UnimplementedAgentLineAllocationServiceServer) List(context.Context, *agentlineallocation.ListAgentLineAllocationsRequest) (*agentlineallocation.ListAgentLineAllocationsResponse, error) {
+func (UnimplementedAgentLineAllocationServiceServer) List(context.Context, *agentlineallocationpb.ListAgentLineAllocationsRequest) (*agentlineallocationpb.ListAgentLineAllocationsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedAgentLineAllocationServiceServer) Save(context.Context, *agentlineallocation.SaveAgentLineAllocationsRequest) (*agentlineallocation.SaveAgentLineAllocationsResponse, error) {
+func (UnimplementedAgentLineAllocationServiceServer) Save(context.Context, *agentlineallocationpb.SaveAgentLineAllocationsRequest) (*agentlineallocationpb.SaveAgentLineAllocationsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Save not implemented")
 }
 func (UnimplementedAgentLineAllocationServiceServer) mustEmbedUnimplementedAgentLineAllocationServiceServer() {
@@ -1400,7 +1400,7 @@ func RegisterAgentLineAllocationServiceServer(s grpc.ServiceRegistrar, srv Agent
 }
 
 func _AgentLineAllocationService_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(agentlineallocation.ListAgentLineAllocationsRequest)
+	in := new(agentlineallocationpb.ListAgentLineAllocationsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1412,13 +1412,13 @@ func _AgentLineAllocationService_List_Handler(srv interface{}, ctx context.Conte
 		FullMethod: AgentLineAllocationService_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentLineAllocationServiceServer).List(ctx, req.(*agentlineallocation.ListAgentLineAllocationsRequest))
+		return srv.(AgentLineAllocationServiceServer).List(ctx, req.(*agentlineallocationpb.ListAgentLineAllocationsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AgentLineAllocationService_Save_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(agentlineallocation.SaveAgentLineAllocationsRequest)
+	in := new(agentlineallocationpb.SaveAgentLineAllocationsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1430,7 +1430,7 @@ func _AgentLineAllocationService_Save_Handler(srv interface{}, ctx context.Conte
 		FullMethod: AgentLineAllocationService_Save_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentLineAllocationServiceServer).Save(ctx, req.(*agentlineallocation.SaveAgentLineAllocationsRequest))
+		return srv.(AgentLineAllocationServiceServer).Save(ctx, req.(*agentlineallocationpb.SaveAgentLineAllocationsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

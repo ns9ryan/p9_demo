@@ -4,15 +4,15 @@ import (
 	"context"
 	"strings"
 
-	"entgo.io/ent/dialect/sql"
-	"github.com/zeromicro/go-zero/core/logx"
-
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
 	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatorregionallocation"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/regionallocation"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/regionallocationpb"
+
+	"entgo.io/ent/dialect/sql"
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type ListLogic struct {
@@ -30,7 +30,7 @@ func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {
 }
 
 // List 获取经营地区分配列表
-func (l *ListLogic) List(in *regionallocation.ListRegionAllocationsRequest) (*regionallocation.ListRegionAllocationsResponse, error) {
+func (l *ListLogic) List(in *regionallocationpb.ListRegionAllocationsRequest) (*regionallocationpb.ListRegionAllocationsResponse, error) {
 	// 校验分页参数
 	if in.Page < 1 || in.PageSize < 1 || in.PageSize > 100 {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -53,7 +53,7 @@ func (l *ListLogic) List(in *regionallocation.ListRegionAllocationsRequest) (*re
 		Query().
 		Where(operatorregionallocation.OperatorIDEQ(in.OperatorId))
 
-	// 按经营地区编码筛选
+	// 按国家地区编码筛选
 	if in.RegionCode != nil {
 		regionCode := strings.ToUpper(strings.TrimSpace(*in.RegionCode))
 		if regionCode != "" {
@@ -86,13 +86,13 @@ func (l *ListLogic) List(in *regionallocation.ListRegionAllocationsRequest) (*re
 	}
 
 	// 转换经营地区分配列表
-	list := make([]*regionallocation.RegionAllocationInfo, 0, len(results))
+	list := make([]*regionallocationpb.RegionAllocationInfo, 0, len(results))
 	for _, result := range results {
 		list = append(list, toRegionAllocationInfo(result))
 	}
 
 	// 返回经营地区分配列表
-	return &regionallocation.ListRegionAllocationsResponse{
+	return &regionallocationpb.ListRegionAllocationsResponse{
 		Total: int64(total), // 数据总数
 		List:  list,         // 经营地区分配列表
 	}, nil

@@ -9,13 +9,13 @@ import (
 
 	"oa.98ent.com/p9/platform-operator/rpc/internal/logic/agentlineallocationservice"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/agentlineallocation"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/agentlineallocationpb"
 )
 
 type AgentLineAllocationServiceServer struct {
 	svcCtx *svc.ServiceContext
-	operator.UnimplementedAgentLineAllocationServiceServer
+	platformoperatorrpc.UnimplementedAgentLineAllocationServiceServer
 }
 
 func NewAgentLineAllocationServiceServer(svcCtx *svc.ServiceContext) *AgentLineAllocationServiceServer {
@@ -25,13 +25,13 @@ func NewAgentLineAllocationServiceServer(svcCtx *svc.ServiceContext) *AgentLineA
 }
 
 // 获取代理子线路分配列表
-func (s *AgentLineAllocationServiceServer) List(ctx context.Context, in *agentlineallocation.ListAgentLineAllocationsRequest) (*agentlineallocation.ListAgentLineAllocationsResponse, error) {
+func (s *AgentLineAllocationServiceServer) List(ctx context.Context, in *agentlineallocationpb.ListAgentLineAllocationsRequest) (*agentlineallocationpb.ListAgentLineAllocationsResponse, error) {
 	l := agentlineallocationservicelogic.NewListLogic(ctx, s.svcCtx)
 	return l.List(in)
 }
 
 // 保存代理子线路分配
-func (s *AgentLineAllocationServiceServer) Save(ctx context.Context, in *agentlineallocation.SaveAgentLineAllocationsRequest) (*agentlineallocation.SaveAgentLineAllocationsResponse, error) {
+func (s *AgentLineAllocationServiceServer) Save(ctx context.Context, in *agentlineallocationpb.SaveAgentLineAllocationsRequest) (*agentlineallocationpb.SaveAgentLineAllocationsResponse, error) {
 	l := agentlineallocationservicelogic.NewSaveLogic(ctx, s.svcCtx)
 	return l.Save(in)
 }

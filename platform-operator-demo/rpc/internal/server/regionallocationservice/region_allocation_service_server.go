@@ -9,13 +9,13 @@ import (
 
 	"oa.98ent.com/p9/platform-operator/rpc/internal/logic/regionallocationservice"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/regionallocation"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/regionallocationpb"
 )
 
 type RegionAllocationServiceServer struct {
 	svcCtx *svc.ServiceContext
-	operator.UnimplementedRegionAllocationServiceServer
+	platformoperatorrpc.UnimplementedRegionAllocationServiceServer
 }
 
 func NewRegionAllocationServiceServer(svcCtx *svc.ServiceContext) *RegionAllocationServiceServer {
@@ -25,13 +25,13 @@ func NewRegionAllocationServiceServer(svcCtx *svc.ServiceContext) *RegionAllocat
 }
 
 // 获取经营地区分配列表
-func (s *RegionAllocationServiceServer) List(ctx context.Context, in *regionallocation.ListRegionAllocationsRequest) (*regionallocation.ListRegionAllocationsResponse, error) {
+func (s *RegionAllocationServiceServer) List(ctx context.Context, in *regionallocationpb.ListRegionAllocationsRequest) (*regionallocationpb.ListRegionAllocationsResponse, error) {
 	l := regionallocationservicelogic.NewListLogic(ctx, s.svcCtx)
 	return l.List(in)
 }
 
 // 保存经营地区分配
-func (s *RegionAllocationServiceServer) Save(ctx context.Context, in *regionallocation.SaveRegionAllocationsRequest) (*regionallocation.SaveRegionAllocationsResponse, error) {
+func (s *RegionAllocationServiceServer) Save(ctx context.Context, in *regionallocationpb.SaveRegionAllocationsRequest) (*regionallocationpb.SaveRegionAllocationsResponse, error) {
 	l := regionallocationservicelogic.NewSaveLogic(ctx, s.svcCtx)
 	return l.Save(in)
 }

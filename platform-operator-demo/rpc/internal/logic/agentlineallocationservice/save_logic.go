@@ -4,8 +4,6 @@ import (
 	"context"
 	"strings"
 
-	"github.com/zeromicro/go-zero/core/logx"
-
 	"oa.98ent.com/p9/platform-operator/pkg/agentline"
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
 	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
@@ -13,7 +11,9 @@ import (
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoragentlineallocation"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/agentlineallocation"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/agentlineallocationpb"
+
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type SaveLogic struct {
@@ -31,7 +31,7 @@ func NewSaveLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SaveLogic {
 }
 
 // Save 保存代理子线路分配
-func (l *SaveLogic) Save(in *agentlineallocation.SaveAgentLineAllocationsRequest) (*agentlineallocation.SaveAgentLineAllocationsResponse, error) {
+func (l *SaveLogic) Save(in *agentlineallocationpb.SaveAgentLineAllocationsRequest) (*agentlineallocationpb.SaveAgentLineAllocationsResponse, error) {
 	// 分站ID必须大于0
 	if in.OperatorId <= 0 {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -40,7 +40,6 @@ func (l *SaveLogic) Save(in *agentlineallocation.SaveAgentLineAllocationsRequest
 	// 整理代理子线路编码并去重
 	agentLineCodes := make([]string, 0, len(in.AgentLineCodes))
 	agentLineCodeSet := make(map[string]struct{}, len(in.AgentLineCodes))
-
 	for _, code := range in.AgentLineCodes {
 		agentLineCode := strings.TrimSpace(code)
 
@@ -125,7 +124,6 @@ func (l *SaveLogic) Save(in *agentlineallocation.SaveAgentLineAllocationsRequest
 	// 批量创建新增的代理子线路分配
 	if len(createCodes) > 0 {
 		builders := make([]*ent.OperatorAgentLineAllocationCreate, 0, len(createCodes))
-
 		for _, agentLineCode := range createCodes {
 			builders = append(
 				builders,
@@ -152,5 +150,5 @@ func (l *SaveLogic) Save(in *agentlineallocation.SaveAgentLineAllocationsRequest
 	}
 
 	// 返回保存结果
-	return &agentlineallocation.SaveAgentLineAllocationsResponse{}, nil
+	return &agentlineallocationpb.SaveAgentLineAllocationsResponse{}, nil
 }

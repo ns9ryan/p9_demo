@@ -4,9 +4,6 @@ import (
 	"context"
 	"strings"
 
-	"entgo.io/ent/dialect/sql"
-	"github.com/zeromicro/go-zero/core/logx"
-
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
 	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-operator/rpc/ent"
@@ -16,7 +13,10 @@ import (
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatorregionallocation"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/basicresourceallocation"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/basicresourceallocationpb"
+
+	"entgo.io/ent/dialect/sql"
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type ListLogic struct {
@@ -41,7 +41,7 @@ func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {
 }
 
 // List 获取基础资源分配列表
-func (l *ListLogic) List(in *basicresourceallocation.ListBasicResourceAllocationsRequest) (*basicresourceallocation.ListBasicResourceAllocationsResponse, error) {
+func (l *ListLogic) List(in *basicresourceallocationpb.ListBasicResourceAllocationsRequest) (*basicresourceallocationpb.ListBasicResourceAllocationsResponse, error) {
 	// 校验分页参数
 	if in.Page < 1 || in.PageSize < 1 || in.PageSize > 100 {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -89,9 +89,9 @@ func (l *ListLogic) List(in *basicresourceallocation.ListBasicResourceAllocation
 
 	// 当前页没有数据时直接返回
 	if len(operators) == 0 {
-		return &basicresourceallocation.ListBasicResourceAllocationsResponse{
-			Total: int64(total),                                             // 数据总数
-			List:  []*basicresourceallocation.BasicResourceAllocationInfo{}, // 基础资源分配列表
+		return &basicresourceallocationpb.ListBasicResourceAllocationsResponse{
+			Total: int64(total),                                               // 数据总数
+			List:  []*basicresourceallocationpb.BasicResourceAllocationInfo{}, // 基础资源分配列表
 		}, nil
 	}
 
@@ -167,9 +167,9 @@ func (l *ListLogic) List(in *basicresourceallocation.ListBasicResourceAllocation
 	// ============================== 基础资源分配列表 ==============================
 
 	// 组装基础资源分配列表
-	list := make([]*basicresourceallocation.BasicResourceAllocationInfo, 0, len(operators))
+	list := make([]*basicresourceallocationpb.BasicResourceAllocationInfo, 0, len(operators))
 	for _, item := range operators {
-		list = append(list, &basicresourceallocation.BasicResourceAllocationInfo{
+		list = append(list, &basicresourceallocationpb.BasicResourceAllocationInfo{
 			OperatorId:     item.ID,                    // 分站ID
 			OperatorCode:   item.Code,                  // 分站业务编码
 			OperatorName:   item.Name,                  // 分站名称
@@ -180,7 +180,7 @@ func (l *ListLogic) List(in *basicresourceallocation.ListBasicResourceAllocation
 	}
 
 	// 返回基础资源分配列表
-	return &basicresourceallocation.ListBasicResourceAllocationsResponse{
+	return &basicresourceallocationpb.ListBasicResourceAllocationsResponse{
 		Total: int64(total), // 数据总数
 		List:  list,         // 基础资源分配列表
 	}, nil

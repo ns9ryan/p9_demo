@@ -3,15 +3,15 @@ package agentlineallocationservicelogic
 import (
 	"context"
 
-	"entgo.io/ent/dialect/sql"
-	"github.com/zeromicro/go-zero/core/logx"
-
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
 	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoragentlineallocation"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/agentlineallocation"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/agentlineallocationpb"
+
+	"entgo.io/ent/dialect/sql"
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type ListLogic struct {
@@ -29,7 +29,7 @@ func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {
 }
 
 // List 获取代理子线路分配列表
-func (l *ListLogic) List(in *agentlineallocation.ListAgentLineAllocationsRequest) (*agentlineallocation.ListAgentLineAllocationsResponse, error) {
+func (l *ListLogic) List(in *agentlineallocationpb.ListAgentLineAllocationsRequest) (*agentlineallocationpb.ListAgentLineAllocationsResponse, error) {
 	// 分站ID必须大于0
 	if in.OperatorId <= 0 {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -57,13 +57,13 @@ func (l *ListLogic) List(in *agentlineallocation.ListAgentLineAllocationsRequest
 	}
 
 	// 转换代理子线路分配列表
-	list := make([]*agentlineallocation.AgentLineAllocationInfo, 0, len(results))
+	list := make([]*agentlineallocationpb.AgentLineAllocationInfo, 0, len(results))
 	for _, result := range results {
 		list = append(list, toAgentLineAllocationInfo(result))
 	}
 
 	// 返回代理子线路分配列表
-	return &agentlineallocation.ListAgentLineAllocationsResponse{
+	return &agentlineallocationpb.ListAgentLineAllocationsResponse{
 		List: list, // 代理子线路分配列表
 	}, nil
 }

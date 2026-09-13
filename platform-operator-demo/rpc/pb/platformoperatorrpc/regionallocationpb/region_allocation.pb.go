@@ -4,7 +4,7 @@
 // 	protoc        v6.32.0
 // source: types/region_allocation.proto
 
-package regionallocation
+package regionallocationpb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -318,7 +318,7 @@ var File_types_region_allocation_proto protoreflect.FileDescriptor
 
 const file_types_region_allocation_proto_rawDesc = "" +
 	"\n" +
-	"\x1dtypes/region_allocation.proto\x12\x10regionallocation\"\x87\x01\n" +
+	"\x1dtypes/region_allocation.proto\x12\x11region_allocation\"\x87\x01\n" +
 	"\x14RegionAllocationInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\x03R\n" +
@@ -334,15 +334,15 @@ const file_types_region_allocation_proto_rawDesc = "" +
 	"operatorId\x12$\n" +
 	"\vregion_code\x18\x04 \x01(\tH\x00R\n" +
 	"regionCode\x88\x01\x01B\x0e\n" +
-	"\f_region_code\"q\n" +
+	"\f_region_code\"r\n" +
 	"\x1dListRegionAllocationsResponse\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x03R\x05total\x12:\n" +
-	"\x04list\x18\x02 \x03(\v2&.regionallocation.RegionAllocationInfoR\x04list\"b\n" +
+	"\x05total\x18\x01 \x01(\x03R\x05total\x12;\n" +
+	"\x04list\x18\x02 \x03(\v2'.region_allocation.RegionAllocationInfoR\x04list\"b\n" +
 	"\x1cSaveRegionAllocationsRequest\x12\x1f\n" +
 	"\voperator_id\x18\x01 \x01(\x03R\n" +
 	"operatorId\x12!\n" +
 	"\fregion_codes\x18\x02 \x03(\tR\vregionCodes\"\x1f\n" +
-	"\x1dSaveRegionAllocationsResponseBDZBoa.98ent.com/p9/platform-operator/rpc/pb/operator/regionallocationb\x06proto3"
+	"\x1dSaveRegionAllocationsResponseBQZOoa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/regionallocationpbb\x06proto3"
 
 var (
 	file_types_region_allocation_proto_rawDescOnce sync.Once
@@ -358,14 +358,14 @@ func file_types_region_allocation_proto_rawDescGZIP() []byte {
 
 var file_types_region_allocation_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_types_region_allocation_proto_goTypes = []any{
-	(*RegionAllocationInfo)(nil),          // 0: regionallocation.RegionAllocationInfo
-	(*ListRegionAllocationsRequest)(nil),  // 1: regionallocation.ListRegionAllocationsRequest
-	(*ListRegionAllocationsResponse)(nil), // 2: regionallocation.ListRegionAllocationsResponse
-	(*SaveRegionAllocationsRequest)(nil),  // 3: regionallocation.SaveRegionAllocationsRequest
-	(*SaveRegionAllocationsResponse)(nil), // 4: regionallocation.SaveRegionAllocationsResponse
+	(*RegionAllocationInfo)(nil),          // 0: region_allocation.RegionAllocationInfo
+	(*ListRegionAllocationsRequest)(nil),  // 1: region_allocation.ListRegionAllocationsRequest
+	(*ListRegionAllocationsResponse)(nil), // 2: region_allocation.ListRegionAllocationsResponse
+	(*SaveRegionAllocationsRequest)(nil),  // 3: region_allocation.SaveRegionAllocationsRequest
+	(*SaveRegionAllocationsResponse)(nil), // 4: region_allocation.SaveRegionAllocationsResponse
 }
 var file_types_region_allocation_proto_depIdxs = []int32{
-	0, // 0: regionallocation.ListRegionAllocationsResponse.list:type_name -> regionallocation.RegionAllocationInfo
+	0, // 0: region_allocation.ListRegionAllocationsResponse.list:type_name -> region_allocation.RegionAllocationInfo
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name

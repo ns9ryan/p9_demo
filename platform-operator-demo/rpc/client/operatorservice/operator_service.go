@@ -7,9 +7,9 @@ package operatorservice
 import (
 	"context"
 
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc"
 
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/operator"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/operatorpb"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
@@ -18,17 +18,17 @@ import (
 type (
 	OperatorService interface {
 		// 创建分站
-		Create(ctx context.Context, in *operator.CreateOperatorRequest, opts ...grpc.CallOption) (*operator.CreateOperatorResponse, error)
+		Create(ctx context.Context, in *operatorpb.CreateOperatorRequest, opts ...grpc.CallOption) (*operatorpb.CreateOperatorResponse, error)
 		// 修改分站
-		Update(ctx context.Context, in *operator.UpdateOperatorRequest, opts ...grpc.CallOption) (*operator.UpdateOperatorResponse, error)
+		Update(ctx context.Context, in *operatorpb.UpdateOperatorRequest, opts ...grpc.CallOption) (*operatorpb.UpdateOperatorResponse, error)
 		// 获取分站
-		Get(ctx context.Context, in *operator.GetOperatorRequest, opts ...grpc.CallOption) (*operator.GetOperatorResponse, error)
+		Get(ctx context.Context, in *operatorpb.GetOperatorRequest, opts ...grpc.CallOption) (*operatorpb.GetOperatorResponse, error)
 		// 获取分站管理列表
-		List(ctx context.Context, in *operator.ListOperatorsRequest, opts ...grpc.CallOption) (*operator.ListOperatorsResponse, error)
+		List(ctx context.Context, in *operatorpb.ListOperatorsRequest, opts ...grpc.CallOption) (*operatorpb.ListOperatorsResponse, error)
 		// 完成分站创建
-		Complete(ctx context.Context, in *operator.CompleteOperatorRequest, opts ...grpc.CallOption) (*operator.CompleteOperatorResponse, error)
+		Complete(ctx context.Context, in *operatorpb.CompleteOperatorRequest, opts ...grpc.CallOption) (*operatorpb.CompleteOperatorResponse, error)
 		// 发布分站
-		Publish(ctx context.Context, in *operator.PublishOperatorRequest, opts ...grpc.CallOption) (*operator.PublishOperatorResponse, error)
+		Publish(ctx context.Context, in *operatorpb.PublishOperatorRequest, opts ...grpc.CallOption) (*operatorpb.PublishOperatorResponse, error)
 	}
 
 	defaultOperatorService struct {
@@ -43,37 +43,37 @@ func NewOperatorService(cli zrpc.Client) OperatorService {
 }
 
 // 创建分站
-func (m *defaultOperatorService) Create(ctx context.Context, in *operator.CreateOperatorRequest, opts ...grpc.CallOption) (*operator.CreateOperatorResponse, error) {
-	client := operator.NewOperatorServiceClient(m.cli.Conn())
+func (m *defaultOperatorService) Create(ctx context.Context, in *operatorpb.CreateOperatorRequest, opts ...grpc.CallOption) (*operatorpb.CreateOperatorResponse, error) {
+	client := platformoperatorrpc.NewOperatorServiceClient(m.cli.Conn())
 	return client.Create(ctx, in, opts...)
 }
 
 // 修改分站
-func (m *defaultOperatorService) Update(ctx context.Context, in *operator.UpdateOperatorRequest, opts ...grpc.CallOption) (*operator.UpdateOperatorResponse, error) {
-	client := operator.NewOperatorServiceClient(m.cli.Conn())
+func (m *defaultOperatorService) Update(ctx context.Context, in *operatorpb.UpdateOperatorRequest, opts ...grpc.CallOption) (*operatorpb.UpdateOperatorResponse, error) {
+	client := platformoperatorrpc.NewOperatorServiceClient(m.cli.Conn())
 	return client.Update(ctx, in, opts...)
 }
 
 // 获取分站
-func (m *defaultOperatorService) Get(ctx context.Context, in *operator.GetOperatorRequest, opts ...grpc.CallOption) (*operator.GetOperatorResponse, error) {
-	client := operator.NewOperatorServiceClient(m.cli.Conn())
+func (m *defaultOperatorService) Get(ctx context.Context, in *operatorpb.GetOperatorRequest, opts ...grpc.CallOption) (*operatorpb.GetOperatorResponse, error) {
+	client := platformoperatorrpc.NewOperatorServiceClient(m.cli.Conn())
 	return client.Get(ctx, in, opts...)
 }
 
 // 获取分站管理列表
-func (m *defaultOperatorService) List(ctx context.Context, in *operator.ListOperatorsRequest, opts ...grpc.CallOption) (*operator.ListOperatorsResponse, error) {
-	client := operator.NewOperatorServiceClient(m.cli.Conn())
+func (m *defaultOperatorService) List(ctx context.Context, in *operatorpb.ListOperatorsRequest, opts ...grpc.CallOption) (*operatorpb.ListOperatorsResponse, error) {
+	client := platformoperatorrpc.NewOperatorServiceClient(m.cli.Conn())
 	return client.List(ctx, in, opts...)
 }
 
 // 完成分站创建
-func (m *defaultOperatorService) Complete(ctx context.Context, in *operator.CompleteOperatorRequest, opts ...grpc.CallOption) (*operator.CompleteOperatorResponse, error) {
-	client := operator.NewOperatorServiceClient(m.cli.Conn())
+func (m *defaultOperatorService) Complete(ctx context.Context, in *operatorpb.CompleteOperatorRequest, opts ...grpc.CallOption) (*operatorpb.CompleteOperatorResponse, error) {
+	client := platformoperatorrpc.NewOperatorServiceClient(m.cli.Conn())
 	return client.Complete(ctx, in, opts...)
 }
 
 // 发布分站
-func (m *defaultOperatorService) Publish(ctx context.Context, in *operator.PublishOperatorRequest, opts ...grpc.CallOption) (*operator.PublishOperatorResponse, error) {
-	client := operator.NewOperatorServiceClient(m.cli.Conn())
+func (m *defaultOperatorService) Publish(ctx context.Context, in *operatorpb.PublishOperatorRequest, opts ...grpc.CallOption) (*operatorpb.PublishOperatorResponse, error) {
+	client := platformoperatorrpc.NewOperatorServiceClient(m.cli.Conn())
 	return client.Publish(ctx, in, opts...)
 }

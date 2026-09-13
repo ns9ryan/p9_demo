@@ -4,13 +4,13 @@ import (
 	"context"
 	"strings"
 
-	"github.com/zeromicro/go-zero/core/logx"
-
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
 	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/domain"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/domainpb"
+
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type UpdateLogic struct {
@@ -28,7 +28,7 @@ func NewUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateLogi
 }
 
 // Update 修改分站域名
-func (l *UpdateLogic) Update(in *domain.UpdateDomainRequest) (*domain.UpdateDomainResponse, error) {
+func (l *UpdateLogic) Update(in *domainpb.UpdateDomainRequest) (*domainpb.UpdateDomainResponse, error) {
 	// 域名ID必须大于0
 	if in.Id <= 0 {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -59,7 +59,7 @@ func (l *UpdateLogic) Update(in *domain.UpdateDomainRequest) (*domain.UpdateDoma
 	// 修改分站域名
 	err = current.
 		Update().
-		SetNillableDomainName(domainName).    // 域名
+		SetNillableDomainName(domainName).    // 域名, 不包含协议和端口
 		SetNillableDomainType(in.DomainType). // 域名类型: 1分站后台, 2代理后台, 3会员H5
 		SetNillableStatus(in.Status).         // 域名状态: 1启用, 2停用
 		SetNillableRemark(in.Remark).         // 总网内部备注
@@ -70,5 +70,5 @@ func (l *UpdateLogic) Update(in *domain.UpdateDomainRequest) (*domain.UpdateDoma
 	}
 
 	// 返回修改结果
-	return &domain.UpdateDomainResponse{}, nil
+	return &domainpb.UpdateDomainResponse{}, nil
 }

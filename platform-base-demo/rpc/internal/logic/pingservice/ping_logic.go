@@ -25,5 +25,6 @@ func NewPingLogic(ctx context.Context, svcCtx *svc.ServiceContext) *PingLogic {
 
 // Ping 健康检查
 func (l *PingLogic) Ping(in *pingpb.PingRequest) (*pingpb.PingResponse, error) {
+	// 返回检查结果
 	return &pingpb.PingResponse{}, nil
 }

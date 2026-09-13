@@ -7,9 +7,9 @@ package languageallocationservice
 import (
 	"context"
 
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc"
 
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/languageallocation"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/languageallocationpb"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
@@ -18,9 +18,9 @@ import (
 type (
 	LanguageAllocationService interface {
 		// 获取语言分配列表
-		List(ctx context.Context, in *languageallocation.ListLanguageAllocationsRequest, opts ...grpc.CallOption) (*languageallocation.ListLanguageAllocationsResponse, error)
+		List(ctx context.Context, in *languageallocationpb.ListLanguageAllocationsRequest, opts ...grpc.CallOption) (*languageallocationpb.ListLanguageAllocationsResponse, error)
 		// 保存语言分配
-		Save(ctx context.Context, in *languageallocation.SaveLanguageAllocationsRequest, opts ...grpc.CallOption) (*languageallocation.SaveLanguageAllocationsResponse, error)
+		Save(ctx context.Context, in *languageallocationpb.SaveLanguageAllocationsRequest, opts ...grpc.CallOption) (*languageallocationpb.SaveLanguageAllocationsResponse, error)
 	}
 
 	defaultLanguageAllocationService struct {
@@ -35,13 +35,13 @@ func NewLanguageAllocationService(cli zrpc.Client) LanguageAllocationService {
 }
 
 // 获取语言分配列表
-func (m *defaultLanguageAllocationService) List(ctx context.Context, in *languageallocation.ListLanguageAllocationsRequest, opts ...grpc.CallOption) (*languageallocation.ListLanguageAllocationsResponse, error) {
-	client := operator.NewLanguageAllocationServiceClient(m.cli.Conn())
+func (m *defaultLanguageAllocationService) List(ctx context.Context, in *languageallocationpb.ListLanguageAllocationsRequest, opts ...grpc.CallOption) (*languageallocationpb.ListLanguageAllocationsResponse, error) {
+	client := platformoperatorrpc.NewLanguageAllocationServiceClient(m.cli.Conn())
 	return client.List(ctx, in, opts...)
 }
 
 // 保存语言分配
-func (m *defaultLanguageAllocationService) Save(ctx context.Context, in *languageallocation.SaveLanguageAllocationsRequest, opts ...grpc.CallOption) (*languageallocation.SaveLanguageAllocationsResponse, error) {
-	client := operator.NewLanguageAllocationServiceClient(m.cli.Conn())
+func (m *defaultLanguageAllocationService) Save(ctx context.Context, in *languageallocationpb.SaveLanguageAllocationsRequest, opts ...grpc.CallOption) (*languageallocationpb.SaveLanguageAllocationsResponse, error) {
+	client := platformoperatorrpc.NewLanguageAllocationServiceClient(m.cli.Conn())
 	return client.Save(ctx, in, opts...)
 }

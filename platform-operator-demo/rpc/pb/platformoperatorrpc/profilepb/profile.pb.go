@@ -4,7 +4,7 @@
 // 	protoc        v6.32.0
 // source: types/profile.proto
 
-package profile
+package profilepb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -519,7 +519,7 @@ const file_types_profile_proto_rawDesc = "" +
 	"\voperator_id\x18\x01 \x01(\x03R\n" +
 	"operatorId\"T\n" +
 	"\x1aGetOperatorProfileResponse\x126\n" +
-	"\aprofile\x18\x01 \x01(\v2\x1c.profile.OperatorProfileInfoR\aprofileB;Z9oa.98ent.com/p9/platform-operator/rpc/pb/operator/profileb\x06proto3"
+	"\aprofile\x18\x01 \x01(\v2\x1c.profile.OperatorProfileInfoR\aprofileBHZFoa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/profilepbb\x06proto3"
 
 var (
 	file_types_profile_proto_rawDescOnce sync.Once

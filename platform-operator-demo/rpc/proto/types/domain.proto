@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package domain;
 
-option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/operator/domain";
+option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/domainpb";
 
 // 分站域名信息
 message DomainInfo {

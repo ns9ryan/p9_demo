@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package regionallocation;
+package region_allocation;
 
-option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/operator/regionallocation";
+option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/regionallocationpb";
 
 // 分站经营地区分配信息
 message RegionAllocationInfo {

@@ -4,7 +4,7 @@
 // 	protoc        v6.32.0
 // source: types/domain.proto
 
-package domain
+package domainpb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -768,7 +768,7 @@ const file_types_domain_proto_rawDesc = "" +
 	"\x04list\x18\x02 \x03(\v2\x12.domain.DomainInfoR\x04list\"%\n" +
 	"\x13DeleteDomainRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"\x16\n" +
-	"\x14DeleteDomainResponseB:Z8oa.98ent.com/p9/platform-operator/rpc/pb/operator/domainb\x06proto3"
+	"\x14DeleteDomainResponseBGZEoa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/domainpbb\x06proto3"
 
 var (
 	file_types_domain_proto_rawDescOnce sync.Once

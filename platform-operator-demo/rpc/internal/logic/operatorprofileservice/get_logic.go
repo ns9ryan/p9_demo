@@ -3,15 +3,15 @@ package operatorprofileservicelogic
 import (
 	"context"
 
-	"github.com/zeromicro/go-zero/core/logx"
-
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
 	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-operator/rpc/ent"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatorprofile"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/profile"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/profilepb"
+
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type GetLogic struct {
@@ -29,7 +29,7 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 }
 
 // Get 获取分站档案
-func (l *GetLogic) Get(in *profile.GetOperatorProfileRequest) (*profile.GetOperatorProfileResponse, error) {
+func (l *GetLogic) Get(in *profilepb.GetOperatorProfileRequest) (*profilepb.GetOperatorProfileResponse, error) {
 	// 分站ID必须大于0
 	if in.OperatorId <= 0 {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -50,7 +50,7 @@ func (l *GetLogic) Get(in *profile.GetOperatorProfileRequest) (*profile.GetOpera
 	if err != nil {
 		// 尚未创建档案时返回空
 		if ent.IsNotFound(err) {
-			return &profile.GetOperatorProfileResponse{
+			return &profilepb.GetOperatorProfileResponse{
 				Profile: nil, // 分站档案信息
 			}, nil
 		}
@@ -60,7 +60,7 @@ func (l *GetLogic) Get(in *profile.GetOperatorProfileRequest) (*profile.GetOpera
 	}
 
 	// 返回分站档案信息
-	return &profile.GetOperatorProfileResponse{
+	return &profilepb.GetOperatorProfileResponse{
 		Profile: toOperatorProfileInfo(result), // 分站档案信息
 	}, nil
 }

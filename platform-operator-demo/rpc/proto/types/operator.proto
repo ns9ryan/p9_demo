@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package operator;
 
-option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/operator/operator";
+option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/operatorpb";
 
 // 分站信息
 message OperatorInfo {

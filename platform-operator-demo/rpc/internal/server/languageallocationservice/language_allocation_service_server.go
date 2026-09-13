@@ -9,13 +9,13 @@ import (
 
 	"oa.98ent.com/p9/platform-operator/rpc/internal/logic/languageallocationservice"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/languageallocation"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/languageallocationpb"
 )
 
 type LanguageAllocationServiceServer struct {
 	svcCtx *svc.ServiceContext
-	operator.UnimplementedLanguageAllocationServiceServer
+	platformoperatorrpc.UnimplementedLanguageAllocationServiceServer
 }
 
 func NewLanguageAllocationServiceServer(svcCtx *svc.ServiceContext) *LanguageAllocationServiceServer {
@@ -25,13 +25,13 @@ func NewLanguageAllocationServiceServer(svcCtx *svc.ServiceContext) *LanguageAll
 }
 
 // 获取语言分配列表
-func (s *LanguageAllocationServiceServer) List(ctx context.Context, in *languageallocation.ListLanguageAllocationsRequest) (*languageallocation.ListLanguageAllocationsResponse, error) {
+func (s *LanguageAllocationServiceServer) List(ctx context.Context, in *languageallocationpb.ListLanguageAllocationsRequest) (*languageallocationpb.ListLanguageAllocationsResponse, error) {
 	l := languageallocationservicelogic.NewListLogic(ctx, s.svcCtx)
 	return l.List(in)
 }
 
 // 保存语言分配
-func (s *LanguageAllocationServiceServer) Save(ctx context.Context, in *languageallocation.SaveLanguageAllocationsRequest) (*languageallocation.SaveLanguageAllocationsResponse, error) {
+func (s *LanguageAllocationServiceServer) Save(ctx context.Context, in *languageallocationpb.SaveLanguageAllocationsRequest) (*languageallocationpb.SaveLanguageAllocationsResponse, error) {
 	l := languageallocationservicelogic.NewSaveLogic(ctx, s.svcCtx)
 	return l.Save(in)
 }

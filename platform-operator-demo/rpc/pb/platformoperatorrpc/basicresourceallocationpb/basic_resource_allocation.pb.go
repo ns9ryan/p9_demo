@@ -4,7 +4,7 @@
 // 	protoc        v6.32.0
 // source: types/basic_resource_allocation.proto
 
-package basicresourceallocation
+package basicresourceallocationpb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -235,7 +235,7 @@ var File_types_basic_resource_allocation_proto protoreflect.FileDescriptor
 
 const file_types_basic_resource_allocation_proto_rawDesc = "" +
 	"\n" +
-	"%types/basic_resource_allocation.proto\x12\x17basicresourceallocation\"\xfc\x01\n" +
+	"%types/basic_resource_allocation.proto\x12\x19basic_resource_allocation\"\xfc\x01\n" +
 	"\x1bBasicResourceAllocationInfo\x12\x1f\n" +
 	"\voperator_id\x18\x01 \x01(\x03R\n" +
 	"operatorId\x12#\n" +
@@ -249,10 +249,10 @@ const file_types_basic_resource_allocation_proto_rawDesc = "" +
 	"\tpage_size\x18\x02 \x01(\x03R\bpageSize\x12\x1d\n" +
 	"\akeyword\x18\x03 \x01(\tH\x00R\akeyword\x88\x01\x01B\n" +
 	"\n" +
-	"\b_keyword\"\x86\x01\n" +
+	"\b_keyword\"\x88\x01\n" +
 	"$ListBasicResourceAllocationsResponse\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x03R\x05total\x12H\n" +
-	"\x04list\x18\x02 \x03(\v24.basicresourceallocation.BasicResourceAllocationInfoR\x04listBKZIoa.98ent.com/p9/platform-operator/rpc/pb/operator/basicresourceallocationb\x06proto3"
+	"\x05total\x18\x01 \x01(\x03R\x05total\x12J\n" +
+	"\x04list\x18\x02 \x03(\v26.basic_resource_allocation.BasicResourceAllocationInfoR\x04listBXZVoa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/basicresourceallocationpbb\x06proto3"
 
 var (
 	file_types_basic_resource_allocation_proto_rawDescOnce sync.Once
@@ -268,12 +268,12 @@ func file_types_basic_resource_allocation_proto_rawDescGZIP() []byte {
 
 var file_types_basic_resource_allocation_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_types_basic_resource_allocation_proto_goTypes = []any{
-	(*BasicResourceAllocationInfo)(nil),          // 0: basicresourceallocation.BasicResourceAllocationInfo
-	(*ListBasicResourceAllocationsRequest)(nil),  // 1: basicresourceallocation.ListBasicResourceAllocationsRequest
-	(*ListBasicResourceAllocationsResponse)(nil), // 2: basicresourceallocation.ListBasicResourceAllocationsResponse
+	(*BasicResourceAllocationInfo)(nil),          // 0: basic_resource_allocation.BasicResourceAllocationInfo
+	(*ListBasicResourceAllocationsRequest)(nil),  // 1: basic_resource_allocation.ListBasicResourceAllocationsRequest
+	(*ListBasicResourceAllocationsResponse)(nil), // 2: basic_resource_allocation.ListBasicResourceAllocationsResponse
 }
 var file_types_basic_resource_allocation_proto_depIdxs = []int32{
-	0, // 0: basicresourceallocation.ListBasicResourceAllocationsResponse.list:type_name -> basicresourceallocation.BasicResourceAllocationInfo
+	0, // 0: basic_resource_allocation.ListBasicResourceAllocationsResponse.list:type_name -> basic_resource_allocation.BasicResourceAllocationInfo
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name

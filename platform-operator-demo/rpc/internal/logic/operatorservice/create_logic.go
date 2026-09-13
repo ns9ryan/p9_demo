@@ -4,12 +4,12 @@ import (
 	"context"
 	"strings"
 
-	"github.com/google/uuid"
-	"github.com/zeromicro/go-zero/core/logx"
-
 	"oa.98ent.com/p9/platform-operator/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/operator"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/operatorpb"
+
+	"github.com/google/uuid"
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type CreateLogic struct {
@@ -27,7 +27,7 @@ func NewCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateLogi
 }
 
 // Create 创建分站
-func (l *CreateLogic) Create(in *operator.CreateOperatorRequest) (*operator.CreateOperatorResponse, error) {
+func (l *CreateLogic) Create(in *operatorpb.CreateOperatorRequest) (*operatorpb.CreateOperatorResponse, error) {
 	// 生成分站业务编码
 	code := "OP_" + strings.ToUpper(strings.ReplaceAll(uuid.NewString(), "-", ""))
 
@@ -38,7 +38,7 @@ func (l *CreateLogic) Create(in *operator.CreateOperatorRequest) (*operator.Crea
 		SetName(in.Name).                                     // 分站名称
 		SetTimezoneCode(in.TimezoneCode).                     // 时区编码
 		SetSettlementCurrencyCode(in.SettlementCurrencyCode). // 结算币种编码
-		SetNillableStatus(in.Status).                         // 分站状态
+		SetNillableStatus(in.Status).                         // 分站状态: 1正常, 2暂停, 3关闭
 		SetNillableRemark(in.Remark).                         // 内部备注
 		Save(l.ctx)
 	if err != nil {
@@ -47,7 +47,7 @@ func (l *CreateLogic) Create(in *operator.CreateOperatorRequest) (*operator.Crea
 	}
 
 	// 返回创建结果
-	return &operator.CreateOperatorResponse{
+	return &operatorpb.CreateOperatorResponse{
 		Id:   data.ID,   // 分站ID
 		Code: data.Code, // 分站业务编码
 	}, nil

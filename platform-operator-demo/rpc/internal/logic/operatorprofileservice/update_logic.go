@@ -3,14 +3,14 @@ package operatorprofileservicelogic
 import (
 	"context"
 
-	"github.com/zeromicro/go-zero/core/logx"
-
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
 	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatorprofile"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/profile"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/profilepb"
+
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type UpdateLogic struct {
@@ -28,7 +28,7 @@ func NewUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateLogi
 }
 
 // Update 修改分站档案
-func (l *UpdateLogic) Update(in *profile.UpdateOperatorProfileRequest) (*profile.UpdateOperatorProfileResponse, error) {
+func (l *UpdateLogic) Update(in *profilepb.UpdateOperatorProfileRequest) (*profilepb.UpdateOperatorProfileResponse, error) {
 	// 分站ID必须大于0
 	if in.OperatorId <= 0 {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -66,5 +66,5 @@ func (l *UpdateLogic) Update(in *profile.UpdateOperatorProfileRequest) (*profile
 	}
 
 	// 返回修改结果
-	return &profile.UpdateOperatorProfileResponse{}, nil
+	return &profilepb.UpdateOperatorProfileResponse{}, nil
 }

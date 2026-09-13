@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package profile;
 
-option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/operator/profile";
+option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/profilepb";
 
 // 分站档案信息
 message OperatorProfileInfo {

@@ -4,7 +4,7 @@
 // 	protoc        v6.32.0
 // source: types/operator.proto
 
-package operator
+package operatorpb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -906,7 +906,7 @@ const file_types_operator_proto_rawDesc = "" +
 	"\x18CompleteOperatorResponse\"(\n" +
 	"\x16PublishOperatorRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"\x19\n" +
-	"\x17PublishOperatorResponseB<Z:oa.98ent.com/p9/platform-operator/rpc/pb/operator/operatorb\x06proto3"
+	"\x17PublishOperatorResponseBIZGoa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/operatorpbb\x06proto3"
 
 var (
 	file_types_operator_proto_rawDescOnce sync.Once

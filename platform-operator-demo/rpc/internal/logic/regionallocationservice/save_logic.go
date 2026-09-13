@@ -4,15 +4,15 @@ import (
 	"context"
 	"strings"
 
-	"github.com/zeromicro/go-zero/core/logx"
-
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
 	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-operator/rpc/ent"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatorregionallocation"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/regionallocation"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/regionallocationpb"
+
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type SaveLogic struct {
@@ -30,16 +30,15 @@ func NewSaveLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SaveLogic {
 }
 
 // Save 保存经营地区分配
-func (l *SaveLogic) Save(in *regionallocation.SaveRegionAllocationsRequest) (*regionallocation.SaveRegionAllocationsResponse, error) {
+func (l *SaveLogic) Save(in *regionallocationpb.SaveRegionAllocationsRequest) (*regionallocationpb.SaveRegionAllocationsResponse, error) {
 	// 分站ID必须大于0
 	if in.OperatorId <= 0 {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
 	}
 
-	// 整理经营地区编码并去重
+	// 整理国家地区编码并去重
 	regionCodes := make([]string, 0, len(in.RegionCodes))
 	regionCodeSet := make(map[string]struct{}, len(in.RegionCodes))
-
 	for _, code := range in.RegionCodes {
 		regionCode := strings.ToUpper(strings.TrimSpace(code))
 		if regionCode == "" {
@@ -71,7 +70,7 @@ func (l *SaveLogic) Save(in *regionallocation.SaveRegionAllocationsRequest) (*re
 		_ = tx.Rollback()
 	}()
 
-	// 获取当前经营地区编码
+	// 获取当前国家地区编码
 	currentCodes, err := tx.OperatorRegionAllocation.
 		Query().
 		Where(operatorregionallocation.OperatorIDEQ(in.OperatorId)).
@@ -82,13 +81,13 @@ func (l *SaveLogic) Save(in *regionallocation.SaveRegionAllocationsRequest) (*re
 		return nil, enterror.Handle(l.Logger, err)
 	}
 
-	// 整理当前经营地区编码
+	// 整理当前国家地区编码
 	currentCodeSet := make(map[string]struct{}, len(currentCodes))
 	for _, regionCode := range currentCodes {
 		currentCodeSet[regionCode] = struct{}{}
 	}
 
-	// 计算需要删除的经营地区编码
+	// 计算需要删除的国家地区编码
 	deleteCodes := make([]string, 0)
 	for _, regionCode := range currentCodes {
 		if _, exists := regionCodeSet[regionCode]; !exists {
@@ -96,7 +95,7 @@ func (l *SaveLogic) Save(in *regionallocation.SaveRegionAllocationsRequest) (*re
 		}
 	}
 
-	// 计算需要新增的经营地区编码
+	// 计算需要新增的国家地区编码
 	createCodes := make([]string, 0)
 	for _, regionCode := range regionCodes {
 		if _, exists := currentCodeSet[regionCode]; !exists {
@@ -122,14 +121,13 @@ func (l *SaveLogic) Save(in *regionallocation.SaveRegionAllocationsRequest) (*re
 	// 批量创建新增的经营地区分配
 	if len(createCodes) > 0 {
 		builders := make([]*ent.OperatorRegionAllocationCreate, 0, len(createCodes))
-
 		for _, regionCode := range createCodes {
 			builders = append(
 				builders,
 				tx.OperatorRegionAllocation.
 					Create().
 					SetOperatorID(in.OperatorId). // 分站ID
-					SetRegionCode(regionCode),    // 经营地区编码
+					SetRegionCode(regionCode),    // 国家地区编码
 			)
 		}
 
@@ -149,5 +147,5 @@ func (l *SaveLogic) Save(in *regionallocation.SaveRegionAllocationsRequest) (*re
 	}
 
 	// 返回保存结果
-	return &regionallocation.SaveRegionAllocationsResponse{}, nil
+	return &regionallocationpb.SaveRegionAllocationsResponse{}, nil
 }

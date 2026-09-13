@@ -4,15 +4,15 @@ import (
 	"context"
 	"strings"
 
-	"github.com/zeromicro/go-zero/core/logx"
-
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
 	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-operator/rpc/ent"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatorlanguageallocation"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/languageallocation"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/languageallocationpb"
+
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type SaveLogic struct {
@@ -30,7 +30,7 @@ func NewSaveLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SaveLogic {
 }
 
 // Save 保存语言分配
-func (l *SaveLogic) Save(in *languageallocation.SaveLanguageAllocationsRequest) (*languageallocation.SaveLanguageAllocationsResponse, error) {
+func (l *SaveLogic) Save(in *languageallocationpb.SaveLanguageAllocationsRequest) (*languageallocationpb.SaveLanguageAllocationsResponse, error) {
 	// 分站ID必须大于0
 	if in.OperatorId <= 0 {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -39,7 +39,6 @@ func (l *SaveLogic) Save(in *languageallocation.SaveLanguageAllocationsRequest) 
 	// 整理语言编码并去重
 	languageCodes := make([]string, 0, len(in.LanguageCodes))
 	languageCodeSet := make(map[string]struct{}, len(in.LanguageCodes))
-
 	for _, code := range in.LanguageCodes {
 		languageCode := strings.TrimSpace(code)
 		if languageCode == "" {
@@ -122,7 +121,6 @@ func (l *SaveLogic) Save(in *languageallocation.SaveLanguageAllocationsRequest) 
 	// 批量创建新增的语言分配
 	if len(createCodes) > 0 {
 		builders := make([]*ent.OperatorLanguageAllocationCreate, 0, len(createCodes))
-
 		for _, languageCode := range createCodes {
 			builders = append(
 				builders,
@@ -149,5 +147,5 @@ func (l *SaveLogic) Save(in *languageallocation.SaveLanguageAllocationsRequest) 
 	}
 
 	// 返回保存结果
-	return &languageallocation.SaveLanguageAllocationsResponse{}, nil
+	return &languageallocationpb.SaveLanguageAllocationsResponse{}, nil
 }

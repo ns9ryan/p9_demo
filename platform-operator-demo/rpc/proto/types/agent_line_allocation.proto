@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package agentlineallocation;
+package agent_line_allocation;
 
-option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/operator/agentlineallocation";
+option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/agentlineallocationpb";
 
 // 分站代理子线路分配信息
 message AgentLineAllocationInfo {

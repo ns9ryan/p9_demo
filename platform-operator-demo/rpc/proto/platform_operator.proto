@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package platform_operator;
 
-option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/operator";
+option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc";
 
 import "types/ping.proto";
 import "types/operator.proto";
@@ -73,32 +73,32 @@ service DomainService {
 // 分站基础资源分配服务
 service BasicResourceAllocationService {
   // 获取基础资源分配列表
-  rpc List(basicresourceallocation.ListBasicResourceAllocationsRequest) returns (basicresourceallocation.ListBasicResourceAllocationsResponse);
+  rpc List(basic_resource_allocation.ListBasicResourceAllocationsRequest) returns (basic_resource_allocation.ListBasicResourceAllocationsResponse);
 }
 
 // 分站语言分配服务
 service LanguageAllocationService {
   // 获取语言分配列表
-  rpc List(languageallocation.ListLanguageAllocationsRequest) returns (languageallocation.ListLanguageAllocationsResponse);
+  rpc List(language_allocation.ListLanguageAllocationsRequest) returns (language_allocation.ListLanguageAllocationsResponse);
 
   // 保存语言分配
-  rpc Save(languageallocation.SaveLanguageAllocationsRequest) returns (languageallocation.SaveLanguageAllocationsResponse);
+  rpc Save(language_allocation.SaveLanguageAllocationsRequest) returns (language_allocation.SaveLanguageAllocationsResponse);
 }
 
 // 分站经营地区分配服务
 service RegionAllocationService {
   // 获取经营地区分配列表
-  rpc List(regionallocation.ListRegionAllocationsRequest) returns (regionallocation.ListRegionAllocationsResponse);
+  rpc List(region_allocation.ListRegionAllocationsRequest) returns (region_allocation.ListRegionAllocationsResponse);
 
   // 保存经营地区分配
-  rpc Save(regionallocation.SaveRegionAllocationsRequest) returns (regionallocation.SaveRegionAllocationsResponse);
+  rpc Save(region_allocation.SaveRegionAllocationsRequest) returns (region_allocation.SaveRegionAllocationsResponse);
 }
 
 // 分站代理子线路分配服务
 service AgentLineAllocationService {
   // 获取代理子线路分配列表
-  rpc List(agentlineallocation.ListAgentLineAllocationsRequest) returns (agentlineallocation.ListAgentLineAllocationsResponse);
+  rpc List(agent_line_allocation.ListAgentLineAllocationsRequest) returns (agent_line_allocation.ListAgentLineAllocationsResponse);
 
   // 保存代理子线路分配
-  rpc Save(agentlineallocation.SaveAgentLineAllocationsRequest) returns (agentlineallocation.SaveAgentLineAllocationsResponse);
+  rpc Save(agent_line_allocation.SaveAgentLineAllocationsRequest) returns (agent_line_allocation.SaveAgentLineAllocationsResponse);
 }

@@ -4,7 +4,7 @@
 // 	protoc        v6.32.0
 // source: types/agent_line_allocation.proto
 
-package agentlineallocation
+package agentlineallocationpb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -282,7 +282,7 @@ var File_types_agent_line_allocation_proto protoreflect.FileDescriptor
 
 const file_types_agent_line_allocation_proto_rawDesc = "" +
 	"\n" +
-	"!types/agent_line_allocation.proto\x12\x13agentlineallocation\"\x91\x01\n" +
+	"!types/agent_line_allocation.proto\x12\x15agent_line_allocation\"\x91\x01\n" +
 	"\x17AgentLineAllocationInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\x03R\n" +
@@ -292,14 +292,14 @@ const file_types_agent_line_allocation_proto_rawDesc = "" +
 	"created_at\x18\x04 \x01(\x03R\tcreatedAt\"B\n" +
 	"\x1fListAgentLineAllocationsRequest\x12\x1f\n" +
 	"\voperator_id\x18\x01 \x01(\x03R\n" +
-	"operatorId\"d\n" +
-	" ListAgentLineAllocationsResponse\x12@\n" +
-	"\x04list\x18\x01 \x03(\v2,.agentlineallocation.AgentLineAllocationInfoR\x04list\"l\n" +
+	"operatorId\"f\n" +
+	" ListAgentLineAllocationsResponse\x12B\n" +
+	"\x04list\x18\x01 \x03(\v2..agent_line_allocation.AgentLineAllocationInfoR\x04list\"l\n" +
 	"\x1fSaveAgentLineAllocationsRequest\x12\x1f\n" +
 	"\voperator_id\x18\x01 \x01(\x03R\n" +
 	"operatorId\x12(\n" +
 	"\x10agent_line_codes\x18\x02 \x03(\tR\x0eagentLineCodes\"\"\n" +
-	" SaveAgentLineAllocationsResponseBGZEoa.98ent.com/p9/platform-operator/rpc/pb/operator/agentlineallocationb\x06proto3"
+	" SaveAgentLineAllocationsResponseBTZRoa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/agentlineallocationpbb\x06proto3"
 
 var (
 	file_types_agent_line_allocation_proto_rawDescOnce sync.Once
@@ -315,14 +315,14 @@ func file_types_agent_line_allocation_proto_rawDescGZIP() []byte {
 
 var file_types_agent_line_allocation_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_types_agent_line_allocation_proto_goTypes = []any{
-	(*AgentLineAllocationInfo)(nil),          // 0: agentlineallocation.AgentLineAllocationInfo
-	(*ListAgentLineAllocationsRequest)(nil),  // 1: agentlineallocation.ListAgentLineAllocationsRequest
-	(*ListAgentLineAllocationsResponse)(nil), // 2: agentlineallocation.ListAgentLineAllocationsResponse
-	(*SaveAgentLineAllocationsRequest)(nil),  // 3: agentlineallocation.SaveAgentLineAllocationsRequest
-	(*SaveAgentLineAllocationsResponse)(nil), // 4: agentlineallocation.SaveAgentLineAllocationsResponse
+	(*AgentLineAllocationInfo)(nil),          // 0: agent_line_allocation.AgentLineAllocationInfo
+	(*ListAgentLineAllocationsRequest)(nil),  // 1: agent_line_allocation.ListAgentLineAllocationsRequest
+	(*ListAgentLineAllocationsResponse)(nil), // 2: agent_line_allocation.ListAgentLineAllocationsResponse
+	(*SaveAgentLineAllocationsRequest)(nil),  // 3: agent_line_allocation.SaveAgentLineAllocationsRequest
+	(*SaveAgentLineAllocationsResponse)(nil), // 4: agent_line_allocation.SaveAgentLineAllocationsResponse
 }
 var file_types_agent_line_allocation_proto_depIdxs = []int32{
-	0, // 0: agentlineallocation.ListAgentLineAllocationsResponse.list:type_name -> agentlineallocation.AgentLineAllocationInfo
+	0, // 0: agent_line_allocation.ListAgentLineAllocationsResponse.list:type_name -> agent_line_allocation.AgentLineAllocationInfo
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name

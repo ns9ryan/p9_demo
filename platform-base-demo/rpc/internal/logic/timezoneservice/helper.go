@@ -12,6 +12,6 @@ func toTimezoneInfo(data *ent.Timezone) *timezonepb.TimezoneInfo {
 		Code:    data.Code,    // IANA时区编码
 		NameKey: data.NameKey, // 名称翻译Key
 		Status:  data.Status,  // 状态: 1启用, 2停用
-		SortNo:  data.SortNo,  // 排序值
+		SortNo:  data.SortNo,  // 排序值, 数值越小越靠前
 	}
 }

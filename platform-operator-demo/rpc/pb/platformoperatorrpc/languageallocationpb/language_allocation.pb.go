@@ -4,7 +4,7 @@
 // 	protoc        v6.32.0
 // source: types/language_allocation.proto
 
-package languageallocation
+package languageallocationpb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -318,7 +318,7 @@ var File_types_language_allocation_proto protoreflect.FileDescriptor
 
 const file_types_language_allocation_proto_rawDesc = "" +
 	"\n" +
-	"\x1ftypes/language_allocation.proto\x12\x12languageallocation\"\x8d\x01\n" +
+	"\x1ftypes/language_allocation.proto\x12\x13language_allocation\"\x8d\x01\n" +
 	"\x16LanguageAllocationInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\x03R\n" +
@@ -332,15 +332,15 @@ const file_types_language_allocation_proto_rawDesc = "" +
 	"\voperator_id\x18\x03 \x01(\x03R\n" +
 	"operatorId\x12(\n" +
 	"\rlanguage_code\x18\x04 \x01(\tH\x00R\flanguageCode\x88\x01\x01B\x10\n" +
-	"\x0e_language_code\"w\n" +
+	"\x0e_language_code\"x\n" +
 	"\x1fListLanguageAllocationsResponse\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x03R\x05total\x12>\n" +
-	"\x04list\x18\x02 \x03(\v2*.languageallocation.LanguageAllocationInfoR\x04list\"h\n" +
+	"\x05total\x18\x01 \x01(\x03R\x05total\x12?\n" +
+	"\x04list\x18\x02 \x03(\v2+.language_allocation.LanguageAllocationInfoR\x04list\"h\n" +
 	"\x1eSaveLanguageAllocationsRequest\x12\x1f\n" +
 	"\voperator_id\x18\x01 \x01(\x03R\n" +
 	"operatorId\x12%\n" +
 	"\x0elanguage_codes\x18\x02 \x03(\tR\rlanguageCodes\"!\n" +
-	"\x1fSaveLanguageAllocationsResponseBFZDoa.98ent.com/p9/platform-operator/rpc/pb/operator/languageallocationb\x06proto3"
+	"\x1fSaveLanguageAllocationsResponseBSZQoa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/languageallocationpbb\x06proto3"
 
 var (
 	file_types_language_allocation_proto_rawDescOnce sync.Once
@@ -356,14 +356,14 @@ func file_types_language_allocation_proto_rawDescGZIP() []byte {
 
 var file_types_language_allocation_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_types_language_allocation_proto_goTypes = []any{
-	(*LanguageAllocationInfo)(nil),          // 0: languageallocation.LanguageAllocationInfo
-	(*ListLanguageAllocationsRequest)(nil),  // 1: languageallocation.ListLanguageAllocationsRequest
-	(*ListLanguageAllocationsResponse)(nil), // 2: languageallocation.ListLanguageAllocationsResponse
-	(*SaveLanguageAllocationsRequest)(nil),  // 3: languageallocation.SaveLanguageAllocationsRequest
-	(*SaveLanguageAllocationsResponse)(nil), // 4: languageallocation.SaveLanguageAllocationsResponse
+	(*LanguageAllocationInfo)(nil),          // 0: language_allocation.LanguageAllocationInfo
+	(*ListLanguageAllocationsRequest)(nil),  // 1: language_allocation.ListLanguageAllocationsRequest
+	(*ListLanguageAllocationsResponse)(nil), // 2: language_allocation.ListLanguageAllocationsResponse
+	(*SaveLanguageAllocationsRequest)(nil),  // 3: language_allocation.SaveLanguageAllocationsRequest
+	(*SaveLanguageAllocationsResponse)(nil), // 4: language_allocation.SaveLanguageAllocationsResponse
 }
 var file_types_language_allocation_proto_depIdxs = []int32{
-	0, // 0: languageallocation.ListLanguageAllocationsResponse.list:type_name -> languageallocation.LanguageAllocationInfo
+	0, // 0: language_allocation.ListLanguageAllocationsResponse.list:type_name -> language_allocation.LanguageAllocationInfo
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name

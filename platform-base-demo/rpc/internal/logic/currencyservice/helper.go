@@ -13,8 +13,8 @@ func toCurrencyInfo(data *ent.Currency) *currencypb.CurrencyInfo {
 		NameKey:      data.NameKey,      // 名称翻译Key
 		CurrencyType: data.CurrencyType, // 货币类型: 1法定货币, 2虚拟货币
 		Symbol:       data.Symbol,       // 货币符号
-		AmountFactor: data.AmountFactor, // 金额换算倍率
+		AmountFactor: data.AmountFactor, // 金额换算倍率, 如 USD=100, VND=1
 		Status:       data.Status,       // 状态: 1启用, 2停用
-		SortNo:       data.SortNo,       // 排序值
+		SortNo:       data.SortNo,       // 排序值, 数值越小越靠前
 	}
 }

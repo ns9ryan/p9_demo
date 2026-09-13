@@ -4,15 +4,15 @@ import (
 	"context"
 	"strings"
 
-	"entgo.io/ent/dialect/sql"
-	"github.com/zeromicro/go-zero/core/logx"
-
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
 	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatorlanguageallocation"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/languageallocation"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/languageallocationpb"
+
+	"entgo.io/ent/dialect/sql"
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type ListLogic struct {
@@ -30,7 +30,7 @@ func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {
 }
 
 // List 获取语言分配列表
-func (l *ListLogic) List(in *languageallocation.ListLanguageAllocationsRequest) (*languageallocation.ListLanguageAllocationsResponse, error) {
+func (l *ListLogic) List(in *languageallocationpb.ListLanguageAllocationsRequest) (*languageallocationpb.ListLanguageAllocationsResponse, error) {
 	// 校验分页参数
 	if in.Page < 1 || in.PageSize < 1 || in.PageSize > 100 {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -86,13 +86,13 @@ func (l *ListLogic) List(in *languageallocation.ListLanguageAllocationsRequest) 
 	}
 
 	// 转换语言分配列表
-	list := make([]*languageallocation.LanguageAllocationInfo, 0, len(results))
+	list := make([]*languageallocationpb.LanguageAllocationInfo, 0, len(results))
 	for _, result := range results {
 		list = append(list, toLanguageAllocationInfo(result))
 	}
 
 	// 返回语言分配列表
-	return &languageallocation.ListLanguageAllocationsResponse{
+	return &languageallocationpb.ListLanguageAllocationsResponse{
 		Total: int64(total), // 数据总数
 		List:  list,         // 语言分配列表
 	}, nil

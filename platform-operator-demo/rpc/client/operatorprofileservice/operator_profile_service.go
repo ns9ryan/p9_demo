@@ -7,9 +7,9 @@ package operatorprofileservice
 import (
 	"context"
 
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc"
 
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/profile"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/profilepb"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
@@ -18,11 +18,11 @@ import (
 type (
 	OperatorProfileService interface {
 		// 创建分站档案
-		Create(ctx context.Context, in *profile.CreateOperatorProfileRequest, opts ...grpc.CallOption) (*profile.CreateOperatorProfileResponse, error)
+		Create(ctx context.Context, in *profilepb.CreateOperatorProfileRequest, opts ...grpc.CallOption) (*profilepb.CreateOperatorProfileResponse, error)
 		// 修改分站档案
-		Update(ctx context.Context, in *profile.UpdateOperatorProfileRequest, opts ...grpc.CallOption) (*profile.UpdateOperatorProfileResponse, error)
+		Update(ctx context.Context, in *profilepb.UpdateOperatorProfileRequest, opts ...grpc.CallOption) (*profilepb.UpdateOperatorProfileResponse, error)
 		// 获取分站档案
-		Get(ctx context.Context, in *profile.GetOperatorProfileRequest, opts ...grpc.CallOption) (*profile.GetOperatorProfileResponse, error)
+		Get(ctx context.Context, in *profilepb.GetOperatorProfileRequest, opts ...grpc.CallOption) (*profilepb.GetOperatorProfileResponse, error)
 	}
 
 	defaultOperatorProfileService struct {
@@ -37,19 +37,19 @@ func NewOperatorProfileService(cli zrpc.Client) OperatorProfileService {
 }
 
 // 创建分站档案
-func (m *defaultOperatorProfileService) Create(ctx context.Context, in *profile.CreateOperatorProfileRequest, opts ...grpc.CallOption) (*profile.CreateOperatorProfileResponse, error) {
-	client := operator.NewOperatorProfileServiceClient(m.cli.Conn())
+func (m *defaultOperatorProfileService) Create(ctx context.Context, in *profilepb.CreateOperatorProfileRequest, opts ...grpc.CallOption) (*profilepb.CreateOperatorProfileResponse, error) {
+	client := platformoperatorrpc.NewOperatorProfileServiceClient(m.cli.Conn())
 	return client.Create(ctx, in, opts...)
 }
 
 // 修改分站档案
-func (m *defaultOperatorProfileService) Update(ctx context.Context, in *profile.UpdateOperatorProfileRequest, opts ...grpc.CallOption) (*profile.UpdateOperatorProfileResponse, error) {
-	client := operator.NewOperatorProfileServiceClient(m.cli.Conn())
+func (m *defaultOperatorProfileService) Update(ctx context.Context, in *profilepb.UpdateOperatorProfileRequest, opts ...grpc.CallOption) (*profilepb.UpdateOperatorProfileResponse, error) {
+	client := platformoperatorrpc.NewOperatorProfileServiceClient(m.cli.Conn())
 	return client.Update(ctx, in, opts...)
 }
 
 // 获取分站档案
-func (m *defaultOperatorProfileService) Get(ctx context.Context, in *profile.GetOperatorProfileRequest, opts ...grpc.CallOption) (*profile.GetOperatorProfileResponse, error) {
-	client := operator.NewOperatorProfileServiceClient(m.cli.Conn())
+func (m *defaultOperatorProfileService) Get(ctx context.Context, in *profilepb.GetOperatorProfileRequest, opts ...grpc.CallOption) (*profilepb.GetOperatorProfileResponse, error) {
+	client := platformoperatorrpc.NewOperatorProfileServiceClient(m.cli.Conn())
 	return client.Get(ctx, in, opts...)
 }

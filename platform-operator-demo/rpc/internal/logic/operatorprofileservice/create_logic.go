@@ -3,13 +3,13 @@ package operatorprofileservicelogic
 import (
 	"context"
 
-	"github.com/zeromicro/go-zero/core/logx"
-
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
 	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/profile"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/profilepb"
+
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type CreateLogic struct {
@@ -27,7 +27,7 @@ func NewCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateLogi
 }
 
 // Create 创建分站档案
-func (l *CreateLogic) Create(in *profile.CreateOperatorProfileRequest) (*profile.CreateOperatorProfileResponse, error) {
+func (l *CreateLogic) Create(in *profilepb.CreateOperatorProfileRequest) (*profilepb.CreateOperatorProfileResponse, error) {
 	// 分站ID必须大于0
 	if in.OperatorId <= 0 {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -55,7 +55,7 @@ func (l *CreateLogic) Create(in *profile.CreateOperatorProfileRequest) (*profile
 	}
 
 	// 返回创建结果
-	return &profile.CreateOperatorProfileResponse{
+	return &profilepb.CreateOperatorProfileResponse{
 		Id: data.ID, // 档案ID
 	}, nil
 }

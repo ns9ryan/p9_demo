@@ -9,13 +9,13 @@ import (
 
 	"oa.98ent.com/p9/platform-operator/rpc/internal/logic/basicresourceallocationservice"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/basicresourceallocation"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/basicresourceallocationpb"
 )
 
 type BasicResourceAllocationServiceServer struct {
 	svcCtx *svc.ServiceContext
-	operator.UnimplementedBasicResourceAllocationServiceServer
+	platformoperatorrpc.UnimplementedBasicResourceAllocationServiceServer
 }
 
 func NewBasicResourceAllocationServiceServer(svcCtx *svc.ServiceContext) *BasicResourceAllocationServiceServer {
@@ -25,7 +25,7 @@ func NewBasicResourceAllocationServiceServer(svcCtx *svc.ServiceContext) *BasicR
 }
 
 // 获取基础资源分配列表
-func (s *BasicResourceAllocationServiceServer) List(ctx context.Context, in *basicresourceallocation.ListBasicResourceAllocationsRequest) (*basicresourceallocation.ListBasicResourceAllocationsResponse, error) {
+func (s *BasicResourceAllocationServiceServer) List(ctx context.Context, in *basicresourceallocationpb.ListBasicResourceAllocationsRequest) (*basicresourceallocationpb.ListBasicResourceAllocationsResponse, error) {
 	l := basicresourceallocationservicelogic.NewListLogic(ctx, s.svcCtx)
 	return l.List(in)
 }

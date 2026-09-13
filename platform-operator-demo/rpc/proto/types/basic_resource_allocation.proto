@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package basicresourceallocation;
+package basic_resource_allocation;
 
-option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/operator/basicresourceallocation";
+option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/basicresourceallocationpb";
 
 // 基础资源分配汇总信息
 message BasicResourceAllocationInfo {
