@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package ping;
 
-option go_package = "oa.98ent.com/p9/platform-base/rpc/pb/base/ping";
+option go_package = "oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/pingpb";
 
 // Ping 请求
 message PingRequest {}

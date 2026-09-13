@@ -8,7 +8,7 @@ import (
 	entregion "oa.98ent.com/p9/platform-base/rpc/ent/region"
 	"oa.98ent.com/p9/platform-base/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-base/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/region"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/regionpb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -28,7 +28,7 @@ func NewListAllLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListAllLo
 }
 
 // ListAll 获取全部国家地区
-func (l *ListAllLogic) ListAll(in *region.ListAllRegionsRequest) (*region.ListAllRegionsResponse, error) {
+func (l *ListAllLogic) ListAll(in *regionpb.ListAllRegionsRequest) (*regionpb.ListAllRegionsResponse, error) {
 	// 校验状态
 	if in.Status != nil && (*in.Status < 1 || *in.Status > 2) {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -55,12 +55,12 @@ func (l *ListAllLogic) ListAll(in *region.ListAllRegionsRequest) (*region.ListAl
 	}
 
 	// 转换国家地区列表
-	list := make([]*region.RegionInfo, 0, len(results))
+	list := make([]*regionpb.RegionInfo, 0, len(results))
 	for _, result := range results {
 		list = append(list, toRegionInfo(result))
 	}
 
-	return &region.ListAllRegionsResponse{
-		List: list,
+	return &regionpb.ListAllRegionsResponse{
+		List: list, // 国家地区列表
 	}, nil
 }

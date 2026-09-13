@@ -7,9 +7,9 @@ package timezoneservice
 import (
 	"context"
 
-	"oa.98ent.com/p9/platform-base/rpc/pb/base"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc"
 
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/timezone"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/timezonepb"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
@@ -18,17 +18,17 @@ import (
 type (
 	TimezoneService interface {
 		// 修改时区
-		Update(ctx context.Context, in *timezone.UpdateTimezoneRequest, opts ...grpc.CallOption) (*timezone.UpdateTimezoneResponse, error)
+		Update(ctx context.Context, in *timezonepb.UpdateTimezoneRequest, opts ...grpc.CallOption) (*timezonepb.UpdateTimezoneResponse, error)
 		// 获取时区
-		Get(ctx context.Context, in *timezone.GetTimezoneRequest, opts ...grpc.CallOption) (*timezone.GetTimezoneResponse, error)
+		Get(ctx context.Context, in *timezonepb.GetTimezoneRequest, opts ...grpc.CallOption) (*timezonepb.GetTimezoneResponse, error)
 		// 按编码获取时区
-		GetByCode(ctx context.Context, in *timezone.GetTimezoneByCodeRequest, opts ...grpc.CallOption) (*timezone.GetTimezoneByCodeResponse, error)
+		GetByCode(ctx context.Context, in *timezonepb.GetTimezoneByCodeRequest, opts ...grpc.CallOption) (*timezonepb.GetTimezoneByCodeResponse, error)
 		// 获取时区管理列表
-		List(ctx context.Context, in *timezone.ListTimezonesRequest, opts ...grpc.CallOption) (*timezone.ListTimezonesResponse, error)
+		List(ctx context.Context, in *timezonepb.ListTimezonesRequest, opts ...grpc.CallOption) (*timezonepb.ListTimezonesResponse, error)
 		// 获取全部时区
-		ListAll(ctx context.Context, in *timezone.ListAllTimezonesRequest, opts ...grpc.CallOption) (*timezone.ListAllTimezonesResponse, error)
+		ListAll(ctx context.Context, in *timezonepb.ListAllTimezonesRequest, opts ...grpc.CallOption) (*timezonepb.ListAllTimezonesResponse, error)
 		// 调整时区排序
-		Reorder(ctx context.Context, in *timezone.ReorderTimezoneRequest, opts ...grpc.CallOption) (*timezone.ReorderTimezoneResponse, error)
+		Reorder(ctx context.Context, in *timezonepb.ReorderTimezoneRequest, opts ...grpc.CallOption) (*timezonepb.ReorderTimezoneResponse, error)
 	}
 
 	defaultTimezoneService struct {
@@ -43,37 +43,37 @@ func NewTimezoneService(cli zrpc.Client) TimezoneService {
 }
 
 // 修改时区
-func (m *defaultTimezoneService) Update(ctx context.Context, in *timezone.UpdateTimezoneRequest, opts ...grpc.CallOption) (*timezone.UpdateTimezoneResponse, error) {
-	client := base.NewTimezoneServiceClient(m.cli.Conn())
+func (m *defaultTimezoneService) Update(ctx context.Context, in *timezonepb.UpdateTimezoneRequest, opts ...grpc.CallOption) (*timezonepb.UpdateTimezoneResponse, error) {
+	client := platformbaserpc.NewTimezoneServiceClient(m.cli.Conn())
 	return client.Update(ctx, in, opts...)
 }
 
 // 获取时区
-func (m *defaultTimezoneService) Get(ctx context.Context, in *timezone.GetTimezoneRequest, opts ...grpc.CallOption) (*timezone.GetTimezoneResponse, error) {
-	client := base.NewTimezoneServiceClient(m.cli.Conn())
+func (m *defaultTimezoneService) Get(ctx context.Context, in *timezonepb.GetTimezoneRequest, opts ...grpc.CallOption) (*timezonepb.GetTimezoneResponse, error) {
+	client := platformbaserpc.NewTimezoneServiceClient(m.cli.Conn())
 	return client.Get(ctx, in, opts...)
 }
 
 // 按编码获取时区
-func (m *defaultTimezoneService) GetByCode(ctx context.Context, in *timezone.GetTimezoneByCodeRequest, opts ...grpc.CallOption) (*timezone.GetTimezoneByCodeResponse, error) {
-	client := base.NewTimezoneServiceClient(m.cli.Conn())
+func (m *defaultTimezoneService) GetByCode(ctx context.Context, in *timezonepb.GetTimezoneByCodeRequest, opts ...grpc.CallOption) (*timezonepb.GetTimezoneByCodeResponse, error) {
+	client := platformbaserpc.NewTimezoneServiceClient(m.cli.Conn())
 	return client.GetByCode(ctx, in, opts...)
 }
 
 // 获取时区管理列表
-func (m *defaultTimezoneService) List(ctx context.Context, in *timezone.ListTimezonesRequest, opts ...grpc.CallOption) (*timezone.ListTimezonesResponse, error) {
-	client := base.NewTimezoneServiceClient(m.cli.Conn())
+func (m *defaultTimezoneService) List(ctx context.Context, in *timezonepb.ListTimezonesRequest, opts ...grpc.CallOption) (*timezonepb.ListTimezonesResponse, error) {
+	client := platformbaserpc.NewTimezoneServiceClient(m.cli.Conn())
 	return client.List(ctx, in, opts...)
 }
 
 // 获取全部时区
-func (m *defaultTimezoneService) ListAll(ctx context.Context, in *timezone.ListAllTimezonesRequest, opts ...grpc.CallOption) (*timezone.ListAllTimezonesResponse, error) {
-	client := base.NewTimezoneServiceClient(m.cli.Conn())
+func (m *defaultTimezoneService) ListAll(ctx context.Context, in *timezonepb.ListAllTimezonesRequest, opts ...grpc.CallOption) (*timezonepb.ListAllTimezonesResponse, error) {
+	client := platformbaserpc.NewTimezoneServiceClient(m.cli.Conn())
 	return client.ListAll(ctx, in, opts...)
 }
 
 // 调整时区排序
-func (m *defaultTimezoneService) Reorder(ctx context.Context, in *timezone.ReorderTimezoneRequest, opts ...grpc.CallOption) (*timezone.ReorderTimezoneResponse, error) {
-	client := base.NewTimezoneServiceClient(m.cli.Conn())
+func (m *defaultTimezoneService) Reorder(ctx context.Context, in *timezonepb.ReorderTimezoneRequest, opts ...grpc.CallOption) (*timezonepb.ReorderTimezoneResponse, error) {
+	client := platformbaserpc.NewTimezoneServiceClient(m.cli.Conn())
 	return client.Reorder(ctx, in, opts...)
 }

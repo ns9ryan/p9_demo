@@ -7,7 +7,7 @@ import (
 	"oa.98ent.com/p9/platform-base/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-base/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-base/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/region"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/regionpb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,7 +27,7 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 }
 
 // Get 获取国家地区
-func (l *GetLogic) Get(in *region.GetRegionRequest) (*region.GetRegionResponse, error) {
+func (l *GetLogic) Get(in *regionpb.GetRegionRequest) (*regionpb.GetRegionResponse, error) {
 	// 国家地区ID必须大于0
 	if in.Id <= 0 {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -40,7 +40,8 @@ func (l *GetLogic) Get(in *region.GetRegionRequest) (*region.GetRegionResponse, 
 		return nil, enterror.Handle(l.Logger, err)
 	}
 
-	return &region.GetRegionResponse{
-		Region: toRegionInfo(result),
+	// 返回国家地区信息
+	return &regionpb.GetRegionResponse{
+		Region: toRegionInfo(result), // 国家地区信息
 	}, nil
 }

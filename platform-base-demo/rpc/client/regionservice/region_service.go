@@ -7,9 +7,9 @@ package regionservice
 import (
 	"context"
 
-	"oa.98ent.com/p9/platform-base/rpc/pb/base"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc"
 
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/region"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/regionpb"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
@@ -18,17 +18,17 @@ import (
 type (
 	RegionService interface {
 		// 修改国家地区
-		Update(ctx context.Context, in *region.UpdateRegionRequest, opts ...grpc.CallOption) (*region.UpdateRegionResponse, error)
+		Update(ctx context.Context, in *regionpb.UpdateRegionRequest, opts ...grpc.CallOption) (*regionpb.UpdateRegionResponse, error)
 		// 获取国家地区
-		Get(ctx context.Context, in *region.GetRegionRequest, opts ...grpc.CallOption) (*region.GetRegionResponse, error)
+		Get(ctx context.Context, in *regionpb.GetRegionRequest, opts ...grpc.CallOption) (*regionpb.GetRegionResponse, error)
 		// 按编码获取国家地区
-		GetByCode(ctx context.Context, in *region.GetRegionByCodeRequest, opts ...grpc.CallOption) (*region.GetRegionByCodeResponse, error)
+		GetByCode(ctx context.Context, in *regionpb.GetRegionByCodeRequest, opts ...grpc.CallOption) (*regionpb.GetRegionByCodeResponse, error)
 		// 获取国家地区管理列表
-		List(ctx context.Context, in *region.ListRegionsRequest, opts ...grpc.CallOption) (*region.ListRegionsResponse, error)
+		List(ctx context.Context, in *regionpb.ListRegionsRequest, opts ...grpc.CallOption) (*regionpb.ListRegionsResponse, error)
 		// 获取全部国家地区
-		ListAll(ctx context.Context, in *region.ListAllRegionsRequest, opts ...grpc.CallOption) (*region.ListAllRegionsResponse, error)
+		ListAll(ctx context.Context, in *regionpb.ListAllRegionsRequest, opts ...grpc.CallOption) (*regionpb.ListAllRegionsResponse, error)
 		// 调整国家地区排序
-		Reorder(ctx context.Context, in *region.ReorderRegionRequest, opts ...grpc.CallOption) (*region.ReorderRegionResponse, error)
+		Reorder(ctx context.Context, in *regionpb.ReorderRegionRequest, opts ...grpc.CallOption) (*regionpb.ReorderRegionResponse, error)
 	}
 
 	defaultRegionService struct {
@@ -43,37 +43,37 @@ func NewRegionService(cli zrpc.Client) RegionService {
 }
 
 // 修改国家地区
-func (m *defaultRegionService) Update(ctx context.Context, in *region.UpdateRegionRequest, opts ...grpc.CallOption) (*region.UpdateRegionResponse, error) {
-	client := base.NewRegionServiceClient(m.cli.Conn())
+func (m *defaultRegionService) Update(ctx context.Context, in *regionpb.UpdateRegionRequest, opts ...grpc.CallOption) (*regionpb.UpdateRegionResponse, error) {
+	client := platformbaserpc.NewRegionServiceClient(m.cli.Conn())
 	return client.Update(ctx, in, opts...)
 }
 
 // 获取国家地区
-func (m *defaultRegionService) Get(ctx context.Context, in *region.GetRegionRequest, opts ...grpc.CallOption) (*region.GetRegionResponse, error) {
-	client := base.NewRegionServiceClient(m.cli.Conn())
+func (m *defaultRegionService) Get(ctx context.Context, in *regionpb.GetRegionRequest, opts ...grpc.CallOption) (*regionpb.GetRegionResponse, error) {
+	client := platformbaserpc.NewRegionServiceClient(m.cli.Conn())
 	return client.Get(ctx, in, opts...)
 }
 
 // 按编码获取国家地区
-func (m *defaultRegionService) GetByCode(ctx context.Context, in *region.GetRegionByCodeRequest, opts ...grpc.CallOption) (*region.GetRegionByCodeResponse, error) {
-	client := base.NewRegionServiceClient(m.cli.Conn())
+func (m *defaultRegionService) GetByCode(ctx context.Context, in *regionpb.GetRegionByCodeRequest, opts ...grpc.CallOption) (*regionpb.GetRegionByCodeResponse, error) {
+	client := platformbaserpc.NewRegionServiceClient(m.cli.Conn())
 	return client.GetByCode(ctx, in, opts...)
 }
 
 // 获取国家地区管理列表
-func (m *defaultRegionService) List(ctx context.Context, in *region.ListRegionsRequest, opts ...grpc.CallOption) (*region.ListRegionsResponse, error) {
-	client := base.NewRegionServiceClient(m.cli.Conn())
+func (m *defaultRegionService) List(ctx context.Context, in *regionpb.ListRegionsRequest, opts ...grpc.CallOption) (*regionpb.ListRegionsResponse, error) {
+	client := platformbaserpc.NewRegionServiceClient(m.cli.Conn())
 	return client.List(ctx, in, opts...)
 }
 
 // 获取全部国家地区
-func (m *defaultRegionService) ListAll(ctx context.Context, in *region.ListAllRegionsRequest, opts ...grpc.CallOption) (*region.ListAllRegionsResponse, error) {
-	client := base.NewRegionServiceClient(m.cli.Conn())
+func (m *defaultRegionService) ListAll(ctx context.Context, in *regionpb.ListAllRegionsRequest, opts ...grpc.CallOption) (*regionpb.ListAllRegionsResponse, error) {
+	client := platformbaserpc.NewRegionServiceClient(m.cli.Conn())
 	return client.ListAll(ctx, in, opts...)
 }
 
 // 调整国家地区排序
-func (m *defaultRegionService) Reorder(ctx context.Context, in *region.ReorderRegionRequest, opts ...grpc.CallOption) (*region.ReorderRegionResponse, error) {
-	client := base.NewRegionServiceClient(m.cli.Conn())
+func (m *defaultRegionService) Reorder(ctx context.Context, in *regionpb.ReorderRegionRequest, opts ...grpc.CallOption) (*regionpb.ReorderRegionResponse, error) {
+	client := platformbaserpc.NewRegionServiceClient(m.cli.Conn())
 	return client.Reorder(ctx, in, opts...)
 }

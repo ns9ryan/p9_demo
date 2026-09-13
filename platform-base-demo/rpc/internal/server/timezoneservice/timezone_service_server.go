@@ -9,13 +9,13 @@ import (
 
 	"oa.98ent.com/p9/platform-base/rpc/internal/logic/timezoneservice"
 	"oa.98ent.com/p9/platform-base/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/timezone"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/timezonepb"
 )
 
 type TimezoneServiceServer struct {
 	svcCtx *svc.ServiceContext
-	base.UnimplementedTimezoneServiceServer
+	platformbaserpc.UnimplementedTimezoneServiceServer
 }
 
 func NewTimezoneServiceServer(svcCtx *svc.ServiceContext) *TimezoneServiceServer {
@@ -25,37 +25,37 @@ func NewTimezoneServiceServer(svcCtx *svc.ServiceContext) *TimezoneServiceServer
 }
 
 // 修改时区
-func (s *TimezoneServiceServer) Update(ctx context.Context, in *timezone.UpdateTimezoneRequest) (*timezone.UpdateTimezoneResponse, error) {
+func (s *TimezoneServiceServer) Update(ctx context.Context, in *timezonepb.UpdateTimezoneRequest) (*timezonepb.UpdateTimezoneResponse, error) {
 	l := timezoneservicelogic.NewUpdateLogic(ctx, s.svcCtx)
 	return l.Update(in)
 }
 
 // 获取时区
-func (s *TimezoneServiceServer) Get(ctx context.Context, in *timezone.GetTimezoneRequest) (*timezone.GetTimezoneResponse, error) {
+func (s *TimezoneServiceServer) Get(ctx context.Context, in *timezonepb.GetTimezoneRequest) (*timezonepb.GetTimezoneResponse, error) {
 	l := timezoneservicelogic.NewGetLogic(ctx, s.svcCtx)
 	return l.Get(in)
 }
 
 // 按编码获取时区
-func (s *TimezoneServiceServer) GetByCode(ctx context.Context, in *timezone.GetTimezoneByCodeRequest) (*timezone.GetTimezoneByCodeResponse, error) {
+func (s *TimezoneServiceServer) GetByCode(ctx context.Context, in *timezonepb.GetTimezoneByCodeRequest) (*timezonepb.GetTimezoneByCodeResponse, error) {
 	l := timezoneservicelogic.NewGetByCodeLogic(ctx, s.svcCtx)
 	return l.GetByCode(in)
 }
 
 // 获取时区管理列表
-func (s *TimezoneServiceServer) List(ctx context.Context, in *timezone.ListTimezonesRequest) (*timezone.ListTimezonesResponse, error) {
+func (s *TimezoneServiceServer) List(ctx context.Context, in *timezonepb.ListTimezonesRequest) (*timezonepb.ListTimezonesResponse, error) {
 	l := timezoneservicelogic.NewListLogic(ctx, s.svcCtx)
 	return l.List(in)
 }
 
 // 获取全部时区
-func (s *TimezoneServiceServer) ListAll(ctx context.Context, in *timezone.ListAllTimezonesRequest) (*timezone.ListAllTimezonesResponse, error) {
+func (s *TimezoneServiceServer) ListAll(ctx context.Context, in *timezonepb.ListAllTimezonesRequest) (*timezonepb.ListAllTimezonesResponse, error) {
 	l := timezoneservicelogic.NewListAllLogic(ctx, s.svcCtx)
 	return l.ListAll(in)
 }
 
 // 调整时区排序
-func (s *TimezoneServiceServer) Reorder(ctx context.Context, in *timezone.ReorderTimezoneRequest) (*timezone.ReorderTimezoneResponse, error) {
+func (s *TimezoneServiceServer) Reorder(ctx context.Context, in *timezonepb.ReorderTimezoneRequest) (*timezonepb.ReorderTimezoneResponse, error) {
 	l := timezoneservicelogic.NewReorderLogic(ctx, s.svcCtx)
 	return l.Reorder(in)
 }

@@ -9,13 +9,13 @@ import (
 
 	"oa.98ent.com/p9/platform-base/rpc/internal/logic/currencyservice"
 	"oa.98ent.com/p9/platform-base/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/currency"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/currencypb"
 )
 
 type CurrencyServiceServer struct {
 	svcCtx *svc.ServiceContext
-	base.UnimplementedCurrencyServiceServer
+	platformbaserpc.UnimplementedCurrencyServiceServer
 }
 
 func NewCurrencyServiceServer(svcCtx *svc.ServiceContext) *CurrencyServiceServer {
@@ -25,37 +25,37 @@ func NewCurrencyServiceServer(svcCtx *svc.ServiceContext) *CurrencyServiceServer
 }
 
 // 修改货币
-func (s *CurrencyServiceServer) Update(ctx context.Context, in *currency.UpdateCurrencyRequest) (*currency.UpdateCurrencyResponse, error) {
+func (s *CurrencyServiceServer) Update(ctx context.Context, in *currencypb.UpdateCurrencyRequest) (*currencypb.UpdateCurrencyResponse, error) {
 	l := currencyservicelogic.NewUpdateLogic(ctx, s.svcCtx)
 	return l.Update(in)
 }
 
 // 获取货币
-func (s *CurrencyServiceServer) Get(ctx context.Context, in *currency.GetCurrencyRequest) (*currency.GetCurrencyResponse, error) {
+func (s *CurrencyServiceServer) Get(ctx context.Context, in *currencypb.GetCurrencyRequest) (*currencypb.GetCurrencyResponse, error) {
 	l := currencyservicelogic.NewGetLogic(ctx, s.svcCtx)
 	return l.Get(in)
 }
 
 // 按编码获取货币
-func (s *CurrencyServiceServer) GetByCode(ctx context.Context, in *currency.GetCurrencyByCodeRequest) (*currency.GetCurrencyByCodeResponse, error) {
+func (s *CurrencyServiceServer) GetByCode(ctx context.Context, in *currencypb.GetCurrencyByCodeRequest) (*currencypb.GetCurrencyByCodeResponse, error) {
 	l := currencyservicelogic.NewGetByCodeLogic(ctx, s.svcCtx)
 	return l.GetByCode(in)
 }
 
 // 获取货币管理列表
-func (s *CurrencyServiceServer) List(ctx context.Context, in *currency.ListCurrenciesRequest) (*currency.ListCurrenciesResponse, error) {
+func (s *CurrencyServiceServer) List(ctx context.Context, in *currencypb.ListCurrenciesRequest) (*currencypb.ListCurrenciesResponse, error) {
 	l := currencyservicelogic.NewListLogic(ctx, s.svcCtx)
 	return l.List(in)
 }
 
 // 获取全部货币
-func (s *CurrencyServiceServer) ListAll(ctx context.Context, in *currency.ListAllCurrenciesRequest) (*currency.ListAllCurrenciesResponse, error) {
+func (s *CurrencyServiceServer) ListAll(ctx context.Context, in *currencypb.ListAllCurrenciesRequest) (*currencypb.ListAllCurrenciesResponse, error) {
 	l := currencyservicelogic.NewListAllLogic(ctx, s.svcCtx)
 	return l.ListAll(in)
 }
 
 // 调整货币排序
-func (s *CurrencyServiceServer) Reorder(ctx context.Context, in *currency.ReorderCurrencyRequest) (*currency.ReorderCurrencyResponse, error) {
+func (s *CurrencyServiceServer) Reorder(ctx context.Context, in *currencypb.ReorderCurrencyRequest) (*currencypb.ReorderCurrencyResponse, error) {
 	l := currencyservicelogic.NewReorderLogic(ctx, s.svcCtx)
 	return l.Reorder(in)
 }

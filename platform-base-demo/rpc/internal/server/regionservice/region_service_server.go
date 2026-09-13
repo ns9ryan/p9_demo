@@ -9,13 +9,13 @@ import (
 
 	"oa.98ent.com/p9/platform-base/rpc/internal/logic/regionservice"
 	"oa.98ent.com/p9/platform-base/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/region"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/regionpb"
 )
 
 type RegionServiceServer struct {
 	svcCtx *svc.ServiceContext
-	base.UnimplementedRegionServiceServer
+	platformbaserpc.UnimplementedRegionServiceServer
 }
 
 func NewRegionServiceServer(svcCtx *svc.ServiceContext) *RegionServiceServer {
@@ -25,37 +25,37 @@ func NewRegionServiceServer(svcCtx *svc.ServiceContext) *RegionServiceServer {
 }
 
 // 修改国家地区
-func (s *RegionServiceServer) Update(ctx context.Context, in *region.UpdateRegionRequest) (*region.UpdateRegionResponse, error) {
+func (s *RegionServiceServer) Update(ctx context.Context, in *regionpb.UpdateRegionRequest) (*regionpb.UpdateRegionResponse, error) {
 	l := regionservicelogic.NewUpdateLogic(ctx, s.svcCtx)
 	return l.Update(in)
 }
 
 // 获取国家地区
-func (s *RegionServiceServer) Get(ctx context.Context, in *region.GetRegionRequest) (*region.GetRegionResponse, error) {
+func (s *RegionServiceServer) Get(ctx context.Context, in *regionpb.GetRegionRequest) (*regionpb.GetRegionResponse, error) {
 	l := regionservicelogic.NewGetLogic(ctx, s.svcCtx)
 	return l.Get(in)
 }
 
 // 按编码获取国家地区
-func (s *RegionServiceServer) GetByCode(ctx context.Context, in *region.GetRegionByCodeRequest) (*region.GetRegionByCodeResponse, error) {
+func (s *RegionServiceServer) GetByCode(ctx context.Context, in *regionpb.GetRegionByCodeRequest) (*regionpb.GetRegionByCodeResponse, error) {
 	l := regionservicelogic.NewGetByCodeLogic(ctx, s.svcCtx)
 	return l.GetByCode(in)
 }
 
 // 获取国家地区管理列表
-func (s *RegionServiceServer) List(ctx context.Context, in *region.ListRegionsRequest) (*region.ListRegionsResponse, error) {
+func (s *RegionServiceServer) List(ctx context.Context, in *regionpb.ListRegionsRequest) (*regionpb.ListRegionsResponse, error) {
 	l := regionservicelogic.NewListLogic(ctx, s.svcCtx)
 	return l.List(in)
 }
 
 // 获取全部国家地区
-func (s *RegionServiceServer) ListAll(ctx context.Context, in *region.ListAllRegionsRequest) (*region.ListAllRegionsResponse, error) {
+func (s *RegionServiceServer) ListAll(ctx context.Context, in *regionpb.ListAllRegionsRequest) (*regionpb.ListAllRegionsResponse, error) {
 	l := regionservicelogic.NewListAllLogic(ctx, s.svcCtx)
 	return l.ListAll(in)
 }
 
 // 调整国家地区排序
-func (s *RegionServiceServer) Reorder(ctx context.Context, in *region.ReorderRegionRequest) (*region.ReorderRegionResponse, error) {
+func (s *RegionServiceServer) Reorder(ctx context.Context, in *regionpb.ReorderRegionRequest) (*regionpb.ReorderRegionResponse, error) {
 	l := regionservicelogic.NewReorderLogic(ctx, s.svcCtx)
 	return l.Reorder(in)
 }

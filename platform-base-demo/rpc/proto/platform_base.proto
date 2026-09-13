@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package platform_base;
 
-option go_package = "oa.98ent.com/p9/platform-base/rpc/pb/base";
+option go_package = "oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc";
 
 import "types/ping.proto";
 import "types/timezone.proto";

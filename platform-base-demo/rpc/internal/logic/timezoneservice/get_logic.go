@@ -7,7 +7,7 @@ import (
 	"oa.98ent.com/p9/platform-base/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-base/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-base/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/timezone"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/timezonepb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,7 +27,7 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 }
 
 // Get 获取时区
-func (l *GetLogic) Get(in *timezone.GetTimezoneRequest) (*timezone.GetTimezoneResponse, error) {
+func (l *GetLogic) Get(in *timezonepb.GetTimezoneRequest) (*timezonepb.GetTimezoneResponse, error) {
 	// 时区ID必须大于0
 	if in.Id <= 0 {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -40,7 +40,8 @@ func (l *GetLogic) Get(in *timezone.GetTimezoneRequest) (*timezone.GetTimezoneRe
 		return nil, enterror.Handle(l.Logger, err)
 	}
 
-	return &timezone.GetTimezoneResponse{
-		Timezone: toTimezoneInfo(result),
+	// 返回时区信息
+	return &timezonepb.GetTimezoneResponse{
+		Timezone: toTimezoneInfo(result), // 时区信息
 	}, nil
 }

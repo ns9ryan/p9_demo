@@ -8,7 +8,7 @@ import (
 	entcurrency "oa.98ent.com/p9/platform-base/rpc/ent/currency"
 	"oa.98ent.com/p9/platform-base/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-base/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/currency"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/currencypb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -28,7 +28,7 @@ func NewReorderLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ReorderLo
 }
 
 // Reorder 调整货币排序
-func (l *ReorderLogic) Reorder(in *currency.ReorderCurrencyRequest) (*currency.ReorderCurrencyResponse, error) {
+func (l *ReorderLogic) Reorder(in *currencypb.ReorderCurrencyRequest) (*currencypb.ReorderCurrencyResponse, error) {
 	// 校验货币ID
 	if in.Id <= 0 || in.TargetId <= 0 || in.Id == in.TargetId {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -62,7 +62,6 @@ func (l *ReorderLogic) Reorder(in *currency.ReorderCurrencyRequest) (*currency.R
 	// 查找移动货币和目标货币的位置
 	sourceIndex := -1
 	targetIndex := -1
-
 	for index, result := range results {
 		switch result.ID {
 		case in.Id:
@@ -123,5 +122,6 @@ func (l *ReorderLogic) Reorder(in *currency.ReorderCurrencyRequest) (*currency.R
 	}
 	committed = true
 
-	return &currency.ReorderCurrencyResponse{}, nil
+	// 返回排序结果
+	return &currencypb.ReorderCurrencyResponse{}, nil
 }

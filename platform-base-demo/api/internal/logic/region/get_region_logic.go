@@ -9,7 +9,7 @@ import (
 	corei18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/platform-base/api/internal/svc"
 	"oa.98ent.com/p9/platform-base/api/internal/types"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/region"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/regionpb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,8 +33,8 @@ func (l *GetRegionLogic) GetRegion(req *types.GetRegionRequest) (resp *types.Get
 	// 调用获取国家地区RPC
 	result, err := l.svcCtx.RegionRpc.Get(
 		l.ctx,
-		&region.GetRegionRequest{
-			Id: req.Id, // 国家或地区ID
+		&regionpb.GetRegionRequest{
+			Id: req.Id, // 国家地区ID
 		},
 	)
 	if err != nil {
@@ -47,9 +47,9 @@ func (l *GetRegionLogic) GetRegion(req *types.GetRegionRequest) (resp *types.Get
 	// 返回国家地区信息
 	return &types.GetRegionResponse{
 		RegionInfo: types.RegionInfo{
-			Id:          result.Region.Id,          // 国家或地区ID
-			Code:        result.Region.Code,        // 国家或地区编码
-			CallingCode: result.Region.CallingCode, // 国际电话区号, 不包含加号
+			Id:          result.Region.Id,          // 国家地区ID
+			Code:        result.Region.Code,        // 国家地区编码
+			CallingCode: result.Region.CallingCode, // 国际电话区号
 			NameKey:     result.Region.NameKey,     // 名称翻译Key
 			Name:        name,                      // 当前语言名称
 			Status:      result.Region.Status,      // 状态: 1启用, 2停用

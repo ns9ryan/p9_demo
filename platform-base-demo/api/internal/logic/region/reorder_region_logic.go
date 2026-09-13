@@ -8,7 +8,7 @@ import (
 
 	"oa.98ent.com/p9/platform-base/api/internal/svc"
 	"oa.98ent.com/p9/platform-base/api/internal/types"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/region"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/regionpb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -32,7 +32,7 @@ func (l *ReorderRegionLogic) ReorderRegion(req *types.ReorderRegionRequest) (res
 	// 调用调整国家地区排序RPC
 	_, err = l.svcCtx.RegionRpc.Reorder(
 		l.ctx,
-		&region.ReorderRegionRequest{
+		&regionpb.ReorderRegionRequest{
 			Id:       req.Id,       // 需要移动的国家地区ID
 			TargetId: req.TargetId, // 目标国家地区ID
 		},
@@ -41,6 +41,6 @@ func (l *ReorderRegionLogic) ReorderRegion(req *types.ReorderRegionRequest) (res
 		return nil, err
 	}
 
-	// 返回调整排序结果
+	// 返回排序结果
 	return &types.ReorderRegionResponse{}, nil
 }

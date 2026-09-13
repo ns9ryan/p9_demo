@@ -8,7 +8,7 @@ import (
 	entregion "oa.98ent.com/p9/platform-base/rpc/ent/region"
 	"oa.98ent.com/p9/platform-base/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-base/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/region"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/regionpb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -28,7 +28,7 @@ func NewReorderLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ReorderLo
 }
 
 // Reorder 调整国家地区排序
-func (l *ReorderLogic) Reorder(in *region.ReorderRegionRequest) (*region.ReorderRegionResponse, error) {
+func (l *ReorderLogic) Reorder(in *regionpb.ReorderRegionRequest) (*regionpb.ReorderRegionResponse, error) {
 	// 校验国家地区ID
 	if in.Id <= 0 || in.TargetId <= 0 || in.Id == in.TargetId {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -62,7 +62,6 @@ func (l *ReorderLogic) Reorder(in *region.ReorderRegionRequest) (*region.Reorder
 	// 查找移动国家地区和目标国家地区的位置
 	sourceIndex := -1
 	targetIndex := -1
-
 	for index, result := range results {
 		switch result.ID {
 		case in.Id:
@@ -123,5 +122,6 @@ func (l *ReorderLogic) Reorder(in *region.ReorderRegionRequest) (*region.Reorder
 	}
 	committed = true
 
-	return &region.ReorderRegionResponse{}, nil
+	// 返回排序结果
+	return &regionpb.ReorderRegionResponse{}, nil
 }

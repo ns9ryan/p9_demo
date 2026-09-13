@@ -4,7 +4,7 @@
 // 	protoc        v6.32.0
 // source: types/ping.proto
 
-package ping
+package pingpb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -101,7 +101,7 @@ const file_types_ping_proto_rawDesc = "" +
 	"\n" +
 	"\x10types/ping.proto\x12\x04ping\"\r\n" +
 	"\vPingRequest\"\x0e\n" +
-	"\fPingResponseB0Z.oa.98ent.com/p9/platform-base/rpc/pb/base/pingb\x06proto3"
+	"\fPingResponseB=Z;oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/pingpbb\x06proto3"
 
 var (
 	file_types_ping_proto_rawDescOnce sync.Once

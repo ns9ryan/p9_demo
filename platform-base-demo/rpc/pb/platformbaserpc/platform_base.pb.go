@@ -4,15 +4,15 @@
 // 	protoc        v6.32.0
 // source: platform_base.proto
 
-package base
+package platformbaserpc
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	currency "oa.98ent.com/p9/platform-base/rpc/pb/base/currency"
-	ping "oa.98ent.com/p9/platform-base/rpc/pb/base/ping"
-	region "oa.98ent.com/p9/platform-base/rpc/pb/base/region"
-	timezone "oa.98ent.com/p9/platform-base/rpc/pb/base/timezone"
+	currencypb "oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/currencypb"
+	pingpb "oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/pingpb"
+	regionpb "oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/regionpb"
+	timezonepb "oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/timezonepb"
 	reflect "reflect"
 	unsafe "unsafe"
 )
@@ -51,47 +51,47 @@ const file_platform_base_proto_rawDesc = "" +
 	"\tGetByCode\x12\x1e.region.GetRegionByCodeRequest\x1a\x1f.region.GetRegionByCodeResponse\x12?\n" +
 	"\x04List\x12\x1a.region.ListRegionsRequest\x1a\x1b.region.ListRegionsResponse\x12H\n" +
 	"\aListAll\x12\x1d.region.ListAllRegionsRequest\x1a\x1e.region.ListAllRegionsResponse\x12F\n" +
-	"\aReorder\x12\x1c.region.ReorderRegionRequest\x1a\x1d.region.ReorderRegionResponseB+Z)oa.98ent.com/p9/platform-base/rpc/pb/baseb\x06proto3"
+	"\aReorder\x12\x1c.region.ReorderRegionRequest\x1a\x1d.region.ReorderRegionResponseB6Z4oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpcb\x06proto3"
 
 var file_platform_base_proto_goTypes = []any{
-	(*ping.PingRequest)(nil),                   // 0: ping.PingRequest
-	(*timezone.UpdateTimezoneRequest)(nil),     // 1: timezone.UpdateTimezoneRequest
-	(*timezone.GetTimezoneRequest)(nil),        // 2: timezone.GetTimezoneRequest
-	(*timezone.GetTimezoneByCodeRequest)(nil),  // 3: timezone.GetTimezoneByCodeRequest
-	(*timezone.ListTimezonesRequest)(nil),      // 4: timezone.ListTimezonesRequest
-	(*timezone.ListAllTimezonesRequest)(nil),   // 5: timezone.ListAllTimezonesRequest
-	(*timezone.ReorderTimezoneRequest)(nil),    // 6: timezone.ReorderTimezoneRequest
-	(*currency.UpdateCurrencyRequest)(nil),     // 7: currency.UpdateCurrencyRequest
-	(*currency.GetCurrencyRequest)(nil),        // 8: currency.GetCurrencyRequest
-	(*currency.GetCurrencyByCodeRequest)(nil),  // 9: currency.GetCurrencyByCodeRequest
-	(*currency.ListCurrenciesRequest)(nil),     // 10: currency.ListCurrenciesRequest
-	(*currency.ListAllCurrenciesRequest)(nil),  // 11: currency.ListAllCurrenciesRequest
-	(*currency.ReorderCurrencyRequest)(nil),    // 12: currency.ReorderCurrencyRequest
-	(*region.UpdateRegionRequest)(nil),         // 13: region.UpdateRegionRequest
-	(*region.GetRegionRequest)(nil),            // 14: region.GetRegionRequest
-	(*region.GetRegionByCodeRequest)(nil),      // 15: region.GetRegionByCodeRequest
-	(*region.ListRegionsRequest)(nil),          // 16: region.ListRegionsRequest
-	(*region.ListAllRegionsRequest)(nil),       // 17: region.ListAllRegionsRequest
-	(*region.ReorderRegionRequest)(nil),        // 18: region.ReorderRegionRequest
-	(*ping.PingResponse)(nil),                  // 19: ping.PingResponse
-	(*timezone.UpdateTimezoneResponse)(nil),    // 20: timezone.UpdateTimezoneResponse
-	(*timezone.GetTimezoneResponse)(nil),       // 21: timezone.GetTimezoneResponse
-	(*timezone.GetTimezoneByCodeResponse)(nil), // 22: timezone.GetTimezoneByCodeResponse
-	(*timezone.ListTimezonesResponse)(nil),     // 23: timezone.ListTimezonesResponse
-	(*timezone.ListAllTimezonesResponse)(nil),  // 24: timezone.ListAllTimezonesResponse
-	(*timezone.ReorderTimezoneResponse)(nil),   // 25: timezone.ReorderTimezoneResponse
-	(*currency.UpdateCurrencyResponse)(nil),    // 26: currency.UpdateCurrencyResponse
-	(*currency.GetCurrencyResponse)(nil),       // 27: currency.GetCurrencyResponse
-	(*currency.GetCurrencyByCodeResponse)(nil), // 28: currency.GetCurrencyByCodeResponse
-	(*currency.ListCurrenciesResponse)(nil),    // 29: currency.ListCurrenciesResponse
-	(*currency.ListAllCurrenciesResponse)(nil), // 30: currency.ListAllCurrenciesResponse
-	(*currency.ReorderCurrencyResponse)(nil),   // 31: currency.ReorderCurrencyResponse
-	(*region.UpdateRegionResponse)(nil),        // 32: region.UpdateRegionResponse
-	(*region.GetRegionResponse)(nil),           // 33: region.GetRegionResponse
-	(*region.GetRegionByCodeResponse)(nil),     // 34: region.GetRegionByCodeResponse
-	(*region.ListRegionsResponse)(nil),         // 35: region.ListRegionsResponse
-	(*region.ListAllRegionsResponse)(nil),      // 36: region.ListAllRegionsResponse
-	(*region.ReorderRegionResponse)(nil),       // 37: region.ReorderRegionResponse
+	(*pingpb.PingRequest)(nil),                   // 0: ping.PingRequest
+	(*timezonepb.UpdateTimezoneRequest)(nil),     // 1: timezone.UpdateTimezoneRequest
+	(*timezonepb.GetTimezoneRequest)(nil),        // 2: timezone.GetTimezoneRequest
+	(*timezonepb.GetTimezoneByCodeRequest)(nil),  // 3: timezone.GetTimezoneByCodeRequest
+	(*timezonepb.ListTimezonesRequest)(nil),      // 4: timezone.ListTimezonesRequest
+	(*timezonepb.ListAllTimezonesRequest)(nil),   // 5: timezone.ListAllTimezonesRequest
+	(*timezonepb.ReorderTimezoneRequest)(nil),    // 6: timezone.ReorderTimezoneRequest
+	(*currencypb.UpdateCurrencyRequest)(nil),     // 7: currency.UpdateCurrencyRequest
+	(*currencypb.GetCurrencyRequest)(nil),        // 8: currency.GetCurrencyRequest
+	(*currencypb.GetCurrencyByCodeRequest)(nil),  // 9: currency.GetCurrencyByCodeRequest
+	(*currencypb.ListCurrenciesRequest)(nil),     // 10: currency.ListCurrenciesRequest
+	(*currencypb.ListAllCurrenciesRequest)(nil),  // 11: currency.ListAllCurrenciesRequest
+	(*currencypb.ReorderCurrencyRequest)(nil),    // 12: currency.ReorderCurrencyRequest
+	(*regionpb.UpdateRegionRequest)(nil),         // 13: region.UpdateRegionRequest
+	(*regionpb.GetRegionRequest)(nil),            // 14: region.GetRegionRequest
+	(*regionpb.GetRegionByCodeRequest)(nil),      // 15: region.GetRegionByCodeRequest
+	(*regionpb.ListRegionsRequest)(nil),          // 16: region.ListRegionsRequest
+	(*regionpb.ListAllRegionsRequest)(nil),       // 17: region.ListAllRegionsRequest
+	(*regionpb.ReorderRegionRequest)(nil),        // 18: region.ReorderRegionRequest
+	(*pingpb.PingResponse)(nil),                  // 19: ping.PingResponse
+	(*timezonepb.UpdateTimezoneResponse)(nil),    // 20: timezone.UpdateTimezoneResponse
+	(*timezonepb.GetTimezoneResponse)(nil),       // 21: timezone.GetTimezoneResponse
+	(*timezonepb.GetTimezoneByCodeResponse)(nil), // 22: timezone.GetTimezoneByCodeResponse
+	(*timezonepb.ListTimezonesResponse)(nil),     // 23: timezone.ListTimezonesResponse
+	(*timezonepb.ListAllTimezonesResponse)(nil),  // 24: timezone.ListAllTimezonesResponse
+	(*timezonepb.ReorderTimezoneResponse)(nil),   // 25: timezone.ReorderTimezoneResponse
+	(*currencypb.UpdateCurrencyResponse)(nil),    // 26: currency.UpdateCurrencyResponse
+	(*currencypb.GetCurrencyResponse)(nil),       // 27: currency.GetCurrencyResponse
+	(*currencypb.GetCurrencyByCodeResponse)(nil), // 28: currency.GetCurrencyByCodeResponse
+	(*currencypb.ListCurrenciesResponse)(nil),    // 29: currency.ListCurrenciesResponse
+	(*currencypb.ListAllCurrenciesResponse)(nil), // 30: currency.ListAllCurrenciesResponse
+	(*currencypb.ReorderCurrencyResponse)(nil),   // 31: currency.ReorderCurrencyResponse
+	(*regionpb.UpdateRegionResponse)(nil),        // 32: region.UpdateRegionResponse
+	(*regionpb.GetRegionResponse)(nil),           // 33: region.GetRegionResponse
+	(*regionpb.GetRegionByCodeResponse)(nil),     // 34: region.GetRegionByCodeResponse
+	(*regionpb.ListRegionsResponse)(nil),         // 35: region.ListRegionsResponse
+	(*regionpb.ListAllRegionsResponse)(nil),      // 36: region.ListAllRegionsResponse
+	(*regionpb.ReorderRegionResponse)(nil),       // 37: region.ReorderRegionResponse
 }
 var file_platform_base_proto_depIdxs = []int32{
 	0,  // 0: platform_base.PingService.Ping:input_type -> ping.PingRequest

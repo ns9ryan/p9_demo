@@ -4,7 +4,7 @@
 // 	protoc        v6.32.0
 // source: types/currency.proto
 
-package currency
+package currencypb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -763,7 +763,7 @@ const file_types_currency_proto_rawDesc = "" +
 	"\x16ReorderCurrencyRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1b\n" +
 	"\ttarget_id\x18\x02 \x01(\x03R\btargetId\"\x19\n" +
-	"\x17ReorderCurrencyResponseB4Z2oa.98ent.com/p9/platform-base/rpc/pb/base/currencyb\x06proto3"
+	"\x17ReorderCurrencyResponseBAZ?oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/currencypbb\x06proto3"
 
 var (
 	file_types_currency_proto_rawDescOnce sync.Once

@@ -36,7 +36,7 @@ var (
 		{Name: "sort_no", Type: field.TypeInt64, Comment: "排序值, 数值越小越靠前", SchemaType: map[string]string{"postgres": "integer"}},
 		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间", SchemaType: map[string]string{"postgres": "timestamptz(3)"}},
 		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间", SchemaType: map[string]string{"postgres": "timestamptz(3)"}},
-		{Name: "code", Type: field.TypeString, Unique: true, Size: 2, Comment: "国家或地区编码"},
+		{Name: "code", Type: field.TypeString, Unique: true, Size: 2, Comment: "国家地区编码"},
 		{Name: "calling_code", Type: field.TypeString, Size: 3, Comment: "国际电话区号, 不包含加号"},
 		{Name: "name_key", Type: field.TypeString, Size: 128, Comment: "名称翻译 Key"},
 	}

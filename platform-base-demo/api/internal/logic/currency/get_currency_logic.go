@@ -9,7 +9,7 @@ import (
 	corei18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/platform-base/api/internal/svc"
 	"oa.98ent.com/p9/platform-base/api/internal/types"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/currency"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/currencypb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,7 +33,7 @@ func (l *GetCurrencyLogic) GetCurrency(req *types.GetCurrencyRequest) (resp *typ
 	// 调用获取货币RPC
 	result, err := l.svcCtx.CurrencyRpc.Get(
 		l.ctx,
-		&currency.GetCurrencyRequest{
+		&currencypb.GetCurrencyRequest{
 			Id: req.Id, // 货币ID
 		},
 	)

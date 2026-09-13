@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package timezone;
 
-option go_package = "oa.98ent.com/p9/platform-base/rpc/pb/base/timezone";
+option go_package = "oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/timezonepb";
 
 // 时区信息
 message TimezoneInfo {

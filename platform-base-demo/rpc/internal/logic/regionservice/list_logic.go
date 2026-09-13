@@ -8,7 +8,7 @@ import (
 	entregion "oa.98ent.com/p9/platform-base/rpc/ent/region"
 	"oa.98ent.com/p9/platform-base/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-base/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/region"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/regionpb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -28,7 +28,7 @@ func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {
 }
 
 // List 获取国家地区管理列表
-func (l *ListLogic) List(in *region.ListRegionsRequest) (*region.ListRegionsResponse, error) {
+func (l *ListLogic) List(in *regionpb.ListRegionsRequest) (*regionpb.ListRegionsResponse, error) {
 	// 校验分页参数
 	if in.Page < 1 || in.PageSize < 1 || in.PageSize > 100 {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -72,13 +72,14 @@ func (l *ListLogic) List(in *region.ListRegionsRequest) (*region.ListRegionsResp
 	}
 
 	// 转换国家地区列表
-	list := make([]*region.RegionInfo, 0, len(results))
+	list := make([]*regionpb.RegionInfo, 0, len(results))
 	for _, result := range results {
 		list = append(list, toRegionInfo(result))
 	}
 
-	return &region.ListRegionsResponse{
-		Total: int64(total),
-		List:  list,
+	// 返回国家地区列表
+	return &regionpb.ListRegionsResponse{
+		Total: int64(total), // 数据总数
+		List:  list,         // 国家地区列表
 	}, nil
 }

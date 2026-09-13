@@ -4,14 +4,14 @@ import (
 	"context"
 	"strings"
 
-	"github.com/zeromicro/go-zero/core/logx"
-
 	"oa.98ent.com/p9/platform-base/pkg/i18nkey"
 	"oa.98ent.com/p9/platform-base/pkg/rpc/grpcerror"
 	enttimezone "oa.98ent.com/p9/platform-base/rpc/ent/timezone"
 	"oa.98ent.com/p9/platform-base/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-base/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/timezone"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/timezonepb"
+
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type GetByCodeLogic struct {
@@ -29,7 +29,7 @@ func NewGetByCodeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetByCo
 }
 
 // GetByCode 按编码获取时区
-func (l *GetByCodeLogic) GetByCode(in *timezone.GetTimezoneByCodeRequest) (*timezone.GetTimezoneByCodeResponse, error) {
+func (l *GetByCodeLogic) GetByCode(in *timezonepb.GetTimezoneByCodeRequest) (*timezonepb.GetTimezoneByCodeResponse, error) {
 	// 整理时区编码
 	code := strings.TrimSpace(in.Code)
 	if code == "" {
@@ -47,7 +47,7 @@ func (l *GetByCodeLogic) GetByCode(in *timezone.GetTimezoneByCodeRequest) (*time
 	}
 
 	// 返回时区信息
-	return &timezone.GetTimezoneByCodeResponse{
+	return &timezonepb.GetTimezoneByCodeResponse{
 		Timezone: toTimezoneInfo(result), // 时区信息
 	}, nil
 }

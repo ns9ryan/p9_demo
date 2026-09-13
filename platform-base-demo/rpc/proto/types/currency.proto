@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package currency;
 
-option go_package = "oa.98ent.com/p9/platform-base/rpc/pb/base/currency";
+option go_package = "oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/currencypb";
 
 // 货币信息
 message CurrencyInfo {

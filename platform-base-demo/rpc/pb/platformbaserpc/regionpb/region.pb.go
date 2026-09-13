@@ -4,7 +4,7 @@
 // 	protoc        v6.32.0
 // source: types/region.proto
 
-package region
+package regionpb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -24,9 +24,9 @@ const (
 // 国家地区信息
 type RegionInfo struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 国家或地区ID
+	// 国家地区ID
 	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// 国家或地区编码
+	// 国家地区编码
 	Code string `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
 	// 国际电话区号, 不包含加号
 	CallingCode string `protobuf:"bytes,3,opt,name=calling_code,json=callingCode,proto3" json:"calling_code,omitempty"`
@@ -115,7 +115,7 @@ func (x *RegionInfo) GetSortNo() int64 {
 // 修改国家地区请求
 type UpdateRegionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 国家或地区ID
+	// 国家地区ID
 	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// 国际电话区号, 不传时不修改
 	CallingCode *string `protobuf:"bytes,2,opt,name=calling_code,json=callingCode,proto3,oneof" json:"calling_code,omitempty"`
@@ -216,7 +216,7 @@ func (*UpdateRegionResponse) Descriptor() ([]byte, []int) {
 // 获取国家地区请求
 type GetRegionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 国家或地区ID
+	// 国家地区ID
 	Id            int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -308,7 +308,7 @@ func (x *GetRegionResponse) GetRegion() *RegionInfo {
 // 按编码获取国家地区请求
 type GetRegionByCodeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 国家或地区编码
+	// 国家地区编码
 	Code          string `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -744,7 +744,7 @@ const file_types_region_proto_rawDesc = "" +
 	"\x14ReorderRegionRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1b\n" +
 	"\ttarget_id\x18\x02 \x01(\x03R\btargetId\"\x17\n" +
-	"\x15ReorderRegionResponseB2Z0oa.98ent.com/p9/platform-base/rpc/pb/base/regionb\x06proto3"
+	"\x15ReorderRegionResponseB?Z=oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/regionpbb\x06proto3"
 
 var (
 	file_types_region_proto_rawDescOnce sync.Once

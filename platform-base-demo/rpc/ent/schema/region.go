@@ -25,7 +25,7 @@ func (Region) Fields() []ent.Field {
 			Match(regexp.MustCompile(`^[A-Z]{2}$`)).
 			Unique().
 			Immutable().
-			Comment("国家或地区编码"),
+			Comment("国家地区编码"),
 
 		field.String("calling_code").
 			NotEmpty().

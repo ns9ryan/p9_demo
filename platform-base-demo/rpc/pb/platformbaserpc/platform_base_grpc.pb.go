@@ -4,17 +4,17 @@
 // - protoc             v6.32.0
 // source: platform_base.proto
 
-package base
+package platformbaserpc
 
 import (
 	context "context"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	currency "oa.98ent.com/p9/platform-base/rpc/pb/base/currency"
-	ping "oa.98ent.com/p9/platform-base/rpc/pb/base/ping"
-	region "oa.98ent.com/p9/platform-base/rpc/pb/base/region"
-	timezone "oa.98ent.com/p9/platform-base/rpc/pb/base/timezone"
+	currencypb "oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/currencypb"
+	pingpb "oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/pingpb"
+	regionpb "oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/regionpb"
+	timezonepb "oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/timezonepb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -33,7 +33,7 @@ const (
 // Ping 服务
 type PingServiceClient interface {
 	// Ping
-	Ping(ctx context.Context, in *ping.PingRequest, opts ...grpc.CallOption) (*ping.PingResponse, error)
+	Ping(ctx context.Context, in *pingpb.PingRequest, opts ...grpc.CallOption) (*pingpb.PingResponse, error)
 }
 
 type pingServiceClient struct {
@@ -44,9 +44,9 @@ func NewPingServiceClient(cc grpc.ClientConnInterface) PingServiceClient {
 	return &pingServiceClient{cc}
 }
 
-func (c *pingServiceClient) Ping(ctx context.Context, in *ping.PingRequest, opts ...grpc.CallOption) (*ping.PingResponse, error) {
+func (c *pingServiceClient) Ping(ctx context.Context, in *pingpb.PingRequest, opts ...grpc.CallOption) (*pingpb.PingResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ping.PingResponse)
+	out := new(pingpb.PingResponse)
 	err := c.cc.Invoke(ctx, PingService_Ping_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -61,7 +61,7 @@ func (c *pingServiceClient) Ping(ctx context.Context, in *ping.PingRequest, opts
 // Ping 服务
 type PingServiceServer interface {
 	// Ping
-	Ping(context.Context, *ping.PingRequest) (*ping.PingResponse, error)
+	Ping(context.Context, *pingpb.PingRequest) (*pingpb.PingResponse, error)
 	mustEmbedUnimplementedPingServiceServer()
 }
 
@@ -72,7 +72,7 @@ type PingServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedPingServiceServer struct{}
 
-func (UnimplementedPingServiceServer) Ping(context.Context, *ping.PingRequest) (*ping.PingResponse, error) {
+func (UnimplementedPingServiceServer) Ping(context.Context, *pingpb.PingRequest) (*pingpb.PingResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Ping not implemented")
 }
 func (UnimplementedPingServiceServer) mustEmbedUnimplementedPingServiceServer() {}
@@ -97,7 +97,7 @@ func RegisterPingServiceServer(s grpc.ServiceRegistrar, srv PingServiceServer) {
 }
 
 func _PingService_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ping.PingRequest)
+	in := new(pingpb.PingRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -109,7 +109,7 @@ func _PingService_Ping_Handler(srv interface{}, ctx context.Context, dec func(in
 		FullMethod: PingService_Ping_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PingServiceServer).Ping(ctx, req.(*ping.PingRequest))
+		return srv.(PingServiceServer).Ping(ctx, req.(*pingpb.PingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -146,17 +146,17 @@ const (
 // 时区服务
 type TimezoneServiceClient interface {
 	// 修改时区
-	Update(ctx context.Context, in *timezone.UpdateTimezoneRequest, opts ...grpc.CallOption) (*timezone.UpdateTimezoneResponse, error)
+	Update(ctx context.Context, in *timezonepb.UpdateTimezoneRequest, opts ...grpc.CallOption) (*timezonepb.UpdateTimezoneResponse, error)
 	// 获取时区
-	Get(ctx context.Context, in *timezone.GetTimezoneRequest, opts ...grpc.CallOption) (*timezone.GetTimezoneResponse, error)
+	Get(ctx context.Context, in *timezonepb.GetTimezoneRequest, opts ...grpc.CallOption) (*timezonepb.GetTimezoneResponse, error)
 	// 按编码获取时区
-	GetByCode(ctx context.Context, in *timezone.GetTimezoneByCodeRequest, opts ...grpc.CallOption) (*timezone.GetTimezoneByCodeResponse, error)
+	GetByCode(ctx context.Context, in *timezonepb.GetTimezoneByCodeRequest, opts ...grpc.CallOption) (*timezonepb.GetTimezoneByCodeResponse, error)
 	// 获取时区管理列表
-	List(ctx context.Context, in *timezone.ListTimezonesRequest, opts ...grpc.CallOption) (*timezone.ListTimezonesResponse, error)
+	List(ctx context.Context, in *timezonepb.ListTimezonesRequest, opts ...grpc.CallOption) (*timezonepb.ListTimezonesResponse, error)
 	// 获取全部时区
-	ListAll(ctx context.Context, in *timezone.ListAllTimezonesRequest, opts ...grpc.CallOption) (*timezone.ListAllTimezonesResponse, error)
+	ListAll(ctx context.Context, in *timezonepb.ListAllTimezonesRequest, opts ...grpc.CallOption) (*timezonepb.ListAllTimezonesResponse, error)
 	// 调整时区排序
-	Reorder(ctx context.Context, in *timezone.ReorderTimezoneRequest, opts ...grpc.CallOption) (*timezone.ReorderTimezoneResponse, error)
+	Reorder(ctx context.Context, in *timezonepb.ReorderTimezoneRequest, opts ...grpc.CallOption) (*timezonepb.ReorderTimezoneResponse, error)
 }
 
 type timezoneServiceClient struct {
@@ -167,9 +167,9 @@ func NewTimezoneServiceClient(cc grpc.ClientConnInterface) TimezoneServiceClient
 	return &timezoneServiceClient{cc}
 }
 
-func (c *timezoneServiceClient) Update(ctx context.Context, in *timezone.UpdateTimezoneRequest, opts ...grpc.CallOption) (*timezone.UpdateTimezoneResponse, error) {
+func (c *timezoneServiceClient) Update(ctx context.Context, in *timezonepb.UpdateTimezoneRequest, opts ...grpc.CallOption) (*timezonepb.UpdateTimezoneResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(timezone.UpdateTimezoneResponse)
+	out := new(timezonepb.UpdateTimezoneResponse)
 	err := c.cc.Invoke(ctx, TimezoneService_Update_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -177,9 +177,9 @@ func (c *timezoneServiceClient) Update(ctx context.Context, in *timezone.UpdateT
 	return out, nil
 }
 
-func (c *timezoneServiceClient) Get(ctx context.Context, in *timezone.GetTimezoneRequest, opts ...grpc.CallOption) (*timezone.GetTimezoneResponse, error) {
+func (c *timezoneServiceClient) Get(ctx context.Context, in *timezonepb.GetTimezoneRequest, opts ...grpc.CallOption) (*timezonepb.GetTimezoneResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(timezone.GetTimezoneResponse)
+	out := new(timezonepb.GetTimezoneResponse)
 	err := c.cc.Invoke(ctx, TimezoneService_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -187,9 +187,9 @@ func (c *timezoneServiceClient) Get(ctx context.Context, in *timezone.GetTimezon
 	return out, nil
 }
 
-func (c *timezoneServiceClient) GetByCode(ctx context.Context, in *timezone.GetTimezoneByCodeRequest, opts ...grpc.CallOption) (*timezone.GetTimezoneByCodeResponse, error) {
+func (c *timezoneServiceClient) GetByCode(ctx context.Context, in *timezonepb.GetTimezoneByCodeRequest, opts ...grpc.CallOption) (*timezonepb.GetTimezoneByCodeResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(timezone.GetTimezoneByCodeResponse)
+	out := new(timezonepb.GetTimezoneByCodeResponse)
 	err := c.cc.Invoke(ctx, TimezoneService_GetByCode_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -197,9 +197,9 @@ func (c *timezoneServiceClient) GetByCode(ctx context.Context, in *timezone.GetT
 	return out, nil
 }
 
-func (c *timezoneServiceClient) List(ctx context.Context, in *timezone.ListTimezonesRequest, opts ...grpc.CallOption) (*timezone.ListTimezonesResponse, error) {
+func (c *timezoneServiceClient) List(ctx context.Context, in *timezonepb.ListTimezonesRequest, opts ...grpc.CallOption) (*timezonepb.ListTimezonesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(timezone.ListTimezonesResponse)
+	out := new(timezonepb.ListTimezonesResponse)
 	err := c.cc.Invoke(ctx, TimezoneService_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -207,9 +207,9 @@ func (c *timezoneServiceClient) List(ctx context.Context, in *timezone.ListTimez
 	return out, nil
 }
 
-func (c *timezoneServiceClient) ListAll(ctx context.Context, in *timezone.ListAllTimezonesRequest, opts ...grpc.CallOption) (*timezone.ListAllTimezonesResponse, error) {
+func (c *timezoneServiceClient) ListAll(ctx context.Context, in *timezonepb.ListAllTimezonesRequest, opts ...grpc.CallOption) (*timezonepb.ListAllTimezonesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(timezone.ListAllTimezonesResponse)
+	out := new(timezonepb.ListAllTimezonesResponse)
 	err := c.cc.Invoke(ctx, TimezoneService_ListAll_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -217,9 +217,9 @@ func (c *timezoneServiceClient) ListAll(ctx context.Context, in *timezone.ListAl
 	return out, nil
 }
 
-func (c *timezoneServiceClient) Reorder(ctx context.Context, in *timezone.ReorderTimezoneRequest, opts ...grpc.CallOption) (*timezone.ReorderTimezoneResponse, error) {
+func (c *timezoneServiceClient) Reorder(ctx context.Context, in *timezonepb.ReorderTimezoneRequest, opts ...grpc.CallOption) (*timezonepb.ReorderTimezoneResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(timezone.ReorderTimezoneResponse)
+	out := new(timezonepb.ReorderTimezoneResponse)
 	err := c.cc.Invoke(ctx, TimezoneService_Reorder_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -234,17 +234,17 @@ func (c *timezoneServiceClient) Reorder(ctx context.Context, in *timezone.Reorde
 // 时区服务
 type TimezoneServiceServer interface {
 	// 修改时区
-	Update(context.Context, *timezone.UpdateTimezoneRequest) (*timezone.UpdateTimezoneResponse, error)
+	Update(context.Context, *timezonepb.UpdateTimezoneRequest) (*timezonepb.UpdateTimezoneResponse, error)
 	// 获取时区
-	Get(context.Context, *timezone.GetTimezoneRequest) (*timezone.GetTimezoneResponse, error)
+	Get(context.Context, *timezonepb.GetTimezoneRequest) (*timezonepb.GetTimezoneResponse, error)
 	// 按编码获取时区
-	GetByCode(context.Context, *timezone.GetTimezoneByCodeRequest) (*timezone.GetTimezoneByCodeResponse, error)
+	GetByCode(context.Context, *timezonepb.GetTimezoneByCodeRequest) (*timezonepb.GetTimezoneByCodeResponse, error)
 	// 获取时区管理列表
-	List(context.Context, *timezone.ListTimezonesRequest) (*timezone.ListTimezonesResponse, error)
+	List(context.Context, *timezonepb.ListTimezonesRequest) (*timezonepb.ListTimezonesResponse, error)
 	// 获取全部时区
-	ListAll(context.Context, *timezone.ListAllTimezonesRequest) (*timezone.ListAllTimezonesResponse, error)
+	ListAll(context.Context, *timezonepb.ListAllTimezonesRequest) (*timezonepb.ListAllTimezonesResponse, error)
 	// 调整时区排序
-	Reorder(context.Context, *timezone.ReorderTimezoneRequest) (*timezone.ReorderTimezoneResponse, error)
+	Reorder(context.Context, *timezonepb.ReorderTimezoneRequest) (*timezonepb.ReorderTimezoneResponse, error)
 	mustEmbedUnimplementedTimezoneServiceServer()
 }
 
@@ -255,22 +255,22 @@ type TimezoneServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedTimezoneServiceServer struct{}
 
-func (UnimplementedTimezoneServiceServer) Update(context.Context, *timezone.UpdateTimezoneRequest) (*timezone.UpdateTimezoneResponse, error) {
+func (UnimplementedTimezoneServiceServer) Update(context.Context, *timezonepb.UpdateTimezoneRequest) (*timezonepb.UpdateTimezoneResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
-func (UnimplementedTimezoneServiceServer) Get(context.Context, *timezone.GetTimezoneRequest) (*timezone.GetTimezoneResponse, error) {
+func (UnimplementedTimezoneServiceServer) Get(context.Context, *timezonepb.GetTimezoneRequest) (*timezonepb.GetTimezoneResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedTimezoneServiceServer) GetByCode(context.Context, *timezone.GetTimezoneByCodeRequest) (*timezone.GetTimezoneByCodeResponse, error) {
+func (UnimplementedTimezoneServiceServer) GetByCode(context.Context, *timezonepb.GetTimezoneByCodeRequest) (*timezonepb.GetTimezoneByCodeResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetByCode not implemented")
 }
-func (UnimplementedTimezoneServiceServer) List(context.Context, *timezone.ListTimezonesRequest) (*timezone.ListTimezonesResponse, error) {
+func (UnimplementedTimezoneServiceServer) List(context.Context, *timezonepb.ListTimezonesRequest) (*timezonepb.ListTimezonesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedTimezoneServiceServer) ListAll(context.Context, *timezone.ListAllTimezonesRequest) (*timezone.ListAllTimezonesResponse, error) {
+func (UnimplementedTimezoneServiceServer) ListAll(context.Context, *timezonepb.ListAllTimezonesRequest) (*timezonepb.ListAllTimezonesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListAll not implemented")
 }
-func (UnimplementedTimezoneServiceServer) Reorder(context.Context, *timezone.ReorderTimezoneRequest) (*timezone.ReorderTimezoneResponse, error) {
+func (UnimplementedTimezoneServiceServer) Reorder(context.Context, *timezonepb.ReorderTimezoneRequest) (*timezonepb.ReorderTimezoneResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Reorder not implemented")
 }
 func (UnimplementedTimezoneServiceServer) mustEmbedUnimplementedTimezoneServiceServer() {}
@@ -295,7 +295,7 @@ func RegisterTimezoneServiceServer(s grpc.ServiceRegistrar, srv TimezoneServiceS
 }
 
 func _TimezoneService_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(timezone.UpdateTimezoneRequest)
+	in := new(timezonepb.UpdateTimezoneRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -307,13 +307,13 @@ func _TimezoneService_Update_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: TimezoneService_Update_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TimezoneServiceServer).Update(ctx, req.(*timezone.UpdateTimezoneRequest))
+		return srv.(TimezoneServiceServer).Update(ctx, req.(*timezonepb.UpdateTimezoneRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _TimezoneService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(timezone.GetTimezoneRequest)
+	in := new(timezonepb.GetTimezoneRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -325,13 +325,13 @@ func _TimezoneService_Get_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: TimezoneService_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TimezoneServiceServer).Get(ctx, req.(*timezone.GetTimezoneRequest))
+		return srv.(TimezoneServiceServer).Get(ctx, req.(*timezonepb.GetTimezoneRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _TimezoneService_GetByCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(timezone.GetTimezoneByCodeRequest)
+	in := new(timezonepb.GetTimezoneByCodeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -343,13 +343,13 @@ func _TimezoneService_GetByCode_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: TimezoneService_GetByCode_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TimezoneServiceServer).GetByCode(ctx, req.(*timezone.GetTimezoneByCodeRequest))
+		return srv.(TimezoneServiceServer).GetByCode(ctx, req.(*timezonepb.GetTimezoneByCodeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _TimezoneService_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(timezone.ListTimezonesRequest)
+	in := new(timezonepb.ListTimezonesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -361,13 +361,13 @@ func _TimezoneService_List_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: TimezoneService_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TimezoneServiceServer).List(ctx, req.(*timezone.ListTimezonesRequest))
+		return srv.(TimezoneServiceServer).List(ctx, req.(*timezonepb.ListTimezonesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _TimezoneService_ListAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(timezone.ListAllTimezonesRequest)
+	in := new(timezonepb.ListAllTimezonesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -379,13 +379,13 @@ func _TimezoneService_ListAll_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: TimezoneService_ListAll_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TimezoneServiceServer).ListAll(ctx, req.(*timezone.ListAllTimezonesRequest))
+		return srv.(TimezoneServiceServer).ListAll(ctx, req.(*timezonepb.ListAllTimezonesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _TimezoneService_Reorder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(timezone.ReorderTimezoneRequest)
+	in := new(timezonepb.ReorderTimezoneRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -397,7 +397,7 @@ func _TimezoneService_Reorder_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: TimezoneService_Reorder_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TimezoneServiceServer).Reorder(ctx, req.(*timezone.ReorderTimezoneRequest))
+		return srv.(TimezoneServiceServer).Reorder(ctx, req.(*timezonepb.ReorderTimezoneRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -454,17 +454,17 @@ const (
 // 货币服务
 type CurrencyServiceClient interface {
 	// 修改货币
-	Update(ctx context.Context, in *currency.UpdateCurrencyRequest, opts ...grpc.CallOption) (*currency.UpdateCurrencyResponse, error)
+	Update(ctx context.Context, in *currencypb.UpdateCurrencyRequest, opts ...grpc.CallOption) (*currencypb.UpdateCurrencyResponse, error)
 	// 获取货币
-	Get(ctx context.Context, in *currency.GetCurrencyRequest, opts ...grpc.CallOption) (*currency.GetCurrencyResponse, error)
+	Get(ctx context.Context, in *currencypb.GetCurrencyRequest, opts ...grpc.CallOption) (*currencypb.GetCurrencyResponse, error)
 	// 按编码获取货币
-	GetByCode(ctx context.Context, in *currency.GetCurrencyByCodeRequest, opts ...grpc.CallOption) (*currency.GetCurrencyByCodeResponse, error)
+	GetByCode(ctx context.Context, in *currencypb.GetCurrencyByCodeRequest, opts ...grpc.CallOption) (*currencypb.GetCurrencyByCodeResponse, error)
 	// 获取货币管理列表
-	List(ctx context.Context, in *currency.ListCurrenciesRequest, opts ...grpc.CallOption) (*currency.ListCurrenciesResponse, error)
+	List(ctx context.Context, in *currencypb.ListCurrenciesRequest, opts ...grpc.CallOption) (*currencypb.ListCurrenciesResponse, error)
 	// 获取全部货币
-	ListAll(ctx context.Context, in *currency.ListAllCurrenciesRequest, opts ...grpc.CallOption) (*currency.ListAllCurrenciesResponse, error)
+	ListAll(ctx context.Context, in *currencypb.ListAllCurrenciesRequest, opts ...grpc.CallOption) (*currencypb.ListAllCurrenciesResponse, error)
 	// 调整货币排序
-	Reorder(ctx context.Context, in *currency.ReorderCurrencyRequest, opts ...grpc.CallOption) (*currency.ReorderCurrencyResponse, error)
+	Reorder(ctx context.Context, in *currencypb.ReorderCurrencyRequest, opts ...grpc.CallOption) (*currencypb.ReorderCurrencyResponse, error)
 }
 
 type currencyServiceClient struct {
@@ -475,9 +475,9 @@ func NewCurrencyServiceClient(cc grpc.ClientConnInterface) CurrencyServiceClient
 	return &currencyServiceClient{cc}
 }
 
-func (c *currencyServiceClient) Update(ctx context.Context, in *currency.UpdateCurrencyRequest, opts ...grpc.CallOption) (*currency.UpdateCurrencyResponse, error) {
+func (c *currencyServiceClient) Update(ctx context.Context, in *currencypb.UpdateCurrencyRequest, opts ...grpc.CallOption) (*currencypb.UpdateCurrencyResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(currency.UpdateCurrencyResponse)
+	out := new(currencypb.UpdateCurrencyResponse)
 	err := c.cc.Invoke(ctx, CurrencyService_Update_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -485,9 +485,9 @@ func (c *currencyServiceClient) Update(ctx context.Context, in *currency.UpdateC
 	return out, nil
 }
 
-func (c *currencyServiceClient) Get(ctx context.Context, in *currency.GetCurrencyRequest, opts ...grpc.CallOption) (*currency.GetCurrencyResponse, error) {
+func (c *currencyServiceClient) Get(ctx context.Context, in *currencypb.GetCurrencyRequest, opts ...grpc.CallOption) (*currencypb.GetCurrencyResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(currency.GetCurrencyResponse)
+	out := new(currencypb.GetCurrencyResponse)
 	err := c.cc.Invoke(ctx, CurrencyService_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -495,9 +495,9 @@ func (c *currencyServiceClient) Get(ctx context.Context, in *currency.GetCurrenc
 	return out, nil
 }
 
-func (c *currencyServiceClient) GetByCode(ctx context.Context, in *currency.GetCurrencyByCodeRequest, opts ...grpc.CallOption) (*currency.GetCurrencyByCodeResponse, error) {
+func (c *currencyServiceClient) GetByCode(ctx context.Context, in *currencypb.GetCurrencyByCodeRequest, opts ...grpc.CallOption) (*currencypb.GetCurrencyByCodeResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(currency.GetCurrencyByCodeResponse)
+	out := new(currencypb.GetCurrencyByCodeResponse)
 	err := c.cc.Invoke(ctx, CurrencyService_GetByCode_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -505,9 +505,9 @@ func (c *currencyServiceClient) GetByCode(ctx context.Context, in *currency.GetC
 	return out, nil
 }
 
-func (c *currencyServiceClient) List(ctx context.Context, in *currency.ListCurrenciesRequest, opts ...grpc.CallOption) (*currency.ListCurrenciesResponse, error) {
+func (c *currencyServiceClient) List(ctx context.Context, in *currencypb.ListCurrenciesRequest, opts ...grpc.CallOption) (*currencypb.ListCurrenciesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(currency.ListCurrenciesResponse)
+	out := new(currencypb.ListCurrenciesResponse)
 	err := c.cc.Invoke(ctx, CurrencyService_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -515,9 +515,9 @@ func (c *currencyServiceClient) List(ctx context.Context, in *currency.ListCurre
 	return out, nil
 }
 
-func (c *currencyServiceClient) ListAll(ctx context.Context, in *currency.ListAllCurrenciesRequest, opts ...grpc.CallOption) (*currency.ListAllCurrenciesResponse, error) {
+func (c *currencyServiceClient) ListAll(ctx context.Context, in *currencypb.ListAllCurrenciesRequest, opts ...grpc.CallOption) (*currencypb.ListAllCurrenciesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(currency.ListAllCurrenciesResponse)
+	out := new(currencypb.ListAllCurrenciesResponse)
 	err := c.cc.Invoke(ctx, CurrencyService_ListAll_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -525,9 +525,9 @@ func (c *currencyServiceClient) ListAll(ctx context.Context, in *currency.ListAl
 	return out, nil
 }
 
-func (c *currencyServiceClient) Reorder(ctx context.Context, in *currency.ReorderCurrencyRequest, opts ...grpc.CallOption) (*currency.ReorderCurrencyResponse, error) {
+func (c *currencyServiceClient) Reorder(ctx context.Context, in *currencypb.ReorderCurrencyRequest, opts ...grpc.CallOption) (*currencypb.ReorderCurrencyResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(currency.ReorderCurrencyResponse)
+	out := new(currencypb.ReorderCurrencyResponse)
 	err := c.cc.Invoke(ctx, CurrencyService_Reorder_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -542,17 +542,17 @@ func (c *currencyServiceClient) Reorder(ctx context.Context, in *currency.Reorde
 // 货币服务
 type CurrencyServiceServer interface {
 	// 修改货币
-	Update(context.Context, *currency.UpdateCurrencyRequest) (*currency.UpdateCurrencyResponse, error)
+	Update(context.Context, *currencypb.UpdateCurrencyRequest) (*currencypb.UpdateCurrencyResponse, error)
 	// 获取货币
-	Get(context.Context, *currency.GetCurrencyRequest) (*currency.GetCurrencyResponse, error)
+	Get(context.Context, *currencypb.GetCurrencyRequest) (*currencypb.GetCurrencyResponse, error)
 	// 按编码获取货币
-	GetByCode(context.Context, *currency.GetCurrencyByCodeRequest) (*currency.GetCurrencyByCodeResponse, error)
+	GetByCode(context.Context, *currencypb.GetCurrencyByCodeRequest) (*currencypb.GetCurrencyByCodeResponse, error)
 	// 获取货币管理列表
-	List(context.Context, *currency.ListCurrenciesRequest) (*currency.ListCurrenciesResponse, error)
+	List(context.Context, *currencypb.ListCurrenciesRequest) (*currencypb.ListCurrenciesResponse, error)
 	// 获取全部货币
-	ListAll(context.Context, *currency.ListAllCurrenciesRequest) (*currency.ListAllCurrenciesResponse, error)
+	ListAll(context.Context, *currencypb.ListAllCurrenciesRequest) (*currencypb.ListAllCurrenciesResponse, error)
 	// 调整货币排序
-	Reorder(context.Context, *currency.ReorderCurrencyRequest) (*currency.ReorderCurrencyResponse, error)
+	Reorder(context.Context, *currencypb.ReorderCurrencyRequest) (*currencypb.ReorderCurrencyResponse, error)
 	mustEmbedUnimplementedCurrencyServiceServer()
 }
 
@@ -563,22 +563,22 @@ type CurrencyServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedCurrencyServiceServer struct{}
 
-func (UnimplementedCurrencyServiceServer) Update(context.Context, *currency.UpdateCurrencyRequest) (*currency.UpdateCurrencyResponse, error) {
+func (UnimplementedCurrencyServiceServer) Update(context.Context, *currencypb.UpdateCurrencyRequest) (*currencypb.UpdateCurrencyResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
-func (UnimplementedCurrencyServiceServer) Get(context.Context, *currency.GetCurrencyRequest) (*currency.GetCurrencyResponse, error) {
+func (UnimplementedCurrencyServiceServer) Get(context.Context, *currencypb.GetCurrencyRequest) (*currencypb.GetCurrencyResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedCurrencyServiceServer) GetByCode(context.Context, *currency.GetCurrencyByCodeRequest) (*currency.GetCurrencyByCodeResponse, error) {
+func (UnimplementedCurrencyServiceServer) GetByCode(context.Context, *currencypb.GetCurrencyByCodeRequest) (*currencypb.GetCurrencyByCodeResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetByCode not implemented")
 }
-func (UnimplementedCurrencyServiceServer) List(context.Context, *currency.ListCurrenciesRequest) (*currency.ListCurrenciesResponse, error) {
+func (UnimplementedCurrencyServiceServer) List(context.Context, *currencypb.ListCurrenciesRequest) (*currencypb.ListCurrenciesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedCurrencyServiceServer) ListAll(context.Context, *currency.ListAllCurrenciesRequest) (*currency.ListAllCurrenciesResponse, error) {
+func (UnimplementedCurrencyServiceServer) ListAll(context.Context, *currencypb.ListAllCurrenciesRequest) (*currencypb.ListAllCurrenciesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListAll not implemented")
 }
-func (UnimplementedCurrencyServiceServer) Reorder(context.Context, *currency.ReorderCurrencyRequest) (*currency.ReorderCurrencyResponse, error) {
+func (UnimplementedCurrencyServiceServer) Reorder(context.Context, *currencypb.ReorderCurrencyRequest) (*currencypb.ReorderCurrencyResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Reorder not implemented")
 }
 func (UnimplementedCurrencyServiceServer) mustEmbedUnimplementedCurrencyServiceServer() {}
@@ -603,7 +603,7 @@ func RegisterCurrencyServiceServer(s grpc.ServiceRegistrar, srv CurrencyServiceS
 }
 
 func _CurrencyService_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(currency.UpdateCurrencyRequest)
+	in := new(currencypb.UpdateCurrencyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -615,13 +615,13 @@ func _CurrencyService_Update_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: CurrencyService_Update_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CurrencyServiceServer).Update(ctx, req.(*currency.UpdateCurrencyRequest))
+		return srv.(CurrencyServiceServer).Update(ctx, req.(*currencypb.UpdateCurrencyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _CurrencyService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(currency.GetCurrencyRequest)
+	in := new(currencypb.GetCurrencyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -633,13 +633,13 @@ func _CurrencyService_Get_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: CurrencyService_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CurrencyServiceServer).Get(ctx, req.(*currency.GetCurrencyRequest))
+		return srv.(CurrencyServiceServer).Get(ctx, req.(*currencypb.GetCurrencyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _CurrencyService_GetByCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(currency.GetCurrencyByCodeRequest)
+	in := new(currencypb.GetCurrencyByCodeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -651,13 +651,13 @@ func _CurrencyService_GetByCode_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: CurrencyService_GetByCode_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CurrencyServiceServer).GetByCode(ctx, req.(*currency.GetCurrencyByCodeRequest))
+		return srv.(CurrencyServiceServer).GetByCode(ctx, req.(*currencypb.GetCurrencyByCodeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _CurrencyService_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(currency.ListCurrenciesRequest)
+	in := new(currencypb.ListCurrenciesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -669,13 +669,13 @@ func _CurrencyService_List_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: CurrencyService_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CurrencyServiceServer).List(ctx, req.(*currency.ListCurrenciesRequest))
+		return srv.(CurrencyServiceServer).List(ctx, req.(*currencypb.ListCurrenciesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _CurrencyService_ListAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(currency.ListAllCurrenciesRequest)
+	in := new(currencypb.ListAllCurrenciesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -687,13 +687,13 @@ func _CurrencyService_ListAll_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: CurrencyService_ListAll_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CurrencyServiceServer).ListAll(ctx, req.(*currency.ListAllCurrenciesRequest))
+		return srv.(CurrencyServiceServer).ListAll(ctx, req.(*currencypb.ListAllCurrenciesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _CurrencyService_Reorder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(currency.ReorderCurrencyRequest)
+	in := new(currencypb.ReorderCurrencyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -705,7 +705,7 @@ func _CurrencyService_Reorder_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: CurrencyService_Reorder_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CurrencyServiceServer).Reorder(ctx, req.(*currency.ReorderCurrencyRequest))
+		return srv.(CurrencyServiceServer).Reorder(ctx, req.(*currencypb.ReorderCurrencyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -762,17 +762,17 @@ const (
 // 国家地区服务
 type RegionServiceClient interface {
 	// 修改国家地区
-	Update(ctx context.Context, in *region.UpdateRegionRequest, opts ...grpc.CallOption) (*region.UpdateRegionResponse, error)
+	Update(ctx context.Context, in *regionpb.UpdateRegionRequest, opts ...grpc.CallOption) (*regionpb.UpdateRegionResponse, error)
 	// 获取国家地区
-	Get(ctx context.Context, in *region.GetRegionRequest, opts ...grpc.CallOption) (*region.GetRegionResponse, error)
+	Get(ctx context.Context, in *regionpb.GetRegionRequest, opts ...grpc.CallOption) (*regionpb.GetRegionResponse, error)
 	// 按编码获取国家地区
-	GetByCode(ctx context.Context, in *region.GetRegionByCodeRequest, opts ...grpc.CallOption) (*region.GetRegionByCodeResponse, error)
+	GetByCode(ctx context.Context, in *regionpb.GetRegionByCodeRequest, opts ...grpc.CallOption) (*regionpb.GetRegionByCodeResponse, error)
 	// 获取国家地区管理列表
-	List(ctx context.Context, in *region.ListRegionsRequest, opts ...grpc.CallOption) (*region.ListRegionsResponse, error)
+	List(ctx context.Context, in *regionpb.ListRegionsRequest, opts ...grpc.CallOption) (*regionpb.ListRegionsResponse, error)
 	// 获取全部国家地区
-	ListAll(ctx context.Context, in *region.ListAllRegionsRequest, opts ...grpc.CallOption) (*region.ListAllRegionsResponse, error)
+	ListAll(ctx context.Context, in *regionpb.ListAllRegionsRequest, opts ...grpc.CallOption) (*regionpb.ListAllRegionsResponse, error)
 	// 调整国家地区排序
-	Reorder(ctx context.Context, in *region.ReorderRegionRequest, opts ...grpc.CallOption) (*region.ReorderRegionResponse, error)
+	Reorder(ctx context.Context, in *regionpb.ReorderRegionRequest, opts ...grpc.CallOption) (*regionpb.ReorderRegionResponse, error)
 }
 
 type regionServiceClient struct {
@@ -783,9 +783,9 @@ func NewRegionServiceClient(cc grpc.ClientConnInterface) RegionServiceClient {
 	return &regionServiceClient{cc}
 }
 
-func (c *regionServiceClient) Update(ctx context.Context, in *region.UpdateRegionRequest, opts ...grpc.CallOption) (*region.UpdateRegionResponse, error) {
+func (c *regionServiceClient) Update(ctx context.Context, in *regionpb.UpdateRegionRequest, opts ...grpc.CallOption) (*regionpb.UpdateRegionResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(region.UpdateRegionResponse)
+	out := new(regionpb.UpdateRegionResponse)
 	err := c.cc.Invoke(ctx, RegionService_Update_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -793,9 +793,9 @@ func (c *regionServiceClient) Update(ctx context.Context, in *region.UpdateRegio
 	return out, nil
 }
 
-func (c *regionServiceClient) Get(ctx context.Context, in *region.GetRegionRequest, opts ...grpc.CallOption) (*region.GetRegionResponse, error) {
+func (c *regionServiceClient) Get(ctx context.Context, in *regionpb.GetRegionRequest, opts ...grpc.CallOption) (*regionpb.GetRegionResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(region.GetRegionResponse)
+	out := new(regionpb.GetRegionResponse)
 	err := c.cc.Invoke(ctx, RegionService_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -803,9 +803,9 @@ func (c *regionServiceClient) Get(ctx context.Context, in *region.GetRegionReque
 	return out, nil
 }
 
-func (c *regionServiceClient) GetByCode(ctx context.Context, in *region.GetRegionByCodeRequest, opts ...grpc.CallOption) (*region.GetRegionByCodeResponse, error) {
+func (c *regionServiceClient) GetByCode(ctx context.Context, in *regionpb.GetRegionByCodeRequest, opts ...grpc.CallOption) (*regionpb.GetRegionByCodeResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(region.GetRegionByCodeResponse)
+	out := new(regionpb.GetRegionByCodeResponse)
 	err := c.cc.Invoke(ctx, RegionService_GetByCode_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -813,9 +813,9 @@ func (c *regionServiceClient) GetByCode(ctx context.Context, in *region.GetRegio
 	return out, nil
 }
 
-func (c *regionServiceClient) List(ctx context.Context, in *region.ListRegionsRequest, opts ...grpc.CallOption) (*region.ListRegionsResponse, error) {
+func (c *regionServiceClient) List(ctx context.Context, in *regionpb.ListRegionsRequest, opts ...grpc.CallOption) (*regionpb.ListRegionsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(region.ListRegionsResponse)
+	out := new(regionpb.ListRegionsResponse)
 	err := c.cc.Invoke(ctx, RegionService_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -823,9 +823,9 @@ func (c *regionServiceClient) List(ctx context.Context, in *region.ListRegionsRe
 	return out, nil
 }
 
-func (c *regionServiceClient) ListAll(ctx context.Context, in *region.ListAllRegionsRequest, opts ...grpc.CallOption) (*region.ListAllRegionsResponse, error) {
+func (c *regionServiceClient) ListAll(ctx context.Context, in *regionpb.ListAllRegionsRequest, opts ...grpc.CallOption) (*regionpb.ListAllRegionsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(region.ListAllRegionsResponse)
+	out := new(regionpb.ListAllRegionsResponse)
 	err := c.cc.Invoke(ctx, RegionService_ListAll_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -833,9 +833,9 @@ func (c *regionServiceClient) ListAll(ctx context.Context, in *region.ListAllReg
 	return out, nil
 }
 
-func (c *regionServiceClient) Reorder(ctx context.Context, in *region.ReorderRegionRequest, opts ...grpc.CallOption) (*region.ReorderRegionResponse, error) {
+func (c *regionServiceClient) Reorder(ctx context.Context, in *regionpb.ReorderRegionRequest, opts ...grpc.CallOption) (*regionpb.ReorderRegionResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(region.ReorderRegionResponse)
+	out := new(regionpb.ReorderRegionResponse)
 	err := c.cc.Invoke(ctx, RegionService_Reorder_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -850,17 +850,17 @@ func (c *regionServiceClient) Reorder(ctx context.Context, in *region.ReorderReg
 // 国家地区服务
 type RegionServiceServer interface {
 	// 修改国家地区
-	Update(context.Context, *region.UpdateRegionRequest) (*region.UpdateRegionResponse, error)
+	Update(context.Context, *regionpb.UpdateRegionRequest) (*regionpb.UpdateRegionResponse, error)
 	// 获取国家地区
-	Get(context.Context, *region.GetRegionRequest) (*region.GetRegionResponse, error)
+	Get(context.Context, *regionpb.GetRegionRequest) (*regionpb.GetRegionResponse, error)
 	// 按编码获取国家地区
-	GetByCode(context.Context, *region.GetRegionByCodeRequest) (*region.GetRegionByCodeResponse, error)
+	GetByCode(context.Context, *regionpb.GetRegionByCodeRequest) (*regionpb.GetRegionByCodeResponse, error)
 	// 获取国家地区管理列表
-	List(context.Context, *region.ListRegionsRequest) (*region.ListRegionsResponse, error)
+	List(context.Context, *regionpb.ListRegionsRequest) (*regionpb.ListRegionsResponse, error)
 	// 获取全部国家地区
-	ListAll(context.Context, *region.ListAllRegionsRequest) (*region.ListAllRegionsResponse, error)
+	ListAll(context.Context, *regionpb.ListAllRegionsRequest) (*regionpb.ListAllRegionsResponse, error)
 	// 调整国家地区排序
-	Reorder(context.Context, *region.ReorderRegionRequest) (*region.ReorderRegionResponse, error)
+	Reorder(context.Context, *regionpb.ReorderRegionRequest) (*regionpb.ReorderRegionResponse, error)
 	mustEmbedUnimplementedRegionServiceServer()
 }
 
@@ -871,22 +871,22 @@ type RegionServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedRegionServiceServer struct{}
 
-func (UnimplementedRegionServiceServer) Update(context.Context, *region.UpdateRegionRequest) (*region.UpdateRegionResponse, error) {
+func (UnimplementedRegionServiceServer) Update(context.Context, *regionpb.UpdateRegionRequest) (*regionpb.UpdateRegionResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
-func (UnimplementedRegionServiceServer) Get(context.Context, *region.GetRegionRequest) (*region.GetRegionResponse, error) {
+func (UnimplementedRegionServiceServer) Get(context.Context, *regionpb.GetRegionRequest) (*regionpb.GetRegionResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedRegionServiceServer) GetByCode(context.Context, *region.GetRegionByCodeRequest) (*region.GetRegionByCodeResponse, error) {
+func (UnimplementedRegionServiceServer) GetByCode(context.Context, *regionpb.GetRegionByCodeRequest) (*regionpb.GetRegionByCodeResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetByCode not implemented")
 }
-func (UnimplementedRegionServiceServer) List(context.Context, *region.ListRegionsRequest) (*region.ListRegionsResponse, error) {
+func (UnimplementedRegionServiceServer) List(context.Context, *regionpb.ListRegionsRequest) (*regionpb.ListRegionsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedRegionServiceServer) ListAll(context.Context, *region.ListAllRegionsRequest) (*region.ListAllRegionsResponse, error) {
+func (UnimplementedRegionServiceServer) ListAll(context.Context, *regionpb.ListAllRegionsRequest) (*regionpb.ListAllRegionsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListAll not implemented")
 }
-func (UnimplementedRegionServiceServer) Reorder(context.Context, *region.ReorderRegionRequest) (*region.ReorderRegionResponse, error) {
+func (UnimplementedRegionServiceServer) Reorder(context.Context, *regionpb.ReorderRegionRequest) (*regionpb.ReorderRegionResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Reorder not implemented")
 }
 func (UnimplementedRegionServiceServer) mustEmbedUnimplementedRegionServiceServer() {}
@@ -911,7 +911,7 @@ func RegisterRegionServiceServer(s grpc.ServiceRegistrar, srv RegionServiceServe
 }
 
 func _RegionService_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(region.UpdateRegionRequest)
+	in := new(regionpb.UpdateRegionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -923,13 +923,13 @@ func _RegionService_Update_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: RegionService_Update_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RegionServiceServer).Update(ctx, req.(*region.UpdateRegionRequest))
+		return srv.(RegionServiceServer).Update(ctx, req.(*regionpb.UpdateRegionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RegionService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(region.GetRegionRequest)
+	in := new(regionpb.GetRegionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -941,13 +941,13 @@ func _RegionService_Get_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: RegionService_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RegionServiceServer).Get(ctx, req.(*region.GetRegionRequest))
+		return srv.(RegionServiceServer).Get(ctx, req.(*regionpb.GetRegionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RegionService_GetByCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(region.GetRegionByCodeRequest)
+	in := new(regionpb.GetRegionByCodeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -959,13 +959,13 @@ func _RegionService_GetByCode_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: RegionService_GetByCode_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RegionServiceServer).GetByCode(ctx, req.(*region.GetRegionByCodeRequest))
+		return srv.(RegionServiceServer).GetByCode(ctx, req.(*regionpb.GetRegionByCodeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RegionService_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(region.ListRegionsRequest)
+	in := new(regionpb.ListRegionsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -977,13 +977,13 @@ func _RegionService_List_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: RegionService_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RegionServiceServer).List(ctx, req.(*region.ListRegionsRequest))
+		return srv.(RegionServiceServer).List(ctx, req.(*regionpb.ListRegionsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RegionService_ListAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(region.ListAllRegionsRequest)
+	in := new(regionpb.ListAllRegionsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -995,13 +995,13 @@ func _RegionService_ListAll_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: RegionService_ListAll_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RegionServiceServer).ListAll(ctx, req.(*region.ListAllRegionsRequest))
+		return srv.(RegionServiceServer).ListAll(ctx, req.(*regionpb.ListAllRegionsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RegionService_Reorder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(region.ReorderRegionRequest)
+	in := new(regionpb.ReorderRegionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1013,7 +1013,7 @@ func _RegionService_Reorder_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: RegionService_Reorder_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RegionServiceServer).Reorder(ctx, req.(*region.ReorderRegionRequest))
+		return srv.(RegionServiceServer).Reorder(ctx, req.(*regionpb.ReorderRegionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

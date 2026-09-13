@@ -9,7 +9,7 @@ import (
 	corei18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/platform-base/api/internal/svc"
 	"oa.98ent.com/p9/platform-base/api/internal/types"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/timezone"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/timezonepb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,7 +33,7 @@ func (l *ListTimezonesLogic) ListTimezones(req *types.ListTimezonesRequest) (res
 	// 调用获取时区管理列表RPC
 	result, err := l.svcCtx.TimezoneRpc.List(
 		l.ctx,
-		&timezone.ListTimezonesRequest{
+		&timezonepb.ListTimezonesRequest{
 			Page:     req.Page,     // 页码
 			PageSize: req.PageSize, // 每页数量
 			Status:   req.Status,   // 状态: 1启用, 2停用

@@ -4,7 +4,7 @@
 // 	protoc        v6.32.0
 // source: types/timezone.proto
 
-package timezone
+package timezonepb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -722,7 +722,7 @@ const file_types_timezone_proto_rawDesc = "" +
 	"\x16ReorderTimezoneRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1b\n" +
 	"\ttarget_id\x18\x02 \x01(\x03R\btargetId\"\x19\n" +
-	"\x17ReorderTimezoneResponseB4Z2oa.98ent.com/p9/platform-base/rpc/pb/base/timezoneb\x06proto3"
+	"\x17ReorderTimezoneResponseBAZ?oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/timezonepbb\x06proto3"
 
 var (
 	file_types_timezone_proto_rawDescOnce sync.Once
