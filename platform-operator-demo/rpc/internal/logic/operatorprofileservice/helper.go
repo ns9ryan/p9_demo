@@ -1,9 +1,20 @@
 package operatorprofileservicelogic
 
 import (
+	"strings"
+
 	"oa.98ent.com/p9/platform-operator/rpc/ent"
 	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/profilepb"
 )
+
+// trimOptionalString 整理可选字符串
+func trimOptionalString(value *string) *string {
+	if value == nil {
+		return nil
+	}
+
+	return new(strings.TrimSpace(*value))
+}
 
 // toOperatorProfileInfo 转换分站档案信息
 func toOperatorProfileInfo(data *ent.OperatorProfile) *profilepb.OperatorProfileInfo {

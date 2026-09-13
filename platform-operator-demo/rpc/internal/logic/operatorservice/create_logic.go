@@ -28,18 +28,24 @@ func NewCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateLogi
 
 // Create 创建分站
 func (l *CreateLogic) Create(in *operatorpb.CreateOperatorRequest) (*operatorpb.CreateOperatorResponse, error) {
+	// 整理创建参数
+	name := strings.TrimSpace(in.Name)
+	timezoneCode := strings.TrimSpace(in.TimezoneCode)
+	settlementCurrencyCode := strings.ToUpper(strings.TrimSpace(in.SettlementCurrencyCode))
+	remark := trimOptionalString(in.Remark)
+
 	// 生成分站业务编码
 	code := "OP_" + strings.ToUpper(strings.ReplaceAll(uuid.NewString(), "-", ""))
 
 	// 创建分站
 	data, err := l.svcCtx.DB.Operator.
 		Create().
-		SetCode(code).                                        // 分站业务编码
-		SetName(in.Name).                                     // 分站名称
-		SetTimezoneCode(in.TimezoneCode).                     // 时区编码
-		SetSettlementCurrencyCode(in.SettlementCurrencyCode). // 结算币种编码
-		SetNillableStatus(in.Status).                         // 分站状态: 1正常, 2暂停, 3关闭
-		SetNillableRemark(in.Remark).                         // 内部备注
+		SetCode(code).                                     // 分站业务编码
+		SetName(name).                                     // 分站名称
+		SetTimezoneCode(timezoneCode).                     // 时区编码
+		SetSettlementCurrencyCode(settlementCurrencyCode). // 结算币种编码
+		SetNillableStatus(in.Status).                      // 分站状态: 1正常, 2暂停, 3关闭
+		SetNillableRemark(remark).                         // 内部备注
 		Save(l.ctx)
 	if err != nil {
 		// 处理数据库错误

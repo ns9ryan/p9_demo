@@ -40,7 +40,7 @@ type ServiceContext struct {
 	// Platform Operator RPC
 	PingRpc                    pingservice.PingService                                       // Ping RPC
 	OperatorRpc                operatorservice.OperatorService                               // 分站RPC
-	ProfileRpc                 operatorprofileservice.OperatorProfileService                 // 分站档案RPC
+	OperatorProfileRpc         operatorprofileservice.OperatorProfileService                 // 分站档案RPC
 	DomainRpc                  domainservice.DomainService                                   // 分站域名RPC
 	BasicResourceAllocationRpc basicresourceallocationservice.BasicResourceAllocationService // 基础资源分配RPC
 	LanguageAllocationRpc      languageallocationservice.LanguageAllocationService           // 语言分配RPC
@@ -112,7 +112,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		// Platform Operator RPC
 		PingRpc:                    pingservice.NewPingService(platformOperatorClient),                                       // Ping RPC
 		OperatorRpc:                operatorservice.NewOperatorService(platformOperatorClient),                               // 分站RPC
-		ProfileRpc:                 operatorprofileservice.NewOperatorProfileService(platformOperatorClient),                 // 分站档案RPC
+		OperatorProfileRpc:         operatorprofileservice.NewOperatorProfileService(platformOperatorClient),                 // 分站档案RPC
 		DomainRpc:                  domainservice.NewDomainService(platformOperatorClient),                                   // 分站域名RPC
 		BasicResourceAllocationRpc: basicresourceallocationservice.NewBasicResourceAllocationService(platformOperatorClient), // 基础资源分配RPC
 		LanguageAllocationRpc:      languageallocationservice.NewLanguageAllocationService(platformOperatorClient),           // 语言分配RPC

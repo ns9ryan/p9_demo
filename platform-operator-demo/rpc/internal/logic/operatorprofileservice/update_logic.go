@@ -55,10 +55,10 @@ func (l *UpdateLogic) Update(in *profilepb.UpdateOperatorProfileRequest) (*profi
 	// 修改分站档案
 	err = current.
 		Update().
-		SetNillableCompanyName(in.CompanyName).   // 公司名称
-		SetNillableContactName(in.ContactName).   // 主要联系人名称
-		SetNillableContactEmail(in.ContactEmail). // 主要联系人邮箱
-		SetNillableRemark(in.Remark).             // 总网内部档案备注
+		SetNillableCompanyName(trimOptionalString(in.CompanyName)).   // 公司名称
+		SetNillableContactName(trimOptionalString(in.ContactName)).   // 主要联系人名称
+		SetNillableContactEmail(trimOptionalString(in.ContactEmail)). // 主要联系人邮箱
+		SetNillableRemark(trimOptionalString(in.Remark)).             // 总网内部档案备注
 		Exec(l.ctx)
 	if err != nil {
 		// 转换Ent错误为gRPC错误

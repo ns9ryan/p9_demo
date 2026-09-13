@@ -43,11 +43,11 @@ func (l *CreateLogic) Create(in *profilepb.CreateOperatorProfileRequest) (*profi
 	// 创建分站档案
 	data, err := l.svcCtx.DB.OperatorProfile.
 		Create().
-		SetOperatorID(in.OperatorId).             // 分站ID
-		SetNillableCompanyName(in.CompanyName).   // 公司名称
-		SetNillableContactName(in.ContactName).   // 主要联系人名称
-		SetNillableContactEmail(in.ContactEmail). // 主要联系人邮箱
-		SetNillableRemark(in.Remark).             // 总网内部档案备注
+		SetOperatorID(in.OperatorId).                                 // 分站ID
+		SetNillableCompanyName(trimOptionalString(in.CompanyName)).   // 公司名称
+		SetNillableContactName(trimOptionalString(in.ContactName)).   // 主要联系人名称
+		SetNillableContactEmail(trimOptionalString(in.ContactEmail)). // 主要联系人邮箱
+		SetNillableRemark(trimOptionalString(in.Remark)).             // 总网内部档案备注
 		Save(l.ctx)
 	if err != nil {
 		// 转换Ent错误为gRPC错误

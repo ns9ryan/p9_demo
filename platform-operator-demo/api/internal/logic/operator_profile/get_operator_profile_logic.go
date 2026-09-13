@@ -8,6 +8,7 @@ import (
 
 	"oa.98ent.com/p9/platform-operator/api/internal/svc"
 	"oa.98ent.com/p9/platform-operator/api/internal/types"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/profilepb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,8 +27,21 @@ func NewGetOperatorProfileLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 	}
 }
 
+// GetOperatorProfile 获取分站档案
 func (l *GetOperatorProfileLogic) GetOperatorProfile(req *types.GetOperatorProfileRequest) (resp *types.GetOperatorProfileResponse, err error) {
-	// todo: add your logic here and delete this line
+	// 获取分站档案
+	result, err := l.svcCtx.OperatorProfileRpc.Get(
+		l.ctx,
+		&profilepb.GetOperatorProfileRequest{
+			OperatorId: req.OperatorId, // 分站ID
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
 
-	return
+	// 返回分站档案信息
+	return &types.GetOperatorProfileResponse{
+		Profile: toOperatorProfileInfo(result.Profile), // 分站档案信息
+	}, nil
 }

@@ -36,16 +36,11 @@ func NewCreateOperatorLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cr
 
 // CreateOperator 创建分站
 func (l *CreateOperatorLogic) CreateOperator(req *types.CreateOperatorRequest) (resp *types.CreateOperatorResponse, err error) {
-	// 整理创建参数
-	name := strings.TrimSpace(req.Name)
+	// 整理时区编码
 	timezoneCode := strings.TrimSpace(req.TimezoneCode)
-	settlementCurrencyCode := strings.ToUpper(strings.TrimSpace(req.SettlementCurrencyCode))
 
-	var remark *string
-	if req.Remark != nil {
-		value := strings.TrimSpace(*req.Remark)
-		remark = &value
-	}
+	// 整理结算币种编码
+	settlementCurrencyCode := strings.ToUpper(strings.TrimSpace(req.SettlementCurrencyCode))
 
 	// 获取并校验时区
 	timezoneResult, err := l.svcCtx.TimezoneRpc.GetByCode(
@@ -93,11 +88,11 @@ func (l *CreateOperatorLogic) CreateOperator(req *types.CreateOperatorRequest) (
 	result, err := l.svcCtx.OperatorRpc.Create(
 		l.ctx,
 		&operatorpb.CreateOperatorRequest{
-			Name:                   name,                         // 分站名称
+			Name:                   req.Name,                     // 分站名称
 			TimezoneCode:           timezoneResult.Timezone.Code, // 时区编码
 			SettlementCurrencyCode: currencyResult.Currency.Code, // 结算币种编码
 			Status:                 req.Status,                   // 分站状态: 1正常, 2暂停, 3关闭
-			Remark:                 remark,                       // 内部备注
+			Remark:                 req.Remark,                   // 内部备注
 		},
 	)
 	if err != nil {
