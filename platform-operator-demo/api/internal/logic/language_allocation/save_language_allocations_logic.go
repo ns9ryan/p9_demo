@@ -17,8 +17,6 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-const coreLanguagePageSize int32 = 100
-
 type SaveLanguageAllocationsLogic struct {
 	logx.Logger
 	ctx    context.Context
@@ -38,20 +36,15 @@ func (l *SaveLanguageAllocationsLogic) SaveLanguageAllocations(req *types.SaveLa
 	languageCodes := make([]string, 0, len(req.LanguageCodes))
 
 	if len(req.LanguageCodes) > 0 {
-		// 获取Core全部语言主数据
-		languages, err := l.getCoreLanguages()
+		// 获取Core全部启用语言
+		result, err := l.svcCtx.Core.GetEnabledI18NLangs(l.ctx, &coreclient.Empty{})
 		if err != nil {
 			return nil, err
 		}
 
 		// 建立可用语言编码索引
-		languageMap := make(map[string]string, len(languages))
-		for _, language := range languages {
-			// 已停用语言不能继续分配
-			if language.Disabled != 0 {
-				continue
-			}
-
+		languageMap := make(map[string]string, len(result.List))
+		for _, language := range result.List {
 			languageMap[strings.ToLower(language.Lang)] = language.Lang
 		}
 
@@ -82,35 +75,4 @@ func (l *SaveLanguageAllocationsLogic) SaveLanguageAllocations(req *types.SaveLa
 
 	// 返回保存结果
 	return &types.SaveLanguageAllocationsResponse{}, nil
-}
-
-// getCoreLanguages 获取Core全部语言主数据 todo：这个要改，需要core提供获取所有语言
-func (l *SaveLanguageAllocationsLogic) getCoreLanguages() ([]*coreclient.I18NLangInfo, error) {
-	page := int32(1)
-	languages := make([]*coreclient.I18NLangInfo, 0)
-
-	for {
-		// 分页获取Core语言主数据
-		result, err := l.svcCtx.Core.GetI18NLangList(
-			l.ctx,
-			&coreclient.I18NLangListReq{
-				Page:     page,                 // 页码, 从1开始
-				PageSize: coreLanguagePageSize, // 每页数量
-			},
-		)
-		if err != nil {
-			return nil, err
-		}
-
-		languages = append(languages, result.List...)
-
-		// 已获取全部语言
-		if int64(len(languages)) >= result.Total || len(result.List) == 0 {
-			break
-		}
-
-		page++
-	}
-
-	return languages, nil
 }
