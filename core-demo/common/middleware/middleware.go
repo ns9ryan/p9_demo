@@ -5,10 +5,14 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/zeromicro/go-zero/rest"
 	"oa.98ent.com/p9/core/common/ctxdata"
 	"oa.98ent.com/p9/core/common/i18n"
+	"oa.98ent.com/p9/core/common/jwt"
+	"oa.98ent.com/p9/core/common/response"
 	"oa.98ent.com/p9/core/common/utils"
+	"oa.98ent.com/p9/core/common/xerr"
+
+	"github.com/zeromicro/go-zero/rest"
 )
 
 // Client 客户端接口
@@ -36,22 +40,22 @@ func ClientIP(next http.HandlerFunc) http.HandlerFunc {
 func JWT(c Client) rest.Middleware {
 	return func(next http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
-			// raw := stripBearer(r.Header.Get("Authorization"))
+			raw := stripBearer(r.Header.Get("Authorization"))
 			ctx := r.Context()
-			// if ctxdata.ClientIPFromCtx(ctx) == "" {
-			// 	ctx = ctxdata.WithClientIP(ctx, utils.ClientIP(r))
-			// }
-			// claims, err := c.CheckToken(ctx, raw)
-			// if err != nil {
-			// 	response.FailCtx(ctx, w, err)
-			// 	return
-			// }
-			// if claims != nil && claims.TokenType == jwt.TokenPreview && previewWriteDenied(r.Method, r.URL.Path) {
-			// 	response.FailCtx(ctx, w, xerr.Forbidden(i18n.AuthPreviewReadOnly))
-			// 	return
-			// }
-			// ctx = ctxdata.WithClaims(ctx, claims)
-			// ctx = ctxdata.WithRawToken(ctx, raw)
+			if ctxdata.ClientIPFromCtx(ctx) == "" {
+				ctx = ctxdata.WithClientIP(ctx, utils.ClientIP(r))
+			}
+			claims, err := c.CheckToken(ctx, raw)
+			if err != nil {
+				response.FailCtx(ctx, w, err)
+				return
+			}
+			if claims != nil && claims.TokenType == jwt.TokenPreview && previewWriteDenied(r.Method, r.URL.Path) {
+				response.FailCtx(ctx, w, xerr.Forbidden(i18n.AuthPreviewReadOnly))
+				return
+			}
+			ctx = ctxdata.WithClaims(ctx, claims)
+			ctx = ctxdata.WithRawToken(ctx, raw)
 			next(w, r.WithContext(ctx))
 		}
 	}
@@ -61,16 +65,16 @@ func JWT(c Client) rest.Middleware {
 func Authority(c Client) rest.Middleware {
 	return func(next http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
-			// claims := ctxdata.ClaimsFromCtx(r.Context())
-			// ok, err := c.Enforce(r.Context(), claims, r.URL.Path, r.Method)
-			// if err != nil {
-			// 	response.FailCtx(r.Context(), w, err)
-			// 	return
-			// }
-			// if !ok {
-			// 	response.FailCtx(r.Context(), w, xerr.Forbidden(i18n.Forbidden))
-			// 	return
-			// }
+			claims := ctxdata.ClaimsFromCtx(r.Context())
+			ok, err := c.Enforce(r.Context(), claims, r.URL.Path, r.Method)
+			if err != nil {
+				response.FailCtx(r.Context(), w, err)
+				return
+			}
+			if !ok {
+				response.FailCtx(r.Context(), w, xerr.Forbidden(i18n.Forbidden))
+				return
+			}
 			next(w, r)
 		}
 	}

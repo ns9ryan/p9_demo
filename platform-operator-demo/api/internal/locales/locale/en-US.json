@@ -14,6 +14,8 @@
 
 	"operator": {
 		"timezone_unavailable": "Timezone unavailable",
-		"settlement_currency_unavailable": "Settlement currency unavailable"
+		"settlement_currency_unavailable": "Settlement currency unavailable",
+		"language_unavailable": "Language unavailable",
+		"region_unavailable": "Region unavailable"
 	}
 }

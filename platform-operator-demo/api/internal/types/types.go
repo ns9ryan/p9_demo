@@ -187,17 +187,6 @@ type OperatorDomainInfo struct {
 	UpdatedAt  int64   `json:"updated_at"`
 }
 
-type OperatorDomainInfo struct {
-	Id         int64   `json:"id"`
-	OperatorId int64   `json:"operator_id"`
-	DomainName string  `json:"domain_name"`
-	DomainType int64   `json:"domain_type"`
-	Status     int64   `json:"status"`
-	Remark     *string `json:"remark,optional"`
-	CreatedAt  int64   `json:"created_at"`
-	UpdatedAt  int64   `json:"updated_at"`
-}
-
 type OperatorInfo struct {
 	Id                     int64   `json:"id"`
 	Code                   string  `json:"code"`
