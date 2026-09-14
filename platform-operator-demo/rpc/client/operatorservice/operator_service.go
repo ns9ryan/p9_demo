@@ -29,6 +29,8 @@ type (
 		Complete(ctx context.Context, in *operatorpb.CompleteOperatorRequest, opts ...grpc.CallOption) (*operatorpb.CompleteOperatorResponse, error)
 		// 发布分站
 		Publish(ctx context.Context, in *operatorpb.PublishOperatorRequest, opts ...grpc.CallOption) (*operatorpb.PublishOperatorResponse, error)
+		// 删除分站
+		Delete(ctx context.Context, in *operatorpb.DeleteOperatorRequest, opts ...grpc.CallOption) (*operatorpb.DeleteOperatorResponse, error)
 	}
 
 	defaultOperatorService struct {
@@ -76,4 +78,10 @@ func (m *defaultOperatorService) Complete(ctx context.Context, in *operatorpb.Co
 func (m *defaultOperatorService) Publish(ctx context.Context, in *operatorpb.PublishOperatorRequest, opts ...grpc.CallOption) (*operatorpb.PublishOperatorResponse, error) {
 	client := platformoperatorrpc.NewOperatorServiceClient(m.cli.Conn())
 	return client.Publish(ctx, in, opts...)
+}
+
+// 删除分站
+func (m *defaultOperatorService) Delete(ctx context.Context, in *operatorpb.DeleteOperatorRequest, opts ...grpc.CallOption) (*operatorpb.DeleteOperatorResponse, error) {
+	client := platformoperatorrpc.NewOperatorServiceClient(m.cli.Conn())
+	return client.Delete(ctx, in, opts...)
 }

@@ -31,6 +31,7 @@ func menus() []*coreclient.RegisterMenuReq {
 		{Name: "OperatorList", Title: "menu.route.operatorList", Path: "/operator/list", MenuType: menuTypeMenu, Component: "operator/list/index", ParentName: "OperatorManagement", Sort: 31},
 		{Name: "OperatorCreate", Title: "menu.route.operatorCreate", MenuType: menuTypeButton, Permission: "operator:create", ParentName: "OperatorList", Sort: 311},
 		{Name: "OperatorUpdate", Title: "menu.route.operatorUpdate", MenuType: menuTypeButton, Permission: "operator:update", ParentName: "OperatorList", Sort: 312},
+		{Name: "OperatorPublish", Title: "menu.route.operatorPublish", MenuType: menuTypeButton, Permission: "operator:publish", ParentName: "OperatorList", Sort: 313},
 
 		// 域名管理
 		{Name: "OperatorDomain", Title: "menu.route.operatorDomain", Path: "/operator/domain", MenuType: menuTypeMenu, Component: "operator/domain/index", ParentName: "OperatorManagement", Sort: 32},
@@ -59,6 +60,7 @@ func apis() []*coreclient.CreateApiReq {
 		{Path: "/admin/operator/get", Method: http.MethodGet, Description: "api.operatorGet", ApiGroup: "operator", ServiceName: "platform-operator-api"},
 		{Path: "/admin/operator/list", Method: http.MethodGet, Description: "api.operatorList", ApiGroup: "operator", ServiceName: "platform-operator-api"},
 		{Path: "/admin/operator/complete", Method: http.MethodPost, Description: "api.operatorComplete", ApiGroup: "operator", ServiceName: "platform-operator-api"},
+		{Path: "/admin/operator/publish", Method: http.MethodPost, Description: "api.operatorPublish", ApiGroup: "operator", ServiceName: "platform-operator-api"},
 
 		// 分站档案
 		{Path: "/admin/operator/profile/create", Method: http.MethodPost, Description: "api.operatorProfileCreate", ApiGroup: "operator_profile", ServiceName: "platform-operator-api"},

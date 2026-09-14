@@ -12,7 +12,7 @@ import (
 	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/rest/httpx"
-
+	"oa.98ent.com/p9/platform-operator/api/internal/catalog"
 	"oa.98ent.com/p9/platform-operator/api/internal/config"
 	"oa.98ent.com/p9/platform-operator/api/internal/handler"
 	"oa.98ent.com/p9/platform-operator/api/internal/svc"
@@ -43,6 +43,9 @@ func main() {
 
 	// 创建服务上下文
 	ctx := svc.NewServiceContext(c)
+
+	// 注册菜单和API目录
+	logx.Must(catalog.Register(ctx.Core))
 
 	// 开发和测试环境返回调试信息
 	debug := c.Mode == service.DevMode || c.Mode == service.TestMode

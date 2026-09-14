@@ -38,6 +38,9 @@ service OperatorService {
 
   // 发布分站
   rpc Publish(platform_operator_operator.PublishOperatorRequest) returns (platform_operator_operator.PublishOperatorResponse);
+
+  // 删除分站
+  rpc Delete(platform_operator_operator.DeleteOperatorRequest) returns (platform_operator_operator.DeleteOperatorResponse);
 }
 
 // 分站档案服务

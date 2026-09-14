@@ -59,3 +59,9 @@ func (s *OperatorServiceServer) Publish(ctx context.Context, in *operatorpb.Publ
 	l := operatorservicelogic.NewPublishLogic(ctx, s.svcCtx)
 	return l.Publish(in)
 }
+
+// 删除分站
+func (s *OperatorServiceServer) Delete(ctx context.Context, in *operatorpb.DeleteOperatorRequest) (*operatorpb.DeleteOperatorResponse, error) {
+	l := operatorservicelogic.NewDeleteLogic(ctx, s.svcCtx)
+	return l.Delete(in)
+}

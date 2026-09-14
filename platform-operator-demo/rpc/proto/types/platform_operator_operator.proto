@@ -126,3 +126,12 @@ message PublishOperatorRequest {
 
 // 发布分站响应
 message PublishOperatorResponse {}
+
+// 删除分站请求
+message DeleteOperatorRequest {
+  // 分站ID
+  int64 id = 1;
+}
+
+// 删除分站响应
+message DeleteOperatorResponse {}
