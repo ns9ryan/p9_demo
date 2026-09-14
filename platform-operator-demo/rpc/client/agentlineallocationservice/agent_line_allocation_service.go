@@ -7,9 +7,9 @@ package agentlineallocationservice
 import (
 	"context"
 
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc"
 
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/agentlineallocation"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/agentlineallocationpb"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
@@ -18,9 +18,9 @@ import (
 type (
 	AgentLineAllocationService interface {
 		// 获取代理子线路分配列表
-		List(ctx context.Context, in *agentlineallocation.ListAgentLineAllocationsRequest, opts ...grpc.CallOption) (*agentlineallocation.ListAgentLineAllocationsResponse, error)
+		List(ctx context.Context, in *agentlineallocationpb.ListAgentLineAllocationsRequest, opts ...grpc.CallOption) (*agentlineallocationpb.ListAgentLineAllocationsResponse, error)
 		// 保存代理子线路分配
-		Save(ctx context.Context, in *agentlineallocation.SaveAgentLineAllocationsRequest, opts ...grpc.CallOption) (*agentlineallocation.SaveAgentLineAllocationsResponse, error)
+		Save(ctx context.Context, in *agentlineallocationpb.SaveAgentLineAllocationsRequest, opts ...grpc.CallOption) (*agentlineallocationpb.SaveAgentLineAllocationsResponse, error)
 	}
 
 	defaultAgentLineAllocationService struct {
@@ -35,13 +35,13 @@ func NewAgentLineAllocationService(cli zrpc.Client) AgentLineAllocationService {
 }
 
 // 获取代理子线路分配列表
-func (m *defaultAgentLineAllocationService) List(ctx context.Context, in *agentlineallocation.ListAgentLineAllocationsRequest, opts ...grpc.CallOption) (*agentlineallocation.ListAgentLineAllocationsResponse, error) {
-	client := operator.NewAgentLineAllocationServiceClient(m.cli.Conn())
+func (m *defaultAgentLineAllocationService) List(ctx context.Context, in *agentlineallocationpb.ListAgentLineAllocationsRequest, opts ...grpc.CallOption) (*agentlineallocationpb.ListAgentLineAllocationsResponse, error) {
+	client := platformoperatorrpc.NewAgentLineAllocationServiceClient(m.cli.Conn())
 	return client.List(ctx, in, opts...)
 }
 
 // 保存代理子线路分配
-func (m *defaultAgentLineAllocationService) Save(ctx context.Context, in *agentlineallocation.SaveAgentLineAllocationsRequest, opts ...grpc.CallOption) (*agentlineallocation.SaveAgentLineAllocationsResponse, error) {
-	client := operator.NewAgentLineAllocationServiceClient(m.cli.Conn())
+func (m *defaultAgentLineAllocationService) Save(ctx context.Context, in *agentlineallocationpb.SaveAgentLineAllocationsRequest, opts ...grpc.CallOption) (*agentlineallocationpb.SaveAgentLineAllocationsResponse, error) {
+	client := platformoperatorrpc.NewAgentLineAllocationServiceClient(m.cli.Conn())
 	return client.Save(ctx, in, opts...)
 }

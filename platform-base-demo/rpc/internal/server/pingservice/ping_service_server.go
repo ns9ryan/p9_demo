@@ -9,13 +9,13 @@ import (
 
 	"oa.98ent.com/p9/platform-base/rpc/internal/logic/pingservice"
 	"oa.98ent.com/p9/platform-base/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/ping"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/pingpb"
 )
 
 type PingServiceServer struct {
 	svcCtx *svc.ServiceContext
-	base.UnimplementedPingServiceServer
+	platformbaserpc.UnimplementedPingServiceServer
 }
 
 func NewPingServiceServer(svcCtx *svc.ServiceContext) *PingServiceServer {
@@ -25,7 +25,7 @@ func NewPingServiceServer(svcCtx *svc.ServiceContext) *PingServiceServer {
 }
 
 // Ping
-func (s *PingServiceServer) Ping(ctx context.Context, in *ping.PingRequest) (*ping.PingResponse, error) {
+func (s *PingServiceServer) Ping(ctx context.Context, in *pingpb.PingRequest) (*pingpb.PingResponse, error) {
 	l := pingservicelogic.NewPingLogic(ctx, s.svcCtx)
 	return l.Ping(in)
 }

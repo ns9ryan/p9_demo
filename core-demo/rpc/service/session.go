@@ -6,6 +6,7 @@ import (
 	"oa.98ent.com/p9/core/common/ctxdata"
 	"oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/common/jwt"
+	"oa.98ent.com/p9/core/common/utils"
 	"oa.98ent.com/p9/core/common/xerr"
 	"oa.98ent.com/p9/core/rpc/model"
 )
@@ -77,6 +78,9 @@ func (d *Deps) CheckToken(ctx context.Context, raw string) (*ctxdata.Claims, err
 	if claims.TokenType == jwt.TokenRefresh {
 		return nil, xerr.Unauthorized(i18n.Unauthorized)
 	}
+	if err := d.checkTokenClientIP(ctx, claims); err != nil {
+		return nil, err
+	}
 	if d.TokenBlacklisted(ctx, raw) {
 		return nil, xerr.Unauthorized(i18n.Unauthorized)
 	}
@@ -112,6 +116,7 @@ func (d *Deps) CheckToken(ctx context.Context, raw string) (*ctxdata.Claims, err
 		ExpiresAt:    exp,
 		TokenType:    claims.TokenType,
 		IsPlatform:   claims.IsPlatform,
+		ClientIP:     claims.ClientIP,
 	}, nil
 }
 
@@ -159,7 +164,17 @@ func (d *Deps) checkPreviewToken(ctx context.Context, claims *jwt.Claims) (*ctxd
 		ExpiresAt:    exp,
 		IsPlatform:   true,
 		TokenType:    jwt.TokenPreview,
+		ClientIP:     claims.ClientIP,
 	}, nil
+}
+
+func (d *Deps) checkTokenClientIP(ctx context.Context, claims *jwt.Claims) error {
+	got := utils.NormalizeIP(claims.ClientIP)
+	want := utils.NormalizeIP(ctxdata.ClientIPFromCtx(ctx))
+	if got == "" || got != want {
+		return xerr.Unauthorized(i18n.AuthIPMismatch)
+	}
+	return nil
 }
 
 func (d *Deps) Enforce(ctx context.Context, claims *ctxdata.Claims, path, method string) (bool, error) {

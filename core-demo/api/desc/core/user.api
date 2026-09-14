@@ -83,6 +83,16 @@ type BindRolesReq {
 	RoleIds []int64 `json:"role_ids"`
 }
 
+// Update user IP whitelist request | 更新用户登录 IP 白名单
+type UpdateUserIpWhitelistReq {
+	// User ID | 用户ID
+	Id                 int64    `json:"id"`
+	// IP whitelist enabled | 是否开启，0 否 1 是
+	IpWhitelistEnabled int32    `json:"ip_whitelist_enabled"`
+	// IP whitelist | IP 或 CIDR 列表
+	IpWhitelist        []string `json:"ip_whitelist"`
+}
+
 @server (
 	prefix:     /admin
 	group:      user
@@ -143,4 +153,8 @@ service Core {
 	@doc "绑定用户角色"
 	@handler bindUserRoles
 	post /user/roles (BindRolesReq) returns (BaseMsgResp)
+
+	@doc "更新用户登录 IP 白名单"
+	@handler updateUserIpWhitelist
+	post /user/ipWhitelist (UpdateUserIpWhitelistReq) returns (BaseMsgResp)
 }

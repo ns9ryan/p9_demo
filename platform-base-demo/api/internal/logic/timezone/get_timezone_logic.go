@@ -9,7 +9,7 @@ import (
 	corei18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/platform-base/api/internal/svc"
 	"oa.98ent.com/p9/platform-base/api/internal/types"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/timezone"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/timezonepb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,7 +33,7 @@ func (l *GetTimezoneLogic) GetTimezone(req *types.GetTimezoneRequest) (resp *typ
 	// 调用获取时区RPC
 	result, err := l.svcCtx.TimezoneRpc.Get(
 		l.ctx,
-		&timezone.GetTimezoneRequest{
+		&timezonepb.GetTimezoneRequest{
 			Id: req.Id, // 时区ID
 		},
 	)
@@ -52,7 +52,7 @@ func (l *GetTimezoneLogic) GetTimezone(req *types.GetTimezoneRequest) (resp *typ
 			NameKey: result.Timezone.NameKey, // 名称翻译Key
 			Name:    name,                    // 当前语言名称
 			Status:  result.Timezone.Status,  // 状态: 1启用, 2停用
-			SortNo:  result.Timezone.SortNo,  // 排序值
+			SortNo:  result.Timezone.SortNo,  // 排序值, 数值越小越靠前
 		},
 	}, nil
 }

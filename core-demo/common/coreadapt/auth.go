@@ -39,6 +39,7 @@ func (a *auth) CheckToken(ctx context.Context, token string) (*ctxdata.Claims, e
 		ExpiresAt:    resp.ExpiresAt,
 		IsPlatform:   resp.IsPlatform,
 		TokenType:    resp.TokenType,
+		ClientIP:     ctxdata.ClientIPFromCtx(ctx),
 	}, nil
 }
 

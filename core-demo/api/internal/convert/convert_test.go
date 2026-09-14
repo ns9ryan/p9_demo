@@ -191,8 +191,11 @@ func TestUserPublicTranslatesRoleNames(t *testing.T) {
 		t.Fatalf("en=%q", en.RoleNames[0])
 	}
 	empty := UserPublic(context.Background(), &coreclient.UserPublic{Id: 2})
-	if empty.RoleCodes == nil || empty.RoleNames == nil {
+	if empty.RoleCodes == nil || empty.RoleNames == nil || empty.IpWhitelist == nil {
 		t.Fatal("empty slices should not be nil")
+	}
+	if empty.IpWhitelistEnabled != 0 {
+		t.Fatalf("default enabled=%d", empty.IpWhitelistEnabled)
 	}
 }
 

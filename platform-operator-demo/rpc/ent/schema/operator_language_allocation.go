@@ -3,6 +3,8 @@ package schema
 import (
 	"time"
 
+	"oa.98ent.com/p9/platform-operator/rpc/ent/schema/mixins"
+
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/entsql"
@@ -10,8 +12,6 @@ import (
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-
-	"oa.98ent.com/p9/platform-operator/rpc/ent/schema/mixins"
 )
 
 // OperatorLanguageAllocation 定义 operator 语言分配表结构
@@ -27,7 +27,7 @@ func (OperatorLanguageAllocation) Fields() []ent.Field {
 
 		field.String("language_code").
 			NotEmpty().
-			MaxLen(35).
+			MaxLen(16).
 			Comment("系统语言唯一业务编码"),
 
 		field.Time("created_at").

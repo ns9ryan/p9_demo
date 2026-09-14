@@ -9807,42 +9807,46 @@ func (m *RoleMutation) ResetEdge(name string) error {
 // UserMutation represents an operation that mutates the User nodes in the graph.
 type UserMutation struct {
 	config
-	op                 Op
-	typ                string
-	id                 *int64
-	created_at         *time.Time
-	updated_at         *time.Time
-	deleted_at         *time.Time
-	operator_id        *int64
-	addoperator_id     *int64
-	user_code          *string
-	username           *string
-	password_hash      *string
-	salt               *string
-	display_name       *string
-	mobile             *string
-	email              *string
-	status             *int16
-	addstatus          *int16
-	is_super_admin     *bool
-	last_login_at      *time.Time
-	last_login_ip      *string
-	clearedFields      map[string]struct{}
-	roles              map[int64]struct{}
-	removedroles       map[int64]struct{}
-	clearedroles       bool
-	login_logs         map[int64]struct{}
-	removedlogin_logs  map[int64]struct{}
-	clearedlogin_logs  bool
-	action_logs        map[int64]struct{}
-	removedaction_logs map[int64]struct{}
-	clearedaction_logs bool
-	error_logs         map[int64]struct{}
-	removederror_logs  map[int64]struct{}
-	clearederror_logs  bool
-	done               bool
-	oldValue           func(context.Context) (*User, error)
-	predicates         []predicate.User
+	op                      Op
+	typ                     string
+	id                      *int64
+	created_at              *time.Time
+	updated_at              *time.Time
+	deleted_at              *time.Time
+	operator_id             *int64
+	addoperator_id          *int64
+	user_code               *string
+	username                *string
+	password_hash           *string
+	salt                    *string
+	display_name            *string
+	mobile                  *string
+	email                   *string
+	status                  *int16
+	addstatus               *int16
+	is_super_admin          *bool
+	last_login_at           *time.Time
+	last_login_ip           *string
+	ip_whitelist_enabled    *int16
+	addip_whitelist_enabled *int16
+	ip_whitelist            *[]string
+	appendip_whitelist      []string
+	clearedFields           map[string]struct{}
+	roles                   map[int64]struct{}
+	removedroles            map[int64]struct{}
+	clearedroles            bool
+	login_logs              map[int64]struct{}
+	removedlogin_logs       map[int64]struct{}
+	clearedlogin_logs       bool
+	action_logs             map[int64]struct{}
+	removedaction_logs      map[int64]struct{}
+	clearedaction_logs      bool
+	error_logs              map[int64]struct{}
+	removederror_logs       map[int64]struct{}
+	clearederror_logs       bool
+	done                    bool
+	oldValue                func(context.Context) (*User, error)
+	predicates              []predicate.User
 }
 
 var _ ent.Mutation = (*UserMutation)(nil)
@@ -10608,6 +10612,113 @@ func (m *UserMutation) ResetLastLoginIP() {
 	delete(m.clearedFields, user.FieldLastLoginIP)
 }
 
+// SetIPWhitelistEnabled sets the "ip_whitelist_enabled" field.
+func (m *UserMutation) SetIPWhitelistEnabled(i int16) {
+	m.ip_whitelist_enabled = &i
+	m.addip_whitelist_enabled = nil
+}
+
+// IPWhitelistEnabled returns the value of the "ip_whitelist_enabled" field in the mutation.
+func (m *UserMutation) IPWhitelistEnabled() (r int16, exists bool) {
+	v := m.ip_whitelist_enabled
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIPWhitelistEnabled returns the old "ip_whitelist_enabled" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldIPWhitelistEnabled(ctx context.Context) (v int16, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIPWhitelistEnabled is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIPWhitelistEnabled requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIPWhitelistEnabled: %w", err)
+	}
+	return oldValue.IPWhitelistEnabled, nil
+}
+
+// AddIPWhitelistEnabled adds i to the "ip_whitelist_enabled" field.
+func (m *UserMutation) AddIPWhitelistEnabled(i int16) {
+	if m.addip_whitelist_enabled != nil {
+		*m.addip_whitelist_enabled += i
+	} else {
+		m.addip_whitelist_enabled = &i
+	}
+}
+
+// AddedIPWhitelistEnabled returns the value that was added to the "ip_whitelist_enabled" field in this mutation.
+func (m *UserMutation) AddedIPWhitelistEnabled() (r int16, exists bool) {
+	v := m.addip_whitelist_enabled
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetIPWhitelistEnabled resets all changes to the "ip_whitelist_enabled" field.
+func (m *UserMutation) ResetIPWhitelistEnabled() {
+	m.ip_whitelist_enabled = nil
+	m.addip_whitelist_enabled = nil
+}
+
+// SetIPWhitelist sets the "ip_whitelist" field.
+func (m *UserMutation) SetIPWhitelist(s []string) {
+	m.ip_whitelist = &s
+	m.appendip_whitelist = nil
+}
+
+// IPWhitelist returns the value of the "ip_whitelist" field in the mutation.
+func (m *UserMutation) IPWhitelist() (r []string, exists bool) {
+	v := m.ip_whitelist
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIPWhitelist returns the old "ip_whitelist" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldIPWhitelist(ctx context.Context) (v []string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIPWhitelist is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIPWhitelist requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIPWhitelist: %w", err)
+	}
+	return oldValue.IPWhitelist, nil
+}
+
+// AppendIPWhitelist adds s to the "ip_whitelist" field.
+func (m *UserMutation) AppendIPWhitelist(s []string) {
+	m.appendip_whitelist = append(m.appendip_whitelist, s...)
+}
+
+// AppendedIPWhitelist returns the list of values that were appended to the "ip_whitelist" field in this mutation.
+func (m *UserMutation) AppendedIPWhitelist() ([]string, bool) {
+	if len(m.appendip_whitelist) == 0 {
+		return nil, false
+	}
+	return m.appendip_whitelist, true
+}
+
+// ResetIPWhitelist resets all changes to the "ip_whitelist" field.
+func (m *UserMutation) ResetIPWhitelist() {
+	m.ip_whitelist = nil
+	m.appendip_whitelist = nil
+}
+
 // AddRoleIDs adds the "roles" edge to the Role entity by ids.
 func (m *UserMutation) AddRoleIDs(ids ...int64) {
 	if m.roles == nil {
@@ -10858,7 +10969,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 15)
+	fields := make([]string, 0, 17)
 	if m.created_at != nil {
 		fields = append(fields, user.FieldCreatedAt)
 	}
@@ -10904,6 +11015,12 @@ func (m *UserMutation) Fields() []string {
 	if m.last_login_ip != nil {
 		fields = append(fields, user.FieldLastLoginIP)
 	}
+	if m.ip_whitelist_enabled != nil {
+		fields = append(fields, user.FieldIPWhitelistEnabled)
+	}
+	if m.ip_whitelist != nil {
+		fields = append(fields, user.FieldIPWhitelist)
+	}
 	return fields
 }
 
@@ -10942,6 +11059,10 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.LastLoginAt()
 	case user.FieldLastLoginIP:
 		return m.LastLoginIP()
+	case user.FieldIPWhitelistEnabled:
+		return m.IPWhitelistEnabled()
+	case user.FieldIPWhitelist:
+		return m.IPWhitelist()
 	}
 	return nil, false
 }
@@ -10981,6 +11102,10 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldLastLoginAt(ctx)
 	case user.FieldLastLoginIP:
 		return m.OldLastLoginIP(ctx)
+	case user.FieldIPWhitelistEnabled:
+		return m.OldIPWhitelistEnabled(ctx)
+	case user.FieldIPWhitelist:
+		return m.OldIPWhitelist(ctx)
 	}
 	return nil, fmt.Errorf("unknown User field %s", name)
 }
@@ -11095,6 +11220,20 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetLastLoginIP(v)
 		return nil
+	case user.FieldIPWhitelistEnabled:
+		v, ok := value.(int16)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIPWhitelistEnabled(v)
+		return nil
+	case user.FieldIPWhitelist:
+		v, ok := value.([]string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIPWhitelist(v)
+		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)
 }
@@ -11109,6 +11248,9 @@ func (m *UserMutation) AddedFields() []string {
 	if m.addstatus != nil {
 		fields = append(fields, user.FieldStatus)
 	}
+	if m.addip_whitelist_enabled != nil {
+		fields = append(fields, user.FieldIPWhitelistEnabled)
+	}
 	return fields
 }
 
@@ -11121,6 +11263,8 @@ func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedOperatorID()
 	case user.FieldStatus:
 		return m.AddedStatus()
+	case user.FieldIPWhitelistEnabled:
+		return m.AddedIPWhitelistEnabled()
 	}
 	return nil, false
 }
@@ -11143,6 +11287,13 @@ func (m *UserMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddStatus(v)
+		return nil
+	case user.FieldIPWhitelistEnabled:
+		v, ok := value.(int16)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddIPWhitelistEnabled(v)
 		return nil
 	}
 	return fmt.Errorf("unknown User numeric field %s", name)
@@ -11254,6 +11405,12 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldLastLoginIP:
 		m.ResetLastLoginIP()
+		return nil
+	case user.FieldIPWhitelistEnabled:
+		m.ResetIPWhitelistEnabled()
+		return nil
+	case user.FieldIPWhitelist:
+		m.ResetIPWhitelist()
 		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)

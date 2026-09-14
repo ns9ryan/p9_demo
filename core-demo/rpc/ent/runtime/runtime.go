@@ -475,6 +475,14 @@ func init() {
 	userDescIsSuperAdmin := userFields[9].Descriptor()
 	// user.DefaultIsSuperAdmin holds the default value on creation for the is_super_admin field.
 	user.DefaultIsSuperAdmin = userDescIsSuperAdmin.Default.(bool)
+	// userDescIPWhitelistEnabled is the schema descriptor for ip_whitelist_enabled field.
+	userDescIPWhitelistEnabled := userFields[12].Descriptor()
+	// user.DefaultIPWhitelistEnabled holds the default value on creation for the ip_whitelist_enabled field.
+	user.DefaultIPWhitelistEnabled = userDescIPWhitelistEnabled.Default.(int16)
+	// userDescIPWhitelist is the schema descriptor for ip_whitelist field.
+	userDescIPWhitelist := userFields[13].Descriptor()
+	// user.DefaultIPWhitelist holds the default value on creation for the ip_whitelist field.
+	user.DefaultIPWhitelist = userDescIPWhitelist.Default.([]string)
 }
 
 const (

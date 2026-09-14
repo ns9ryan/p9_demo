@@ -56,6 +56,7 @@ func main() {
 	server := rest.MustNewServer(c.RestConf)
 	defer server.Stop()
 	server.Use(middleware.I18n)
+	server.Use(middleware.ClientIP)
 	server.AddRoutes(
 		rest.WithMiddlewares(
 			[]rest.Middleware{middleware.JWT(auth), middleware.Authority(auth)},

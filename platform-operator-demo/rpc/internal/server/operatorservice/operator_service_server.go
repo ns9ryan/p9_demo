@@ -9,13 +9,13 @@ import (
 
 	"oa.98ent.com/p9/platform-operator/rpc/internal/logic/operatorservice"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/operator"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/operatorpb"
 )
 
 type OperatorServiceServer struct {
 	svcCtx *svc.ServiceContext
-	operator.UnimplementedOperatorServiceServer
+	platformoperatorrpc.UnimplementedOperatorServiceServer
 }
 
 func NewOperatorServiceServer(svcCtx *svc.ServiceContext) *OperatorServiceServer {
@@ -25,37 +25,37 @@ func NewOperatorServiceServer(svcCtx *svc.ServiceContext) *OperatorServiceServer
 }
 
 // 创建分站
-func (s *OperatorServiceServer) Create(ctx context.Context, in *operator.CreateOperatorRequest) (*operator.CreateOperatorResponse, error) {
+func (s *OperatorServiceServer) Create(ctx context.Context, in *operatorpb.CreateOperatorRequest) (*operatorpb.CreateOperatorResponse, error) {
 	l := operatorservicelogic.NewCreateLogic(ctx, s.svcCtx)
 	return l.Create(in)
 }
 
 // 修改分站
-func (s *OperatorServiceServer) Update(ctx context.Context, in *operator.UpdateOperatorRequest) (*operator.UpdateOperatorResponse, error) {
+func (s *OperatorServiceServer) Update(ctx context.Context, in *operatorpb.UpdateOperatorRequest) (*operatorpb.UpdateOperatorResponse, error) {
 	l := operatorservicelogic.NewUpdateLogic(ctx, s.svcCtx)
 	return l.Update(in)
 }
 
 // 获取分站
-func (s *OperatorServiceServer) Get(ctx context.Context, in *operator.GetOperatorRequest) (*operator.GetOperatorResponse, error) {
+func (s *OperatorServiceServer) Get(ctx context.Context, in *operatorpb.GetOperatorRequest) (*operatorpb.GetOperatorResponse, error) {
 	l := operatorservicelogic.NewGetLogic(ctx, s.svcCtx)
 	return l.Get(in)
 }
 
 // 获取分站管理列表
-func (s *OperatorServiceServer) List(ctx context.Context, in *operator.ListOperatorsRequest) (*operator.ListOperatorsResponse, error) {
+func (s *OperatorServiceServer) List(ctx context.Context, in *operatorpb.ListOperatorsRequest) (*operatorpb.ListOperatorsResponse, error) {
 	l := operatorservicelogic.NewListLogic(ctx, s.svcCtx)
 	return l.List(in)
 }
 
 // 完成分站创建
-func (s *OperatorServiceServer) Complete(ctx context.Context, in *operator.CompleteOperatorRequest) (*operator.CompleteOperatorResponse, error) {
+func (s *OperatorServiceServer) Complete(ctx context.Context, in *operatorpb.CompleteOperatorRequest) (*operatorpb.CompleteOperatorResponse, error) {
 	l := operatorservicelogic.NewCompleteLogic(ctx, s.svcCtx)
 	return l.Complete(in)
 }
 
 // 发布分站
-func (s *OperatorServiceServer) Publish(ctx context.Context, in *operator.PublishOperatorRequest) (*operator.PublishOperatorResponse, error) {
+func (s *OperatorServiceServer) Publish(ctx context.Context, in *operatorpb.PublishOperatorRequest) (*operatorpb.PublishOperatorResponse, error) {
 	l := operatorservicelogic.NewPublishLogic(ctx, s.svcCtx)
 	return l.Publish(in)
 }

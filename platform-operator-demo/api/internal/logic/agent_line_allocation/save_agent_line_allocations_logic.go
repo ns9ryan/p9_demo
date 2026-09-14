@@ -8,6 +8,7 @@ import (
 
 	"oa.98ent.com/p9/platform-operator/api/internal/svc"
 	"oa.98ent.com/p9/platform-operator/api/internal/types"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/agentlineallocationpb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,8 +27,20 @@ func NewSaveAgentLineAllocationsLogic(ctx context.Context, svcCtx *svc.ServiceCo
 	}
 }
 
+// SaveAgentLineAllocations 保存代理子线路分配
 func (l *SaveAgentLineAllocationsLogic) SaveAgentLineAllocations(req *types.SaveAgentLineAllocationsRequest) (resp *types.SaveAgentLineAllocationsResponse, err error) {
-	// todo: add your logic here and delete this line
+	// 保存分站代理子线路分配
+	_, err = l.svcCtx.AgentLineAllocationRpc.Save(
+		l.ctx,
+		&agentlineallocationpb.SaveAgentLineAllocationsRequest{
+			OperatorId:     req.OperatorId,     // 分站ID
+			AgentLineCodes: req.AgentLineCodes, // 当前分配的代理子线路编码
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
 
-	return
+	// 返回保存结果
+	return &types.SaveAgentLineAllocationsResponse{}, nil
 }

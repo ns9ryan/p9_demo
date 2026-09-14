@@ -130,6 +130,11 @@ func LastLoginIP(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldLastLoginIP, v))
 }
 
+// IPWhitelistEnabled applies equality check predicate on the "ip_whitelist_enabled" field. It's identical to IPWhitelistEnabledEQ.
+func IPWhitelistEnabled(v int16) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldIPWhitelistEnabled, v))
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v time.Time) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldCreatedAt, v))
@@ -958,6 +963,46 @@ func LastLoginIPEqualFold(v string) predicate.User {
 // LastLoginIPContainsFold applies the ContainsFold predicate on the "last_login_ip" field.
 func LastLoginIPContainsFold(v string) predicate.User {
 	return predicate.User(sql.FieldContainsFold(FieldLastLoginIP, v))
+}
+
+// IPWhitelistEnabledEQ applies the EQ predicate on the "ip_whitelist_enabled" field.
+func IPWhitelistEnabledEQ(v int16) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldIPWhitelistEnabled, v))
+}
+
+// IPWhitelistEnabledNEQ applies the NEQ predicate on the "ip_whitelist_enabled" field.
+func IPWhitelistEnabledNEQ(v int16) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldIPWhitelistEnabled, v))
+}
+
+// IPWhitelistEnabledIn applies the In predicate on the "ip_whitelist_enabled" field.
+func IPWhitelistEnabledIn(vs ...int16) predicate.User {
+	return predicate.User(sql.FieldIn(FieldIPWhitelistEnabled, vs...))
+}
+
+// IPWhitelistEnabledNotIn applies the NotIn predicate on the "ip_whitelist_enabled" field.
+func IPWhitelistEnabledNotIn(vs ...int16) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldIPWhitelistEnabled, vs...))
+}
+
+// IPWhitelistEnabledGT applies the GT predicate on the "ip_whitelist_enabled" field.
+func IPWhitelistEnabledGT(v int16) predicate.User {
+	return predicate.User(sql.FieldGT(FieldIPWhitelistEnabled, v))
+}
+
+// IPWhitelistEnabledGTE applies the GTE predicate on the "ip_whitelist_enabled" field.
+func IPWhitelistEnabledGTE(v int16) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldIPWhitelistEnabled, v))
+}
+
+// IPWhitelistEnabledLT applies the LT predicate on the "ip_whitelist_enabled" field.
+func IPWhitelistEnabledLT(v int16) predicate.User {
+	return predicate.User(sql.FieldLT(FieldIPWhitelistEnabled, v))
+}
+
+// IPWhitelistEnabledLTE applies the LTE predicate on the "ip_whitelist_enabled" field.
+func IPWhitelistEnabledLTE(v int16) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldIPWhitelistEnabled, v))
 }
 
 // HasRoles applies the HasEdge predicate on the "roles" edge.

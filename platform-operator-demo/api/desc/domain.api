@@ -4,7 +4,7 @@ import "types/common.api"
 
 type (
 	// 分站域名信息
-	DomainInfo {
+	OperatorDomainInfo {
 		// 域名ID
 		Id int64 `json:"id"`
 		// 分站ID
@@ -23,11 +23,11 @@ type (
 		UpdatedAt int64 `json:"updated_at"`
 	}
 	// 创建分站域名请求
-	CreateDomainRequest {
+	CreateOperatorDomainRequest {
 		// 分站ID
 		OperatorId int64 `json:"operator_id" validate:"required,gt=0"`
 		// 域名, 不包含协议和端口
-		DomainName string `json:"domain_name" validate:"required,max=253"`
+		DomainName string `json:"domain_name" validate:"required,notblank,fqdn,max=253"`
 		// 域名类型: 1分站后台, 2代理后台, 3会员H5
 		DomainType int64 `json:"domain_type" validate:"required,oneof=1 2 3"`
 		// 域名状态: 1启用, 2停用
@@ -36,16 +36,16 @@ type (
 		Remark *string `json:"remark,optional" validate:"omitempty,max=1000"`
 	}
 	// 创建分站域名响应
-	CreateDomainResponse {
+	CreateOperatorDomainResponse {
 		// 域名ID
 		Id int64 `json:"id"`
 	}
 	// 修改分站域名请求
-	UpdateDomainRequest {
+	UpdateOperatorDomainRequest {
 		// 域名ID
 		Id int64 `json:"id" validate:"required,gt=0"`
-		// 域名
-		DomainName *string `json:"domain_name,optional" validate:"omitempty,max=253"`
+		// 域名, 不包含协议和端口
+		DomainName *string `json:"domain_name,optional" validate:"omitempty,notblank,fqdn,max=253"`
 		// 域名类型: 1分站后台, 2代理后台, 3会员H5
 		DomainType *int64 `json:"domain_type,optional" validate:"omitempty,oneof=1 2 3"`
 		// 域名状态: 1启用, 2停用
@@ -54,18 +54,18 @@ type (
 		Remark *string `json:"remark,optional" validate:"omitempty,max=1000"`
 	}
 	// 修改分站域名响应
-	UpdateDomainResponse  {}
+	UpdateOperatorDomainResponse  {}
 	// 获取分站域名请求
-	GetDomainRequest {
+	GetOperatorDomainRequest {
 		// 域名ID
 		Id int64 `form:"id" validate:"required,gt=0"`
 	}
 	// 获取分站域名响应
-	GetDomainResponse {
-		DomainInfo
+	GetOperatorDomainResponse {
+		OperatorDomainInfo
 	}
 	// 获取分站域名列表请求
-	ListDomainsRequest {
+	ListOperatorDomainsRequest {
 		// 分页参数
 		PageRequest
 		// 分站ID
@@ -78,45 +78,45 @@ type (
 		Status *int64 `form:"status,optional" validate:"omitempty,oneof=1 2"`
 	}
 	// 获取分站域名列表响应
-	ListDomainsResponse {
+	ListOperatorDomainsResponse {
 		// 数据总数
 		Total int64 `json:"total"`
 		// 域名列表
-		List []DomainInfo `json:"list"`
+		List []OperatorDomainInfo `json:"list"`
 	}
 	// 删除分站域名请求
-	DeleteDomainRequest {
+	DeleteOperatorDomainRequest {
 		// 域名ID
 		Id int64 `json:"id" validate:"required,gt=0"`
 	}
 	// 删除分站域名响应
-	DeleteDomainResponse  {}
+	DeleteOperatorDomainResponse  {}
 )
 
 @server (
-	group:      domain
+	group:      operator_domain
 	prefix:     /admin/operator/domain
 	middleware: Jwt,ActionLog,Authority
 )
 service platform_operator {
 	// 创建分站域名
-	@handler CreateDomain
-	post /create (CreateDomainRequest) returns (CreateDomainResponse)
+	@handler CreateOperatorDomain
+	post /create (CreateOperatorDomainRequest) returns (CreateOperatorDomainResponse)
 
 	// 修改分站域名
-	@handler UpdateDomain
-	post /update (UpdateDomainRequest) returns (UpdateDomainResponse)
+	@handler UpdateOperatorDomain
+	post /update (UpdateOperatorDomainRequest) returns (UpdateOperatorDomainResponse)
 
 	// 获取分站域名
-	@handler GetDomain
-	get /get (GetDomainRequest) returns (GetDomainResponse)
+	@handler GetOperatorDomain
+	get /get (GetOperatorDomainRequest) returns (GetOperatorDomainResponse)
 
 	// 获取分站域名列表
-	@handler ListDomains
-	get /list (ListDomainsRequest) returns (ListDomainsResponse)
+	@handler ListOperatorDomains
+	get /list (ListOperatorDomainsRequest) returns (ListOperatorDomainsResponse)
 
 	// 删除分站域名
-	@handler DeleteDomain
-	post /delete (DeleteDomainRequest) returns (DeleteDomainResponse)
+	@handler DeleteOperatorDomain
+	post /delete (DeleteOperatorDomainRequest) returns (DeleteOperatorDomainResponse)
 }
 

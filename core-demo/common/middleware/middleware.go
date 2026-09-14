@@ -9,6 +9,7 @@ import (
 	"oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/common/jwt"
 	"oa.98ent.com/p9/core/common/response"
+	"oa.98ent.com/p9/core/common/utils"
 	"oa.98ent.com/p9/core/common/xerr"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -28,21 +29,32 @@ func I18n(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
+// ClientIP 把客户端 IP 写入上下文（含 gRPC outgoing metadata）。
+func ClientIP(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		next(w, r.WithContext(ctxdata.WithClientIP(r.Context(), utils.ClientIP(r))))
+	}
+}
+
 // JWT 认证
 func JWT(c Client) rest.Middleware {
 	return func(next http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
 			raw := stripBearer(r.Header.Get("Authorization"))
-			claims, err := c.CheckToken(r.Context(), raw)
+			ctx := r.Context()
+			if ctxdata.ClientIPFromCtx(ctx) == "" {
+				ctx = ctxdata.WithClientIP(ctx, utils.ClientIP(r))
+			}
+			claims, err := c.CheckToken(ctx, raw)
 			if err != nil {
-				response.FailCtx(r.Context(), w, err)
+				response.FailCtx(ctx, w, err)
 				return
 			}
 			if claims != nil && claims.TokenType == jwt.TokenPreview && previewWriteDenied(r.Method, r.URL.Path) {
-				response.FailCtx(r.Context(), w, xerr.Forbidden(i18n.AuthPreviewReadOnly))
+				response.FailCtx(ctx, w, xerr.Forbidden(i18n.AuthPreviewReadOnly))
 				return
 			}
-			ctx := ctxdata.WithClaims(r.Context(), claims)
+			ctx = ctxdata.WithClaims(ctx, claims)
 			ctx = ctxdata.WithRawToken(ctx, raw)
 			next(w, r.WithContext(ctx))
 		}

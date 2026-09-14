@@ -8,7 +8,7 @@ import (
 
 	"oa.98ent.com/p9/platform-base/api/internal/svc"
 	"oa.98ent.com/p9/platform-base/api/internal/types"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/currency"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/currencypb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -32,7 +32,7 @@ func (l *ReorderCurrencyLogic) ReorderCurrency(req *types.ReorderCurrencyRequest
 	// 调用调整货币排序RPC
 	_, err = l.svcCtx.CurrencyRpc.Reorder(
 		l.ctx,
-		&currency.ReorderCurrencyRequest{
+		&currencypb.ReorderCurrencyRequest{
 			Id:       req.Id,       // 需要移动的货币ID
 			TargetId: req.TargetId, // 目标货币ID
 		},
@@ -41,6 +41,6 @@ func (l *ReorderCurrencyLogic) ReorderCurrency(req *types.ReorderCurrencyRequest
 		return nil, err
 	}
 
-	// 返回调整排序结果
+	// 返回排序结果
 	return &types.ReorderCurrencyResponse{}, nil
 }

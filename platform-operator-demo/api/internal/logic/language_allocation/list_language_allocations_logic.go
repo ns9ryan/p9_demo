@@ -8,6 +8,7 @@ import (
 
 	"oa.98ent.com/p9/platform-operator/api/internal/svc"
 	"oa.98ent.com/p9/platform-operator/api/internal/types"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/languageallocationpb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,8 +27,30 @@ func NewListLanguageAllocationsLogic(ctx context.Context, svcCtx *svc.ServiceCon
 	}
 }
 
+// ListLanguageAllocations 获取语言分配列表
 func (l *ListLanguageAllocationsLogic) ListLanguageAllocations(req *types.ListLanguageAllocationsRequest) (resp *types.ListLanguageAllocationsResponse, err error) {
-	// todo: add your logic here and delete this line
+	// 获取分站当前语言分配关系
+	result, err := l.svcCtx.LanguageAllocationRpc.List(
+		l.ctx,
+		&languageallocationpb.ListLanguageAllocationsRequest{
+			OperatorId: req.OperatorId, // 分站ID
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
 
-	return
+	// 转换语言分配列表
+	list := make([]types.LanguageAllocationInfo, 0, len(result.List))
+	for _, item := range result.List {
+		list = append(list, types.LanguageAllocationInfo{
+			LanguageCode: item.LanguageCode, // 语言编码
+			AllocatedAt:  item.CreatedAt,    // 分配时间, Unix毫秒时间戳
+		})
+	}
+
+	// 返回语言分配列表
+	return &types.ListLanguageAllocationsResponse{
+		List: list, // 已分配语言列表
+	}, nil
 }

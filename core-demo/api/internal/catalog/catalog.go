@@ -46,6 +46,7 @@ func catalogReq(code string) *coreclient.RegisterCatalogReq {
 			{Path: "/admin/user/detail", Method: http.MethodGet, Description: "api.userDetail", ApiGroup: "user", ServiceName: "core-api"},
 			{Path: "/admin/user/password", Method: http.MethodPost, Description: "api.userPassword", ApiGroup: "user", ServiceName: "core-api"},
 			{Path: "/admin/user/roles", Method: http.MethodPost, Description: "api.userRoles", ApiGroup: "user", ServiceName: "core-api"},
+			{Path: "/admin/user/ipWhitelist", Method: http.MethodPost, Description: "api.userIpWhitelist", ApiGroup: "user", ServiceName: "core-api"},
 			{Path: "/admin/role/create", Method: http.MethodPost, Description: "api.roleCreate", ApiGroup: "role", ServiceName: "core-api"},
 			{Path: "/admin/role/update", Method: http.MethodPost, Description: "api.roleUpdate", ApiGroup: "role", ServiceName: "core-api"},
 			{Path: "/admin/role/delete", Method: http.MethodPost, Description: "api.roleDelete", ApiGroup: "role", ServiceName: "core-api"},

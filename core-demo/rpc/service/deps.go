@@ -10,6 +10,7 @@ import (
 	"oa.98ent.com/p9/core/common/ctxdata"
 	"oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/common/jwt"
+	"oa.98ent.com/p9/core/common/utils"
 	"oa.98ent.com/p9/core/common/xerr"
 	"oa.98ent.com/p9/core/rpc/casbinx"
 	"oa.98ent.com/p9/core/rpc/ent"
@@ -222,6 +223,7 @@ func (d *Deps) tokenClaims(ctx context.Context, u *model.User, roleCodes []strin
 		OperatorCode: code,
 		RoleCodes:    roleCodes,
 		Salt:         u.Salt,
+		ClientIP:     utils.NormalizeIP(ctxdata.ClientIPFromCtx(ctx)),
 	}
 }
 

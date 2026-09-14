@@ -50,5 +50,5 @@ service Core {
 
 	@doc "签发总网预览令牌，只读"
 	@handler issuePreviewToken
-	post /preview-token (IssuePreviewTokenReq) returns (IssuePreviewTokenResp)
+	post /previewToken (IssuePreviewTokenReq) returns (IssuePreviewTokenResp)
 }

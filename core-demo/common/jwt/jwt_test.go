@@ -17,6 +17,7 @@ func TestSignParseRoundTrip(t *testing.T) {
 		RoleCodes:    []string{"super_admin"},
 		Salt:         "s1",
 		TokenType:    TokenAccess,
+		ClientIP:     "10.0.0.1",
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -28,7 +29,7 @@ func TestSignParseRoundTrip(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if c.UserID != 1 || c.Salt != "s1" || c.OperatorID != 12 || c.OperatorCode != "demo" || c.TokenType != TokenAccess {
+	if c.UserID != 1 || c.Salt != "s1" || c.OperatorID != 12 || c.OperatorCode != "demo" || c.TokenType != TokenAccess || c.ClientIP != "10.0.0.1" {
 		t.Fatalf("claims %+v", c)
 	}
 	if _, err := Parse("other", tok); err == nil {

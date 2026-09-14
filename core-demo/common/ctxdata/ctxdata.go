@@ -13,6 +13,7 @@ type ctxKey int
 const (
 	claimsKey ctxKey = iota + 1
 	rawTokenKey
+	clientIPKey
 )
 
 type skipTenantKey struct{}
@@ -34,6 +35,7 @@ const (
 	headerRawToken     = "x-raw-token"
 	headerIsPlatform   = "x-is-platform"
 	headerTokenType    = "x-token-type"
+	headerClientIP     = "x-client-ip"
 )
 
 // Claims 用户身份信息
@@ -48,6 +50,7 @@ type Claims struct {
 	ExpiresAt    int64
 	IsPlatform   bool
 	TokenType    string
+	ClientIP     string
 }
 
 // WithClaimsHolder 在外层放入可写的身份盒子，内层 WithClaims 会回写，外层仍能读到。
@@ -79,6 +82,7 @@ func WithClaims(ctx context.Context, c *Claims) context.Context {
 		headerExpiresAt, strconv.FormatInt(c.ExpiresAt, 10),
 		headerIsPlatform, formatBool(c.IsPlatform),
 		headerTokenType, c.TokenType,
+		headerClientIP, c.ClientIP,
 	)
 }
 
@@ -134,6 +138,27 @@ func RawTokenFromCtx(ctx context.Context) string {
 	return first(md, headerRawToken)
 }
 
+// WithClientIP 添加客户端 IP 到上下文，并写入 gRPC outgoing metadata。
+func WithClientIP(ctx context.Context, ip string) context.Context {
+	if ip == "" {
+		return ctx
+	}
+	ctx = context.WithValue(ctx, clientIPKey, ip)
+	return metadata.AppendToOutgoingContext(ctx, headerClientIP, ip)
+}
+
+// ClientIPFromCtx 从上下文中获取客户端 IP。
+func ClientIPFromCtx(ctx context.Context) string {
+	if s, _ := ctx.Value(clientIPKey).(string); s != "" {
+		return s
+	}
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return ""
+	}
+	return first(md, headerClientIP)
+}
+
 // SkipTenant 跳过租户
 func SkipTenant(ctx context.Context) context.Context {
 	return context.WithValue(ctx, skipTenantKey{}, true)
@@ -184,6 +209,7 @@ func claimsFromIncomingMD(ctx context.Context) *Claims {
 		ExpiresAt:    parseInt(first(md, headerExpiresAt)),
 		IsPlatform:   isPlatform,
 		TokenType:    first(md, headerTokenType),
+		ClientIP:     first(md, headerClientIP),
 	}
 }
 

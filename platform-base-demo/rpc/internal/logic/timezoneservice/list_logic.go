@@ -8,7 +8,7 @@ import (
 	enttimezone "oa.98ent.com/p9/platform-base/rpc/ent/timezone"
 	"oa.98ent.com/p9/platform-base/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-base/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/timezone"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/timezonepb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -28,7 +28,7 @@ func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {
 }
 
 // List 获取时区管理列表
-func (l *ListLogic) List(in *timezone.ListTimezonesRequest) (*timezone.ListTimezonesResponse, error) {
+func (l *ListLogic) List(in *timezonepb.ListTimezonesRequest) (*timezonepb.ListTimezonesResponse, error) {
 	// 校验分页参数
 	if in.Page < 1 || in.PageSize < 1 || in.PageSize > 100 {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -72,13 +72,13 @@ func (l *ListLogic) List(in *timezone.ListTimezonesRequest) (*timezone.ListTimez
 	}
 
 	// 转换时区列表
-	list := make([]*timezone.TimezoneInfo, 0, len(results))
+	list := make([]*timezonepb.TimezoneInfo, 0, len(results))
 	for _, result := range results {
 		list = append(list, toTimezoneInfo(result))
 	}
 
-	return &timezone.ListTimezonesResponse{
-		Total: int64(total),
-		List:  list,
+	return &timezonepb.ListTimezonesResponse{
+		Total: int64(total), // 数据总数
+		List:  list,         // 时区列表
 	}, nil
 }

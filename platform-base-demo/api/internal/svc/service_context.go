@@ -56,11 +56,15 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	trans, err := i18n.New(c.I18n, locales.FS)
 	logx.Must(err)
 
+	// ============================== Platform Base RPC ==============================
+
 	// 创建Platform Base RPC客户端，并注册RPC错误拦截器
 	platformBaseClient := zrpc.MustNewClient(
 		c.PlatformBaseRpc,
 		zrpc.WithUnaryClientInterceptor(rpcerror.UnaryClientInterceptor),
 	)
+
+	// ============================== Core RPC ==============================
 
 	// 创建Core RPC客户端
 	coreClient := zrpc.MustNewClient(c.CoreRpc)
@@ -71,6 +75,8 @@ func NewServiceContext(c config.Config) *ServiceContext {
 
 	// 创建Core认证适配器
 	auth := coreadapt.Auth(coreCli)
+
+	// ============================== Service Context ==============================
 
 	return &ServiceContext{
 		// 服务配置

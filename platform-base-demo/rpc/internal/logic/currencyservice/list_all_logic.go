@@ -8,7 +8,7 @@ import (
 	entcurrency "oa.98ent.com/p9/platform-base/rpc/ent/currency"
 	"oa.98ent.com/p9/platform-base/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-base/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/currency"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/currencypb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -28,7 +28,7 @@ func NewListAllLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListAllLo
 }
 
 // ListAll 获取全部货币
-func (l *ListAllLogic) ListAll(in *currency.ListAllCurrenciesRequest) (*currency.ListAllCurrenciesResponse, error) {
+func (l *ListAllLogic) ListAll(in *currencypb.ListAllCurrenciesRequest) (*currencypb.ListAllCurrenciesResponse, error) {
 	// 校验状态
 	if in.Status != nil && (*in.Status < 1 || *in.Status > 2) {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -55,12 +55,13 @@ func (l *ListAllLogic) ListAll(in *currency.ListAllCurrenciesRequest) (*currency
 	}
 
 	// 转换货币列表
-	list := make([]*currency.CurrencyInfo, 0, len(results))
+	list := make([]*currencypb.CurrencyInfo, 0, len(results))
 	for _, result := range results {
 		list = append(list, toCurrencyInfo(result))
 	}
 
-	return &currency.ListAllCurrenciesResponse{
-		List: list,
+	// 返回货币列表
+	return &currencypb.ListAllCurrenciesResponse{
+		List: list, // 货币列表
 	}, nil
 }

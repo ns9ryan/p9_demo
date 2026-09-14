@@ -62,6 +62,7 @@ func apiI18n(i18nCode string) []*coreclient.I18NItem {
 	add("api.userDetail", "后台用户详情", "後台用戶詳情", "Admin user detail")
 	add("api.userPassword", "修改他人密码", "修改他人密碼", "Change another user's password")
 	add("api.userRoles", "绑定用户角色", "綁定用戶角色", "Bind user roles")
+	add("api.userIpWhitelist", "修改用户IP白名单", "修改用戶IP白名單", "Update user IP whitelist")
 	add("api.roleCreate", "创建角色", "創建角色", "Create role")
 	add("api.roleUpdate", "更新角色", "更新角色", "Update role")
 	add("api.roleDelete", "删除角色", "刪除角色", "Delete role")

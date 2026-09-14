@@ -10,7 +10,7 @@ import (
 	regionserviceServer "oa.98ent.com/p9/platform-base/rpc/internal/server/regionservice"
 	timezoneserviceServer "oa.98ent.com/p9/platform-base/rpc/internal/server/timezoneservice"
 	"oa.98ent.com/p9/platform-base/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
@@ -34,11 +34,19 @@ func main() {
 	ctx.MustMigrate()
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
-		base.RegisterPingServiceServer(grpcServer, pingserviceServer.NewPingServiceServer(ctx))
-		base.RegisterTimezoneServiceServer(grpcServer, timezoneserviceServer.NewTimezoneServiceServer(ctx))
-		base.RegisterCurrencyServiceServer(grpcServer, currencyserviceServer.NewCurrencyServiceServer(ctx))
-		base.RegisterRegionServiceServer(grpcServer, regionserviceServer.NewRegionServiceServer(ctx))
+		// Ping 服务
+		platformbaserpc.RegisterPingServiceServer(grpcServer, pingserviceServer.NewPingServiceServer(ctx))
 
+		// 时区服务
+		platformbaserpc.RegisterTimezoneServiceServer(grpcServer, timezoneserviceServer.NewTimezoneServiceServer(ctx))
+
+		// 货币服务
+		platformbaserpc.RegisterCurrencyServiceServer(grpcServer, currencyserviceServer.NewCurrencyServiceServer(ctx))
+
+		// 国家地区服务
+		platformbaserpc.RegisterRegionServiceServer(grpcServer, regionserviceServer.NewRegionServiceServer(ctx))
+
+		// 开发和测试环境额外开启服务反射
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)
 		}

@@ -8,11 +8,11 @@ import (
 
 	agent_line_allocation "oa.98ent.com/p9/platform-operator/api/internal/handler/agent_line_allocation"
 	basic_resource_allocation "oa.98ent.com/p9/platform-operator/api/internal/handler/basic_resource_allocation"
-	domain "oa.98ent.com/p9/platform-operator/api/internal/handler/domain"
 	game_allocation "oa.98ent.com/p9/platform-operator/api/internal/handler/game_allocation"
 	language_allocation "oa.98ent.com/p9/platform-operator/api/internal/handler/language_allocation"
 	operator "oa.98ent.com/p9/platform-operator/api/internal/handler/operator"
 	operator_admin "oa.98ent.com/p9/platform-operator/api/internal/handler/operator_admin"
+	operator_domain "oa.98ent.com/p9/platform-operator/api/internal/handler/operator_domain"
 	operator_profile "oa.98ent.com/p9/platform-operator/api/internal/handler/operator_profile"
 	ping "oa.98ent.com/p9/platform-operator/api/internal/handler/ping"
 	region_allocation "oa.98ent.com/p9/platform-operator/api/internal/handler/region_allocation"
@@ -53,40 +53,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			}...,
 		),
 		rest.WithPrefix("/admin/operator"),
-	)
-
-	server.AddRoutes(
-		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
-			[]rest.Route{
-				{
-					Method:  http.MethodPost,
-					Path:    "/create",
-					Handler: domain.CreateDomainHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/delete",
-					Handler: domain.DeleteDomainHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/get",
-					Handler: domain.GetDomainHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/list",
-					Handler: domain.ListDomainsHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/update",
-					Handler: domain.UpdateDomainHandler(serverCtx),
-				},
-			}...,
-		),
-		rest.WithPrefix("/admin/operator/domain"),
 	)
 
 	server.AddRoutes(
@@ -183,6 +149,40 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			}...,
 		),
 		rest.WithPrefix("/admin/operator/admin"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
+			[]rest.Route{
+				{
+					Method:  http.MethodPost,
+					Path:    "/create",
+					Handler: operator_domain.CreateOperatorDomainHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/delete",
+					Handler: operator_domain.DeleteOperatorDomainHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/get",
+					Handler: operator_domain.GetOperatorDomainHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/list",
+					Handler: operator_domain.ListOperatorDomainsHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/update",
+					Handler: operator_domain.UpdateOperatorDomainHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/admin/operator/domain"),
 	)
 
 	server.AddRoutes(

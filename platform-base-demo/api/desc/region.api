@@ -7,7 +7,7 @@ type (
 	RegionInfo {
 		// 国家地区ID
 		Id int64 `json:"id"`
-		// 国家或地区编码
+		// 国家地区编码
 		Code string `json:"code"`
 		// 国际电话区号, 不包含加号
 		CallingCode string `json:"calling_code"`

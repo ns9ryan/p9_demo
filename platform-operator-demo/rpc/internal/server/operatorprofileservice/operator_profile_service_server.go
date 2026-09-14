@@ -9,13 +9,13 @@ import (
 
 	"oa.98ent.com/p9/platform-operator/rpc/internal/logic/operatorprofileservice"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/profile"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/profilepb"
 )
 
 type OperatorProfileServiceServer struct {
 	svcCtx *svc.ServiceContext
-	operator.UnimplementedOperatorProfileServiceServer
+	platformoperatorrpc.UnimplementedOperatorProfileServiceServer
 }
 
 func NewOperatorProfileServiceServer(svcCtx *svc.ServiceContext) *OperatorProfileServiceServer {
@@ -25,19 +25,19 @@ func NewOperatorProfileServiceServer(svcCtx *svc.ServiceContext) *OperatorProfil
 }
 
 // 创建分站档案
-func (s *OperatorProfileServiceServer) Create(ctx context.Context, in *profile.CreateOperatorProfileRequest) (*profile.CreateOperatorProfileResponse, error) {
+func (s *OperatorProfileServiceServer) Create(ctx context.Context, in *profilepb.CreateOperatorProfileRequest) (*profilepb.CreateOperatorProfileResponse, error) {
 	l := operatorprofileservicelogic.NewCreateLogic(ctx, s.svcCtx)
 	return l.Create(in)
 }
 
 // 修改分站档案
-func (s *OperatorProfileServiceServer) Update(ctx context.Context, in *profile.UpdateOperatorProfileRequest) (*profile.UpdateOperatorProfileResponse, error) {
+func (s *OperatorProfileServiceServer) Update(ctx context.Context, in *profilepb.UpdateOperatorProfileRequest) (*profilepb.UpdateOperatorProfileResponse, error) {
 	l := operatorprofileservicelogic.NewUpdateLogic(ctx, s.svcCtx)
 	return l.Update(in)
 }
 
 // 获取分站档案
-func (s *OperatorProfileServiceServer) Get(ctx context.Context, in *profile.GetOperatorProfileRequest) (*profile.GetOperatorProfileResponse, error) {
+func (s *OperatorProfileServiceServer) Get(ctx context.Context, in *profilepb.GetOperatorProfileRequest) (*profilepb.GetOperatorProfileResponse, error) {
 	l := operatorprofileservicelogic.NewGetLogic(ctx, s.svcCtx)
 	return l.Get(in)
 }

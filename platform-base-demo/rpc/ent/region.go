@@ -26,7 +26,7 @@ type Region struct {
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// 更新时间
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	// 国家或地区编码
+	// 国家地区编码
 	Code string `json:"code,omitempty"`
 	// 国际电话区号, 不包含加号
 	CallingCode string `json:"calling_code,omitempty"`

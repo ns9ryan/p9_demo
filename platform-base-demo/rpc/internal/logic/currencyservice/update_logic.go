@@ -8,7 +8,7 @@ import (
 	"oa.98ent.com/p9/platform-base/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-base/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-base/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/currency"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/currencypb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -28,7 +28,7 @@ func NewUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateLogi
 }
 
 // Update 修改货币
-func (l *UpdateLogic) Update(in *currency.UpdateCurrencyRequest) (*currency.UpdateCurrencyResponse, error) {
+func (l *UpdateLogic) Update(in *currencypb.UpdateCurrencyRequest) (*currencypb.UpdateCurrencyResponse, error) {
 	// 货币ID必须大于0
 	if in.Id <= 0 {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -66,5 +66,6 @@ func (l *UpdateLogic) Update(in *currency.UpdateCurrencyRequest) (*currency.Upda
 		return nil, enterror.Handle(l.Logger, err)
 	}
 
-	return &currency.UpdateCurrencyResponse{}, nil
+	// 返回修改结果
+	return &currencypb.UpdateCurrencyResponse{}, nil
 }

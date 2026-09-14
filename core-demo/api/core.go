@@ -37,6 +37,8 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 	// 注册I18n中间件
 	server.Use(middleware.I18n)
+	// 注册客户端 IP 中间件
+	server.Use(middleware.ClientIP)
 	// 注册错误日志中间件
 	server.Use(ctx.ErrorLog)
 

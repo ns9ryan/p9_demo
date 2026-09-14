@@ -2,103 +2,103 @@ syntax = "proto3";
 
 package platform_operator;
 
-option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/operator";
+option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc";
 
-import "types/ping.proto";
-import "types/operator.proto";
-import "types/profile.proto";
-import "types/domain.proto";
-import "types/basic_resource_allocation.proto";
-import "types/language_allocation.proto";
-import "types/region_allocation.proto";
-import "types/agent_line_allocation.proto";
+import "types/platform_operator_ping.proto";
+import "types/platform_operator_operator.proto";
+import "types/platform_operator_profile.proto";
+import "types/platform_operator_domain.proto";
+import "types/platform_operator_basic_resource_allocation.proto";
+import "types/platform_operator_language_allocation.proto";
+import "types/platform_operator_region_allocation.proto";
+import "types/platform_operator_agent_line_allocation.proto";
 
 // Ping 服务
 service PingService {
   // Ping
-  rpc Ping(ping.PingRequest) returns (ping.PingResponse);
+  rpc Ping(platform_operator_ping.PingRequest) returns (platform_operator_ping.PingResponse);
 }
 
 // 分站服务
 service OperatorService {
   // 创建分站
-  rpc Create(operator.CreateOperatorRequest) returns (operator.CreateOperatorResponse);
+  rpc Create(platform_operator_operator.CreateOperatorRequest) returns (platform_operator_operator.CreateOperatorResponse);
 
   // 修改分站
-  rpc Update(operator.UpdateOperatorRequest) returns (operator.UpdateOperatorResponse);
+  rpc Update(platform_operator_operator.UpdateOperatorRequest) returns (platform_operator_operator.UpdateOperatorResponse);
 
   // 获取分站
-  rpc Get(operator.GetOperatorRequest) returns (operator.GetOperatorResponse);
+  rpc Get(platform_operator_operator.GetOperatorRequest) returns (platform_operator_operator.GetOperatorResponse);
 
   // 获取分站管理列表
-  rpc List(operator.ListOperatorsRequest) returns (operator.ListOperatorsResponse);
+  rpc List(platform_operator_operator.ListOperatorsRequest) returns (platform_operator_operator.ListOperatorsResponse);
 
   // 完成分站创建
-  rpc Complete(operator.CompleteOperatorRequest) returns (operator.CompleteOperatorResponse);
+  rpc Complete(platform_operator_operator.CompleteOperatorRequest) returns (platform_operator_operator.CompleteOperatorResponse);
 
   // 发布分站
-  rpc Publish(operator.PublishOperatorRequest) returns (operator.PublishOperatorResponse);
+  rpc Publish(platform_operator_operator.PublishOperatorRequest) returns (platform_operator_operator.PublishOperatorResponse);
 }
 
 // 分站档案服务
 service OperatorProfileService {
   // 创建分站档案
-  rpc Create(profile.CreateOperatorProfileRequest) returns (profile.CreateOperatorProfileResponse);
+  rpc Create(platform_operator_profile.CreateOperatorProfileRequest) returns (platform_operator_profile.CreateOperatorProfileResponse);
 
   // 修改分站档案
-  rpc Update(profile.UpdateOperatorProfileRequest) returns (profile.UpdateOperatorProfileResponse);
+  rpc Update(platform_operator_profile.UpdateOperatorProfileRequest) returns (platform_operator_profile.UpdateOperatorProfileResponse);
 
   // 获取分站档案
-  rpc Get(profile.GetOperatorProfileRequest) returns (profile.GetOperatorProfileResponse);
+  rpc Get(platform_operator_profile.GetOperatorProfileRequest) returns (platform_operator_profile.GetOperatorProfileResponse);
 }
 
 // 分站域名服务
-service DomainService {
-  // 创建域名
-  rpc Create(domain.CreateDomainRequest) returns (domain.CreateDomainResponse);
+service OperatorDomainService {
+  // 创建分站域名
+  rpc Create(platform_operator_domain.CreateDomainRequest) returns (platform_operator_domain.CreateDomainResponse);
 
-  // 修改域名
-  rpc Update(domain.UpdateDomainRequest) returns (domain.UpdateDomainResponse);
+  // 修改分站域名
+  rpc Update(platform_operator_domain.UpdateDomainRequest) returns (platform_operator_domain.UpdateDomainResponse);
 
-  // 获取域名
-  rpc Get(domain.GetDomainRequest) returns (domain.GetDomainResponse);
+  // 获取分站域名
+  rpc Get(platform_operator_domain.GetDomainRequest) returns (platform_operator_domain.GetDomainResponse);
 
-  // 获取域名管理列表
-  rpc List(domain.ListDomainsRequest) returns (domain.ListDomainsResponse);
+  // 获取分站域名管理列表
+  rpc List(platform_operator_domain.ListDomainsRequest) returns (platform_operator_domain.ListDomainsResponse);
 
-  // 删除域名
-  rpc Delete(domain.DeleteDomainRequest) returns (domain.DeleteDomainResponse);
+  // 删除分站域名
+  rpc Delete(platform_operator_domain.DeleteDomainRequest) returns (platform_operator_domain.DeleteDomainResponse);
 }
 
 // 分站基础资源分配服务
 service BasicResourceAllocationService {
   // 获取基础资源分配列表
-  rpc List(basicresourceallocation.ListBasicResourceAllocationsRequest) returns (basicresourceallocation.ListBasicResourceAllocationsResponse);
+  rpc List(platform_operator_basic_resource_allocation.ListBasicResourceAllocationsRequest) returns (platform_operator_basic_resource_allocation.ListBasicResourceAllocationsResponse);
 }
 
 // 分站语言分配服务
 service LanguageAllocationService {
   // 获取语言分配列表
-  rpc List(languageallocation.ListLanguageAllocationsRequest) returns (languageallocation.ListLanguageAllocationsResponse);
+  rpc List(platform_operator_language_allocation.ListLanguageAllocationsRequest) returns (platform_operator_language_allocation.ListLanguageAllocationsResponse);
 
   // 保存语言分配
-  rpc Save(languageallocation.SaveLanguageAllocationsRequest) returns (languageallocation.SaveLanguageAllocationsResponse);
+  rpc Save(platform_operator_language_allocation.SaveLanguageAllocationsRequest) returns (platform_operator_language_allocation.SaveLanguageAllocationsResponse);
 }
 
 // 分站经营地区分配服务
 service RegionAllocationService {
   // 获取经营地区分配列表
-  rpc List(regionallocation.ListRegionAllocationsRequest) returns (regionallocation.ListRegionAllocationsResponse);
+  rpc List(platform_operator_region_allocation.ListRegionAllocationsRequest) returns (platform_operator_region_allocation.ListRegionAllocationsResponse);
 
   // 保存经营地区分配
-  rpc Save(regionallocation.SaveRegionAllocationsRequest) returns (regionallocation.SaveRegionAllocationsResponse);
+  rpc Save(platform_operator_region_allocation.SaveRegionAllocationsRequest) returns (platform_operator_region_allocation.SaveRegionAllocationsResponse);
 }
 
 // 分站代理子线路分配服务
 service AgentLineAllocationService {
   // 获取代理子线路分配列表
-  rpc List(agentlineallocation.ListAgentLineAllocationsRequest) returns (agentlineallocation.ListAgentLineAllocationsResponse);
+  rpc List(platform_operator_agent_line_allocation.ListAgentLineAllocationsRequest) returns (platform_operator_agent_line_allocation.ListAgentLineAllocationsResponse);
 
   // 保存代理子线路分配
-  rpc Save(agentlineallocation.SaveAgentLineAllocationsRequest) returns (agentlineallocation.SaveAgentLineAllocationsResponse);
+  rpc Save(platform_operator_agent_line_allocation.SaveAgentLineAllocationsRequest) returns (platform_operator_agent_line_allocation.SaveAgentLineAllocationsResponse);
 }

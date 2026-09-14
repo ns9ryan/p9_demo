@@ -23,7 +23,9 @@
     "partnerModeMismatch": "分站模式不匹配",
     "rootUserExists": "平台超管已存在",
     "bootstrapFieldsRequired": "分站编码、用户名和密码必填",
-    "previewReadOnly": "预览模式仅允许查看"
+    "previewReadOnly": "预览模式仅允许查看",
+    "ipNotAllowed": "当前 IP 不在白名单内",
+    "ipMismatch": "登录 IP 已变化，请重新登录"
   },
   "user": {
     "createFieldsRequired": "用户名、密码和显示名必填",
@@ -33,7 +35,8 @@
     "passwordRequired": "密码必填",
     "oldPasswordMismatch": "原密码不正确",
     "notFound": "用户不存在",
-    "roleNotFound": "角色不存在"
+    "roleNotFound": "角色不存在",
+    "invalidIpWhitelist": "IP 白名单无效"
   },
   "role": {
     "codeNameRequired": "角色编码和名称必填",

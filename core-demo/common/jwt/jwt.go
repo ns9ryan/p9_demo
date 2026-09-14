@@ -24,6 +24,7 @@ type Claims struct {
 	Salt         string   `json:"salt"`
 	TokenType    string   `json:"token_type"`
 	IsPlatform   bool     `json:"is_platform"`
+	ClientIP     string   `json:"client_ip"`
 	jwtv5.RegisteredClaims
 }
 

@@ -7,9 +7,9 @@ package currencyservice
 import (
 	"context"
 
-	"oa.98ent.com/p9/platform-base/rpc/pb/base"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc"
 
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/currency"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/currencypb"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
@@ -18,15 +18,17 @@ import (
 type (
 	CurrencyService interface {
 		// 修改货币
-		Update(ctx context.Context, in *currency.UpdateCurrencyRequest, opts ...grpc.CallOption) (*currency.UpdateCurrencyResponse, error)
+		Update(ctx context.Context, in *currencypb.UpdateCurrencyRequest, opts ...grpc.CallOption) (*currencypb.UpdateCurrencyResponse, error)
 		// 获取货币
-		Get(ctx context.Context, in *currency.GetCurrencyRequest, opts ...grpc.CallOption) (*currency.GetCurrencyResponse, error)
+		Get(ctx context.Context, in *currencypb.GetCurrencyRequest, opts ...grpc.CallOption) (*currencypb.GetCurrencyResponse, error)
+		// 按编码获取货币
+		GetByCode(ctx context.Context, in *currencypb.GetCurrencyByCodeRequest, opts ...grpc.CallOption) (*currencypb.GetCurrencyByCodeResponse, error)
 		// 获取货币管理列表
-		List(ctx context.Context, in *currency.ListCurrenciesRequest, opts ...grpc.CallOption) (*currency.ListCurrenciesResponse, error)
+		List(ctx context.Context, in *currencypb.ListCurrenciesRequest, opts ...grpc.CallOption) (*currencypb.ListCurrenciesResponse, error)
 		// 获取全部货币
-		ListAll(ctx context.Context, in *currency.ListAllCurrenciesRequest, opts ...grpc.CallOption) (*currency.ListAllCurrenciesResponse, error)
+		ListAll(ctx context.Context, in *currencypb.ListAllCurrenciesRequest, opts ...grpc.CallOption) (*currencypb.ListAllCurrenciesResponse, error)
 		// 调整货币排序
-		Reorder(ctx context.Context, in *currency.ReorderCurrencyRequest, opts ...grpc.CallOption) (*currency.ReorderCurrencyResponse, error)
+		Reorder(ctx context.Context, in *currencypb.ReorderCurrencyRequest, opts ...grpc.CallOption) (*currencypb.ReorderCurrencyResponse, error)
 	}
 
 	defaultCurrencyService struct {
@@ -41,31 +43,37 @@ func NewCurrencyService(cli zrpc.Client) CurrencyService {
 }
 
 // 修改货币
-func (m *defaultCurrencyService) Update(ctx context.Context, in *currency.UpdateCurrencyRequest, opts ...grpc.CallOption) (*currency.UpdateCurrencyResponse, error) {
-	client := base.NewCurrencyServiceClient(m.cli.Conn())
+func (m *defaultCurrencyService) Update(ctx context.Context, in *currencypb.UpdateCurrencyRequest, opts ...grpc.CallOption) (*currencypb.UpdateCurrencyResponse, error) {
+	client := platformbaserpc.NewCurrencyServiceClient(m.cli.Conn())
 	return client.Update(ctx, in, opts...)
 }
 
 // 获取货币
-func (m *defaultCurrencyService) Get(ctx context.Context, in *currency.GetCurrencyRequest, opts ...grpc.CallOption) (*currency.GetCurrencyResponse, error) {
-	client := base.NewCurrencyServiceClient(m.cli.Conn())
+func (m *defaultCurrencyService) Get(ctx context.Context, in *currencypb.GetCurrencyRequest, opts ...grpc.CallOption) (*currencypb.GetCurrencyResponse, error) {
+	client := platformbaserpc.NewCurrencyServiceClient(m.cli.Conn())
 	return client.Get(ctx, in, opts...)
 }
 
+// 按编码获取货币
+func (m *defaultCurrencyService) GetByCode(ctx context.Context, in *currencypb.GetCurrencyByCodeRequest, opts ...grpc.CallOption) (*currencypb.GetCurrencyByCodeResponse, error) {
+	client := platformbaserpc.NewCurrencyServiceClient(m.cli.Conn())
+	return client.GetByCode(ctx, in, opts...)
+}
+
 // 获取货币管理列表
-func (m *defaultCurrencyService) List(ctx context.Context, in *currency.ListCurrenciesRequest, opts ...grpc.CallOption) (*currency.ListCurrenciesResponse, error) {
-	client := base.NewCurrencyServiceClient(m.cli.Conn())
+func (m *defaultCurrencyService) List(ctx context.Context, in *currencypb.ListCurrenciesRequest, opts ...grpc.CallOption) (*currencypb.ListCurrenciesResponse, error) {
+	client := platformbaserpc.NewCurrencyServiceClient(m.cli.Conn())
 	return client.List(ctx, in, opts...)
 }
 
 // 获取全部货币
-func (m *defaultCurrencyService) ListAll(ctx context.Context, in *currency.ListAllCurrenciesRequest, opts ...grpc.CallOption) (*currency.ListAllCurrenciesResponse, error) {
-	client := base.NewCurrencyServiceClient(m.cli.Conn())
+func (m *defaultCurrencyService) ListAll(ctx context.Context, in *currencypb.ListAllCurrenciesRequest, opts ...grpc.CallOption) (*currencypb.ListAllCurrenciesResponse, error) {
+	client := platformbaserpc.NewCurrencyServiceClient(m.cli.Conn())
 	return client.ListAll(ctx, in, opts...)
 }
 
 // 调整货币排序
-func (m *defaultCurrencyService) Reorder(ctx context.Context, in *currency.ReorderCurrencyRequest, opts ...grpc.CallOption) (*currency.ReorderCurrencyResponse, error) {
-	client := base.NewCurrencyServiceClient(m.cli.Conn())
+func (m *defaultCurrencyService) Reorder(ctx context.Context, in *currencypb.ReorderCurrencyRequest, opts ...grpc.CallOption) (*currencypb.ReorderCurrencyResponse, error) {
+	client := platformbaserpc.NewCurrencyServiceClient(m.cli.Conn())
 	return client.Reorder(ctx, in, opts...)
 }

@@ -8,7 +8,7 @@ import (
 
 	"oa.98ent.com/p9/platform-base/api/internal/svc"
 	"oa.98ent.com/p9/platform-base/api/internal/types"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/timezone"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/timezonepb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -32,7 +32,7 @@ func (l *UpdateTimezoneLogic) UpdateTimezone(req *types.UpdateTimezoneRequest) (
 	// 调用修改时区RPC
 	_, err = l.svcCtx.TimezoneRpc.Update(
 		l.ctx,
-		&timezone.UpdateTimezoneRequest{
+		&timezonepb.UpdateTimezoneRequest{
 			Id:     req.Id,     // 时区ID
 			Status: req.Status, // 状态: 1启用, 2停用
 		},

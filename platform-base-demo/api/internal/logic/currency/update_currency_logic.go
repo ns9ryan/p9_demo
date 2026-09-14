@@ -8,7 +8,7 @@ import (
 
 	"oa.98ent.com/p9/platform-base/api/internal/svc"
 	"oa.98ent.com/p9/platform-base/api/internal/types"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/currency"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/currencypb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -32,7 +32,7 @@ func (l *UpdateCurrencyLogic) UpdateCurrency(req *types.UpdateCurrencyRequest) (
 	// 调用修改货币RPC
 	_, err = l.svcCtx.CurrencyRpc.Update(
 		l.ctx,
-		&currency.UpdateCurrencyRequest{
+		&currencypb.UpdateCurrencyRequest{
 			Id:     req.Id,     // 货币ID
 			Symbol: req.Symbol, // 货币符号
 			Status: req.Status, // 状态: 1启用, 2停用

@@ -9,7 +9,7 @@ import (
 	corei18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/platform-base/api/internal/svc"
 	"oa.98ent.com/p9/platform-base/api/internal/types"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/currency"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/currencypb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,7 +33,7 @@ func (l *ListCurrenciesLogic) ListCurrencies(req *types.ListCurrenciesRequest) (
 	// 调用获取货币管理列表RPC
 	result, err := l.svcCtx.CurrencyRpc.List(
 		l.ctx,
-		&currency.ListCurrenciesRequest{
+		&currencypb.ListCurrenciesRequest{
 			Page:     req.Page,     // 页码
 			PageSize: req.PageSize, // 每页数量
 			Status:   req.Status,   // 状态: 1启用, 2停用
@@ -56,9 +56,9 @@ func (l *ListCurrenciesLogic) ListCurrencies(req *types.ListCurrenciesRequest) (
 			Name:         name,              // 当前语言名称
 			CurrencyType: item.CurrencyType, // 货币类型: 1法定货币, 2虚拟货币
 			Symbol:       item.Symbol,       // 货币符号
-			AmountFactor: item.AmountFactor, // 金额换算倍率
+			AmountFactor: item.AmountFactor, // 金额换算倍率, 如 USD=100, VND=1
 			Status:       item.Status,       // 状态: 1启用, 2停用
-			SortNo:       item.SortNo,       // 排序值
+			SortNo:       item.SortNo,       // 排序值, 数值越小越靠前
 		})
 	}
 

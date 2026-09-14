@@ -8,7 +8,7 @@ import (
 	enttimezone "oa.98ent.com/p9/platform-base/rpc/ent/timezone"
 	"oa.98ent.com/p9/platform-base/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-base/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/timezone"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/timezonepb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -28,7 +28,7 @@ func NewReorderLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ReorderLo
 }
 
 // Reorder 调整时区排序
-func (l *ReorderLogic) Reorder(in *timezone.ReorderTimezoneRequest) (*timezone.ReorderTimezoneResponse, error) {
+func (l *ReorderLogic) Reorder(in *timezonepb.ReorderTimezoneRequest) (*timezonepb.ReorderTimezoneResponse, error) {
 	// 校验时区ID
 	if in.Id <= 0 || in.TargetId <= 0 || in.Id == in.TargetId {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -62,7 +62,6 @@ func (l *ReorderLogic) Reorder(in *timezone.ReorderTimezoneRequest) (*timezone.R
 	// 查找移动时区和目标时区的位置
 	sourceIndex := -1
 	targetIndex := -1
-
 	for index, result := range results {
 		switch result.ID {
 		case in.Id:
@@ -123,5 +122,6 @@ func (l *ReorderLogic) Reorder(in *timezone.ReorderTimezoneRequest) (*timezone.R
 	}
 	committed = true
 
-	return &timezone.ReorderTimezoneResponse{}, nil
+	// 返回排序结果
+	return &timezonepb.ReorderTimezoneResponse{}, nil
 }

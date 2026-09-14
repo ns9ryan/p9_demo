@@ -333,3 +333,8 @@ func (s *CoreServer) BindUserRoles(ctx context.Context, in *core.BindRolesReq) (
 	l := user.NewBindUserRolesLogic(ctx, s.svcCtx)
 	return l.BindUserRoles(in)
 }
+
+func (s *CoreServer) UpdateUserIpWhitelist(ctx context.Context, in *core.UpdateUserIpWhitelistReq) (*core.Empty, error) {
+	l := user.NewUpdateUserIpWhitelistLogic(ctx, s.svcCtx)
+	return l.UpdateUserIpWhitelist(in)
+}

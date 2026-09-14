@@ -7,6 +7,7 @@ import (
 
 	"oa.98ent.com/p9/core/common/ctxdata"
 	"oa.98ent.com/p9/core/common/i18n"
+	"oa.98ent.com/p9/core/common/utils"
 	"oa.98ent.com/p9/core/common/xerr"
 	"oa.98ent.com/p9/core/rpc/ent"
 	"oa.98ent.com/p9/core/rpc/ent/role"
@@ -32,6 +33,12 @@ type UpdateUserReq struct {
 	Mobile      *string `json:"mobile"`
 	Email       *string `json:"email"`
 	Status      *int16  `json:"status"`
+}
+
+type UpdateUserIpWhitelistReq struct {
+	ID                 int64    `json:"id"`
+	IPWhitelistEnabled int16    `json:"ip_whitelist_enabled"`
+	IPWhitelist        []string `json:"ip_whitelist"`
 }
 
 type IDReq struct {
@@ -155,6 +162,27 @@ func (d *Deps) UpdateUser(ctx context.Context, claims *ctxdata.Claims, req Updat
 		}
 	}
 	return upd.Exec(ctx)
+}
+
+func (d *Deps) UpdateUserIpWhitelist(ctx context.Context, claims *ctxdata.Claims, req UpdateUserIpWhitelistReq) error {
+	if req.IPWhitelistEnabled != 0 && req.IPWhitelistEnabled != 1 {
+		return xerr.BadRequest(i18n.InvalidParam)
+	}
+	list, ok := utils.NormalizeIPWhitelist(req.IPWhitelist)
+	if !ok {
+		return xerr.BadRequest(i18n.UserInvalidIpWhitelist)
+	}
+	if req.IPWhitelistEnabled == 1 && len(list) == 0 {
+		return xerr.BadRequest(i18n.UserInvalidIpWhitelist)
+	}
+	u, err := d.mustTenantUser(ctx, claims, req.ID)
+	if err != nil {
+		return err
+	}
+	return d.Client.User.UpdateOneID(u.ID).
+		SetIPWhitelistEnabled(req.IPWhitelistEnabled).
+		SetIPWhitelist(list).
+		Exec(ctx)
 }
 
 func (d *Deps) DeleteUsers(ctx context.Context, claims *ctxdata.Claims, ids []int64) error {

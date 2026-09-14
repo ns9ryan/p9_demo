@@ -7,7 +7,7 @@ import (
 	"oa.98ent.com/p9/platform-base/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-base/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-base/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/currency"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/currencypb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,7 +27,7 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 }
 
 // Get 获取货币
-func (l *GetLogic) Get(in *currency.GetCurrencyRequest) (*currency.GetCurrencyResponse, error) {
+func (l *GetLogic) Get(in *currencypb.GetCurrencyRequest) (*currencypb.GetCurrencyResponse, error) {
 	// 货币ID必须大于0
 	if in.Id <= 0 {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -40,7 +40,8 @@ func (l *GetLogic) Get(in *currency.GetCurrencyRequest) (*currency.GetCurrencyRe
 		return nil, enterror.Handle(l.Logger, err)
 	}
 
-	return &currency.GetCurrencyResponse{
-		Currency: toCurrencyInfo(result),
+	// 返回货币信息
+	return &currencypb.GetCurrencyResponse{
+		Currency: toCurrencyInfo(result), // 货币信息
 	}, nil
 }

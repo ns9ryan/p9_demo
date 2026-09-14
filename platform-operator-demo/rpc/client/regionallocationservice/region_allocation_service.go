@@ -7,9 +7,9 @@ package regionallocationservice
 import (
 	"context"
 
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc"
 
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/regionallocation"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/regionallocationpb"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
@@ -18,9 +18,9 @@ import (
 type (
 	RegionAllocationService interface {
 		// 获取经营地区分配列表
-		List(ctx context.Context, in *regionallocation.ListRegionAllocationsRequest, opts ...grpc.CallOption) (*regionallocation.ListRegionAllocationsResponse, error)
+		List(ctx context.Context, in *regionallocationpb.ListRegionAllocationsRequest, opts ...grpc.CallOption) (*regionallocationpb.ListRegionAllocationsResponse, error)
 		// 保存经营地区分配
-		Save(ctx context.Context, in *regionallocation.SaveRegionAllocationsRequest, opts ...grpc.CallOption) (*regionallocation.SaveRegionAllocationsResponse, error)
+		Save(ctx context.Context, in *regionallocationpb.SaveRegionAllocationsRequest, opts ...grpc.CallOption) (*regionallocationpb.SaveRegionAllocationsResponse, error)
 	}
 
 	defaultRegionAllocationService struct {
@@ -35,13 +35,13 @@ func NewRegionAllocationService(cli zrpc.Client) RegionAllocationService {
 }
 
 // 获取经营地区分配列表
-func (m *defaultRegionAllocationService) List(ctx context.Context, in *regionallocation.ListRegionAllocationsRequest, opts ...grpc.CallOption) (*regionallocation.ListRegionAllocationsResponse, error) {
-	client := operator.NewRegionAllocationServiceClient(m.cli.Conn())
+func (m *defaultRegionAllocationService) List(ctx context.Context, in *regionallocationpb.ListRegionAllocationsRequest, opts ...grpc.CallOption) (*regionallocationpb.ListRegionAllocationsResponse, error) {
+	client := platformoperatorrpc.NewRegionAllocationServiceClient(m.cli.Conn())
 	return client.List(ctx, in, opts...)
 }
 
 // 保存经营地区分配
-func (m *defaultRegionAllocationService) Save(ctx context.Context, in *regionallocation.SaveRegionAllocationsRequest, opts ...grpc.CallOption) (*regionallocation.SaveRegionAllocationsResponse, error) {
-	client := operator.NewRegionAllocationServiceClient(m.cli.Conn())
+func (m *defaultRegionAllocationService) Save(ctx context.Context, in *regionallocationpb.SaveRegionAllocationsRequest, opts ...grpc.CallOption) (*regionallocationpb.SaveRegionAllocationsResponse, error) {
+	client := platformoperatorrpc.NewRegionAllocationServiceClient(m.cli.Conn())
 	return client.Save(ctx, in, opts...)
 }

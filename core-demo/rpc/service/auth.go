@@ -9,6 +9,7 @@ import (
 	"oa.98ent.com/p9/core/common/ctxdata"
 	"oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/common/jwt"
+	"oa.98ent.com/p9/core/common/utils"
 	"oa.98ent.com/p9/core/common/xerr"
 	"oa.98ent.com/p9/core/rpc/ent"
 	"oa.98ent.com/p9/core/rpc/ent/operator"
@@ -47,20 +48,22 @@ type LogoutReq struct {
 }
 
 type UserPublic struct {
-	ID           int64    `json:"id"`
-	UserCode     string   `json:"user_code"`
-	Username     string   `json:"username"`
-	DisplayName  string   `json:"display_name"`
-	OperatorID   *int64   `json:"operator_id,omitempty"`
-	IsSuperAdmin bool     `json:"is_super_admin"`
-	Status       int16    `json:"status"`
-	RoleCodes    []string `json:"role_codes"`
-	RoleNames    []string `json:"role_names"`
-	HomePath     string   `json:"home_path,omitempty"`
-	CreatedAt    int64    `json:"created_at"`
-	LastLoginAt  *int64   `json:"last_login_at,omitempty"`
-	Mobile       *string  `json:"mobile,omitempty"`
-	Email        *string  `json:"email,omitempty"`
+	ID                 int64    `json:"id"`
+	UserCode           string   `json:"user_code"`
+	Username           string   `json:"username"`
+	DisplayName        string   `json:"display_name"`
+	OperatorID         *int64   `json:"operator_id,omitempty"`
+	IsSuperAdmin       bool     `json:"is_super_admin"`
+	Status             int16    `json:"status"`
+	RoleCodes          []string `json:"role_codes"`
+	RoleNames          []string `json:"role_names"`
+	HomePath           string   `json:"home_path,omitempty"`
+	CreatedAt          int64    `json:"created_at"`
+	LastLoginAt        *int64   `json:"last_login_at,omitempty"`
+	Mobile             *string  `json:"mobile,omitempty"`
+	Email              *string  `json:"email,omitempty"`
+	IPWhitelistEnabled int16    `json:"ip_whitelist_enabled"`
+	IPWhitelist        []string `json:"ip_whitelist"`
 }
 
 func toPublic(u *model.User, roles UserRoles) UserPublic {
@@ -71,19 +74,21 @@ func toPublic(u *model.User, roles UserRoles) UserPublic {
 		roles.Names = []string{}
 	}
 	out := UserPublic{
-		ID:           u.ID,
-		UserCode:     u.UserCode,
-		Username:     u.Username,
-		DisplayName:  u.DisplayName,
-		OperatorID:   u.OperatorID,
-		IsSuperAdmin: u.IsSuperAdmin,
-		Status:       u.Status,
-		RoleCodes:    roles.Codes,
-		RoleNames:    roles.Names,
-		HomePath:     "/dashboard",
-		CreatedAt:    u.CreatedAt.Unix(),
-		Mobile:       u.Mobile,
-		Email:        u.Email,
+		ID:                 u.ID,
+		UserCode:           u.UserCode,
+		Username:           u.Username,
+		DisplayName:        u.DisplayName,
+		OperatorID:         u.OperatorID,
+		IsSuperAdmin:       u.IsSuperAdmin,
+		Status:             u.Status,
+		RoleCodes:          roles.Codes,
+		RoleNames:          roles.Names,
+		HomePath:           "/dashboard",
+		CreatedAt:          u.CreatedAt.Unix(),
+		Mobile:             u.Mobile,
+		Email:              u.Email,
+		IPWhitelistEnabled: u.IPWhitelistEnabled,
+		IPWhitelist:        copyStrings(u.IPWhitelist),
 	}
 	if u.LastLoginAt != nil {
 		ts := u.LastLoginAt.Unix()
@@ -119,6 +124,13 @@ func (d *Deps) doLogin(ctx context.Context, req LoginReq) (*LoginResult, *model.
 	}
 	if len(roles.Codes) == 0 {
 		return nil, u, i18n.AuthNoActiveRole, xerr.Forbidden(i18n.AuthNoActiveRole)
+	}
+	if u.IPWhitelistEnabled == 1 && !utils.IPAllowed(req.ClientIP, u.IPWhitelist) {
+		return nil, u, i18n.AuthIPNotAllowed, xerr.Forbidden(i18n.AuthIPNotAllowed)
+	}
+	// 如果ctx客户端IP为空，则设置ctx客户端IP
+	if ctxdata.ClientIPFromCtx(ctx) == "" && req.ClientIP != "" {
+		ctx = ctxdata.WithClientIP(ctx, req.ClientIP)
 	}
 	tok, err := d.SignTokenPair(ctx, u, roles.Codes)
 	if err != nil {
@@ -242,6 +254,9 @@ func (d *Deps) Refresh(ctx context.Context, req RefreshReq) (*LoginResult, error
 	}
 	if d.TokenBlacklisted(ctx, raw) {
 		return nil, xerr.Unauthorized(i18n.Unauthorized)
+	}
+	if err := d.checkTokenClientIP(ctx, c); err != nil {
+		return nil, err
 	}
 	u, roles, err := d.sessionFromClaims(ctx, c)
 	if err != nil {

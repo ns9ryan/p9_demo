@@ -33,22 +33,24 @@ type Operator struct {
 }
 
 type User struct {
-	ID           int64      `json:"id"`
-	UserCode     string     `json:"user_code"`
-	OperatorID   *int64     `json:"operator_id,omitempty"`
-	Username     string     `json:"username"`
-	PasswordHash string     `json:"-"`
-	Salt         string     `json:"-"`
-	DisplayName  string     `json:"display_name"`
-	Mobile       *string    `json:"mobile,omitempty"`
-	Email        *string    `json:"email,omitempty"`
-	Status       int16      `json:"status"`
-	IsSuperAdmin bool       `json:"is_super_admin"`
-	LastLoginAt  *time.Time `json:"last_login_at,omitempty"`
-	LastLoginIP  *string    `json:"last_login_ip,omitempty"`
-	CreatedAt    time.Time  `json:"created_at"`
-	UpdatedAt    time.Time  `json:"updated_at"`
-	DeletedAt    *time.Time `json:"deleted_at,omitempty"`
+	ID                 int64      `json:"id"`
+	UserCode           string     `json:"user_code"`
+	OperatorID         *int64     `json:"operator_id,omitempty"`
+	Username           string     `json:"username"`
+	PasswordHash       string     `json:"-"`
+	Salt               string     `json:"-"`
+	DisplayName        string     `json:"display_name"`
+	Mobile             *string    `json:"mobile,omitempty"`
+	Email              *string    `json:"email,omitempty"`
+	Status             int16      `json:"status"`
+	IsSuperAdmin       bool       `json:"is_super_admin"`
+	LastLoginAt        *time.Time `json:"last_login_at,omitempty"`
+	LastLoginIP        *string    `json:"last_login_ip,omitempty"`
+	IPWhitelistEnabled int16      `json:"ip_whitelist_enabled"`
+	IPWhitelist        []string   `json:"ip_whitelist"`
+	CreatedAt          time.Time  `json:"created_at"`
+	UpdatedAt          time.Time  `json:"updated_at"`
+	DeletedAt          *time.Time `json:"deleted_at,omitempty"`
 }
 
 type Role struct {

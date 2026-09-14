@@ -2,69 +2,78 @@ syntax = "proto3";
 
 package platform_base;
 
-option go_package = "oa.98ent.com/p9/platform-base/rpc/pb/base";
+option go_package = "oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc";
 
-import "types/ping.proto";
-import "types/timezone.proto";
-import "types/currency.proto";
-import "types/region.proto";
+import "types/platform_base_ping.proto";
+import "types/platform_base_timezone.proto";
+import "types/platform_base_currency.proto";
+import "types/platform_base_region.proto";
 
 // Ping 服务
 service PingService {
   // Ping
-  rpc Ping(ping.PingRequest) returns (ping.PingResponse);
+  rpc Ping(platform_base_ping.PingRequest) returns (platform_base_ping.PingResponse);
 }
 
 // 时区服务
 service TimezoneService {
   // 修改时区
-  rpc Update(timezone.UpdateTimezoneRequest) returns (timezone.UpdateTimezoneResponse);
+  rpc Update(platform_base_timezone.UpdateTimezoneRequest) returns (platform_base_timezone.UpdateTimezoneResponse);
 
   // 获取时区
-  rpc Get(timezone.GetTimezoneRequest) returns (timezone.GetTimezoneResponse);
+  rpc Get(platform_base_timezone.GetTimezoneRequest) returns (platform_base_timezone.GetTimezoneResponse);
+
+  // 按编码获取时区
+  rpc GetByCode(platform_base_timezone.GetTimezoneByCodeRequest) returns (platform_base_timezone.GetTimezoneByCodeResponse);
 
   // 获取时区管理列表
-  rpc List(timezone.ListTimezonesRequest) returns (timezone.ListTimezonesResponse);
+  rpc List(platform_base_timezone.ListTimezonesRequest) returns (platform_base_timezone.ListTimezonesResponse);
 
   // 获取全部时区
-  rpc ListAll(timezone.ListAllTimezonesRequest) returns (timezone.ListAllTimezonesResponse);
+  rpc ListAll(platform_base_timezone.ListAllTimezonesRequest) returns (platform_base_timezone.ListAllTimezonesResponse);
 
   // 调整时区排序
-  rpc Reorder(timezone.ReorderTimezoneRequest) returns (timezone.ReorderTimezoneResponse);
+  rpc Reorder(platform_base_timezone.ReorderTimezoneRequest) returns (platform_base_timezone.ReorderTimezoneResponse);
 }
 
 // 货币服务
 service CurrencyService {
   // 修改货币
-  rpc Update(currency.UpdateCurrencyRequest) returns (currency.UpdateCurrencyResponse);
+  rpc Update(platform_base_currency.UpdateCurrencyRequest) returns (platform_base_currency.UpdateCurrencyResponse);
 
   // 获取货币
-  rpc Get(currency.GetCurrencyRequest) returns (currency.GetCurrencyResponse);
+  rpc Get(platform_base_currency.GetCurrencyRequest) returns (platform_base_currency.GetCurrencyResponse);
+
+  // 按编码获取货币
+  rpc GetByCode(platform_base_currency.GetCurrencyByCodeRequest) returns (platform_base_currency.GetCurrencyByCodeResponse);
 
   // 获取货币管理列表
-  rpc List(currency.ListCurrenciesRequest) returns (currency.ListCurrenciesResponse);
+  rpc List(platform_base_currency.ListCurrenciesRequest) returns (platform_base_currency.ListCurrenciesResponse);
 
   // 获取全部货币
-  rpc ListAll(currency.ListAllCurrenciesRequest) returns (currency.ListAllCurrenciesResponse);
+  rpc ListAll(platform_base_currency.ListAllCurrenciesRequest) returns (platform_base_currency.ListAllCurrenciesResponse);
 
   // 调整货币排序
-  rpc Reorder(currency.ReorderCurrencyRequest) returns (currency.ReorderCurrencyResponse);
+  rpc Reorder(platform_base_currency.ReorderCurrencyRequest) returns (platform_base_currency.ReorderCurrencyResponse);
 }
 
 // 国家地区服务
 service RegionService {
   // 修改国家地区
-  rpc Update(region.UpdateRegionRequest) returns (region.UpdateRegionResponse);
+  rpc Update(platform_base_region.UpdateRegionRequest) returns (platform_base_region.UpdateRegionResponse);
 
   // 获取国家地区
-  rpc Get(region.GetRegionRequest) returns (region.GetRegionResponse);
+  rpc Get(platform_base_region.GetRegionRequest) returns (platform_base_region.GetRegionResponse);
+
+  // 按编码获取国家地区
+  rpc GetByCode(platform_base_region.GetRegionByCodeRequest) returns (platform_base_region.GetRegionByCodeResponse);
 
   // 获取国家地区管理列表
-  rpc List(region.ListRegionsRequest) returns (region.ListRegionsResponse);
+  rpc List(platform_base_region.ListRegionsRequest) returns (platform_base_region.ListRegionsResponse);
 
   // 获取全部国家地区
-  rpc ListAll(region.ListAllRegionsRequest) returns (region.ListAllRegionsResponse);
+  rpc ListAll(platform_base_region.ListAllRegionsRequest) returns (platform_base_region.ListAllRegionsResponse);
 
   // 调整国家地区排序
-  rpc Reorder(region.ReorderRegionRequest) returns (region.ReorderRegionResponse);
+  rpc Reorder(platform_base_region.ReorderRegionRequest) returns (platform_base_region.ReorderRegionResponse);
 }

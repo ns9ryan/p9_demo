@@ -50,7 +50,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				// 签发总网预览令牌，只读
 				Method:  http.MethodPost,
-				Path:    "/preview-token",
+				Path:    "/previewToken",
 				Handler: public.IssuePreviewTokenHandler(serverCtx),
 			},
 		},
@@ -141,6 +141,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Method:  http.MethodPost,
 					Path:    "/user/roles",
 					Handler: user.BindUserRolesHandler(serverCtx),
+				},
+				{
+					// 更新用户登录 IP 白名单
+					Method:  http.MethodPost,
+					Path:    "/user/ipWhitelist",
+					Handler: user.UpdateUserIpWhitelistHandler(serverCtx),
 				},
 			}...,
 		),

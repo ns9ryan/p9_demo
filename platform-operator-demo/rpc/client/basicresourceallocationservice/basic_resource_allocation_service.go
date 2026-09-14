@@ -7,9 +7,9 @@ package basicresourceallocationservice
 import (
 	"context"
 
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc"
 
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/basicresourceallocation"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/basicresourceallocationpb"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
@@ -18,7 +18,7 @@ import (
 type (
 	BasicResourceAllocationService interface {
 		// 获取基础资源分配列表
-		List(ctx context.Context, in *basicresourceallocation.ListBasicResourceAllocationsRequest, opts ...grpc.CallOption) (*basicresourceallocation.ListBasicResourceAllocationsResponse, error)
+		List(ctx context.Context, in *basicresourceallocationpb.ListBasicResourceAllocationsRequest, opts ...grpc.CallOption) (*basicresourceallocationpb.ListBasicResourceAllocationsResponse, error)
 	}
 
 	defaultBasicResourceAllocationService struct {
@@ -33,7 +33,7 @@ func NewBasicResourceAllocationService(cli zrpc.Client) BasicResourceAllocationS
 }
 
 // 获取基础资源分配列表
-func (m *defaultBasicResourceAllocationService) List(ctx context.Context, in *basicresourceallocation.ListBasicResourceAllocationsRequest, opts ...grpc.CallOption) (*basicresourceallocation.ListBasicResourceAllocationsResponse, error) {
-	client := operator.NewBasicResourceAllocationServiceClient(m.cli.Conn())
+func (m *defaultBasicResourceAllocationService) List(ctx context.Context, in *basicresourceallocationpb.ListBasicResourceAllocationsRequest, opts ...grpc.CallOption) (*basicresourceallocationpb.ListBasicResourceAllocationsResponse, error) {
+	client := platformoperatorrpc.NewBasicResourceAllocationServiceClient(m.cli.Conn())
 	return client.List(ctx, in, opts...)
 }

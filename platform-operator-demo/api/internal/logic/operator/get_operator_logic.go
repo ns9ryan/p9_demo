@@ -8,6 +8,7 @@ import (
 
 	"oa.98ent.com/p9/platform-operator/api/internal/svc"
 	"oa.98ent.com/p9/platform-operator/api/internal/types"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/operatorpb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,8 +27,21 @@ func NewGetOperatorLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetOp
 	}
 }
 
+// GetOperator 获取分站
 func (l *GetOperatorLogic) GetOperator(req *types.GetOperatorRequest) (resp *types.GetOperatorResponse, err error) {
-	// todo: add your logic here and delete this line
+	// 获取分站
+	result, err := l.svcCtx.OperatorRpc.Get(
+		l.ctx,
+		&operatorpb.GetOperatorRequest{
+			Id: req.Id, // 分站ID
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
 
-	return
+	// 返回分站信息
+	return &types.GetOperatorResponse{
+		OperatorInfo: toOperatorInfo(result.Operator),
+	}, nil
 }

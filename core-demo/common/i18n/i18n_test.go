@@ -53,6 +53,12 @@ func TestT(t *testing.T) {
 	if got := T(zh, "运营"); got != "运营" {
 		t.Fatalf("passthrough=%q", got)
 	}
+	if got := T(zh, AuthIPMismatch); got != "登录 IP 已变化，请重新登录" {
+		t.Fatalf("zh ipMismatch=%q", got)
+	}
+	if got := T(en, AuthIPMismatch); got != "login IP has changed, please sign in again" {
+		t.Fatalf("en ipMismatch=%q", got)
+	}
 }
 
 func TestTG(t *testing.T) {

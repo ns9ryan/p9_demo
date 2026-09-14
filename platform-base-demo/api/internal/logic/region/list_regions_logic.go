@@ -9,7 +9,7 @@ import (
 	corei18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/platform-base/api/internal/svc"
 	"oa.98ent.com/p9/platform-base/api/internal/types"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/region"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/regionpb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,7 +33,7 @@ func (l *ListRegionsLogic) ListRegions(req *types.ListRegionsRequest) (resp *typ
 	// 调用获取国家地区管理列表RPC
 	result, err := l.svcCtx.RegionRpc.List(
 		l.ctx,
-		&region.ListRegionsRequest{
+		&regionpb.ListRegionsRequest{
 			Page:     req.Page,     // 页码
 			PageSize: req.PageSize, // 每页数量
 			Status:   req.Status,   // 状态: 1启用, 2停用
@@ -50,13 +50,13 @@ func (l *ListRegionsLogic) ListRegions(req *types.ListRegionsRequest) (resp *typ
 		name := corei18n.TG(l.ctx, corei18n.CodePlatform, "base", item.NameKey)
 
 		list = append(list, types.RegionInfo{
-			Id:          item.Id,          // 国家或地区ID
-			Code:        item.Code,        // 国家或地区编码
+			Id:          item.Id,          // 国家地区ID
+			Code:        item.Code,        // 国家地区编码
 			CallingCode: item.CallingCode, // 国际电话区号, 不包含加号
 			NameKey:     item.NameKey,     // 名称翻译Key
 			Name:        name,             // 当前语言名称
 			Status:      item.Status,      // 状态: 1启用, 2停用
-			SortNo:      item.SortNo,      // 排序值
+			SortNo:      item.SortNo,      // 排序值, 数值越小越靠前
 		})
 	}
 

@@ -63,6 +63,11 @@ func New(defaultLanguage string) (*Validator, error) {
 		return nil, err
 	}
 
+	// 注册非空白字符串校验
+	if err := registerNotBlank(v); err != nil {
+		return nil, err
+	}
+
 	return v, nil
 }
 

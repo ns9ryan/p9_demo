@@ -7,7 +7,7 @@ import (
 	"oa.98ent.com/p9/platform-base/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-base/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-base/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/timezone"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/timezonepb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,7 +27,7 @@ func NewUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateLogi
 }
 
 // Update 修改时区
-func (l *UpdateLogic) Update(in *timezone.UpdateTimezoneRequest) (*timezone.UpdateTimezoneResponse, error) {
+func (l *UpdateLogic) Update(in *timezonepb.UpdateTimezoneRequest) (*timezonepb.UpdateTimezoneResponse, error) {
 	// 时区ID必须大于0
 	if in.Id <= 0 {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -48,5 +48,6 @@ func (l *UpdateLogic) Update(in *timezone.UpdateTimezoneRequest) (*timezone.Upda
 		return nil, enterror.Handle(l.Logger, err)
 	}
 
-	return &timezone.UpdateTimezoneResponse{}, nil
+	// 返回修改结果
+	return &timezonepb.UpdateTimezoneResponse{}, nil
 }

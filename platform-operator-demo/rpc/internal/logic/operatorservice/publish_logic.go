@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
-	"oa.98ent.com/p9/platform-operator/rpc/pb/operator/operator"
+	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/operatorpb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,8 +24,8 @@ func NewPublishLogic(ctx context.Context, svcCtx *svc.ServiceContext) *PublishLo
 }
 
 // 发布分站
-func (l *PublishLogic) Publish(in *operator.PublishOperatorRequest) (*operator.PublishOperatorResponse, error) {
+func (l *PublishLogic) Publish(in *operatorpb.PublishOperatorRequest) (*operatorpb.PublishOperatorResponse, error) {
 	// todo: add your logic here and delete this line
 
-	return &operator.PublishOperatorResponse{}, nil
+	return &operatorpb.PublishOperatorResponse{}, nil
 }

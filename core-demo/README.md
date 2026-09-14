@@ -92,4 +92,4 @@ cd example/promo-api/ent && go generate
 
 `goctls` v1.12.6、protoc 需在 PATH 中。`PROJECT_STYLE=go_zero`。RPC 生成会把 desc 合并进 `rpc/core.proto`，logic 按 group 落在 `rpc/internal/logic/<group>/`，client 在 `rpc/coreclient`。
 
-登录会把客户端 IP 传给 RPC：`api/internal/logic/public/login_logic.go` 使用 `*http.Request`。重新 `make gen-api` 后若 handler 被覆盖，把 `NewLoginLogic(r.Context(), svcCtx)` 改回 `NewLoginLogic(r, svcCtx)`。
+登录仍用 `*http.Request` 取 UserAgent / 回退 IP：`api/internal/logic/public/login_logic.go`。刷新 / 预览走生成代码 `NewXxxLogic(r.Context(), svcCtx)`，客户端 IP 由全局 `middleware.ClientIP`（与 `middleware.I18n` 同级）写入上下文。使用 core JWT 的业务 API 同样要 `server.Use(middleware.ClientIP)`；JWT 仅在 ctx 里还没有 IP 时回填。重新 `make gen-api` 后若 login handler 被覆盖，把 `NewLoginLogic(r.Context(), svcCtx)` 改回 `NewLoginLogic(r, svcCtx)`。

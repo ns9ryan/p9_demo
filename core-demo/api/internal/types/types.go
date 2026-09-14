@@ -53,6 +53,10 @@ type UserPublic struct {
 	Mobile string `json:"mobile,optional"`
 	// Email | 邮箱
 	Email string `json:"email,optional"`
+	// IP whitelist enabled | 是否开启登录 IP 白名单
+	IpWhitelistEnabled int32 `json:"ip_whitelist_enabled"`
+	// IP whitelist | 登录 IP 白名单
+	IpWhitelist []string `json:"ip_whitelist"`
 }
 
 // Login response | 登录响应
@@ -237,6 +241,16 @@ type BindRolesReq struct {
 	UserId int64 `json:"user_id"`
 	// Role IDs | 角色ID
 	RoleIds []int64 `json:"role_ids"`
+}
+
+// Update user IP whitelist request | 更新用户登录 IP 白名单
+type UpdateUserIpWhitelistReq struct {
+	// User ID | 用户ID
+	Id int64 `json:"id"`
+	// IP whitelist enabled | 是否开启，0 否 1 是
+	IpWhitelistEnabled int32 `json:"ip_whitelist_enabled"`
+	// IP whitelist | IP 或 CIDR 列表
+	IpWhitelist []string `json:"ip_whitelist"`
 }
 
 // Operator info | 分站信息

@@ -5,8 +5,6 @@ type (
 	AgentLineAllocationInfo {
 		// 代理子线路编码
 		AgentLineCode string `json:"agent_line_code"`
-		// 代理子线路名称
-		Name string `json:"name"`
 		// 是否已分配
 		Allocated bool `json:"allocated"`
 		// 分配时间, 未分配时为空
@@ -27,7 +25,7 @@ type (
 		// 分站ID
 		OperatorId int64 `json:"operator_id" validate:"required,gt=0"`
 		// 当前分配的代理子线路编码
-		AgentLineCodes []string `json:"agent_line_codes" validate:"omitempty,dive,required,max=32"`
+		AgentLineCodes []string `json:"agent_line_codes" validate:"omitempty,dive,required,notblank,max=32"`
 	}
 	// 保存代理子线路分配响应
 	SaveAgentLineAllocationsResponse  {}

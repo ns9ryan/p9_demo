@@ -7,9 +7,9 @@ package pingservice
 import (
 	"context"
 
-	"oa.98ent.com/p9/platform-base/rpc/pb/base"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc"
 
-	"oa.98ent.com/p9/platform-base/rpc/pb/base/ping"
+	"oa.98ent.com/p9/platform-base/rpc/pb/platformbaserpc/pingpb"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
@@ -18,7 +18,7 @@ import (
 type (
 	PingService interface {
 		// Ping
-		Ping(ctx context.Context, in *ping.PingRequest, opts ...grpc.CallOption) (*ping.PingResponse, error)
+		Ping(ctx context.Context, in *pingpb.PingRequest, opts ...grpc.CallOption) (*pingpb.PingResponse, error)
 	}
 
 	defaultPingService struct {
@@ -33,7 +33,7 @@ func NewPingService(cli zrpc.Client) PingService {
 }
 
 // Ping
-func (m *defaultPingService) Ping(ctx context.Context, in *ping.PingRequest, opts ...grpc.CallOption) (*ping.PingResponse, error) {
-	client := base.NewPingServiceClient(m.cli.Conn())
+func (m *defaultPingService) Ping(ctx context.Context, in *pingpb.PingRequest, opts ...grpc.CallOption) (*pingpb.PingResponse, error) {
+	client := platformbaserpc.NewPingServiceClient(m.cli.Conn())
 	return client.Ping(ctx, in, opts...)
 }
