@@ -97,8 +97,14 @@ func (x *LanguageAllocationInfo) GetCreatedAt() int64 {
 // 获取语言分配列表请求
 type ListLanguageAllocationsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
+	// 页码, 从1开始
+	Page int64 `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	// 每页数量
+	PageSize int64 `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
 	// 分站ID
-	OperatorId    int64 `protobuf:"varint,1,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
+	OperatorId int64 `protobuf:"varint,3,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
+	// 语言编码
+	LanguageCode  *string `protobuf:"bytes,4,opt,name=language_code,json=languageCode,proto3,oneof" json:"language_code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -133,6 +139,20 @@ func (*ListLanguageAllocationsRequest) Descriptor() ([]byte, []int) {
 	return file_types_platform_operator_language_allocation_proto_rawDescGZIP(), []int{1}
 }
 
+func (x *ListLanguageAllocationsRequest) GetPage() int64 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *ListLanguageAllocationsRequest) GetPageSize() int64 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
 func (x *ListLanguageAllocationsRequest) GetOperatorId() int64 {
 	if x != nil {
 		return x.OperatorId
@@ -140,11 +160,20 @@ func (x *ListLanguageAllocationsRequest) GetOperatorId() int64 {
 	return 0
 }
 
+func (x *ListLanguageAllocationsRequest) GetLanguageCode() string {
+	if x != nil && x.LanguageCode != nil {
+		return *x.LanguageCode
+	}
+	return ""
+}
+
 // 获取语言分配列表响应
 type ListLanguageAllocationsResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
+	// 数据总数
+	Total int64 `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
 	// 语言分配列表
-	List          []*LanguageAllocationInfo `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	List          []*LanguageAllocationInfo `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -177,6 +206,13 @@ func (x *ListLanguageAllocationsResponse) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ListLanguageAllocationsResponse.ProtoReflect.Descriptor instead.
 func (*ListLanguageAllocationsResponse) Descriptor() ([]byte, []int) {
 	return file_types_platform_operator_language_allocation_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *ListLanguageAllocationsResponse) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
 }
 
 func (x *ListLanguageAllocationsResponse) GetList() []*LanguageAllocationInfo {
@@ -289,12 +325,17 @@ const file_types_platform_operator_language_allocation_proto_rawDesc = "" +
 	"operatorId\x12#\n" +
 	"\rlanguage_code\x18\x03 \x01(\tR\flanguageCode\x12\x1d\n" +
 	"\n" +
-	"created_at\x18\x04 \x01(\x03R\tcreatedAt\"A\n" +
-	"\x1eListLanguageAllocationsRequest\x12\x1f\n" +
-	"\voperator_id\x18\x01 \x01(\x03R\n" +
-	"operatorId\"t\n" +
-	"\x1fListLanguageAllocationsResponse\x12Q\n" +
-	"\x04list\x18\x01 \x03(\v2=.platform_operator_language_allocation.LanguageAllocationInfoR\x04list\"h\n" +
+	"created_at\x18\x04 \x01(\x03R\tcreatedAt\"\xae\x01\n" +
+	"\x1eListLanguageAllocationsRequest\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x03R\x04page\x12\x1b\n" +
+	"\tpage_size\x18\x02 \x01(\x03R\bpageSize\x12\x1f\n" +
+	"\voperator_id\x18\x03 \x01(\x03R\n" +
+	"operatorId\x12(\n" +
+	"\rlanguage_code\x18\x04 \x01(\tH\x00R\flanguageCode\x88\x01\x01B\x10\n" +
+	"\x0e_language_code\"\x8a\x01\n" +
+	"\x1fListLanguageAllocationsResponse\x12\x14\n" +
+	"\x05total\x18\x01 \x01(\x03R\x05total\x12Q\n" +
+	"\x04list\x18\x02 \x03(\v2=.platform_operator_language_allocation.LanguageAllocationInfoR\x04list\"h\n" +
 	"\x1eSaveLanguageAllocationsRequest\x12\x1f\n" +
 	"\voperator_id\x18\x01 \x01(\x03R\n" +
 	"operatorId\x12%\n" +
@@ -335,6 +376,7 @@ func file_types_platform_operator_language_allocation_proto_init() {
 	if File_types_platform_operator_language_allocation_proto != nil {
 		return
 	}
+	file_types_platform_operator_language_allocation_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

@@ -97,8 +97,14 @@ func (x *RegionAllocationInfo) GetCreatedAt() int64 {
 // 获取经营地区分配列表请求
 type ListRegionAllocationsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
+	// 页码, 从1开始
+	Page int64 `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	// 每页数量
+	PageSize int64 `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
 	// 分站ID
-	OperatorId    int64 `protobuf:"varint,1,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
+	OperatorId int64 `protobuf:"varint,3,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
+	// 国家地区编码
+	RegionCode    *string `protobuf:"bytes,4,opt,name=region_code,json=regionCode,proto3,oneof" json:"region_code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -133,6 +139,20 @@ func (*ListRegionAllocationsRequest) Descriptor() ([]byte, []int) {
 	return file_types_platform_operator_region_allocation_proto_rawDescGZIP(), []int{1}
 }
 
+func (x *ListRegionAllocationsRequest) GetPage() int64 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *ListRegionAllocationsRequest) GetPageSize() int64 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
 func (x *ListRegionAllocationsRequest) GetOperatorId() int64 {
 	if x != nil {
 		return x.OperatorId
@@ -140,11 +160,20 @@ func (x *ListRegionAllocationsRequest) GetOperatorId() int64 {
 	return 0
 }
 
+func (x *ListRegionAllocationsRequest) GetRegionCode() string {
+	if x != nil && x.RegionCode != nil {
+		return *x.RegionCode
+	}
+	return ""
+}
+
 // 获取经营地区分配列表响应
 type ListRegionAllocationsResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
+	// 数据总数
+	Total int64 `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
 	// 经营地区分配列表
-	List          []*RegionAllocationInfo `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	List          []*RegionAllocationInfo `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -177,6 +206,13 @@ func (x *ListRegionAllocationsResponse) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ListRegionAllocationsResponse.ProtoReflect.Descriptor instead.
 func (*ListRegionAllocationsResponse) Descriptor() ([]byte, []int) {
 	return file_types_platform_operator_region_allocation_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *ListRegionAllocationsResponse) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
 }
 
 func (x *ListRegionAllocationsResponse) GetList() []*RegionAllocationInfo {
@@ -290,12 +326,18 @@ const file_types_platform_operator_region_allocation_proto_rawDesc = "" +
 	"\vregion_code\x18\x03 \x01(\tR\n" +
 	"regionCode\x12\x1d\n" +
 	"\n" +
-	"created_at\x18\x04 \x01(\x03R\tcreatedAt\"?\n" +
-	"\x1cListRegionAllocationsRequest\x12\x1f\n" +
-	"\voperator_id\x18\x01 \x01(\x03R\n" +
-	"operatorId\"n\n" +
-	"\x1dListRegionAllocationsResponse\x12M\n" +
-	"\x04list\x18\x01 \x03(\v29.platform_operator_region_allocation.RegionAllocationInfoR\x04list\"b\n" +
+	"created_at\x18\x04 \x01(\x03R\tcreatedAt\"\xa6\x01\n" +
+	"\x1cListRegionAllocationsRequest\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x03R\x04page\x12\x1b\n" +
+	"\tpage_size\x18\x02 \x01(\x03R\bpageSize\x12\x1f\n" +
+	"\voperator_id\x18\x03 \x01(\x03R\n" +
+	"operatorId\x12$\n" +
+	"\vregion_code\x18\x04 \x01(\tH\x00R\n" +
+	"regionCode\x88\x01\x01B\x0e\n" +
+	"\f_region_code\"\x84\x01\n" +
+	"\x1dListRegionAllocationsResponse\x12\x14\n" +
+	"\x05total\x18\x01 \x01(\x03R\x05total\x12M\n" +
+	"\x04list\x18\x02 \x03(\v29.platform_operator_region_allocation.RegionAllocationInfoR\x04list\"b\n" +
 	"\x1cSaveRegionAllocationsRequest\x12\x1f\n" +
 	"\voperator_id\x18\x01 \x01(\x03R\n" +
 	"operatorId\x12!\n" +
@@ -336,6 +378,7 @@ func file_types_platform_operator_region_allocation_proto_init() {
 	if File_types_platform_operator_region_allocation_proto != nil {
 		return
 	}
+	file_types_platform_operator_region_allocation_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

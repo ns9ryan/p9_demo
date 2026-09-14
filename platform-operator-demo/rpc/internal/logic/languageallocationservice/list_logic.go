@@ -2,6 +2,7 @@ package languageallocationservicelogic
 
 import (
 	"context"
+	"strings"
 
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
 	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
@@ -30,6 +31,11 @@ func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {
 
 // List 获取语言分配列表
 func (l *ListLogic) List(in *languageallocationpb.ListLanguageAllocationsRequest) (*languageallocationpb.ListLanguageAllocationsResponse, error) {
+	// 校验分页参数
+	if in.Page < 1 || in.PageSize < 1 || in.PageSize > 100 {
+		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
+	}
+
 	// 分站ID必须大于0
 	if in.OperatorId <= 0 {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
@@ -42,14 +48,37 @@ func (l *ListLogic) List(in *languageallocationpb.ListLanguageAllocationsRequest
 		return nil, enterror.Handle(l.Logger, err)
 	}
 
-	// 获取分站当前全部语言分配
-	results, err := l.svcCtx.DB.OperatorLanguageAllocation.
+	// 创建语言分配查询
+	query := l.svcCtx.DB.OperatorLanguageAllocation.
 		Query().
-		Where(operatorlanguageallocation.OperatorIDEQ(in.OperatorId)).
+		Where(operatorlanguageallocation.OperatorIDEQ(in.OperatorId))
+
+	// 按语言编码筛选
+	if in.LanguageCode != nil {
+		languageCode := strings.TrimSpace(*in.LanguageCode)
+		if languageCode != "" {
+			query = query.Where(operatorlanguageallocation.LanguageCodeEQ(languageCode))
+		}
+	}
+
+	// 获取符合条件的数据总数
+	total, err := query.Clone().Count(l.ctx)
+	if err != nil {
+		// 转换Ent错误为gRPC错误
+		return nil, enterror.Handle(l.Logger, err)
+	}
+
+	// 计算分页偏移量
+	offset := (in.Page - 1) * in.PageSize
+
+	// 获取当前页语言分配数据
+	results, err := query.
 		Order(
 			operatorlanguageallocation.ByCreatedAt(sql.OrderDesc()), // 按分配时间倒序
 			operatorlanguageallocation.ByID(sql.OrderDesc()),        // 分配时间相同时按ID倒序
 		).
+		Offset(int(offset)).
+		Limit(int(in.PageSize)).
 		All(l.ctx)
 	if err != nil {
 		// 转换Ent错误为gRPC错误
@@ -64,6 +93,7 @@ func (l *ListLogic) List(in *languageallocationpb.ListLanguageAllocationsRequest
 
 	// 返回语言分配列表
 	return &languageallocationpb.ListLanguageAllocationsResponse{
-		List: list, // 语言分配列表
+		Total: int64(total), // 数据总数
+		List:  list,         // 语言分配列表
 	}, nil
 }
