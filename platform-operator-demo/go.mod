@@ -4,6 +4,7 @@ go 1.26.0
 
 require (
 	entgo.io/ent v0.14.6
+	github.com/duke-git/lancet/v2 v2.3.9
 	github.com/go-playground/locales v0.14.1
 	github.com/go-playground/universal-translator v0.18.1
 	github.com/go-playground/validator/v10 v10.30.4
