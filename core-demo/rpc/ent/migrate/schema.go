@@ -11,19 +11,20 @@ import (
 var (
 	// SysAPIColumns holds the columns for the "sys_api" table.
 	SysAPIColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true},
-		{Name: "created_at", Type: field.TypeTime, Default: schema.Expr("CURRENT_TIMESTAMP")},
-		{Name: "updated_at", Type: field.TypeTime, Default: schema.Expr("CURRENT_TIMESTAMP")},
-		{Name: "description", Type: field.TypeString, Size: 255},
-		{Name: "api_group", Type: field.TypeString, Size: 100},
-		{Name: "method", Type: field.TypeString, Size: 10},
-		{Name: "path", Type: field.TypeString, Size: 255},
-		{Name: "is_required", Type: field.TypeInt16, Default: 0},
-		{Name: "service_name", Type: field.TypeString, Size: 255},
+		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "Created At | 创建时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "Updated At | 更新时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
+		{Name: "description", Type: field.TypeString, Size: 255, Comment: "Description i18n key | 描述词条"},
+		{Name: "api_group", Type: field.TypeString, Size: 100, Comment: "API group | 接口分组"},
+		{Name: "method", Type: field.TypeString, Size: 10, Comment: "HTTP method | 请求方法"},
+		{Name: "path", Type: field.TypeString, Size: 255, Comment: "Request path | 请求路径"},
+		{Name: "is_required", Type: field.TypeInt16, Comment: "Required 0 no 1 yes | 是否必选 0 否 1 是", Default: 0},
+		{Name: "service_name", Type: field.TypeString, Size: 255, Comment: "Service name | 服务名"},
 	}
 	// SysAPITable holds the schema information for the "sys_api" table.
 	SysAPITable = &schema.Table{
 		Name:       "sys_api",
+		Comment:    "API Table | 接口表",
 		Columns:    SysAPIColumns,
 		PrimaryKey: []*schema.Column{SysAPIColumns[0]},
 		Indexes: []*schema.Index{
@@ -36,24 +37,25 @@ var (
 	}
 	// SysAdminActionLogColumns holds the columns for the "sys_admin_action_log" table.
 	SysAdminActionLogColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true},
-		{Name: "operator_id", Type: field.TypeInt64, Nullable: true},
-		{Name: "request_method", Type: field.TypeString, Size: 10},
-		{Name: "request_path", Type: field.TypeString, Size: 500},
-		{Name: "request_query", Type: field.TypeString, Nullable: true, Size: 2147483647},
-		{Name: "request_body", Type: field.TypeString, Nullable: true, Size: 2147483647},
-		{Name: "action_result", Type: field.TypeInt16},
-		{Name: "response_status", Type: field.TypeInt},
-		{Name: "response_body", Type: field.TypeString, Nullable: true, Size: 2147483647},
-		{Name: "duration_ms", Type: field.TypeInt, Default: 0},
-		{Name: "client_ip", Type: field.TypeString, SchemaType: map[string]string{"postgres": "inet"}},
-		{Name: "user_agent", Type: field.TypeString, Nullable: true, Size: 1000},
-		{Name: "created_at", Type: field.TypeTime},
-		{Name: "user_id", Type: field.TypeInt64},
+		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键"},
+		{Name: "operator_code", Type: field.TypeString, Nullable: true, Size: 64, Comment: "Operator Code | 分站编码"},
+		{Name: "request_method", Type: field.TypeString, Size: 10, Comment: "HTTP method | 请求方法"},
+		{Name: "request_path", Type: field.TypeString, Size: 500, Comment: "Request path | 请求路径"},
+		{Name: "request_query", Type: field.TypeString, Nullable: true, Size: 2147483647, Comment: "Query string | 查询串"},
+		{Name: "request_body", Type: field.TypeString, Nullable: true, Size: 2147483647, Comment: "Request body | 请求体"},
+		{Name: "action_result", Type: field.TypeInt16, Comment: "Action result 1 success 2 fail | 操作结果 1 成功 2 失败"},
+		{Name: "response_status", Type: field.TypeInt, Comment: "HTTP status | 响应状态码"},
+		{Name: "response_body", Type: field.TypeString, Nullable: true, Size: 2147483647, Comment: "Response body | 响应体"},
+		{Name: "duration_ms", Type: field.TypeInt, Comment: "Duration ms | 耗时毫秒", Default: 0},
+		{Name: "client_ip", Type: field.TypeString, Comment: "Client IP | 客户端 IP", SchemaType: map[string]string{"postgres": "inet"}},
+		{Name: "user_agent", Type: field.TypeString, Nullable: true, Size: 1000, Comment: "User agent | 客户端标识"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "Created at | 创建时间"},
+		{Name: "user_id", Type: field.TypeInt64, Comment: "User ID | 用户 ID"},
 	}
 	// SysAdminActionLogTable holds the schema information for the "sys_admin_action_log" table.
 	SysAdminActionLogTable = &schema.Table{
 		Name:       "sys_admin_action_log",
+		Comment:    "Admin Action Log Table | 操作日志表",
 		Columns:    SysAdminActionLogColumns,
 		PrimaryKey: []*schema.Column{SysAdminActionLogColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
@@ -89,18 +91,19 @@ var (
 	}
 	// CasbinRuleColumns holds the columns for the "casbin_rule" table.
 	CasbinRuleColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true},
-		{Name: "ptype", Type: field.TypeString, Size: 16, Default: "p"},
-		{Name: "v0", Type: field.TypeString, Size: 255, Default: ""},
-		{Name: "v1", Type: field.TypeString, Size: 255, Default: ""},
-		{Name: "v2", Type: field.TypeString, Size: 255, Default: ""},
-		{Name: "v3", Type: field.TypeString, Size: 255, Default: ""},
-		{Name: "v4", Type: field.TypeString, Size: 255, Default: ""},
-		{Name: "v5", Type: field.TypeString, Size: 255, Default: ""},
+		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键"},
+		{Name: "ptype", Type: field.TypeString, Size: 16, Comment: "Policy type | 策略类型", Default: "p"},
+		{Name: "v0", Type: field.TypeString, Size: 255, Comment: "Subject / role | 主体 / 角色", Default: ""},
+		{Name: "v1", Type: field.TypeString, Size: 255, Comment: "Domain | 域", Default: ""},
+		{Name: "v2", Type: field.TypeString, Size: 255, Comment: "Object / path | 对象 / 路径", Default: ""},
+		{Name: "v3", Type: field.TypeString, Size: 255, Comment: "Action / method | 操作 / 方法", Default: ""},
+		{Name: "v4", Type: field.TypeString, Size: 255, Comment: "Extra | 扩展", Default: ""},
+		{Name: "v5", Type: field.TypeString, Size: 255, Comment: "Extra | 扩展", Default: ""},
 	}
 	// CasbinRuleTable holds the schema information for the "casbin_rule" table.
 	CasbinRuleTable = &schema.Table{
 		Name:       "casbin_rule",
+		Comment:    "Casbin Rule Table | 权限策略表",
 		Columns:    CasbinRuleColumns,
 		PrimaryKey: []*schema.Column{CasbinRuleColumns[0]},
 		Indexes: []*schema.Index{
@@ -113,26 +116,27 @@ var (
 	}
 	// SysErrorLogColumns holds the columns for the "sys_error_log" table.
 	SysErrorLogColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true},
-		{Name: "operator_id", Type: field.TypeInt64, Nullable: true},
-		{Name: "request_method", Type: field.TypeString, Size: 10},
-		{Name: "request_path", Type: field.TypeString, Size: 500},
-		{Name: "request_query", Type: field.TypeString, Nullable: true, Size: 2147483647},
-		{Name: "request_body", Type: field.TypeString, Nullable: true, Size: 2147483647},
-		{Name: "service_name", Type: field.TypeString, Size: 100},
-		{Name: "response_status", Type: field.TypeInt},
-		{Name: "response_body", Type: field.TypeString, Nullable: true, Size: 2147483647},
-		{Name: "subject", Type: field.TypeString, Nullable: true, Size: 2147483647},
-		{Name: "detail", Type: field.TypeString, Nullable: true, Size: 2147483647},
-		{Name: "duration_ms", Type: field.TypeInt, Default: 0},
-		{Name: "client_ip", Type: field.TypeString, SchemaType: map[string]string{"postgres": "inet"}},
-		{Name: "user_agent", Type: field.TypeString, Nullable: true, Size: 1000},
-		{Name: "created_at", Type: field.TypeTime},
-		{Name: "user_id", Type: field.TypeInt64, Nullable: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键"},
+		{Name: "operator_code", Type: field.TypeString, Nullable: true, Size: 64, Comment: "Operator Code | 分站编码"},
+		{Name: "request_method", Type: field.TypeString, Size: 10, Comment: "HTTP method | 请求方法"},
+		{Name: "request_path", Type: field.TypeString, Size: 500, Comment: "Request path | 请求路径"},
+		{Name: "request_query", Type: field.TypeString, Nullable: true, Size: 2147483647, Comment: "Query string | 查询串"},
+		{Name: "request_body", Type: field.TypeString, Nullable: true, Size: 2147483647, Comment: "Request body | 请求体"},
+		{Name: "service_name", Type: field.TypeString, Size: 100, Comment: "Service name | 服务名"},
+		{Name: "response_status", Type: field.TypeInt, Comment: "HTTP status | 响应状态码"},
+		{Name: "response_body", Type: field.TypeString, Nullable: true, Size: 2147483647, Comment: "Response body | 响应体"},
+		{Name: "subject", Type: field.TypeString, Nullable: true, Size: 2147483647, Comment: "Error subject | 错误摘要"},
+		{Name: "detail", Type: field.TypeString, Nullable: true, Size: 2147483647, Comment: "Error detail | 错误详情"},
+		{Name: "duration_ms", Type: field.TypeInt, Comment: "Duration ms | 耗时毫秒", Default: 0},
+		{Name: "client_ip", Type: field.TypeString, Comment: "Client IP | 客户端 IP", SchemaType: map[string]string{"postgres": "inet"}},
+		{Name: "user_agent", Type: field.TypeString, Nullable: true, Size: 1000, Comment: "User agent | 客户端标识"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "Created at | 创建时间"},
+		{Name: "user_id", Type: field.TypeInt64, Nullable: true, Comment: "User ID | 用户 ID"},
 	}
 	// SysErrorLogTable holds the schema information for the "sys_error_log" table.
 	SysErrorLogTable = &schema.Table{
 		Name:       "sys_error_log",
+		Comment:    "Error Log Table | 错误日志表",
 		Columns:    SysErrorLogColumns,
 		PrimaryKey: []*schema.Column{SysErrorLogColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
@@ -176,18 +180,19 @@ var (
 	}
 	// SysI18nColumns holds the columns for the "sys_i18n" table.
 	SysI18nColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true},
-		{Name: "created_at", Type: field.TypeTime, Default: schema.Expr("CURRENT_TIMESTAMP")},
-		{Name: "updated_at", Type: field.TypeTime, Default: schema.Expr("CURRENT_TIMESTAMP")},
-		{Name: "i18n_code", Type: field.TypeString, Size: 32, Default: "platform"},
-		{Name: "i18n_group", Type: field.TypeString, Size: 64},
-		{Name: "trans_key", Type: field.TypeString, Size: 255},
-		{Name: "lang", Type: field.TypeString, Size: 16},
-		{Name: "value", Type: field.TypeString, Size: 1024},
+		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "Created At | 创建时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "Updated At | 更新时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
+		{Name: "i18n_code", Type: field.TypeString, Size: 32, Comment: "Site code | 站点编码", Default: "platform"},
+		{Name: "i18n_group", Type: field.TypeString, Size: 64, Comment: "Group menu/api/front | 分组"},
+		{Name: "trans_key", Type: field.TypeString, Size: 255, Comment: "Translation key | 词条 key"},
+		{Name: "lang", Type: field.TypeString, Size: 16, Comment: "Language code | 语言码"},
+		{Name: "value", Type: field.TypeString, Size: 1024, Comment: "Translated text | 译文"},
 	}
 	// SysI18nTable holds the schema information for the "sys_i18n" table.
 	SysI18nTable = &schema.Table{
 		Name:       "sys_i18n",
+		Comment:    "I18n Table | 多语言词条表",
 		Columns:    SysI18nColumns,
 		PrimaryKey: []*schema.Column{SysI18nColumns[0]},
 		Indexes: []*schema.Index{
@@ -205,17 +210,19 @@ var (
 	}
 	// SysI18nLangColumns holds the columns for the "sys_i18n_lang" table.
 	SysI18nLangColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true},
-		{Name: "created_at", Type: field.TypeTime, Default: schema.Expr("CURRENT_TIMESTAMP")},
-		{Name: "updated_at", Type: field.TypeTime, Default: schema.Expr("CURRENT_TIMESTAMP")},
-		{Name: "lang", Type: field.TypeString, Size: 16},
-		{Name: "name", Type: field.TypeString, Size: 64, Default: ""},
-		{Name: "disabled", Type: field.TypeInt16, Default: 0},
-		{Name: "sort_no", Type: field.TypeInt, Default: 0},
+		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "Created At | 创建时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "Updated At | 更新时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
+		{Name: "lang", Type: field.TypeString, Size: 16, Comment: "Language code | 语言码"},
+		{Name: "name", Type: field.TypeString, Size: 64, Comment: "Display name | 显示名", Default: ""},
+		{Name: "i18n_key", Type: field.TypeString, Size: 255, Comment: "I18n key | 多语言 key", Default: ""},
+		{Name: "disabled", Type: field.TypeInt16, Comment: "Disabled 0 no 1 yes | 停用 0 否 1 是", Default: 0},
+		{Name: "sort_no", Type: field.TypeInt, Comment: "Sort order | 排序", Default: 0},
 	}
 	// SysI18nLangTable holds the schema information for the "sys_i18n_lang" table.
 	SysI18nLangTable = &schema.Table{
 		Name:       "sys_i18n_lang",
+		Comment:    "I18n Language Table | 语言表",
 		Columns:    SysI18nLangColumns,
 		PrimaryKey: []*schema.Column{SysI18nLangColumns[0]},
 		Indexes: []*schema.Index{
@@ -228,20 +235,21 @@ var (
 	}
 	// SysLoginLogColumns holds the columns for the "sys_login_log" table.
 	SysLoginLogColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true},
-		{Name: "operator_id", Type: field.TypeInt64, Nullable: true},
-		{Name: "username", Type: field.TypeString, Size: 64},
-		{Name: "login_result", Type: field.TypeInt16},
-		{Name: "failure_reason", Type: field.TypeString, Nullable: true, Size: 255},
-		{Name: "login_ip", Type: field.TypeString, SchemaType: map[string]string{"postgres": "inet"}},
-		{Name: "device_id", Type: field.TypeInt64, Nullable: true},
-		{Name: "user_agent", Type: field.TypeString, Nullable: true, Size: 1000},
-		{Name: "login_at", Type: field.TypeTime},
-		{Name: "user_id", Type: field.TypeInt64, Nullable: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键"},
+		{Name: "operator_code", Type: field.TypeString, Nullable: true, Size: 64, Comment: "Operator Code | 分站编码"},
+		{Name: "username", Type: field.TypeString, Size: 64, Comment: "Login name | 登录名"},
+		{Name: "login_result", Type: field.TypeInt16, Comment: "Login result 1 success 2 fail | 登录结果 1 成功 2 失败"},
+		{Name: "failure_reason", Type: field.TypeString, Nullable: true, Size: 255, Comment: "Failure reason | 失败原因"},
+		{Name: "login_ip", Type: field.TypeString, Comment: "Login IP | 登录 IP", SchemaType: map[string]string{"postgres": "inet"}},
+		{Name: "device_id", Type: field.TypeInt64, Nullable: true, Comment: "Device ID | 设备 ID"},
+		{Name: "user_agent", Type: field.TypeString, Nullable: true, Size: 1000, Comment: "User agent | 客户端标识"},
+		{Name: "login_at", Type: field.TypeTime, Comment: "Login time | 登录时间"},
+		{Name: "user_id", Type: field.TypeInt64, Nullable: true, Comment: "User ID | 用户 ID"},
 	}
 	// SysLoginLogTable holds the schema information for the "sys_login_log" table.
 	SysLoginLogTable = &schema.Table{
 		Name:       "sys_login_log",
+		Comment:    "Login Log Table | 登录日志表",
 		Columns:    SysLoginLogColumns,
 		PrimaryKey: []*schema.Column{SysLoginLogColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
@@ -280,25 +288,26 @@ var (
 	}
 	// SysMenuColumns holds the columns for the "sys_menu" table.
 	SysMenuColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true},
-		{Name: "created_at", Type: field.TypeTime, Default: schema.Expr("CURRENT_TIMESTAMP")},
-		{Name: "updated_at", Type: field.TypeTime, Default: schema.Expr("CURRENT_TIMESTAMP")},
-		{Name: "parent_id", Type: field.TypeInt64, Default: 0},
-		{Name: "menu_type", Type: field.TypeInt16},
-		{Name: "path", Type: field.TypeString, Size: 128, Default: ""},
-		{Name: "name", Type: field.TypeString, Size: 64, Default: ""},
-		{Name: "component", Type: field.TypeString, Size: 255, Default: ""},
-		{Name: "redirect", Type: field.TypeString, Size: 255, Default: ""},
-		{Name: "title", Type: field.TypeString, Size: 64, Default: ""},
-		{Name: "icon", Type: field.TypeString, Size: 64, Default: ""},
-		{Name: "permission", Type: field.TypeString, Size: 128, Default: ""},
-		{Name: "hide_menu", Type: field.TypeInt16, Default: 0},
-		{Name: "sort", Type: field.TypeInt, Default: 0},
-		{Name: "disabled", Type: field.TypeInt16, Default: 0},
+		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "Created At | 创建时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "Updated At | 更新时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
+		{Name: "parent_id", Type: field.TypeInt64, Comment: "Parent ID | 父级 ID", Default: 0},
+		{Name: "menu_type", Type: field.TypeInt16, Comment: "Menu type 0 directory 1 menu 2 button | 类型 0 目录 1 菜单 2 按钮"},
+		{Name: "path", Type: field.TypeString, Size: 128, Comment: "Route path | 路由路径", Default: ""},
+		{Name: "name", Type: field.TypeString, Size: 64, Comment: "Route name | 路由名", Default: ""},
+		{Name: "component", Type: field.TypeString, Size: 255, Comment: "Component | 组件", Default: ""},
+		{Name: "redirect", Type: field.TypeString, Size: 255, Comment: "Redirect | 重定向", Default: ""},
+		{Name: "title", Type: field.TypeString, Size: 64, Comment: "Title i18n key | 标题词条", Default: ""},
+		{Name: "icon", Type: field.TypeString, Size: 64, Comment: "Icon | 图标", Default: ""},
+		{Name: "permission", Type: field.TypeString, Size: 128, Comment: "Permission code | 权限码", Default: ""},
+		{Name: "hide_menu", Type: field.TypeInt16, Comment: "Hide menu 0 no 1 yes | 隐藏菜单 0 否 1 是", Default: 0},
+		{Name: "sort", Type: field.TypeInt, Comment: "Sort order | 排序", Default: 0},
+		{Name: "disabled", Type: field.TypeInt16, Comment: "Disabled 0 no 1 yes | 停用 0 否 1 是", Default: 0},
 	}
 	// SysMenuTable holds the schema information for the "sys_menu" table.
 	SysMenuTable = &schema.Table{
 		Name:       "sys_menu",
+		Comment:    "Menu Table | 菜单表",
 		Columns:    SysMenuColumns,
 		PrimaryKey: []*schema.Column{SysMenuColumns[0]},
 		Indexes: []*schema.Index{
@@ -309,49 +318,24 @@ var (
 			},
 		},
 	}
-	// OperatorColumns holds the columns for the "operator" table.
-	OperatorColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true},
-		{Name: "created_at", Type: field.TypeTime, Default: schema.Expr("CURRENT_TIMESTAMP")},
-		{Name: "updated_at", Type: field.TypeTime, Default: schema.Expr("CURRENT_TIMESTAMP")},
-		{Name: "operator_code", Type: field.TypeString, Size: 64},
-		{Name: "timezone_code", Type: field.TypeString, Size: 64},
-		{Name: "settlement_currency_code", Type: field.TypeString, Size: 16},
-		{Name: "status", Type: field.TypeInt16, Default: 1},
-		{Name: "required_config_version", Type: field.TypeInt, Default: 1},
-		{Name: "completed_config_version", Type: field.TypeInt, Default: 0},
-		{Name: "config_completed_at", Type: field.TypeTime, Nullable: true},
-	}
-	// OperatorTable holds the schema information for the "operator" table.
-	OperatorTable = &schema.Table{
-		Name:       "operator",
-		Columns:    OperatorColumns,
-		PrimaryKey: []*schema.Column{OperatorColumns[0]},
-		Indexes: []*schema.Index{
-			{
-				Name:    "uk_operator_operator_code",
-				Unique:  true,
-				Columns: []*schema.Column{OperatorColumns[3]},
-			},
-		},
-	}
 	// SysRoleColumns holds the columns for the "sys_role" table.
 	SysRoleColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true},
-		{Name: "created_at", Type: field.TypeTime, Default: schema.Expr("CURRENT_TIMESTAMP")},
-		{Name: "updated_at", Type: field.TypeTime, Default: schema.Expr("CURRENT_TIMESTAMP")},
-		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
-		{Name: "operator_id", Type: field.TypeInt64, Nullable: true},
-		{Name: "role_code", Type: field.TypeString, Size: 64},
-		{Name: "role_name", Type: field.TypeString, Size: 100},
-		{Name: "description", Type: field.TypeString, Nullable: true, Size: 255},
-		{Name: "status", Type: field.TypeInt16, Default: 1},
-		{Name: "is_system", Type: field.TypeBool, Default: false},
-		{Name: "sort_no", Type: field.TypeInt, Default: 0},
+		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "Created At | 创建时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "Updated At | 更新时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "Deleted At | 删除时间"},
+		{Name: "operator_code", Type: field.TypeString, Nullable: true, Size: 64, Comment: "Operator Code | 分站编码"},
+		{Name: "role_code", Type: field.TypeString, Size: 64, Comment: "Role code | 角色编码"},
+		{Name: "role_name", Type: field.TypeString, Size: 100, Comment: "Role name | 角色名"},
+		{Name: "description", Type: field.TypeString, Nullable: true, Size: 255, Comment: "Description | 描述"},
+		{Name: "status", Type: field.TypeInt16, Comment: "Status 1 enabled 2 disabled | 状态 1 启用 2 停用", Default: 1},
+		{Name: "is_system", Type: field.TypeBool, Comment: "System role | 是否系统角色", Default: false},
+		{Name: "sort_no", Type: field.TypeInt, Comment: "Sort order | 排序", Default: 0},
 	}
 	// SysRoleTable holds the schema information for the "sys_role" table.
 	SysRoleTable = &schema.Table{
 		Name:       "sys_role",
+		Comment:    "Role Table | 角色表",
 		Columns:    SysRoleColumns,
 		PrimaryKey: []*schema.Column{SysRoleColumns[0]},
 		Indexes: []*schema.Index{
@@ -360,7 +344,7 @@ var (
 				Unique:  true,
 				Columns: []*schema.Column{SysRoleColumns[4], SysRoleColumns[5]},
 				Annotation: &entsql.IndexAnnotation{
-					Where: "operator_id IS NOT NULL",
+					Where: "operator_code IS NOT NULL",
 				},
 			},
 			{
@@ -368,7 +352,7 @@ var (
 				Unique:  true,
 				Columns: []*schema.Column{SysRoleColumns[5]},
 				Annotation: &entsql.IndexAnnotation{
-					Where: "operator_id IS NULL",
+					Where: "operator_code IS NULL",
 				},
 			},
 			{
@@ -383,28 +367,29 @@ var (
 	}
 	// SysUserColumns holds the columns for the "sys_user" table.
 	SysUserColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true},
-		{Name: "created_at", Type: field.TypeTime, Default: schema.Expr("CURRENT_TIMESTAMP")},
-		{Name: "updated_at", Type: field.TypeTime, Default: schema.Expr("CURRENT_TIMESTAMP")},
-		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
-		{Name: "operator_id", Type: field.TypeInt64, Nullable: true},
-		{Name: "user_code", Type: field.TypeString, Size: 64},
-		{Name: "username", Type: field.TypeString, Size: 64},
-		{Name: "password_hash", Type: field.TypeString, Size: 255},
-		{Name: "salt", Type: field.TypeString, Size: 64},
-		{Name: "display_name", Type: field.TypeString, Size: 100},
-		{Name: "mobile", Type: field.TypeString, Nullable: true, Size: 32},
-		{Name: "email", Type: field.TypeString, Nullable: true, Size: 255},
-		{Name: "status", Type: field.TypeInt16, Default: 1},
-		{Name: "is_super_admin", Type: field.TypeBool, Default: false},
-		{Name: "last_login_at", Type: field.TypeTime, Nullable: true},
-		{Name: "last_login_ip", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"postgres": "inet"}},
-		{Name: "ip_whitelist_enabled", Type: field.TypeInt16, Default: 0},
-		{Name: "ip_whitelist", Type: field.TypeJSON, Default: schema.Expr("'[]'"), SchemaType: map[string]string{"postgres": "jsonb"}},
+		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "Created At | 创建时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "Updated At | 更新时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "Deleted At | 删除时间"},
+		{Name: "operator_code", Type: field.TypeString, Nullable: true, Size: 64, Comment: "Operator Code | 分站编码"},
+		{Name: "user_code", Type: field.TypeString, Size: 64, Comment: "User code | 用户编码"},
+		{Name: "username", Type: field.TypeString, Size: 64, Comment: "Login name | 登录名"},
+		{Name: "password_hash", Type: field.TypeString, Size: 255, Comment: "Password hash | 密码哈希"},
+		{Name: "salt", Type: field.TypeString, Size: 64, Comment: "Token salt | 令牌盐"},
+		{Name: "display_name", Type: field.TypeString, Size: 100, Comment: "Display name | 显示名"},
+		{Name: "mobile", Type: field.TypeString, Nullable: true, Size: 32, Comment: "Mobile | 手机号"},
+		{Name: "email", Type: field.TypeString, Nullable: true, Size: 255, Comment: "Email | 邮箱"},
+		{Name: "status", Type: field.TypeInt16, Comment: "Status 1 enabled 2 disabled | 状态 1 启用 2 停用", Default: 1},
+		{Name: "is_super_admin", Type: field.TypeBool, Comment: "Super admin | 是否超管", Default: false},
+		{Name: "last_login_at", Type: field.TypeTime, Nullable: true, Comment: "Last login time | 最后登录时间"},
+		{Name: "last_login_ip", Type: field.TypeString, Nullable: true, Comment: "Last login IP | 最后登录 IP", SchemaType: map[string]string{"postgres": "inet"}},
+		{Name: "ip_whitelist_enabled", Type: field.TypeInt16, Comment: "IP whitelist switch 0 off 1 on | IP 白名单开关 0 关 1 开", Default: 0},
+		{Name: "ip_whitelist", Type: field.TypeJSON, Comment: "Allowed login IPs or CIDRs | 允许登录的 IP / CIDR", Default: schema.Expr("'[]'"), SchemaType: map[string]string{"postgres": "jsonb"}},
 	}
 	// SysUserTable holds the schema information for the "sys_user" table.
 	SysUserTable = &schema.Table{
 		Name:       "sys_user",
+		Comment:    "User Table | 用户表",
 		Columns:    SysUserColumns,
 		PrimaryKey: []*schema.Column{SysUserColumns[0]},
 		Indexes: []*schema.Index{
@@ -418,7 +403,7 @@ var (
 				Unique:  true,
 				Columns: []*schema.Column{SysUserColumns[4], SysUserColumns[6]},
 				Annotation: &entsql.IndexAnnotation{
-					Where: "operator_id IS NOT NULL",
+					Where: "operator_code IS NOT NULL",
 				},
 			},
 			{
@@ -426,7 +411,7 @@ var (
 				Unique:  true,
 				Columns: []*schema.Column{SysUserColumns[6]},
 				Annotation: &entsql.IndexAnnotation{
-					Where: "operator_id IS NULL",
+					Where: "operator_code IS NULL",
 				},
 			},
 			{
@@ -504,7 +489,6 @@ var (
 		SysI18nLangTable,
 		SysLoginLogTable,
 		SysMenuTable,
-		OperatorTable,
 		SysRoleTable,
 		SysUserTable,
 		SysRoleMenuTable,
@@ -539,9 +523,6 @@ func init() {
 	}
 	SysMenuTable.Annotation = &entsql.Annotation{
 		Table: "sys_menu",
-	}
-	OperatorTable.Annotation = &entsql.Annotation{
-		Table: "operator",
 	}
 	SysRoleTable.Annotation = &entsql.Annotation{
 		Table: "sys_role",

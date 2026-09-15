@@ -27,7 +27,6 @@ const (
 	headerUserID       = "x-user-id"
 	headerUserCode     = "x-user-code"
 	headerUsername     = "x-username"
-	headerOperatorID   = "x-operator-id"
 	headerOperatorCode = "x-operator-code"
 	headerRoleCodes    = "x-role-codes"
 	headerSalt         = "x-salt"
@@ -43,7 +42,6 @@ type Claims struct {
 	UserID       int64
 	UserCode     string
 	Username     string
-	OperatorID   int64
 	OperatorCode string
 	RoleCodes    []string
 	Salt         string
@@ -75,7 +73,6 @@ func WithClaims(ctx context.Context, c *Claims) context.Context {
 		headerUserID, strconv.FormatInt(c.UserID, 10),
 		headerUserCode, c.UserCode,
 		headerUsername, c.Username,
-		headerOperatorID, strconv.FormatInt(c.OperatorID, 10),
 		headerOperatorCode, c.OperatorCode,
 		headerRoleCodes, strings.Join(c.RoleCodes, ","),
 		headerSalt, c.Salt,
@@ -97,15 +94,6 @@ func ClaimsFromCtx(ctx context.Context) *Claims {
 func boxFrom(ctx context.Context) *claimsBox {
 	box, _ := ctx.Value(claimsKey).(*claimsBox)
 	return box
-}
-
-// OperatorIDFromCtx 从上下文中获取操作员ID
-func OperatorIDFromCtx(ctx context.Context) int64 {
-	c := ClaimsFromCtx(ctx)
-	if c == nil {
-		return 0
-	}
-	return c.OperatorID
 }
 
 // OperatorCodeFromCtx 从上下文中获取操作员代码
@@ -189,9 +177,9 @@ func claimsFromIncomingMD(ctx context.Context) *Claims {
 	}
 	userID := parseInt(first(md, headerUserID))
 	username := first(md, headerUsername)
-	operatorID := parseInt(first(md, headerOperatorID))
+	operatorCode := first(md, headerOperatorCode)
 	isPlatform := parseBool(first(md, headerIsPlatform))
-	if userID == 0 && username == "" && operatorID == 0 && !isPlatform {
+	if userID == 0 && username == "" && operatorCode == "" && !isPlatform {
 		return nil
 	}
 	codes := []string{}
@@ -202,8 +190,7 @@ func claimsFromIncomingMD(ctx context.Context) *Claims {
 		UserID:       userID,
 		UserCode:     first(md, headerUserCode),
 		Username:     username,
-		OperatorID:   operatorID,
-		OperatorCode: first(md, headerOperatorCode),
+		OperatorCode: operatorCode,
 		RoleCodes:    codes,
 		Salt:         first(md, headerSalt),
 		ExpiresAt:    parseInt(first(md, headerExpiresAt)),

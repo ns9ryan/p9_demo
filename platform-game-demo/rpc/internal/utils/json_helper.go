@@ -39,3 +39,7 @@ func JSON(data interface{}) string {
 	bytes, _ := json.Marshal(data)
 	return string(bytes)
 }
+
+func GetI18nNameKey(biz string, key string) string {
+	return biz + "." + key + ".name"
+}

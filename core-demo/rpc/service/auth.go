@@ -12,7 +12,6 @@ import (
 	"oa.98ent.com/p9/core/common/utils"
 	"oa.98ent.com/p9/core/common/xerr"
 	"oa.98ent.com/p9/core/rpc/ent"
-	"oa.98ent.com/p9/core/rpc/ent/operator"
 	"oa.98ent.com/p9/core/rpc/ent/user"
 	"oa.98ent.com/p9/core/rpc/model"
 
@@ -52,7 +51,7 @@ type UserPublic struct {
 	UserCode           string   `json:"user_code"`
 	Username           string   `json:"username"`
 	DisplayName        string   `json:"display_name"`
-	OperatorID         *int64   `json:"operator_id,omitempty"`
+	OperatorCode       *string  `json:"operator_code,omitempty"`
 	IsSuperAdmin       bool     `json:"is_super_admin"`
 	Status             int16    `json:"status"`
 	RoleCodes          []string `json:"role_codes"`
@@ -78,7 +77,7 @@ func toPublic(u *model.User, roles UserRoles) UserPublic {
 		UserCode:           u.UserCode,
 		Username:           u.Username,
 		DisplayName:        u.DisplayName,
-		OperatorID:         u.OperatorID,
+		OperatorCode:       u.OperatorCode,
 		IsSuperAdmin:       u.IsSuperAdmin,
 		Status:             u.Status,
 		RoleCodes:          roles.Codes,
@@ -144,8 +143,8 @@ func (d *Deps) writeLoginLog(ctx context.Context, req LoginReq, u *model.User, o
 	if d == nil || d.Client == nil {
 		return
 	}
-	if opID := d.loginLogOperatorID(ctx, req, u); opID != 0 {
-		ctx = ctxdata.WithClaims(ctx, &ctxdata.Claims{OperatorID: opID})
+	if code := d.loginLogOperatorCode(req, u); code != "" {
+		ctx = ctxdata.WithClaims(ctx, &ctxdata.Claims{OperatorCode: code})
 	}
 	username := req.Username
 	if username == "" {
@@ -180,22 +179,14 @@ func (d *Deps) writeLoginLog(ctx context.Context, req LoginReq, u *model.User, o
 	}
 }
 
-func (d *Deps) loginLogOperatorID(ctx context.Context, req LoginReq, u *model.User) int64 {
-	if u != nil && u.OperatorID != nil && *u.OperatorID != 0 {
-		return *u.OperatorID
+func (d *Deps) loginLogOperatorCode(req LoginReq, u *model.User) string {
+	if u != nil && u.OperatorCode != nil && *u.OperatorCode != "" {
+		return *u.OperatorCode
 	}
 	if d.Mode != ModeOn {
-		return 0
+		return ""
 	}
-	code := strings.TrimSpace(req.OperatorCode)
-	if code == "" {
-		return 0
-	}
-	op, err := d.Client.Operator.Query().Where(operator.OperatorCodeEQ(code)).Only(ctx)
-	if err != nil {
-		return 0
-	}
-	return op.ID
+	return strings.TrimSpace(req.OperatorCode)
 }
 
 func clip(s string, n int) string {
@@ -208,7 +199,7 @@ func clip(s string, n int) string {
 func (d *Deps) loginUser(ctx context.Context, req LoginReq) (*model.User, error) {
 	q := d.Client.User.Query().Where(user.DeletedAtIsNil(), user.UsernameEqualFold(req.Username))
 	if d.Mode != ModeOn {
-		row, err := q.Where(user.OperatorIDIsNil()).Only(ctx)
+		row, err := q.Where(user.OperatorCodeIsNil()).Only(ctx)
 		if err != nil {
 			return nil, xerr.Unauthorized(i18n.AuthInvalidCredentials)
 		}
@@ -218,22 +209,12 @@ func (d *Deps) loginUser(ctx context.Context, req LoginReq) (*model.User, error)
 	if code == "" {
 		return nil, xerr.BadRequest(i18n.AuthOperatorCodeRequired)
 	}
-	op, err := d.Client.Operator.Query().Where(operator.OperatorCodeEQ(code)).Only(ctx)
+	row, err := q.Where(user.OperatorCodeEQ(code)).Only(ctx)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, xerr.Unauthorized(i18n.AuthInvalidCredentials)
 		}
 		return nil, err
-	}
-	if op.Status != model.StatusNormal {
-		return nil, xerr.Forbidden(i18n.AuthOperatorDisabled)
-	}
-	row, err := q.Where(user.OperatorIDEQ(op.ID)).Only(ctx)
-	if err != nil {
-		if ent.IsNotFound(err) {
-			return nil, xerr.BadRequest(i18n.AuthPasswordIncorrect)
-		}
-		return nil, xerr.InternalServerError(i18n.InternalError)
 	}
 	return userFromEnt(row), nil
 }

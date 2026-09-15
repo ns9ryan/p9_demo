@@ -11,17 +11,17 @@ import (
 	"entgo.io/ent/schema/mixin"
 )
 
-// OperatorCodeMixin 操作员代码混合
+// OperatorCodeMixin 分站编码混合
 type OperatorCodeMixin struct{ mixin.Schema }
 
-// Fields 操作员代码字段
+// Fields 分站编码字段
 func (OperatorCodeMixin) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("operator_code").MaxLen(64).Optional().Nillable(),
+		field.String("operator_code").MaxLen(64).Optional().Nillable().Comment("Operator Code | 分站编码"),
 	}
 }
 
-// Interceptors 操作员代码拦截器
+// Interceptors 分站编码拦截器
 func (OperatorCodeMixin) Interceptors() []ent.Interceptor {
 	return []ent.Interceptor{
 		ent.TraverseFunc(func(ctx context.Context, q ent.Query) error {
@@ -35,7 +35,7 @@ func (OperatorCodeMixin) Interceptors() []ent.Interceptor {
 	}
 }
 
-// Hooks 操作员代码钩子
+// Hooks 分站编码钩子
 func (OperatorCodeMixin) Hooks() []ent.Hook {
 	return []ent.Hook{
 		func(next ent.Mutator) ent.Mutator {
@@ -44,13 +44,15 @@ func (OperatorCodeMixin) Hooks() []ent.Hook {
 					return next.Mutate(ctx, m)
 				}
 				c := ctxdata.ClaimsFromCtx(ctx)
-				if c == nil || c.OperatorCode == "" {
+				if c == nil {
 					return next.Mutate(ctx, m)
 				}
 				if m.Op().Is(ent.OpCreate) {
-					if _, exists := m.Field("operator_code"); !exists {
-						if err := m.SetField("operator_code", c.OperatorCode); err != nil {
-							return nil, err
+					if c.OperatorCode != "" {
+						if _, exists := m.Field("operator_code"); !exists {
+							if err := m.SetField("operator_code", c.OperatorCode); err != nil {
+								return nil, err
+							}
 						}
 					}
 					return next.Mutate(ctx, m)
@@ -58,9 +60,7 @@ func (OperatorCodeMixin) Hooks() []ent.Hook {
 				if w, ok := m.(interface {
 					WhereP(...func(*sql.Selector))
 				}); ok {
-					w.WhereP(func(s *sql.Selector) {
-						s.Where(sql.EQ(s.C("operator_code"), c.OperatorCode))
-					})
+					w.WhereP(operatorCodeWhere(c.OperatorCode))
 				}
 				return next.Mutate(ctx, m)
 			})
@@ -68,16 +68,24 @@ func (OperatorCodeMixin) Hooks() []ent.Hook {
 	}
 }
 
-// FilterOperatorCode 过滤操作员代码
+// FilterOperatorCode 过滤分站编码
 func FilterOperatorCode(ctx context.Context, q Query) {
 	if ctxdata.TenantSkipped(ctx) {
 		return
 	}
 	c := ctxdata.ClaimsFromCtx(ctx)
-	if c == nil || c.OperatorCode == "" {
+	if c == nil {
 		return
 	}
-	q.WhereP(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C("operator_code"), c.OperatorCode))
-	})
+	q.WhereP(operatorCodeWhere(c.OperatorCode))
+}
+
+func operatorCodeWhere(code string) func(*sql.Selector) {
+	return func(s *sql.Selector) {
+		if code == "" {
+			s.Where(sql.IsNull(s.C("operator_code")))
+			return
+		}
+		s.Where(sql.EQ(s.C("operator_code"), code))
+	}
 }

@@ -10,9 +10,9 @@ import (
 func TestWithClaimsWritesOutgoingAndValue(t *testing.T) {
 	in := &Claims{
 		UserID: 7, UserCode: "u7", Username: "alice",
-		OperatorID: 3, OperatorCode: "A",
-		RoleCodes: []string{"admin", "ops"},
-		Salt:      "s", ExpiresAt: 99,
+		OperatorCode: "A",
+		RoleCodes:    []string{"admin", "ops"},
+		Salt:         "s", ExpiresAt: 99,
 		IsPlatform: true, TokenType: "preview", ClientIP: "10.0.0.1",
 	}
 	ctx := WithClaims(context.Background(), in)
@@ -31,7 +31,6 @@ func TestClaimsFromIncomingMetadata(t *testing.T) {
 		headerUserID, "7",
 		headerUserCode, "u7",
 		headerUsername, "alice",
-		headerOperatorID, "3",
 		headerOperatorCode, "A",
 		headerRoleCodes, "admin,ops",
 		headerSalt, "s",
@@ -86,9 +85,9 @@ func TestClientIPRoundTrip(t *testing.T) {
 
 func TestClaimsHolderSeesChildWithClaims(t *testing.T) {
 	parent := WithClaimsHolder(context.Background())
-	child := WithClaims(parent, &Claims{UserID: 9, OperatorID: 3, Username: "alice"})
+	child := WithClaims(parent, &Claims{UserID: 9, OperatorCode: "A", Username: "alice"})
 	got := ClaimsFromCtx(parent)
-	if got == nil || got.UserID != 9 || got.OperatorID != 3 || got.Username != "alice" {
+	if got == nil || got.UserID != 9 || got.OperatorCode != "A" || got.Username != "alice" {
 		t.Fatalf("parent %+v", got)
 	}
 	if ClaimsFromCtx(child) != got {
@@ -98,7 +97,7 @@ func TestClaimsHolderSeesChildWithClaims(t *testing.T) {
 
 func TestWithClaimsWithoutHolderDoesNotLeak(t *testing.T) {
 	parent := context.Background()
-	_ = WithClaims(parent, &Claims{UserID: 9, OperatorID: 3})
+	_ = WithClaims(parent, &Claims{UserID: 9, OperatorCode: "A"})
 	if ClaimsFromCtx(parent) != nil {
 		t.Fatal("parent should stay empty")
 	}
@@ -112,24 +111,23 @@ func TestWithClaimsNil(t *testing.T) {
 }
 
 func TestOperatorFromCtx(t *testing.T) {
-	if OperatorIDFromCtx(context.Background()) != 0 || OperatorCodeFromCtx(context.Background()) != "" {
+	if OperatorCodeFromCtx(context.Background()) != "" {
 		t.Fatal("empty ctx")
 	}
-	ctx := WithClaims(context.Background(), &Claims{UserID: 1, OperatorID: 3, OperatorCode: "A"})
-	if OperatorIDFromCtx(ctx) != 3 || OperatorCodeFromCtx(ctx) != "A" {
+	ctx := WithClaims(context.Background(), &Claims{UserID: 1, OperatorCode: "A"})
+	if OperatorCodeFromCtx(ctx) != "A" {
 		t.Fatal("value")
 	}
 	in := metadata.NewIncomingContext(context.Background(), metadata.Pairs(
-		headerUserID, "1", headerOperatorID, "9", headerOperatorCode, "B",
+		headerUserID, "1", headerOperatorCode, "B",
 	))
-	if OperatorIDFromCtx(in) != 9 || OperatorCodeFromCtx(in) != "B" {
+	if OperatorCodeFromCtx(in) != "B" {
 		t.Fatal("incoming")
 	}
 }
 
 func TestClaimsFromIncomingPreviewPlatform(t *testing.T) {
 	md := metadata.Pairs(
-		headerOperatorID, "12",
 		headerOperatorCode, "demo",
 		headerRoleCodes, "super_admin",
 		headerIsPlatform, "1",
@@ -139,7 +137,7 @@ func TestClaimsFromIncomingPreviewPlatform(t *testing.T) {
 	if got == nil {
 		t.Fatal("nil claims")
 	}
-	if got.UserID != 0 || got.OperatorID != 12 || !got.IsPlatform || got.TokenType != "preview" {
+	if got.UserID != 0 || got.OperatorCode != "demo" || !got.IsPlatform || got.TokenType != "preview" {
 		t.Fatalf("%+v", got)
 	}
 }

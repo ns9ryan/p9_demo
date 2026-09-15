@@ -2,15 +2,14 @@ package syncservicelogic
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"time"
 
-	pkgsync "oa.98ent.com/p9/platform-game/pkg/sync"
 	"oa.98ent.com/p9/platform-game/rpc/ent"
 	"oa.98ent.com/p9/platform-game/rpc/internal/constant"
 	"oa.98ent.com/p9/platform-game/rpc/internal/svc"
-	sync "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
+	gs "oa.98ent.com/p9/platform-game/rpc/internal/synchro"
+	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -30,7 +29,7 @@ func NewSyncRunLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SyncRunLo
 }
 
 // 同步执行（执行同步操作）
-func (l *SyncRunLogic) SyncRun(in *sync.SyncRunRequest) (*sync.SyncRunResp, error) {
+func (l *SyncRunLogic) SyncRun(in *platform_game.SyncRunRequest) (*platform_game.SyncRunResp, error) {
 	l.Infof("🚀 SyncRun 请求开始")
 	l.Infof("   📋 ObjectType: %s", in.ObjectType)
 	l.Infof("   ⚙️  SyncCols: %v", in.SyncCols)
@@ -38,7 +37,7 @@ func (l *SyncRunLogic) SyncRun(in *sync.SyncRunRequest) (*sync.SyncRunResp, erro
 	// 检查数据库连接
 	if l.svcCtx.DB == nil {
 		l.Errorf("❌ 数据库连接不可用")
-		return &sync.SyncRunResp{
+		return &platform_game.SyncRunResp{
 			Code:    constant.CodeInternalError,
 			Message: "Database not available",
 		}, nil
@@ -79,27 +78,28 @@ func (l *SyncRunLogic) SyncRun(in *sync.SyncRunRequest) (*sync.SyncRunResp, erro
 		UpdatedAt:       time.Now(),
 	}
 
-	if err := l.svcCtx.DB.Create(checkpoint).Error; err != nil {
+	createdCheckpoint, err := l.svcCtx.DAOManager.GameSyncCheckpoint.CreateGameSyncCheckpoint(l.ctx, checkpoint)
+	if err != nil {
 		l.Errorf("[RPC SyncRun] create checkpoint failed: %v", err)
-		return &sync.SyncRunResp{
+		return &platform_game.SyncRunResp{
 			Code:    constant.CodeInternalError,
 			Message: "create checkpoint failed: " + err.Error(),
 		}, nil
 	}
 
-	l.Infof("[RPC SyncRun] checkpoint created: id=%d", checkpoint.Id)
+	l.Infof("[RPC SyncRun] checkpoint created: id=%d", createdCheckpoint.ID)
 
 	// 第二步：立即返回检查点 ID，不阻塞
-	resp := &sync.SyncRunResp{
+	resp := &platform_game.SyncRunResp{
 		Code:         constant.CodeSuccess,
 		Message:      "async sync started",
-		CheckpointId: checkpoint.Id,
+		CheckpointId: createdCheckpoint.ID,
 	}
 
 	// 第三步：启动协程异步处理同步逻辑
-	go l.doAsyncSync(checkpoint.Id, in.ObjectType, in.SyncCols, grpcServerAddr, syncScope, checkpoint.Id)
+	go l.doAsyncSync(createdCheckpoint.ID, in.ObjectType, in.SyncCols, grpcServerAddr, syncScope, createdCheckpoint.ID)
 
-	l.Infof("[RPC SyncRun] async sync started for checkpoint: id=%d", checkpoint.Id)
+	l.Infof("[RPC SyncRun] async sync started for checkpoint: id=%d", checkpoint.ID)
 	l.Infof("🎉 SyncRun 请求完成")
 	return resp, nil
 }
@@ -121,7 +121,7 @@ func (l *SyncRunLogic) doAsyncSync(checkpointID int64, objectType string, syncCo
 	}()
 
 	// 创建同步服务实例
-	syncService := pkgsync.NewSyncServiceImpl(l.svcCtx.DB, grpcServerAddr)
+	syncService := gs.NewSyncServiceImpl(l.svcCtx.DAOManager, grpcServerAddr)
 
 	// 执行同步
 	result, err := syncService.Run(ctx, objectType, syncCols, localCheckpointID)
@@ -142,13 +142,13 @@ func (l *SyncRunLogic) doAsyncSync(checkpointID int64, objectType string, syncCo
 
 // updateCheckpointError 更新检查点错误状态
 func (l *SyncRunLogic) updateCheckpointError(checkpointID int64, errMsg string) {
-	checkpoint := &ent.GameSyncCheckpoint{
-		SyncStatus:       0, // 失败
-		LastErrorMessage: sql.NullString{String: errMsg, Valid: true},
-		UpdatedAt:        time.Now(),
+	updates := map[string]interface{}{
+		"ID":               checkpointID,
+		"SyncStatus":       int64(0),
+		"LastErrorMessage": errMsg,
+		"UpdatedAt":        time.Now(),
 	}
-
-	if err := l.svcCtx.DB.Model(&ent.GameSyncCheckpoint{}).Where("id = ?", checkpointID).Updates(checkpoint).Error; err != nil {
+	if _, err := l.svcCtx.DAOManager.GameSyncCheckpoint.UpdateGameSyncCheckpoint(context.Background(), updates); err != nil {
 		logx.Errorf("[RPC AsyncSync] update checkpoint error failed: %v", err)
 	}
 }

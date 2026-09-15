@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operator"
+	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoradmin"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoragentlineallocation"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatordomain"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatorlanguageallocation"
@@ -201,6 +202,21 @@ func (_c *OperatorCreate) AddDomains(v ...*OperatorDomain) *OperatorCreate {
 		ids[i] = v[i].ID
 	}
 	return _c.AddDomainIDs(ids...)
+}
+
+// AddAdminIDs adds the "admins" edge to the OperatorAdmin entity by IDs.
+func (_c *OperatorCreate) AddAdminIDs(ids ...int64) *OperatorCreate {
+	_c.mutation.AddAdminIDs(ids...)
+	return _c
+}
+
+// AddAdmins adds the "admins" edges to the OperatorAdmin entity.
+func (_c *OperatorCreate) AddAdmins(v ...*OperatorAdmin) *OperatorCreate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddAdminIDs(ids...)
 }
 
 // AddLanguageAllocationIDs adds the "language_allocations" edge to the OperatorLanguageAllocation entity by IDs.
@@ -485,6 +501,22 @@ func (_c *OperatorCreate) createSpec() (*Operator, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(operatordomain.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.AdminsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   operator.AdminsTable,
+			Columns: []string{operator.AdminsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(operatoradmin.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

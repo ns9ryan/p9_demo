@@ -298,12 +298,12 @@ func (_q *LoginLogQuery) WithUser(opts ...func(*UserQuery)) *LoginLogQuery {
 // Example:
 //
 //	var v []struct {
-//		OperatorID int64 `json:"operator_id,omitempty"`
+//		OperatorCode string `json:"operator_code,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.LoginLog.Query().
-//		GroupBy(loginlog.FieldOperatorID).
+//		GroupBy(loginlog.FieldOperatorCode).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (_q *LoginLogQuery) GroupBy(field string, fields ...string) *LoginLogGroupBy {
@@ -321,11 +321,11 @@ func (_q *LoginLogQuery) GroupBy(field string, fields ...string) *LoginLogGroupB
 // Example:
 //
 //	var v []struct {
-//		OperatorID int64 `json:"operator_id,omitempty"`
+//		OperatorCode string `json:"operator_code,omitempty"`
 //	}
 //
 //	client.LoginLog.Query().
-//		Select(loginlog.FieldOperatorID).
+//		Select(loginlog.FieldOperatorCode).
 //		Scan(ctx, &v)
 func (_q *LoginLogQuery) Select(fields ...string) *LoginLogSelect {
 	_q.ctx.Fields = append(_q.ctx.Fields, fields...)

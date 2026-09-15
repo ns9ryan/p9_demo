@@ -109,8 +109,7 @@ func (d *Deps) CheckToken(ctx context.Context, raw string) (*ctxdata.Claims, err
 		UserID:       u.ID,
 		UserCode:     u.UserCode,
 		Username:     u.Username,
-		OperatorID:   claims.OperatorID,
-		OperatorCode: d.operatorCodeOf(ctx, claims),
+		OperatorCode: claims.OperatorCode,
 		RoleCodes:    codes,
 		Salt:         u.Salt,
 		ExpiresAt:    exp,
@@ -121,14 +120,7 @@ func (d *Deps) CheckToken(ctx context.Context, raw string) (*ctxdata.Claims, err
 }
 
 func (d *Deps) checkPreviewToken(ctx context.Context, claims *jwt.Claims) (*ctxdata.Claims, error) {
-	if claims.OperatorID == 0 {
-		return nil, xerr.Unauthorized(i18n.Unauthorized)
-	}
-	op, err := d.Client.Operator.Get(ctxdata.SkipTenant(ctx), claims.OperatorID)
-	if err != nil {
-		return nil, xerr.Unauthorized(i18n.Unauthorized)
-	}
-	if op.Status != model.StatusNormal {
+	if claims.OperatorCode == "" {
 		return nil, xerr.Unauthorized(i18n.Unauthorized)
 	}
 	if claims.UserID == 0 {
@@ -141,6 +133,9 @@ func (d *Deps) checkPreviewToken(ctx context.Context, claims *jwt.Claims) (*ctxd
 	if u.Status != model.StatusNormal || u.Salt != claims.Salt {
 		return nil, xerr.Unauthorized(i18n.Unauthorized)
 	}
+	if u.OperatorCode == nil || *u.OperatorCode != claims.OperatorCode {
+		return nil, xerr.Unauthorized(i18n.Unauthorized)
+	}
 	codes := claims.RoleCodes
 	if codes == nil {
 		codes = []string{}
@@ -149,16 +144,11 @@ func (d *Deps) checkPreviewToken(ctx context.Context, claims *jwt.Claims) (*ctxd
 	if claims.ExpiresAt != nil {
 		exp = claims.ExpiresAt.Unix()
 	}
-	code := claims.OperatorCode
-	if code == "" {
-		code = op.OperatorCode
-	}
 	return &ctxdata.Claims{
 		UserID:       u.ID,
 		UserCode:     u.UserCode,
 		Username:     u.Username,
-		OperatorID:   op.ID,
-		OperatorCode: code,
+		OperatorCode: claims.OperatorCode,
 		RoleCodes:    codes,
 		Salt:         u.Salt,
 		ExpiresAt:    exp,
@@ -221,36 +211,22 @@ func (d *Deps) sessionFromClaims(ctx context.Context, c *jwt.Claims) (*model.Use
 
 func (d *Deps) checkTokenTenant(ctx context.Context, u *model.User, c *jwt.Claims) error {
 	if d.Mode != ModeOn {
-		if u.OperatorID != nil || c.OperatorID != 0 {
+		if strVal(u.OperatorCode) != "" || c.OperatorCode != "" {
 			return xerr.Unauthorized(i18n.Unauthorized)
 		}
 		return nil
 	}
-	if u.OperatorID == nil || *u.OperatorID != c.OperatorID || c.OperatorID == 0 {
-		return xerr.Unauthorized(i18n.Unauthorized)
-	}
-	op, err := d.Client.Operator.Get(ctx, c.OperatorID)
-	if err != nil {
-		return xerr.Unauthorized(i18n.Unauthorized)
-	}
-	if op.Status != model.StatusNormal {
+	if strVal(u.OperatorCode) == "" || c.OperatorCode == "" || strVal(u.OperatorCode) != c.OperatorCode {
 		return xerr.Unauthorized(i18n.Unauthorized)
 	}
 	return nil
 }
 
-func (d *Deps) operatorCodeOf(ctx context.Context, c *jwt.Claims) string {
-	if c.OperatorCode != "" {
-		return c.OperatorCode
-	}
-	if c.OperatorID == 0 {
+func strVal(s *string) string {
+	if s == nil {
 		return ""
 	}
-	op, err := d.Client.Operator.Get(ctx, c.OperatorID)
-	if err != nil {
-		return ""
-	}
-	return op.OperatorCode
+	return *s
 }
 
 func PublicUser(u *model.User, roles UserRoles) UserPublic {

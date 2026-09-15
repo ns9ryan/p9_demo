@@ -32,6 +32,39 @@ var (
 		Columns:    OperatorColumns,
 		PrimaryKey: []*schema.Column{OperatorColumns[0]},
 	}
+	// OperatorAdminColumns holds the columns for the "operator_admin" table.
+	OperatorAdminColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "主键ID", SchemaType: map[string]string{"postgres": "bigint"}},
+		{Name: "status", Type: field.TypeInt64, Comment: "状态: 1启用, 2停用", Default: 1, SchemaType: map[string]string{"postgres": "smallint"}},
+		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间", SchemaType: map[string]string{"postgres": "timestamptz(3)"}},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间", SchemaType: map[string]string{"postgres": "timestamptz(3)"}},
+		{Name: "username", Type: field.TypeString, Size: 64, Comment: "账号"},
+		{Name: "password", Type: field.TypeString, Size: 64, Comment: "密码"},
+		{Name: "display_name", Type: field.TypeString, Size: 100, Comment: "显示名称"},
+		{Name: "operator_id", Type: field.TypeInt64, Comment: "所属 operator 本地主键", SchemaType: map[string]string{"postgres": "bigint"}},
+	}
+	// OperatorAdminTable holds the schema information for the "operator_admin" table.
+	OperatorAdminTable = &schema.Table{
+		Name:       "operator_admin",
+		Comment:    "总网 operator 管理员表",
+		Columns:    OperatorAdminColumns,
+		PrimaryKey: []*schema.Column{OperatorAdminColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "operator_admin_operator_admins",
+				Columns:    []*schema.Column{OperatorAdminColumns[7]},
+				RefColumns: []*schema.Column{OperatorColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "uk_operator_admin_operator_username",
+				Unique:  true,
+				Columns: []*schema.Column{OperatorAdminColumns[7], OperatorAdminColumns[4]},
+			},
+		},
+	}
 	// OperatorAgentLineAllocationColumns holds the columns for the "operator_agent_line_allocation" table.
 	OperatorAgentLineAllocationColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "主键ID", SchemaType: map[string]string{"postgres": "bigint"}},
@@ -197,6 +230,7 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		OperatorTable,
+		OperatorAdminTable,
 		OperatorAgentLineAllocationTable,
 		OperatorDomainTable,
 		OperatorLanguageAllocationTable,
@@ -208,6 +242,10 @@ var (
 func init() {
 	OperatorTable.Annotation = &entsql.Annotation{
 		Table: "operator",
+	}
+	OperatorAdminTable.ForeignKeys[0].RefTable = OperatorTable
+	OperatorAdminTable.Annotation = &entsql.Annotation{
+		Table: "operator_admin",
 	}
 	OperatorAgentLineAllocationTable.ForeignKeys[0].RefTable = OperatorTable
 	OperatorAgentLineAllocationTable.Annotation = &entsql.Annotation{

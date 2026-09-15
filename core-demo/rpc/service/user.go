@@ -102,7 +102,7 @@ func (d *Deps) CreateUser(ctx context.Context, claims *ctxdata.Claims, req Creat
 		req.Status = model.StatusNormal
 	}
 	if d.Mode == ModeOn {
-		if claims == nil || claims.OperatorID == 0 {
+		if claims == nil || claims.OperatorCode == "" {
 			return nil, xerr.Unauthorized(i18n.Unauthorized)
 		}
 	}

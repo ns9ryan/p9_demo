@@ -12,22 +12,25 @@ import (
 	"oa.98ent.com/p9/core/rpc/ent/i18nlang"
 )
 
-// I18nLang is the model entity for the I18nLang schema.
+// I18n Language Table | 语言表
 type I18nLang struct {
 	config `json:"-"`
 	// ID of the ent.
+	// Primary key | 主键
 	ID int64 `json:"id,omitempty"`
 	// Created At | 创建时间
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Updated At | 更新时间
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	// Lang holds the value of the "lang" field.
+	// Language code | 语言码
 	Lang string `json:"lang,omitempty"`
-	// Name holds the value of the "name" field.
+	// Display name | 显示名
 	Name string `json:"name,omitempty"`
-	// Disabled holds the value of the "disabled" field.
+	// I18n key | 多语言 key
+	I18nKey string `json:"i18n_key,omitempty"`
+	// Disabled 0 no 1 yes | 停用 0 否 1 是
 	Disabled int16 `json:"disabled,omitempty"`
-	// SortNo holds the value of the "sort_no" field.
+	// Sort order | 排序
 	SortNo       int `json:"sort_no,omitempty"`
 	selectValues sql.SelectValues
 }
@@ -39,7 +42,7 @@ func (*I18nLang) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case i18nlang.FieldID, i18nlang.FieldDisabled, i18nlang.FieldSortNo:
 			values[i] = new(sql.NullInt64)
-		case i18nlang.FieldLang, i18nlang.FieldName:
+		case i18nlang.FieldLang, i18nlang.FieldName, i18nlang.FieldI18nKey:
 			values[i] = new(sql.NullString)
 		case i18nlang.FieldCreatedAt, i18nlang.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -87,6 +90,12 @@ func (_m *I18nLang) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
 				_m.Name = value.String
+			}
+		case i18nlang.FieldI18nKey:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field i18n_key", values[i])
+			} else if value.Valid {
+				_m.I18nKey = value.String
 			}
 		case i18nlang.FieldDisabled:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -147,6 +156,9 @@ func (_m *I18nLang) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("name=")
 	builder.WriteString(_m.Name)
+	builder.WriteString(", ")
+	builder.WriteString("i18n_key=")
+	builder.WriteString(_m.I18nKey)
 	builder.WriteString(", ")
 	builder.WriteString("disabled=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Disabled))

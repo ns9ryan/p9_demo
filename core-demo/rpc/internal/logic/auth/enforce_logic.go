@@ -28,7 +28,7 @@ func NewEnforceLogic(ctx context.Context, svcCtx *svc.ServiceContext) *EnforceLo
 func (l *EnforceLogic) Enforce(in *core.EnforceReq) (*core.EnforceResp, error) {
 	claims := ctxdata.ClaimsFromCtx(l.ctx)
 	if claims == nil {
-		claims = &ctxdata.Claims{RoleCodes: in.RoleCodes, OperatorID: in.OperatorId}
+		claims = &ctxdata.Claims{RoleCodes: in.RoleCodes, OperatorCode: in.OperatorCode}
 	}
 	ok, err := l.svcCtx.Deps.Enforce(l.ctx, claims, in.Path, in.Method)
 	if err != nil {

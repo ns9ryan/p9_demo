@@ -47,10 +47,11 @@ const file_platform_game_proto_rawDesc = "" +
 	"\x13GameCurrencyService\x12h\n" +
 	"\x13GetGameCurrencyList\x12).platform_game.GetGameCurrencyListRequest\x1a&.platform_game.GetGameCurrencyListResp\x12\\\n" +
 	"\x0fGetGameCurrency\x12%.platform_game.GetGameCurrencyRequest\x1a\".platform_game.GetGameCurrencyResp\x12e\n" +
-	"\x12UpdateGameCurrency\x12(.platform_game.UpdateGameCurrencyRequest\x1a%.platform_game.UpdateGameCurrencyResp2\x87\x02\n" +
+	"\x12UpdateGameCurrency\x12(.platform_game.UpdateGameCurrencyRequest\x1a%.platform_game.UpdateGameCurrencyResp2\xe2\x02\n" +
 	"\x19GameSyncCheckpointService\x12n\n" +
 	"\x15GetGameSyncCheckpoint\x12+.platform_game.GetGameSyncCheckpointRequest\x1a(.platform_game.GetGameSyncCheckpointResp\x12z\n" +
-	"\x19GetGameSyncCheckpointList\x12/.platform_game.GetGameSyncCheckpointListRequest\x1a,.platform_game.GetGameSyncCheckpointListResp2\xfa\x01\n" +
+	"\x19GetGameSyncCheckpointList\x12/.platform_game.GetGameSyncCheckpointListRequest\x1a,.platform_game.GetGameSyncCheckpointListResp\x12Y\n" +
+	"\x0eGetI18nNameMap\x12$.platform_game.GetI18nNameMapRequest\x1a!.platform_game.GetI18nNameMapResp2\xfa\x01\n" +
 	"\vSyncService\x12P\n" +
 	"\vSyncPreview\x12!.platform_game.SyncPreviewRequest\x1a\x1e.platform_game.SyncPreviewResp\x12D\n" +
 	"\aSyncRun\x12\x1d.platform_game.SyncRunRequest\x1a\x1a.platform_game.SyncRunResp\x12S\n" +
@@ -75,30 +76,32 @@ var file_platform_game_proto_goTypes = []any{
 	(*UpdateGameCurrencyRequest)(nil),        // 15: platform_game.UpdateGameCurrencyRequest
 	(*GetGameSyncCheckpointRequest)(nil),     // 16: platform_game.GetGameSyncCheckpointRequest
 	(*GetGameSyncCheckpointListRequest)(nil), // 17: platform_game.GetGameSyncCheckpointListRequest
-	(*SyncPreviewRequest)(nil),               // 18: platform_game.SyncPreviewRequest
-	(*SyncRunRequest)(nil),                   // 19: platform_game.SyncRunRequest
-	(*ExecuteV2SqlRequest)(nil),              // 20: platform_game.ExecuteV2SqlRequest
-	(*PingResponse)(nil),                     // 21: platform_game.PingResponse
-	(*GetGameListResp)(nil),                  // 22: platform_game.GetGameListResp
-	(*GetGameResp)(nil),                      // 23: platform_game.GetGameResp
-	(*UpdateGameResp)(nil),                   // 24: platform_game.UpdateGameResp
-	(*GetGameCategoryListResp)(nil),          // 25: platform_game.GetGameCategoryListResp
-	(*GetGameCategoryResp)(nil),              // 26: platform_game.GetGameCategoryResp
-	(*UpdateGameCategoryResp)(nil),           // 27: platform_game.UpdateGameCategoryResp
-	(*GetGameProviderListResp)(nil),          // 28: platform_game.GetGameProviderListResp
-	(*GetGameProviderResp)(nil),              // 29: platform_game.GetGameProviderResp
-	(*UpdateGameProviderResp)(nil),           // 30: platform_game.UpdateGameProviderResp
-	(*GetGameChannelResp)(nil),               // 31: platform_game.GetGameChannelResp
-	(*GetGameChannelListResp)(nil),           // 32: platform_game.GetGameChannelListResp
-	(*UpdateGameChannelResp)(nil),            // 33: platform_game.UpdateGameChannelResp
-	(*GetGameCurrencyListResp)(nil),          // 34: platform_game.GetGameCurrencyListResp
-	(*GetGameCurrencyResp)(nil),              // 35: platform_game.GetGameCurrencyResp
-	(*UpdateGameCurrencyResp)(nil),           // 36: platform_game.UpdateGameCurrencyResp
-	(*GetGameSyncCheckpointResp)(nil),        // 37: platform_game.GetGameSyncCheckpointResp
-	(*GetGameSyncCheckpointListResp)(nil),    // 38: platform_game.GetGameSyncCheckpointListResp
-	(*SyncPreviewResp)(nil),                  // 39: platform_game.SyncPreviewResp
-	(*SyncRunResp)(nil),                      // 40: platform_game.SyncRunResp
-	(*ExecuteV2SqlResp)(nil),                 // 41: platform_game.ExecuteV2SqlResp
+	(*GetI18NNameMapRequest)(nil),            // 18: platform_game.GetI18nNameMapRequest
+	(*SyncPreviewRequest)(nil),               // 19: platform_game.SyncPreviewRequest
+	(*SyncRunRequest)(nil),                   // 20: platform_game.SyncRunRequest
+	(*ExecuteV2SqlRequest)(nil),              // 21: platform_game.ExecuteV2SqlRequest
+	(*PingResponse)(nil),                     // 22: platform_game.PingResponse
+	(*GetGameListResp)(nil),                  // 23: platform_game.GetGameListResp
+	(*GetGameResp)(nil),                      // 24: platform_game.GetGameResp
+	(*UpdateGameResp)(nil),                   // 25: platform_game.UpdateGameResp
+	(*GetGameCategoryListResp)(nil),          // 26: platform_game.GetGameCategoryListResp
+	(*GetGameCategoryResp)(nil),              // 27: platform_game.GetGameCategoryResp
+	(*UpdateGameCategoryResp)(nil),           // 28: platform_game.UpdateGameCategoryResp
+	(*GetGameProviderListResp)(nil),          // 29: platform_game.GetGameProviderListResp
+	(*GetGameProviderResp)(nil),              // 30: platform_game.GetGameProviderResp
+	(*UpdateGameProviderResp)(nil),           // 31: platform_game.UpdateGameProviderResp
+	(*GetGameChannelResp)(nil),               // 32: platform_game.GetGameChannelResp
+	(*GetGameChannelListResp)(nil),           // 33: platform_game.GetGameChannelListResp
+	(*UpdateGameChannelResp)(nil),            // 34: platform_game.UpdateGameChannelResp
+	(*GetGameCurrencyListResp)(nil),          // 35: platform_game.GetGameCurrencyListResp
+	(*GetGameCurrencyResp)(nil),              // 36: platform_game.GetGameCurrencyResp
+	(*UpdateGameCurrencyResp)(nil),           // 37: platform_game.UpdateGameCurrencyResp
+	(*GetGameSyncCheckpointResp)(nil),        // 38: platform_game.GetGameSyncCheckpointResp
+	(*GetGameSyncCheckpointListResp)(nil),    // 39: platform_game.GetGameSyncCheckpointListResp
+	(*GetI18NNameMapResp)(nil),               // 40: platform_game.GetI18nNameMapResp
+	(*SyncPreviewResp)(nil),                  // 41: platform_game.SyncPreviewResp
+	(*SyncRunResp)(nil),                      // 42: platform_game.SyncRunResp
+	(*ExecuteV2SqlResp)(nil),                 // 43: platform_game.ExecuteV2SqlResp
 }
 var file_platform_game_proto_depIdxs = []int32{
 	0,  // 0: platform_game.PingService.Ping:input_type -> platform_game.PingRequest
@@ -119,32 +122,34 @@ var file_platform_game_proto_depIdxs = []int32{
 	15, // 15: platform_game.GameCurrencyService.UpdateGameCurrency:input_type -> platform_game.UpdateGameCurrencyRequest
 	16, // 16: platform_game.GameSyncCheckpointService.GetGameSyncCheckpoint:input_type -> platform_game.GetGameSyncCheckpointRequest
 	17, // 17: platform_game.GameSyncCheckpointService.GetGameSyncCheckpointList:input_type -> platform_game.GetGameSyncCheckpointListRequest
-	18, // 18: platform_game.SyncService.SyncPreview:input_type -> platform_game.SyncPreviewRequest
-	19, // 19: platform_game.SyncService.SyncRun:input_type -> platform_game.SyncRunRequest
-	20, // 20: platform_game.SyncService.ExecuteV2Sql:input_type -> platform_game.ExecuteV2SqlRequest
-	21, // 21: platform_game.PingService.Ping:output_type -> platform_game.PingResponse
-	22, // 22: platform_game.GameService.GetGameList:output_type -> platform_game.GetGameListResp
-	23, // 23: platform_game.GameService.GetGame:output_type -> platform_game.GetGameResp
-	24, // 24: platform_game.GameService.UpdateGame:output_type -> platform_game.UpdateGameResp
-	25, // 25: platform_game.GameCategoryService.GetGameCategoryList:output_type -> platform_game.GetGameCategoryListResp
-	26, // 26: platform_game.GameCategoryService.GetGameCategory:output_type -> platform_game.GetGameCategoryResp
-	27, // 27: platform_game.GameCategoryService.UpdateGameCategory:output_type -> platform_game.UpdateGameCategoryResp
-	28, // 28: platform_game.GameProviderService.GetGameProviderList:output_type -> platform_game.GetGameProviderListResp
-	29, // 29: platform_game.GameProviderService.GetGameProvider:output_type -> platform_game.GetGameProviderResp
-	30, // 30: platform_game.GameProviderService.UpdateGameProvider:output_type -> platform_game.UpdateGameProviderResp
-	31, // 31: platform_game.GameChannelService.GetGameChannel:output_type -> platform_game.GetGameChannelResp
-	32, // 32: platform_game.GameChannelService.GetGameChannelList:output_type -> platform_game.GetGameChannelListResp
-	33, // 33: platform_game.GameChannelService.UpdateGameChannel:output_type -> platform_game.UpdateGameChannelResp
-	34, // 34: platform_game.GameCurrencyService.GetGameCurrencyList:output_type -> platform_game.GetGameCurrencyListResp
-	35, // 35: platform_game.GameCurrencyService.GetGameCurrency:output_type -> platform_game.GetGameCurrencyResp
-	36, // 36: platform_game.GameCurrencyService.UpdateGameCurrency:output_type -> platform_game.UpdateGameCurrencyResp
-	37, // 37: platform_game.GameSyncCheckpointService.GetGameSyncCheckpoint:output_type -> platform_game.GetGameSyncCheckpointResp
-	38, // 38: platform_game.GameSyncCheckpointService.GetGameSyncCheckpointList:output_type -> platform_game.GetGameSyncCheckpointListResp
-	39, // 39: platform_game.SyncService.SyncPreview:output_type -> platform_game.SyncPreviewResp
-	40, // 40: platform_game.SyncService.SyncRun:output_type -> platform_game.SyncRunResp
-	41, // 41: platform_game.SyncService.ExecuteV2Sql:output_type -> platform_game.ExecuteV2SqlResp
-	21, // [21:42] is the sub-list for method output_type
-	0,  // [0:21] is the sub-list for method input_type
+	18, // 18: platform_game.GameSyncCheckpointService.GetI18nNameMap:input_type -> platform_game.GetI18nNameMapRequest
+	19, // 19: platform_game.SyncService.SyncPreview:input_type -> platform_game.SyncPreviewRequest
+	20, // 20: platform_game.SyncService.SyncRun:input_type -> platform_game.SyncRunRequest
+	21, // 21: platform_game.SyncService.ExecuteV2Sql:input_type -> platform_game.ExecuteV2SqlRequest
+	22, // 22: platform_game.PingService.Ping:output_type -> platform_game.PingResponse
+	23, // 23: platform_game.GameService.GetGameList:output_type -> platform_game.GetGameListResp
+	24, // 24: platform_game.GameService.GetGame:output_type -> platform_game.GetGameResp
+	25, // 25: platform_game.GameService.UpdateGame:output_type -> platform_game.UpdateGameResp
+	26, // 26: platform_game.GameCategoryService.GetGameCategoryList:output_type -> platform_game.GetGameCategoryListResp
+	27, // 27: platform_game.GameCategoryService.GetGameCategory:output_type -> platform_game.GetGameCategoryResp
+	28, // 28: platform_game.GameCategoryService.UpdateGameCategory:output_type -> platform_game.UpdateGameCategoryResp
+	29, // 29: platform_game.GameProviderService.GetGameProviderList:output_type -> platform_game.GetGameProviderListResp
+	30, // 30: platform_game.GameProviderService.GetGameProvider:output_type -> platform_game.GetGameProviderResp
+	31, // 31: platform_game.GameProviderService.UpdateGameProvider:output_type -> platform_game.UpdateGameProviderResp
+	32, // 32: platform_game.GameChannelService.GetGameChannel:output_type -> platform_game.GetGameChannelResp
+	33, // 33: platform_game.GameChannelService.GetGameChannelList:output_type -> platform_game.GetGameChannelListResp
+	34, // 34: platform_game.GameChannelService.UpdateGameChannel:output_type -> platform_game.UpdateGameChannelResp
+	35, // 35: platform_game.GameCurrencyService.GetGameCurrencyList:output_type -> platform_game.GetGameCurrencyListResp
+	36, // 36: platform_game.GameCurrencyService.GetGameCurrency:output_type -> platform_game.GetGameCurrencyResp
+	37, // 37: platform_game.GameCurrencyService.UpdateGameCurrency:output_type -> platform_game.UpdateGameCurrencyResp
+	38, // 38: platform_game.GameSyncCheckpointService.GetGameSyncCheckpoint:output_type -> platform_game.GetGameSyncCheckpointResp
+	39, // 39: platform_game.GameSyncCheckpointService.GetGameSyncCheckpointList:output_type -> platform_game.GetGameSyncCheckpointListResp
+	40, // 40: platform_game.GameSyncCheckpointService.GetI18nNameMap:output_type -> platform_game.GetI18nNameMapResp
+	41, // 41: platform_game.SyncService.SyncPreview:output_type -> platform_game.SyncPreviewResp
+	42, // 42: platform_game.SyncService.SyncRun:output_type -> platform_game.SyncRunResp
+	43, // 43: platform_game.SyncService.ExecuteV2Sql:output_type -> platform_game.ExecuteV2SqlResp
+	22, // [22:44] is the sub-list for method output_type
+	0,  // [0:22] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

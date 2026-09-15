@@ -23,13 +23,13 @@ func testClient(t *testing.T) *ent.Client {
 	t.Helper()
 	dsn := fmt.Sprintf("file:%s?mode=memory&cache=shared&_fk=1", t.Name())
 	client := enttest.Open(t, dialect.SQLite, dsn)
-	fOperatorID := intercept.TraverseFunc(func(ctx context.Context, q intercept.Query) error {
-		entmixin.FilterOperatorID(ctx, q)
+	fOperatorCode := intercept.TraverseFunc(func(ctx context.Context, q intercept.Query) error {
+		entmixin.FilterOperatorCode(ctx, q)
 		return nil
 	})
-	client.LoginLog.Intercept(fOperatorID)
-	client.AdminActionLog.Intercept(fOperatorID)
-	client.ErrorLog.Intercept(fOperatorID)
+	client.LoginLog.Intercept(fOperatorCode)
+	client.AdminActionLog.Intercept(fOperatorCode)
+	client.ErrorLog.Intercept(fOperatorCode)
 	t.Cleanup(func() { _ = client.Close() })
 	return client
 }
@@ -46,7 +46,7 @@ func testDeps(t *testing.T, mode string) *Deps {
 	}
 }
 
-func createUserWithRole(t *testing.T, d *Deps, username, password string, operatorID *int64) *ent.User {
+func createUserWithRole(t *testing.T, d *Deps, username, password string, operatorCode *string) *ent.User {
 	t.Helper()
 	ctx := context.Background()
 	hash, err := HashPassword(password)
@@ -57,8 +57,8 @@ func createUserWithRole(t *testing.T, d *Deps, username, password string, operat
 		SetRoleCode("admin_" + username).
 		SetRoleName("Admin").
 		SetStatus(model.StatusNormal)
-	if operatorID != nil {
-		rb.SetOperatorID(*operatorID)
+	if operatorCode != nil {
+		rb.SetOperatorCode(*operatorCode)
 	}
 	role, err := rb.Save(ctx)
 	if err != nil {
@@ -72,8 +72,8 @@ func createUserWithRole(t *testing.T, d *Deps, username, password string, operat
 		SetDisplayName(username).
 		SetStatus(model.StatusNormal).
 		AddRoleIDs(role.ID)
-	if operatorID != nil {
-		ub.SetOperatorID(*operatorID)
+	if operatorCode != nil {
+		ub.SetOperatorCode(*operatorCode)
 	}
 	u, err := ub.Save(ctx)
 	if err != nil {
@@ -122,25 +122,17 @@ func TestLoginWritesSuccessAndFailLogs(t *testing.T) {
 		t.Fatalf("unknown user log %+v", rows[2])
 	}
 	for i, row := range rows {
-		if row.OperatorID != nil {
-			t.Fatalf("mode off log %d operator_id=%v", i, row.OperatorID)
+		if row.OperatorCode != nil {
+			t.Fatalf("mode off log %d operator_code=%v", i, row.OperatorCode)
 		}
 	}
 }
 
-func TestLoginWritesOperatorIDModeOn(t *testing.T) {
+func TestLoginWritesOperatorCodeModeOn(t *testing.T) {
 	d := testDeps(t, ModeOn)
 	ctx := context.Background()
-	op, err := d.Client.Operator.Create().
-		SetOperatorCode("op1").
-		SetTimezoneCode("UTC").
-		SetSettlementCurrencyCode("USD").
-		SetStatus(model.StatusNormal).
-		Save(ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
-	u := createUserWithRole(t, d, "admin", "pass", &op.ID)
+	code := "op1"
+	u := createUserWithRole(t, d, "admin", "pass", &code)
 
 	if _, err := d.Login(ctx, LoginReq{Username: "admin", Password: "pass", OperatorCode: "op1", ClientIP: "127.0.0.1"}); err != nil {
 		t.Fatalf("login: %v", err)
@@ -169,8 +161,8 @@ func TestLoginWritesOperatorIDModeOn(t *testing.T) {
 		t.Fatalf("unknown user log %+v", rows[2])
 	}
 	for i, row := range rows {
-		if row.OperatorID == nil || *row.OperatorID != op.ID {
-			t.Fatalf("log %d operator_id=%v want %d", i, row.OperatorID, op.ID)
+		if row.OperatorCode == nil || *row.OperatorCode != "op1" {
+			t.Fatalf("log %d operator_code=%v want op1", i, row.OperatorCode)
 		}
 	}
 }
@@ -183,38 +175,21 @@ func TestWriteLoginLogNilClient(t *testing.T) {
 func TestListLoginLogsFilterAndTenant(t *testing.T) {
 	d := testDeps(t, ModeOn)
 	ctx := context.Background()
-	op1, err := d.Client.Operator.Create().
-		SetOperatorCode("op1").
-		SetTimezoneCode("UTC").
-		SetSettlementCurrencyCode("USD").
-		SetStatus(model.StatusNormal).
-		Save(ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
-	op2, err := d.Client.Operator.Create().
-		SetOperatorCode("op2").
-		SetTimezoneCode("UTC").
-		SetSettlementCurrencyCode("USD").
-		SetStatus(model.StatusNormal).
-		Save(ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
-	u1 := createUserWithRole(t, d, "alice", "pass", &op1.ID)
-	u2 := createUserWithRole(t, d, "bob", "pass", &op2.ID)
+	code1, code2 := "op1", "op2"
+	u1 := createUserWithRole(t, d, "alice", "pass", &code1)
+	u2 := createUserWithRole(t, d, "bob", "pass", &code2)
 	now := time.Now()
-	if err := d.Client.LoginLog.Create().SetUsername("alice").SetLoginResult(model.LoginResultSuccess).SetLoginIP("1.1.1.1").SetUserID(u1.ID).SetOperatorID(op1.ID).SetLoginAt(now).Exec(ctx); err != nil {
+	if err := d.Client.LoginLog.Create().SetUsername("alice").SetLoginResult(model.LoginResultSuccess).SetLoginIP("1.1.1.1").SetUserID(u1.ID).SetOperatorCode(code1).SetLoginAt(now).Exec(ctx); err != nil {
 		t.Fatal(err)
 	}
-	if err := d.Client.LoginLog.Create().SetUsername("bob").SetLoginResult(model.LoginResultFail).SetLoginIP("2.2.2.2").SetUserID(u2.ID).SetOperatorID(op2.ID).SetFailureReason(i18n.AuthPasswordIncorrect).SetLoginAt(now).Exec(ctx); err != nil {
+	if err := d.Client.LoginLog.Create().SetUsername("bob").SetLoginResult(model.LoginResultFail).SetLoginIP("2.2.2.2").SetUserID(u2.ID).SetOperatorCode(code2).SetFailureReason(i18n.AuthPasswordIncorrect).SetLoginAt(now).Exec(ctx); err != nil {
 		t.Fatal(err)
 	}
-	if err := d.Client.LoginLog.Create().SetUsername("ghost").SetLoginResult(model.LoginResultFail).SetLoginIP("3.3.3.3").SetOperatorID(op1.ID).SetLoginAt(now).Exec(ctx); err != nil {
+	if err := d.Client.LoginLog.Create().SetUsername("ghost").SetLoginResult(model.LoginResultFail).SetLoginIP("3.3.3.3").SetOperatorCode(code1).SetLoginAt(now).Exec(ctx); err != nil {
 		t.Fatal(err)
 	}
 
-	claims := &ctxdata.Claims{OperatorID: op1.ID}
+	claims := &ctxdata.Claims{OperatorCode: code1}
 	list, total, err := d.ListLoginLogs(ctx, claims, LoginLogListReq{})
 	if err != nil {
 		t.Fatal(err)
@@ -225,8 +200,8 @@ func TestListLoginLogsFilterAndTenant(t *testing.T) {
 	got := map[string]bool{}
 	for _, row := range list {
 		got[row.Username] = true
-		if row.OperatorID == nil || *row.OperatorID != op1.ID {
-			t.Fatalf("tenant row operator_id=%v want %d", row.OperatorID, op1.ID)
+		if row.OperatorCode == nil || *row.OperatorCode != code1 {
+			t.Fatalf("tenant row operator_code=%v want %s", row.OperatorCode, code1)
 		}
 	}
 	if !got["alice"] || !got["ghost"] || got["bob"] {
@@ -244,7 +219,7 @@ func TestListLoginLogsFilterAndTenant(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if total != 1 || all[0].Username != "bob" || all[0].OperatorID != nil {
+	if total != 1 || all[0].Username != "bob" || all[0].OperatorCode != nil {
 		t.Fatalf("filter username total=%d list=%+v", total, all)
 	}
 	fails, total, err := d.ListLoginLogs(ctx, &ctxdata.Claims{}, LoginLogListReq{LoginResult: model.LoginResultFail})

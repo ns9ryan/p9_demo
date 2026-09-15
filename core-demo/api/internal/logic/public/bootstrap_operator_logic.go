@@ -27,8 +27,7 @@ func NewBootstrapOperatorLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 
 func (l *BootstrapOperatorLogic) BootstrapOperator(req *types.BootstrapOperatorReq) (resp *types.UserPublic, err error) {
 	out, err := l.svcCtx.Core.BootstrapOperator(l.ctx, &coreclient.BootstrapOperatorReq{
-		InitToken: req.InitToken, OperatorCode: req.OperatorCode, TimezoneCode: req.TimezoneCode,
-		SettlementCurrencyCode: req.SettlementCurrencyCode, Username: req.Username, Password: req.Password,
+		InitToken: req.InitToken, OperatorCode: req.OperatorCode, Username: req.Username, Password: req.Password,
 		DisplayName: req.DisplayName,
 	})
 	if err != nil {

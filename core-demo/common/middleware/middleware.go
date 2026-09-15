@@ -97,9 +97,19 @@ func IsAdminWrite(method, path string) bool {
 	if !strings.EqualFold(method, http.MethodPost) {
 		return true
 	}
-	if strings.HasSuffix(path, "/list") {
-		return false
+
+	// 后缀列表匹配
+	suffixes := []string{
+		"/list",
+		"/preview",
+		"/search",
 	}
+	for _, suffix := range suffixes {
+		if strings.HasSuffix(path, suffix) {
+			return false
+		}
+	}
+
 	if strings.HasSuffix(path, "/authority/menu/role") || strings.HasSuffix(path, "/authority/api/role") {
 		return false
 	}

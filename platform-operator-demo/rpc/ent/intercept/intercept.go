@@ -9,6 +9,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"oa.98ent.com/p9/platform-operator/rpc/ent"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operator"
+	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoradmin"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoragentlineallocation"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatordomain"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatorlanguageallocation"
@@ -98,6 +99,33 @@ func (f TraverseOperator) Traverse(ctx context.Context, q ent.Query) error {
 		return f(ctx, q)
 	}
 	return fmt.Errorf("unexpected query type %T. expect *ent.OperatorQuery", q)
+}
+
+// The OperatorAdminFunc type is an adapter to allow the use of ordinary function as a Querier.
+type OperatorAdminFunc func(context.Context, *ent.OperatorAdminQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f OperatorAdminFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.OperatorAdminQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.OperatorAdminQuery", q)
+}
+
+// The TraverseOperatorAdmin type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseOperatorAdmin func(context.Context, *ent.OperatorAdminQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraverseOperatorAdmin) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraverseOperatorAdmin) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.OperatorAdminQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.OperatorAdminQuery", q)
 }
 
 // The OperatorAgentLineAllocationFunc type is an adapter to allow the use of ordinary function as a Querier.
@@ -240,6 +268,8 @@ func NewQuery(q ent.Query) (Query, error) {
 	switch q := q.(type) {
 	case *ent.OperatorQuery:
 		return &query[*ent.OperatorQuery, predicate.Operator, operator.OrderOption]{typ: ent.TypeOperator, tq: q}, nil
+	case *ent.OperatorAdminQuery:
+		return &query[*ent.OperatorAdminQuery, predicate.OperatorAdmin, operatoradmin.OrderOption]{typ: ent.TypeOperatorAdmin, tq: q}, nil
 	case *ent.OperatorAgentLineAllocationQuery:
 		return &query[*ent.OperatorAgentLineAllocationQuery, predicate.OperatorAgentLineAllocation, operatoragentlineallocation.OrderOption]{typ: ent.TypeOperatorAgentLineAllocation, tq: q}, nil
 	case *ent.OperatorDomainQuery:

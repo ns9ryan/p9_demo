@@ -39,8 +39,7 @@ type GameCategoryResp struct {
 	SourceID           int64  `json:"source_id" comment:"上游分类ID"`
 	CategoryCode       string `json:"category_code" comment:"分类编码"`
 	SourceCategoryCode string `json:"source_category_code" comment:"上游分类编码"`
-	SourceNameI18n     string `json:"source_name_i18n" comment:"上游分类名称（多语言JSON）"`
-	NameI18n           string `json:"name_i18n" comment:"分类名称（多语言JSON）"`
+	Name               string `json:"name" comment:"分类名称"`
 	SourceSortNo       int32  `json:"source_sort_no,omitempty" comment:"上游排序号"`
 	SortNo             int32  `json:"sort_no" comment:"排序号"`
 	SourceStatus       int16  `json:"source_status" comment:"上游状态：1启用/2禁用"`
@@ -83,8 +82,7 @@ type GameChannelResp struct {
 	SourceID          int64  `json:"source_id" comment:"上游渠道ID"`
 	ChannelCode       string `json:"channel_code" comment:"渠道编码"`
 	SourceChannelCode string `json:"source_channel_code" comment:"上游渠道编码"`
-	SourceNameI18n    string `json:"source_name_i18n" comment:"上游渠道名称（多语言JSON）"`
-	NameI18n          string `json:"name_i18n" comment:"渠道名称（多语言JSON）"`
+	Name              string `json:"name" comment:"上游渠道名称"`
 	SourceSortNo      int32  `json:"source_sort_no" comment:"上游排序号"`
 	SortNo            int32  `json:"sort_no" comment:"排序号"`
 	SourceStatus      int16  `json:"source_status" comment:"上游状态：1启用/2禁用"`
@@ -107,8 +105,8 @@ type GameCurrencyGetReq struct {
 }
 
 type GameCurrencyInfo struct {
-	CurrencyID       int64  `json:"currency_id" comment:"币种ID"`
-	CurrencyNameI18n string `json:"currency_name_i18n" comment:"币种名称（多语言JSON）"`
+	CurrencyID   int64  `json:"currency_id" comment:"币种ID"`
+	CurrencyName string `json:"currency_name" comment:"币种名称"`
 }
 
 type GameCurrencyListReq struct {
@@ -128,18 +126,18 @@ type GameCurrencyListResp struct {
 }
 
 type GameCurrencyResp struct {
-	ID               int64  `json:"id" comment:"游戏货币ID"`
-	GameID           int64  `json:"game_id" comment:"游戏ID"`
-	CurrencyID       int64  `json:"currency_id" comment:"货币ID"`
-	GameCode         string `json:"game_code,omitempty" comment:"游戏编码"`
-	GameNameI18n     string `json:"game_name_i18n,omitempty" comment:"游戏名称（多语言JSON）"`
-	CurrencyCode     string `json:"currency_code,omitempty" comment:"币种编码"`
-	CurrencyNameI18n string `json:"currency_name_i18n,omitempty" comment:"币种名称（多语言JSON）"`
-	SourceStatus     int16  `json:"source_status" comment:"上游状态：1启用/2禁用"`
-	Status           int16  `json:"status" comment:"状态：1启用/2禁用"`
-	IsDeleted        int16  `json:"is_deleted" comment:"软删除：0正常/1已删除"`
-	CreatedAt        int64  `json:"created_at" comment:"创建时间戳"`
-	UpdatedAt        int64  `json:"updated_at" comment:"更新时间戳"`
+	ID           int64  `json:"id" comment:"游戏货币ID"`
+	GameID       int64  `json:"game_id" comment:"游戏ID"`
+	CurrencyID   int64  `json:"currency_id" comment:"货币ID"`
+	GameCode     string `json:"game_code,omitempty" comment:"游戏编码"`
+	GameName     string `json:"game_name,omitempty" comment:"游戏名称（多语言JSON）"`
+	CurrencyCode string `json:"currency_code,omitempty" comment:"币种编码"`
+	CurrencyName string `json:"currency_name,omitempty" comment:"币种名称（多语言JSON）"`
+	SourceStatus int16  `json:"source_status" comment:"上游状态：1启用/2禁用"`
+	Status       int16  `json:"status" comment:"状态：1启用/2禁用"`
+	IsDeleted    int16  `json:"is_deleted" comment:"软删除：0正常/1已删除"`
+	CreatedAt    int64  `json:"created_at" comment:"创建时间戳"`
+	UpdatedAt    int64  `json:"updated_at" comment:"更新时间戳"`
 }
 
 type GameCurrencyUpdateReq struct {
@@ -196,8 +194,7 @@ type GameProviderResp struct {
 	SourceID           int64  `json:"source_id" comment:"上游厂商ID"`
 	ProviderCode       string `json:"provider_code" comment:"厂商编码"`
 	SourceProviderCode string `json:"source_provider_code" comment:"上游厂商编码"`
-	SourceNameI18n     string `json:"source_name_i18n" comment:"上游厂商名称（多语言JSON）"`
-	NameI18n           string `json:"name_i18n" comment:"厂商名称（多语言JSON）"`
+	Name               string `json:"name" comment:"厂商名称（多语言JSON）"`
 	SourceLogoUrl      string `json:"source_logo_url,omitempty" comment:"上游厂商Logo URL"`
 	LogoUrl            string `json:"logo_url,omitempty" comment:"厂商Logo URL"`
 	SourceSortNo       int32  `json:"source_sort_no,omitempty" comment:"上游排序号"`
@@ -224,18 +221,17 @@ type GameResp struct {
 	GameCode          string             `json:"game_code" comment:"游戏编码"`
 	SourceGameCode    string             `json:"source_game_code" comment:"上游游戏编码"`
 	SourceProviderKey string             `json:"source_provider_key,omitempty" comment:"上游厂商Key"`
-	SourceNameI18n    string             `json:"source_name_i18n" comment:"上游游戏名称（多语言JSON）"`
+	Name              string             `json:"name" comment:"上游游戏名称（多语言JSON）"`
 	SourceImageUrl    string             `json:"source_image_url,omitempty" comment:"上游游戏图片URL"`
 	SourceSortNo      int32              `json:"source_sort_no,omitempty" comment:"上游排序号"`
 	SourceStatus      int16              `json:"source_status" comment:"上游状态：1启用/2禁用"`
 	CategoryID        int64              `json:"category_id" comment:"分类ID"`
 	ProviderID        int64              `json:"provider_id" comment:"厂商ID"`
 	ChannelID         int64              `json:"channel_id,omitempty" comment:"渠道ID"`
-	CategoryNameI18n  string             `json:"category_name_i18n,omitempty" comment:"分类名称（多语言JSON）"`
-	ProviderNameI18n  string             `json:"provider_name_i18n,omitempty" comment:"厂商名称（多语言JSON）"`
-	ChannelNameI18n   string             `json:"channel_name_i18n,omitempty" comment:"渠道名称（多语言JSON）"`
+	CategoryName      string             `json:"category_name_i18n,omitempty" comment:"分类名称"`
+	ProviderName      string             `json:"provider_name_i18n,omitempty" comment:"厂商名称"`
+	ChannelName       string             `json:"channel_name_i18n,omitempty" comment:"渠道名称"`
 	ProviderKey       string             `json:"provider_key,omitempty" comment:"厂商Key"`
-	NameI18n          string             `json:"name_i18n" comment:"游戏名称（多语言JSON）"`
 	GameCurrencyInfo  []GameCurrencyInfo `json:"game_currency_info" comment:"游戏币种信息"`
 	ImageUrl          string             `json:"image_url,omitempty" comment:"游戏图片URL"`
 	SortNo            int32              `json:"sort_no" comment:"排序号"`
@@ -286,7 +282,7 @@ type GameSyncCheckpointResp struct {
 
 type GameUpdateReq struct {
 	ID               int64  `json:"id" binding:"required" comment:"游戏ID"`
-	NameI18n         string `json:"name_i18n,optional" comment:"游戏名称（多语言JSON）"`
+	Name             string `json:"name,optional" comment:"游戏名称"`
 	ImageUrl         string `json:"image_url,optional" comment:"游戏图片URL"`
 	SortNo           int32  `json:"sort_no,optional" comment:"排序号"`
 	SupportsEmbed    *bool  `json:"supports_embed,optional" comment:"是否支持嵌入"`

@@ -72,7 +72,7 @@ func (d *Deps) UpdateAPIAuthority(ctx context.Context, claims *ctxdata.Claims, r
 	for _, a := range required {
 		seen[a.Method+" "+a.Path] = APIAuthItem{Path: a.Path, Method: a.Method}
 	}
-	dom := casbinx.Domain(r.OperatorID)
+	dom := casbinx.Domain(r.OperatorCode)
 	var policies [][]string
 	for _, it := range seen {
 		policies = append(policies, []string{r.RoleCode, dom, it.Path, it.Method})
@@ -85,7 +85,7 @@ func (d *Deps) GetAPIAuthority(ctx context.Context, claims *ctxdata.Claims, role
 	if err != nil {
 		return nil, err
 	}
-	dom := casbinx.Domain(r.OperatorID)
+	dom := casbinx.Domain(r.OperatorCode)
 	list, err := d.Enforcer.GetFilteredPolicy(0, r.RoleCode, dom)
 	if err != nil {
 		return nil, err

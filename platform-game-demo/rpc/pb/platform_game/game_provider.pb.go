@@ -28,16 +28,15 @@ type ProviderInfo struct {
 	SourceId           int64                  `protobuf:"varint,2,opt,name=source_id,json=sourceId,proto3" json:"source_id,omitempty"`
 	ProviderCode       string                 `protobuf:"bytes,3,opt,name=provider_code,json=providerCode,proto3" json:"provider_code,omitempty"`
 	SourceProviderCode string                 `protobuf:"bytes,4,opt,name=source_provider_code,json=sourceProviderCode,proto3" json:"source_provider_code,omitempty"`
-	NameI18N           string                 `protobuf:"bytes,5,opt,name=name_i18n,json=nameI18n,proto3" json:"name_i18n,omitempty"`
-	SourceNameI18N     string                 `protobuf:"bytes,6,opt,name=source_name_i18n,json=sourceNameI18n,proto3" json:"source_name_i18n,omitempty"`
-	LogoUrl            string                 `protobuf:"bytes,7,opt,name=logo_url,json=logoUrl,proto3" json:"logo_url,omitempty"`
-	SourceLogoUrl      string                 `protobuf:"bytes,8,opt,name=source_logo_url,json=sourceLogoUrl,proto3" json:"source_logo_url,omitempty"`
-	SortNo             int32                  `protobuf:"varint,9,opt,name=sort_no,json=sortNo,proto3" json:"sort_no,omitempty"`
-	Status             int32                  `protobuf:"varint,10,opt,name=status,proto3" json:"status,omitempty"`
-	SourceStatus       int32                  `protobuf:"varint,11,opt,name=source_status,json=sourceStatus,proto3" json:"source_status,omitempty"`
-	IsDeleted          int32                  `protobuf:"varint,12,opt,name=is_deleted,json=isDeleted,proto3" json:"is_deleted,omitempty"`
-	CreatedAt          int64                  `protobuf:"varint,13,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt          int64                  `protobuf:"varint,14,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	NameKey            string                 `protobuf:"bytes,5,opt,name=name_key,json=nameKey,proto3" json:"name_key,omitempty"`
+	LogoUrl            string                 `protobuf:"bytes,6,opt,name=logo_url,json=logoUrl,proto3" json:"logo_url,omitempty"`
+	SourceLogoUrl      string                 `protobuf:"bytes,7,opt,name=source_logo_url,json=sourceLogoUrl,proto3" json:"source_logo_url,omitempty"`
+	SortNo             int32                  `protobuf:"varint,8,opt,name=sort_no,json=sortNo,proto3" json:"sort_no,omitempty"`
+	Status             int32                  `protobuf:"varint,9,opt,name=status,proto3" json:"status,omitempty"`
+	SourceStatus       int32                  `protobuf:"varint,10,opt,name=source_status,json=sourceStatus,proto3" json:"source_status,omitempty"`
+	IsDeleted          int32                  `protobuf:"varint,11,opt,name=is_deleted,json=isDeleted,proto3" json:"is_deleted,omitempty"`
+	CreatedAt          int64                  `protobuf:"varint,12,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt          int64                  `protobuf:"varint,13,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -100,16 +99,9 @@ func (x *ProviderInfo) GetSourceProviderCode() string {
 	return ""
 }
 
-func (x *ProviderInfo) GetNameI18N() string {
+func (x *ProviderInfo) GetNameKey() string {
 	if x != nil {
-		return x.NameI18N
-	}
-	return ""
-}
-
-func (x *ProviderInfo) GetSourceNameI18N() string {
-	if x != nil {
-		return x.SourceNameI18N
+		return x.NameKey
 	}
 	return ""
 }
@@ -176,11 +168,8 @@ type GetGameProviderListRequest struct {
 	Page          int32                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
 	PageSize      int32                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
 	ProviderCode  string                 `protobuf:"bytes,3,opt,name=provider_code,json=providerCode,proto3" json:"provider_code,omitempty"`
-	Name          string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
-	Status        int32                  `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`
-	IsDeleted     int32                  `protobuf:"varint,6,opt,name=is_deleted,json=isDeleted,proto3" json:"is_deleted,omitempty"`
-	SortBy        string                 `protobuf:"bytes,7,opt,name=sort_by,json=sortBy,proto3" json:"sort_by,omitempty"`          // id/sort_no/created_at
-	SortOrder     string                 `protobuf:"bytes,8,opt,name=sort_order,json=sortOrder,proto3" json:"sort_order,omitempty"` // asc/desc
+	Status        int32                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`
+	IsDeleted     int32                  `protobuf:"varint,5,opt,name=is_deleted,json=isDeleted,proto3" json:"is_deleted,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -236,13 +225,6 @@ func (x *GetGameProviderListRequest) GetProviderCode() string {
 	return ""
 }
 
-func (x *GetGameProviderListRequest) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
 func (x *GetGameProviderListRequest) GetStatus() int32 {
 	if x != nil {
 		return x.Status
@@ -257,26 +239,12 @@ func (x *GetGameProviderListRequest) GetIsDeleted() int32 {
 	return 0
 }
 
-func (x *GetGameProviderListRequest) GetSortBy() string {
-	if x != nil {
-		return x.SortBy
-	}
-	return ""
-}
-
-func (x *GetGameProviderListRequest) GetSortOrder() string {
-	if x != nil {
-		return x.SortOrder
-	}
-	return ""
-}
-
 // GetGameProviderListResp 游戏供应商列表响应
 type GetGameProviderListResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Code          int32                  `protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty"`
 	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
-	Data          []*ProviderInfo        `protobuf:"bytes,3,rep,name=data,proto3" json:"data,omitempty"`
+	Items         []*ProviderInfo        `protobuf:"bytes,3,rep,name=items,proto3" json:"items,omitempty"`
 	Total         int64                  `protobuf:"varint,4,opt,name=total,proto3" json:"total,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -326,9 +294,9 @@ func (x *GetGameProviderListResp) GetMessage() string {
 	return ""
 }
 
-func (x *GetGameProviderListResp) GetData() []*ProviderInfo {
+func (x *GetGameProviderListResp) GetItems() []*ProviderInfo {
 	if x != nil {
-		return x.Data
+		return x.Items
 	}
 	return nil
 }
@@ -450,11 +418,10 @@ func (x *GetGameProviderResp) GetData() *ProviderInfo {
 type UpdateGameProviderRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	NameI18N      string                 `protobuf:"bytes,2,opt,name=name_i18n,json=nameI18n,proto3" json:"name_i18n,omitempty"`
-	SortNo        int32                  `protobuf:"varint,3,opt,name=sort_no,json=sortNo,proto3" json:"sort_no,omitempty"`
-	Status        int32                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`
-	LogoUrl       string                 `protobuf:"bytes,5,opt,name=logo_url,json=logoUrl,proto3" json:"logo_url,omitempty"`
-	ForceLogout   bool                   `protobuf:"varint,6,opt,name=force_logout,json=forceLogout,proto3" json:"force_logout,omitempty"`
+	SortNo        int32                  `protobuf:"varint,2,opt,name=sort_no,json=sortNo,proto3" json:"sort_no,omitempty"`
+	Status        int32                  `protobuf:"varint,3,opt,name=status,proto3" json:"status,omitempty"`
+	LogoUrl       string                 `protobuf:"bytes,4,opt,name=logo_url,json=logoUrl,proto3" json:"logo_url,omitempty"`
+	ForceLogout   bool                   `protobuf:"varint,5,opt,name=force_logout,json=forceLogout,proto3" json:"force_logout,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -494,13 +461,6 @@ func (x *UpdateGameProviderRequest) GetId() int64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *UpdateGameProviderRequest) GetNameI18N() string {
-	if x != nil {
-		return x.NameI18N
-	}
-	return ""
 }
 
 func (x *UpdateGameProviderRequest) GetSortNo() int32 {
@@ -596,55 +556,49 @@ var File_types_game_provider_proto protoreflect.FileDescriptor
 
 const file_types_game_provider_proto_rawDesc = "" +
 	"\n" +
-	"\x19types/game_provider.proto\x12\rplatform_game\"\xcf\x03\n" +
+	"\x19types/game_provider.proto\x12\rplatform_game\"\xa3\x03\n" +
 	"\fProviderInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1b\n" +
 	"\tsource_id\x18\x02 \x01(\x03R\bsourceId\x12#\n" +
 	"\rprovider_code\x18\x03 \x01(\tR\fproviderCode\x120\n" +
-	"\x14source_provider_code\x18\x04 \x01(\tR\x12sourceProviderCode\x12\x1b\n" +
-	"\tname_i18n\x18\x05 \x01(\tR\bnameI18n\x12(\n" +
-	"\x10source_name_i18n\x18\x06 \x01(\tR\x0esourceNameI18n\x12\x19\n" +
-	"\blogo_url\x18\a \x01(\tR\alogoUrl\x12&\n" +
-	"\x0fsource_logo_url\x18\b \x01(\tR\rsourceLogoUrl\x12\x17\n" +
-	"\asort_no\x18\t \x01(\x05R\x06sortNo\x12\x16\n" +
-	"\x06status\x18\n" +
-	" \x01(\x05R\x06status\x12#\n" +
-	"\rsource_status\x18\v \x01(\x05R\fsourceStatus\x12\x1d\n" +
+	"\x14source_provider_code\x18\x04 \x01(\tR\x12sourceProviderCode\x12\x19\n" +
+	"\bname_key\x18\x05 \x01(\tR\anameKey\x12\x19\n" +
+	"\blogo_url\x18\x06 \x01(\tR\alogoUrl\x12&\n" +
+	"\x0fsource_logo_url\x18\a \x01(\tR\rsourceLogoUrl\x12\x17\n" +
+	"\asort_no\x18\b \x01(\x05R\x06sortNo\x12\x16\n" +
+	"\x06status\x18\t \x01(\x05R\x06status\x12#\n" +
+	"\rsource_status\x18\n" +
+	" \x01(\x05R\fsourceStatus\x12\x1d\n" +
 	"\n" +
-	"is_deleted\x18\f \x01(\x05R\tisDeleted\x12\x1d\n" +
+	"is_deleted\x18\v \x01(\x05R\tisDeleted\x12\x1d\n" +
 	"\n" +
-	"created_at\x18\r \x01(\x03R\tcreatedAt\x12\x1d\n" +
+	"created_at\x18\f \x01(\x03R\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\x0e \x01(\x03R\tupdatedAt\"\xf5\x01\n" +
+	"updated_at\x18\r \x01(\x03R\tupdatedAt\"\xa9\x01\n" +
 	"\x1aGetGameProviderListRequest\x12\x12\n" +
 	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1b\n" +
 	"\tpage_size\x18\x02 \x01(\x05R\bpageSize\x12#\n" +
-	"\rprovider_code\x18\x03 \x01(\tR\fproviderCode\x12\x12\n" +
-	"\x04name\x18\x04 \x01(\tR\x04name\x12\x16\n" +
-	"\x06status\x18\x05 \x01(\x05R\x06status\x12\x1d\n" +
+	"\rprovider_code\x18\x03 \x01(\tR\fproviderCode\x12\x16\n" +
+	"\x06status\x18\x04 \x01(\x05R\x06status\x12\x1d\n" +
 	"\n" +
-	"is_deleted\x18\x06 \x01(\x05R\tisDeleted\x12\x17\n" +
-	"\asort_by\x18\a \x01(\tR\x06sortBy\x12\x1d\n" +
-	"\n" +
-	"sort_order\x18\b \x01(\tR\tsortOrder\"\x8e\x01\n" +
+	"is_deleted\x18\x05 \x01(\x05R\tisDeleted\"\x90\x01\n" +
 	"\x17GetGameProviderListResp\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\x05R\x04code\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\x12/\n" +
-	"\x04data\x18\x03 \x03(\v2\x1b.platform_game.ProviderInfoR\x04data\x12\x14\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x121\n" +
+	"\x05items\x18\x03 \x03(\v2\x1b.platform_game.ProviderInfoR\x05items\x12\x14\n" +
 	"\x05total\x18\x04 \x01(\x03R\x05total\"(\n" +
 	"\x16GetGameProviderRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"t\n" +
 	"\x13GetGameProviderResp\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\x05R\x04code\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12/\n" +
-	"\x04data\x18\x03 \x01(\v2\x1b.platform_game.ProviderInfoR\x04data\"\xb7\x01\n" +
+	"\x04data\x18\x03 \x01(\v2\x1b.platform_game.ProviderInfoR\x04data\"\x9a\x01\n" +
 	"\x19UpdateGameProviderRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1b\n" +
-	"\tname_i18n\x18\x02 \x01(\tR\bnameI18n\x12\x17\n" +
-	"\asort_no\x18\x03 \x01(\x05R\x06sortNo\x12\x16\n" +
-	"\x06status\x18\x04 \x01(\x05R\x06status\x12\x19\n" +
-	"\blogo_url\x18\x05 \x01(\tR\alogoUrl\x12!\n" +
-	"\fforce_logout\x18\x06 \x01(\bR\vforceLogout\"w\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
+	"\asort_no\x18\x02 \x01(\x05R\x06sortNo\x12\x16\n" +
+	"\x06status\x18\x03 \x01(\x05R\x06status\x12\x19\n" +
+	"\blogo_url\x18\x04 \x01(\tR\alogoUrl\x12!\n" +
+	"\fforce_logout\x18\x05 \x01(\bR\vforceLogout\"w\n" +
 	"\x16UpdateGameProviderResp\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\x05R\x04code\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12/\n" +
@@ -673,7 +627,7 @@ var file_types_game_provider_proto_goTypes = []any{
 	(*UpdateGameProviderResp)(nil),     // 6: platform_game.UpdateGameProviderResp
 }
 var file_types_game_provider_proto_depIdxs = []int32{
-	0, // 0: platform_game.GetGameProviderListResp.data:type_name -> platform_game.ProviderInfo
+	0, // 0: platform_game.GetGameProviderListResp.items:type_name -> platform_game.ProviderInfo
 	0, // 1: platform_game.GetGameProviderResp.data:type_name -> platform_game.ProviderInfo
 	0, // 2: platform_game.UpdateGameProviderResp.data:type_name -> platform_game.ProviderInfo
 	3, // [3:3] is the sub-list for method output_type

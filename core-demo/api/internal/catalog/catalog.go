@@ -37,8 +37,6 @@ func catalogReq(code string) *coreclient.RegisterCatalogReq {
 			{Name: "I18nLangCreate", Title: "menu.route.i18nLangCreate", MenuType: menuTypeButton, Permission: "i18nLang:create", ParentName: "I18nLang", Sort: 1621},
 		},
 		Apis: []*coreclient.CreateApiReq{
-			{Path: "/admin/operator/self", Method: http.MethodGet, Description: "api.operatorSelf", ApiGroup: "operator", ServiceName: "core-api"},
-			{Path: "/admin/operator/update", Method: http.MethodPost, Description: "api.operatorUpdate", ApiGroup: "operator", ServiceName: "core-api"},
 			{Path: "/admin/user/create", Method: http.MethodPost, Description: "api.userCreate", ApiGroup: "user", ServiceName: "core-api"},
 			{Path: "/admin/user/update", Method: http.MethodPost, Description: "api.userUpdate", ApiGroup: "user", ServiceName: "core-api"},
 			{Path: "/admin/user/delete", Method: http.MethodPost, Description: "api.userDelete", ApiGroup: "user", ServiceName: "core-api"},
@@ -78,7 +76,7 @@ func catalogReq(code string) *coreclient.RegisterCatalogReq {
 			{Path: "/admin/i18n/lang/delete", Method: http.MethodPost, Description: "api.i18nLangDelete", ApiGroup: "i18n", ServiceName: "core-api"},
 			{Path: "/admin/i18n/lang/list", Method: http.MethodPost, Description: "api.i18nLangList", ApiGroup: "i18n", ServiceName: "core-api"},
 		},
-		I18N:      append(append(menuI18n(code), apiI18n(code)...), frontI18n(code)...),
+		I18N:      append(append(append(menuI18n(code), apiI18n(code)...), frontI18n(code)...), langI18n(code)...),
 		I18NLangs: langSeeds(),
 	}
 }

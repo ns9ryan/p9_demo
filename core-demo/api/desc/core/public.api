@@ -44,7 +44,7 @@ service Core {
 	@handler bootstrapAdmin
 	post /bootstrap/admin (BootstrapAdminReq) returns (UserPublic)
 
-	@doc "初始化分站及超管"
+	@doc "初始化分站超管"
 	@handler bootstrapOperator
 	post /bootstrap/operator (BootstrapOperatorReq) returns (UserPublic)
 

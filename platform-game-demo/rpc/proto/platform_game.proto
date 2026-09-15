@@ -100,6 +100,9 @@ service GameSyncCheckpointService {
 
     // 获取同步检查点列表
     rpc GetGameSyncCheckpointList(GetGameSyncCheckpointListRequest) returns (GetGameSyncCheckpointListResp);
+
+    // 获取多语言映射文件name_map
+    rpc GetI18nNameMap(GetI18nNameMapRequest) returns (GetI18nNameMapResp);
 }
 
 // ========== Sync Service ==========

@@ -55,3 +55,14 @@ message GetGameSyncCheckpointListResp {
     int32 page = 5;
     int32 page_size = 6;
 }
+
+// GetI18nNameMapRequest 获取多语言映射文件name_map请求
+message GetI18nNameMapRequest {
+}
+
+// GetI18nNameMapResp 获取多语言映射文件name_map响应
+message GetI18nNameMapResp {
+    int32 code = 1;
+    string message = 2;
+    map<string, string> data = 3;
+}

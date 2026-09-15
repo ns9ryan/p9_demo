@@ -8,12 +8,20 @@ Log:
   Mode: console
   Level: info
 
-# 数据库配置
-Database:
-  Driver: postgres
-  DSN: "host=postgres user=root password=root dbname=p9_platform port=5432 sslmode=disable TimeZone=UTC"
-  MaxConns: 20
-  MaxIdle: 5
-
 # 游戏供应商 gRPC 服务地址（用于同步）
 GrpcServerAddr: game-vendor-gateway:5000
+
+
+# Database:
+#   Driver: postgres
+#   DSN: "host=postgres user=root password=root dbname=p9_platform port=5432 sslmode=disable TimeZone=UTC"
+#   MaxConns: 20
+#   MaxIdle: 5
+
+DatabaseConf:
+  Host:     postgres     # 数据库地址
+  Port:     5432          # 数据库端口
+  DBName:   p9_platform   # 数据库名称
+  Username: root          # 数据库用户名
+  Password: root          # 数据库密码
+  SSLMode:  disable       # SSL模式

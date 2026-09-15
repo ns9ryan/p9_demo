@@ -119,6 +119,10 @@ type I18nLangInfo {
 	Lang      string `json:"lang"`
 	// Name | 显示名
 	Name      string `json:"name"`
+	// I18n key | 多语言 key
+	I18nKey   string `json:"i18n_key"`
+	// I18n name | 多语言显示名
+	I18nName  string `json:"i18n_name"`
 	// Disabled | 是否停用
 	Disabled  int32  `json:"disabled"`
 	// Sort | 排序，越小越前
@@ -135,6 +139,8 @@ type CreateI18nLangReq {
 	Lang      string `json:"lang"`
 	// Name | 显示名
 	Name      string `json:"name"`
+	// I18n key | 多语言 key
+	I18nKey   string `json:"i18n_key,optional"`
 	// Disabled | 是否停用
 	Disabled  int32  `json:"disabled,optional"`
 	// Sort | 排序，越小越前
@@ -149,6 +155,8 @@ type UpdateI18nLangReq {
 	Lang      string `json:"lang,optional"`
 	// Name | 显示名
 	Name      string `json:"name,optional"`
+	// I18n key | 多语言 key
+	I18nKey   string `json:"i18n_key,optional"`
 	// Disabled | 是否停用
 	Disabled  *int32 `json:"disabled,optional"`
 	// Sort | 排序，越小越前

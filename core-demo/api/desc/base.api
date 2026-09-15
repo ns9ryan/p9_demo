@@ -39,8 +39,8 @@ type UserPublic {
 	Username     string   `json:"username"`
 	// Display name | 显示名
 	DisplayName  string   `json:"display_name"`
-	// Operator ID | 分站ID
-	OperatorId   int64    `json:"operator_id,optional"`
+	// Operator code | 分站编码
+	OperatorCode string `json:"operator_code,optional"`
 	// Super admin | 是否超管
 	IsSuperAdmin bool     `json:"is_super_admin"`
 	// Status | 状态
@@ -103,10 +103,6 @@ type BootstrapOperatorReq {
 	InitToken              string `header:"X-Init-Token"`
 	// Operator code | 分站编码
 	OperatorCode           string `json:"operator_code"`
-	// Timezone code | 时区
-	TimezoneCode           string `json:"timezone_code,optional"`
-	// Settlement currency | 结算币种
-	SettlementCurrencyCode string `json:"settlement_currency_code,optional"`
 	// Username | 用户名
 	Username               string `json:"username"`
 	// Password | 密码

@@ -26,9 +26,15 @@ type CompleteOperatorResponse struct {
 }
 
 type CreateOperatorAdminRequest struct {
+	OperatorId  int64  `json:"operator_id" validate:"required,gt=0"`
+	Username    string `json:"username" validate:"required,notblank,max=64"`
+	Password    string `json:"password" validate:"required,min=6,max=32"`
+	DisplayName string `json:"display_name" validate:"required,notblank,max=100"`
+	Status      *int64 `json:"status,optional" validate:"omitempty,oneof=1 2"`
 }
 
 type CreateOperatorAdminResponse struct {
+	Id int64 `json:"id"`
 }
 
 type CreateOperatorDomainRequest struct {
@@ -144,9 +150,15 @@ type ListLanguageAllocationsResponse struct {
 }
 
 type ListOperatorAdminsRequest struct {
+	PageRequest
+	OperatorId *int64  `form:"operator_id,optional" validate:"omitempty,gt=0"`
+	Keyword    *string `form:"keyword,optional" validate:"omitempty,max=100"`
+	Status     *int64  `form:"status,optional" validate:"omitempty,oneof=1 2"`
 }
 
 type ListOperatorAdminsResponse struct {
+	Total int64               `json:"total"`
+	List  []OperatorAdminInfo `json:"list"`
 }
 
 type ListOperatorDomainsRequest struct {
@@ -181,6 +193,17 @@ type ListRegionAllocationsRequest struct {
 
 type ListRegionAllocationsResponse struct {
 	List []RegionAllocationInfo `json:"list"`
+}
+
+type OperatorAdminInfo struct {
+	Id           int64  `json:"id"`
+	OperatorId   int64  `json:"operator_id"`
+	OperatorName string `json:"operator_name"`
+	Username     string `json:"username"`
+	DisplayName  string `json:"display_name"`
+	Status       int64  `json:"status"`
+	CreatedAt    int64  `json:"created_at"`
+	UpdatedAt    int64  `json:"updated_at"`
 }
 
 type OperatorDomainInfo struct {
@@ -240,6 +263,14 @@ type RegionAllocationInfo struct {
 	AllocatedAt int64  `json:"allocated_at"`
 }
 
+type ResetOperatorAdminPasswordRequest struct {
+	Id       int64  `json:"id" validate:"required,gt=0"`
+	Password string `json:"password" validate:"required,min=6,max=32"`
+}
+
+type ResetOperatorAdminPasswordResponse struct {
+}
+
 type SaveAgentLineAllocationsRequest struct {
 	OperatorId     int64    `json:"operator_id" validate:"required,gt=0"`
 	AgentLineCodes []string `json:"agent_line_codes" validate:"omitempty,dive,required,notblank,max=32"`
@@ -268,6 +299,25 @@ type SaveRegionAllocationsRequest struct {
 }
 
 type SaveRegionAllocationsResponse struct {
+}
+
+type UpdateOperatorAdminRequest struct {
+	Id          int64   `json:"id" validate:"required,gt=0"`
+	Username    *string `json:"username,optional" validate:"omitempty,notblank,max=64"`
+	Password    *string `json:"password,optional" validate:"omitempty,min=6,max=32"`
+	DisplayName *string `json:"display_name,optional" validate:"omitempty,notblank,max=100"`
+	Status      *int64  `json:"status,optional" validate:"omitempty,oneof=1 2"`
+}
+
+type UpdateOperatorAdminResponse struct {
+}
+
+type UpdateOperatorAdminStatusRequest struct {
+	Id     int64 `json:"id" validate:"required,gt=0"`
+	Status int64 `json:"status" validate:"required,oneof=1 2"`
+}
+
+type UpdateOperatorAdminStatusResponse struct {
 }
 
 type UpdateOperatorDomainRequest struct {

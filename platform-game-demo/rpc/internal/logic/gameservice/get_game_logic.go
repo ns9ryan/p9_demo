@@ -2,6 +2,7 @@ package gameservicelogic
 
 import (
 	"context"
+	"fmt"
 
 	"oa.98ent.com/p9/platform-game/rpc/ent"
 	"oa.98ent.com/p9/platform-game/rpc/internal/constant"
@@ -31,24 +32,23 @@ func NewGetGameLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetGameLo
 func (l *GetGameLogic) GetGame(in *platformgame.GetGameRequest) (*platformgame.GetGameResp, error) {
 	l.Infof("[RPC GetGame] received request: id=%d", in.GetId())
 
-	if l.svcCtx == nil || l.svcCtx.DB == nil {
-		l.Errorf("[RPC GetGame] Database not available")
+	if l.svcCtx == nil || l.svcCtx.DAOManager == nil {
+		l.Errorf("[RPC GetGame] DAO Manager not available")
 		return &platformgame.GetGameResp{
 			Code:    constant.CodeInternalError,
-			Message: "Database not available",
+			Message: "DAO Manager not available",
 		}, nil
 	}
 
-	gameRecord := &ent.Game{}
-	if err := l.svcCtx.DB.WithContext(l.ctx).
-		Where("id = ? AND deleted_at IS NULL", in.GetId()).
-		First(gameRecord).Error; err != nil {
+	gameRecord, err := l.svcCtx.DAOManager.Game.GetGameByID(l.ctx, in.GetId())
+	if err != nil {
 		l.Errorf("[RPC GetGame] query failed: %v", err)
 		return &platformgame.GetGameResp{
 			Code:    constant.CodeInternalError,
 			Message: "failed to get game: " + err.Error(),
 		}, nil
 	}
+
 	// 查询关联的分类、供应商和渠道信息
 	ext, err := GetGameExtInfo(l.ctx, l.svcCtx, gameRecord)
 	if err != nil {
@@ -67,59 +67,59 @@ func (l *GetGameLogic) GetGame(in *platformgame.GetGameRequest) (*platformgame.G
 
 func GetGameExtInfo(ctx context.Context, svcCtx *svc.ServiceContext, gameRecord *ent.Game) (*logic.GameInfoExt, error) {
 	ext := &logic.GameInfoExt{}
-	categoryRecord := &ent.GameCategory{}
-	if err := svcCtx.DB.WithContext(ctx).
-		Where("source_id = ? AND deleted_at IS NULL", gameRecord.CategoryId).
-		First(categoryRecord).Error; err != nil {
-		return nil, err
-	}
-	ext.CategoryNameI18N = categoryRecord.NameI18n
 
-	providerRecord := &ent.GameProvider{}
-	if err := svcCtx.DB.WithContext(ctx).
-		Where("source_id = ? AND deleted_at IS NULL", gameRecord.ProviderId).
-		First(providerRecord).Error; err != nil {
-		return nil, err
+	if svcCtx == nil || svcCtx.DAOManager == nil {
+		return nil, fmt.Errorf("DAO Manager not available")
 	}
-	ext.ProviderNameI18N = providerRecord.NameI18n
 
-	channelRecord := &ent.GameChannel{}
-	if gameRecord.ChannelId.Int64 != 0 {
-		if err := svcCtx.DB.WithContext(ctx).
-			Where("source_id = ? AND deleted_at IS NULL", gameRecord.ChannelId.Int64).
-			First(channelRecord).Error; err != nil {
-			return nil, err
+	// 查询分类信息
+	categoryRecord, err := svcCtx.DAOManager.GameCategory.GetGameCategoryBySourceId(ctx, gameRecord.CategoryID)
+	if err != nil {
+		return nil, fmt.Errorf("query category failed: categoryID=%d: %w", gameRecord.CategoryID, err)
+	}
+	ext.CategoryCode = categoryRecord.SourceCategoryCode
+
+	// 查询供应商信息
+	providerRecord, err := svcCtx.DAOManager.GameProvider.GetGameProviderBySourceId(ctx, gameRecord.ProviderID)
+	if err != nil {
+		return nil, fmt.Errorf("query provider failed: providerID=%d: %w", gameRecord.ProviderID, err)
+	}
+	ext.ProviderCode = providerRecord.SourceProviderCode
+
+	// 查询渠道信息（如果存在）
+	if gameRecord.ChannelID != 0 {
+		channelRecord, err := svcCtx.DAOManager.GameChannel.GetGameChannelBySourceId(ctx, gameRecord.ChannelID)
+		if err != nil {
+			return nil, fmt.Errorf("query channel failed: channelID=%d: %w", gameRecord.ChannelID, err)
 		}
+		ext.ChannelCode = channelRecord.SourceChannelCode
 	}
-	ext.ChannelNameI18N = channelRecord.NameI18n
 
-	gameCurrencyRecords := []*ent.GameCurrency{}
-	if err := svcCtx.DB.WithContext(ctx).
-		Where("game_id = ? AND deleted_at IS NULL", gameRecord.SourceId).
-		Find(&gameCurrencyRecords).Error; err != nil {
-		return nil, err
+	// 查询游戏货币信息 - 需要通过GameCurrencyDAO
+	gameCurrencyRecords, err := svcCtx.DAOManager.GameCurrency.GetAllGameCurrency(ctx, gameRecord.SourceID, 0)
+	if err != nil {
+		return nil, fmt.Errorf("query game currency failed: %w", err)
 	}
+
 	gameCurrencyInfo := []GameCurrencyInfo{}
-	for _, currency := range gameCurrencyRecords {
-		if currency == nil {
+	for _, gameCurrencyRecord := range gameCurrencyRecords {
+		currencyRecord, err := svcCtx.DAOManager.Currency.GetCurrencyByID(ctx, gameCurrencyRecord.CurrencyID)
+		if err != nil {
+			fmt.Errorf("query currency failed: currencyID=%d: %w", gameCurrencyRecord.CurrencyID, err)
 			continue
 		}
-		sysCurrencyRecords := &ent.SysCurrency{}
-		if err := svcCtx.DB.WithContext(ctx).
-			Where("id = ?", currency.CurrencyId).
-			First(sysCurrencyRecords).Error; err != nil {
-			return nil, err
-		}
+		// 需要查询Currency表获取name_key
 		gameCurrencyInfo = append(gameCurrencyInfo, GameCurrencyInfo{
-			CurrencyID:       currency.CurrencyId,
-			CurrencyNameI18n: sysCurrencyRecords.NameI18n,
+			CurrencyID:      gameCurrencyRecord.CurrencyID,
+			CurrencyNameKey: currencyRecord.NameKey,
 		})
 	}
+
 	ext.GameCurrencyInfo = utils.JSON(gameCurrencyInfo)
 	return ext, nil
 }
 
 type GameCurrencyInfo struct {
-	CurrencyID       int64  `json:"currency_id" comment:"币种ID"`
-	CurrencyNameI18n string `json:"currency_name_i18n" comment:"币种名称（多语言JSON）"`
+	CurrencyID      int64  `json:"currency_id" comment:"币种ID"`
+	CurrencyNameKey string `json:"currency_name_key" comment:"币种名称Key"`
 }

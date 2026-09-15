@@ -2,7 +2,7 @@ syntax = "v1"
 
 @server (
 	group: checkpoint
-	middleware: Auth
+	middleware: Jwt,ActionLog,Authority
 	prefix: /admin
 )
 service platform_game {

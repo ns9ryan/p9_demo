@@ -21,8 +21,8 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
 	FieldDeletedAt = "deleted_at"
-	// FieldOperatorID holds the string denoting the operator_id field in the database.
-	FieldOperatorID = "operator_id"
+	// FieldOperatorCode holds the string denoting the operator_code field in the database.
+	FieldOperatorCode = "operator_code"
 	// FieldUserCode holds the string denoting the user_code field in the database.
 	FieldUserCode = "user_code"
 	// FieldUsername holds the string denoting the username field in the database.
@@ -93,7 +93,7 @@ var Columns = []string{
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeletedAt,
-	FieldOperatorID,
+	FieldOperatorCode,
 	FieldUserCode,
 	FieldUsername,
 	FieldPasswordHash,
@@ -139,6 +139,8 @@ var (
 	DefaultUpdatedAt func() time.Time
 	// UpdateDefaultUpdatedAt holds the default value on update for the "updated_at" field.
 	UpdateDefaultUpdatedAt func() time.Time
+	// OperatorCodeValidator is a validator for the "operator_code" field. It is called by the builders before save.
+	OperatorCodeValidator func(string) error
 	// UserCodeValidator is a validator for the "user_code" field. It is called by the builders before save.
 	UserCodeValidator func(string) error
 	// UsernameValidator is a validator for the "username" field. It is called by the builders before save.
@@ -186,9 +188,9 @@ func ByDeletedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDeletedAt, opts...).ToFunc()
 }
 
-// ByOperatorID orders the results by the operator_id field.
-func ByOperatorID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldOperatorID, opts...).ToFunc()
+// ByOperatorCode orders the results by the operator_code field.
+func ByOperatorCode(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldOperatorCode, opts...).ToFunc()
 }
 
 // ByUserCode orders the results by the user_code field.

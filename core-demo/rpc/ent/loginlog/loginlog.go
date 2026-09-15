@@ -15,8 +15,8 @@ const (
 	Label = "login_log"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldOperatorID holds the string denoting the operator_id field in the database.
-	FieldOperatorID = "operator_id"
+	// FieldOperatorCode holds the string denoting the operator_code field in the database.
+	FieldOperatorCode = "operator_code"
 	// FieldUserID holds the string denoting the user_id field in the database.
 	FieldUserID = "user_id"
 	// FieldUsername holds the string denoting the username field in the database.
@@ -49,7 +49,7 @@ const (
 // Columns holds all SQL columns for loginlog fields.
 var Columns = []string{
 	FieldID,
-	FieldOperatorID,
+	FieldOperatorCode,
 	FieldUserID,
 	FieldUsername,
 	FieldLoginResult,
@@ -78,6 +78,8 @@ func ValidColumn(column string) bool {
 var (
 	Hooks        [1]ent.Hook
 	Interceptors [1]ent.Interceptor
+	// OperatorCodeValidator is a validator for the "operator_code" field. It is called by the builders before save.
+	OperatorCodeValidator func(string) error
 	// UsernameValidator is a validator for the "username" field. It is called by the builders before save.
 	UsernameValidator func(string) error
 	// FailureReasonValidator is a validator for the "failure_reason" field. It is called by the builders before save.
@@ -96,9 +98,9 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
 }
 
-// ByOperatorID orders the results by the operator_id field.
-func ByOperatorID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldOperatorID, opts...).ToFunc()
+// ByOperatorCode orders the results by the operator_code field.
+func ByOperatorCode(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldOperatorCode, opts...).ToFunc()
 }
 
 // ByUserID orders the results by the user_id field.

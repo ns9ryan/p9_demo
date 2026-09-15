@@ -12,7 +12,6 @@ func TestPreviewWriteDenied(t *testing.T) {
 	allow := [][2]string{
 		{http.MethodGet, "/admin/user/info"},
 		{http.MethodGet, "/admin/user/perm"},
-		{http.MethodGet, "/admin/operator/self"},
 		{http.MethodGet, "/admin/menu/role"},
 		{http.MethodHead, "/admin/user/detail"},
 		{http.MethodOptions, "/admin/role/detail"},
@@ -22,6 +21,8 @@ func TestPreviewWriteDenied(t *testing.T) {
 		{http.MethodPost, "/admin/api/list"},
 		{http.MethodPost, "/admin/authority/menu/role"},
 		{http.MethodPost, "/admin/authority/api/role"},
+		{http.MethodPost, "/admin/menu/update"},
+		{http.MethodPost, "/admin/authority/menu/update"},
 	}
 	deny := [][2]string{
 		{http.MethodPost, "/admin/user/create"},
@@ -33,10 +34,7 @@ func TestPreviewWriteDenied(t *testing.T) {
 		{http.MethodPost, "/admin/user/ipWhitelist"},
 		{http.MethodPost, "/admin/logout"},
 		{http.MethodPost, "/admin/logout/all"},
-		{http.MethodPost, "/admin/operator/update"},
 		{http.MethodPost, "/admin/role/create"},
-		{http.MethodPost, "/admin/menu/update"},
-		{http.MethodPost, "/admin/authority/menu/update"},
 		{http.MethodPost, "/admin/authority/api/update"},
 		{http.MethodPut, "/admin/user/list"},
 		{http.MethodDelete, "/admin/user/info"},

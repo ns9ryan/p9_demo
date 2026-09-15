@@ -17,7 +17,7 @@ type SoftDeleteMixin struct{ mixin.Schema }
 
 func (SoftDeleteMixin) Fields() []ent.Field {
 	return []ent.Field{
-		field.Time("deleted_at").Optional().Nillable(),
+		field.Time("deleted_at").Optional().Nillable().Comment("Deleted At | 删除时间"),
 	}
 }
 

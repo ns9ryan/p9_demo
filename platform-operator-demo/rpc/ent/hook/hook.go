@@ -21,6 +21,18 @@ func (f OperatorFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, er
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.OperatorMutation", m)
 }
 
+// The OperatorAdminFunc type is an adapter to allow the use of ordinary
+// function as OperatorAdmin mutator.
+type OperatorAdminFunc func(context.Context, *ent.OperatorAdminMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f OperatorAdminFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.OperatorAdminMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.OperatorAdminMutation", m)
+}
+
 // The OperatorAgentLineAllocationFunc type is an adapter to allow the use of ordinary
 // function as OperatorAgentLineAllocation mutator.
 type OperatorAgentLineAllocationFunc func(context.Context, *ent.OperatorAgentLineAllocationMutation) (ent.Value, error)

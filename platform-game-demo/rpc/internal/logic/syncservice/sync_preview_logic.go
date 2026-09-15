@@ -3,9 +3,9 @@ package syncservicelogic
 import (
 	"context"
 
-	pkgsync "oa.98ent.com/p9/platform-game/pkg/sync"
 	"oa.98ent.com/p9/platform-game/rpc/internal/constant"
 	"oa.98ent.com/p9/platform-game/rpc/internal/svc"
+	gs "oa.98ent.com/p9/platform-game/rpc/internal/synchro"
 	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -53,7 +53,7 @@ func (l *SyncPreviewLogic) SyncPreview(in *platform_game.SyncPreviewRequest) (*p
 
 	l.Infof("🔄 创建同步服务实例...")
 	// 创建同步服务实例
-	syncService := pkgsync.NewSyncServiceImpl(l.svcCtx.DB, grpcServerAddr)
+	syncService := gs.NewSyncServiceImpl(l.svcCtx.DAOManager, grpcServerAddr)
 
 	l.Infof("🔗 正在连接 game-vendor-sync 服务...")
 	l.Infof("   目标地址: %s", grpcServerAddr)

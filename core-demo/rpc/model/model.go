@@ -19,23 +19,10 @@ const (
 	RoleSuperAdmin = "super_admin"
 )
 
-type Operator struct {
-	ID                     int64      `json:"id"`
-	OperatorCode           string     `json:"operator_code"`
-	TimezoneCode           string     `json:"timezone_code"`
-	SettlementCurrencyCode string     `json:"settlement_currency_code"`
-	Status                 int16      `json:"status"`
-	RequiredConfigVersion  int        `json:"required_config_version"`
-	CompletedConfigVersion int        `json:"completed_config_version"`
-	ConfigCompletedAt      *time.Time `json:"config_completed_at,omitempty"`
-	CreatedAt              time.Time  `json:"created_at"`
-	UpdatedAt              time.Time  `json:"updated_at"`
-}
-
 type User struct {
 	ID                 int64      `json:"id"`
 	UserCode           string     `json:"user_code"`
-	OperatorID         *int64     `json:"operator_id,omitempty"`
+	OperatorCode       *string    `json:"operator_code,omitempty"`
 	Username           string     `json:"username"`
 	PasswordHash       string     `json:"-"`
 	Salt               string     `json:"-"`
@@ -54,17 +41,17 @@ type User struct {
 }
 
 type Role struct {
-	ID          int64      `json:"id"`
-	OperatorID  *int64     `json:"operator_id,omitempty"`
-	RoleCode    string     `json:"role_code"`
-	RoleName    string     `json:"role_name"`
-	Description *string    `json:"description,omitempty"`
-	Status      int16      `json:"status"`
-	IsSystem    bool       `json:"is_system"`
-	SortNo      int        `json:"sort_no"`
-	CreatedAt   time.Time  `json:"created_at"`
-	UpdatedAt   time.Time  `json:"updated_at"`
-	DeletedAt   *time.Time `json:"deleted_at,omitempty"`
+	ID           int64      `json:"id"`
+	OperatorCode *string    `json:"operator_code,omitempty"`
+	RoleCode     string     `json:"role_code"`
+	RoleName     string     `json:"role_name"`
+	Description  *string    `json:"description,omitempty"`
+	Status       int16      `json:"status"`
+	IsSystem     bool       `json:"is_system"`
+	SortNo       int        `json:"sort_no"`
+	CreatedAt    time.Time  `json:"created_at"`
+	UpdatedAt    time.Time  `json:"updated_at"`
+	DeletedAt    *time.Time `json:"deleted_at,omitempty"`
 }
 
 type UserRole struct {
@@ -126,6 +113,7 @@ type I18nLang struct {
 	ID        int64     `json:"id"`
 	Lang      string    `json:"lang"`
 	Name      string    `json:"name"`
+	I18nKey   string    `json:"i18n_key"`
 	Disabled  int16     `json:"disabled"`
 	SortNo    int       `json:"sort_no"`
 	CreatedAt time.Time `json:"created_at"`
@@ -135,7 +123,7 @@ type I18nLang struct {
 type LoginLog struct {
 	ID            int64     `json:"id"`
 	UserID        *int64    `json:"user_id,omitempty"`
-	OperatorID    *int64    `json:"operator_id,omitempty"`
+	OperatorCode  *string   `json:"operator_code,omitempty"`
 	Username      string    `json:"username"`
 	LoginResult   int16     `json:"login_result"`
 	FailureReason *string   `json:"failure_reason,omitempty"`
@@ -148,7 +136,7 @@ type LoginLog struct {
 type AdminActionLog struct {
 	ID             int64     `json:"id"`
 	UserID         int64     `json:"user_id"`
-	OperatorID     *int64    `json:"operator_id,omitempty"`
+	OperatorCode   *string   `json:"operator_code,omitempty"`
 	Username       string    `json:"username"`
 	RequestMethod  string    `json:"request_method"`
 	RequestPath    string    `json:"request_path"`
@@ -166,7 +154,7 @@ type AdminActionLog struct {
 type ErrorLog struct {
 	ID             int64     `json:"id"`
 	UserID         *int64    `json:"user_id,omitempty"`
-	OperatorID     *int64    `json:"operator_id,omitempty"`
+	OperatorCode   *string   `json:"operator_code,omitempty"`
 	Username       string    `json:"username"`
 	RequestMethod  string    `json:"request_method"`
 	RequestPath    string    `json:"request_path"`

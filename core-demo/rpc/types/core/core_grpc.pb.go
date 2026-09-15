@@ -60,8 +60,6 @@ const (
 	Core_UpdateMenu_FullMethodName            = "/core.Core/updateMenu"
 	Core_DeleteMenu_FullMethodName            = "/core.Core/deleteMenu"
 	Core_GetMenuList_FullMethodName           = "/core.Core/getMenuList"
-	Core_GetOperator_FullMethodName           = "/core.Core/getOperator"
-	Core_UpdateOperator_FullMethodName        = "/core.Core/updateOperator"
 	Core_IssuePreviewToken_FullMethodName     = "/core.Core/issuePreviewToken"
 	Core_CreateRole_FullMethodName            = "/core.Core/createRole"
 	Core_UpdateRole_FullMethodName            = "/core.Core/updateRole"
@@ -171,11 +169,6 @@ type CoreClient interface {
 	DeleteMenu(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*Empty, error)
 	// group: menu
 	GetMenuList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*MenuListResp, error)
-	// Operator management
-	// group: operator
-	GetOperator(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*OperatorInfo, error)
-	// group: operator
-	UpdateOperator(ctx context.Context, in *UpdateOperatorReq, opts ...grpc.CallOption) (*Empty, error)
 	// group: operator
 	IssuePreviewToken(ctx context.Context, in *IssuePreviewTokenReq, opts ...grpc.CallOption) (*IssuePreviewTokenResp, error)
 	// Role management
@@ -632,26 +625,6 @@ func (c *coreClient) GetMenuList(ctx context.Context, in *Empty, opts ...grpc.Ca
 	return out, nil
 }
 
-func (c *coreClient) GetOperator(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*OperatorInfo, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(OperatorInfo)
-	err := c.cc.Invoke(ctx, Core_GetOperator_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *coreClient) UpdateOperator(ctx context.Context, in *UpdateOperatorReq, opts ...grpc.CallOption) (*Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Empty)
-	err := c.cc.Invoke(ctx, Core_UpdateOperator_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *coreClient) IssuePreviewToken(ctx context.Context, in *IssuePreviewTokenReq, opts ...grpc.CallOption) (*IssuePreviewTokenResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(IssuePreviewTokenResp)
@@ -912,11 +885,6 @@ type CoreServer interface {
 	DeleteMenu(context.Context, *IDsReq) (*Empty, error)
 	// group: menu
 	GetMenuList(context.Context, *Empty) (*MenuListResp, error)
-	// Operator management
-	// group: operator
-	GetOperator(context.Context, *Empty) (*OperatorInfo, error)
-	// group: operator
-	UpdateOperator(context.Context, *UpdateOperatorReq) (*Empty, error)
 	// group: operator
 	IssuePreviewToken(context.Context, *IssuePreviewTokenReq) (*IssuePreviewTokenResp, error)
 	// Role management
@@ -1085,12 +1053,6 @@ func (UnimplementedCoreServer) DeleteMenu(context.Context, *IDsReq) (*Empty, err
 }
 func (UnimplementedCoreServer) GetMenuList(context.Context, *Empty) (*MenuListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMenuList not implemented")
-}
-func (UnimplementedCoreServer) GetOperator(context.Context, *Empty) (*OperatorInfo, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetOperator not implemented")
-}
-func (UnimplementedCoreServer) UpdateOperator(context.Context, *UpdateOperatorReq) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateOperator not implemented")
 }
 func (UnimplementedCoreServer) IssuePreviewToken(context.Context, *IssuePreviewTokenReq) (*IssuePreviewTokenResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IssuePreviewToken not implemented")
@@ -1902,42 +1864,6 @@ func _Core_GetMenuList_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Core_GetOperator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(CoreServer).GetOperator(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Core_GetOperator_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CoreServer).GetOperator(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Core_UpdateOperator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateOperatorReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(CoreServer).UpdateOperator(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Core_UpdateOperator_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CoreServer).UpdateOperator(ctx, req.(*UpdateOperatorReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Core_IssuePreviewToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(IssuePreviewTokenReq)
 	if err := dec(in); err != nil {
@@ -2414,14 +2340,6 @@ var Core_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getMenuList",
 			Handler:    _Core_GetMenuList_Handler,
-		},
-		{
-			MethodName: "getOperator",
-			Handler:    _Core_GetOperator_Handler,
-		},
-		{
-			MethodName: "updateOperator",
-			Handler:    _Core_UpdateOperator_Handler,
 		},
 		{
 			MethodName: "issuePreviewToken",

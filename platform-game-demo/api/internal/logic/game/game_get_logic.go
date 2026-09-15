@@ -11,7 +11,7 @@ import (
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
 	"oa.98ent.com/p9/platform-game/common/constant"
-	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
+	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -38,7 +38,7 @@ func (l *GameGetLogic) GameGet(req *types.GameGetReq) (resp *types.GameResp, err
 		return nil, fmt.Errorf("gRPC client not available")
 	}
 
-	grpcResp, err := l.svcCtx.GrpcClient.GetGameServiceClient().GetGame(l.ctx, &platformgame.GetGameRequest{
+	grpcResp, err := l.svcCtx.GrpcClient.GetGameServiceClient().GetGame(l.ctx, &platform_game.GetGameRequest{
 		Id: req.ID,
 	})
 	if err != nil {
@@ -57,7 +57,7 @@ func (l *GameGetLogic) GameGet(req *types.GameGetReq) (resp *types.GameResp, err
 	}
 
 	// 转换 proto 消息为 API 响应类型
-	resp = logic.GameProtoToResponse(grpcResp.Data)
+	resp = logic.GameProtoToResponse(l.ctx, grpcResp.Data)
 
 	l.Infof("[API GameGet] query success: id=%d, source_id=%d", req.ID, grpcResp.Data.SourceId)
 	return resp, nil

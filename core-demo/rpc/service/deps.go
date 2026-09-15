@@ -12,7 +12,6 @@ import (
 	"oa.98ent.com/p9/core/common/jwt"
 	"oa.98ent.com/p9/core/common/utils"
 	"oa.98ent.com/p9/core/common/xerr"
-	"oa.98ent.com/p9/core/rpc/casbinx"
 	"oa.98ent.com/p9/core/rpc/ent"
 	"oa.98ent.com/p9/core/rpc/ent/role"
 	"oa.98ent.com/p9/core/rpc/ent/user"
@@ -73,7 +72,7 @@ func (d *Deps) DomainFromClaims(c *ctxdata.Claims) string {
 	if c == nil {
 		return ""
 	}
-	return casbinx.DomainID(c.OperatorID)
+	return c.OperatorCode
 }
 
 func (d *Deps) RequireMode(want string) error {
@@ -207,19 +206,14 @@ func (d *Deps) SignTokenPair(ctx context.Context, u *model.User, roleCodes []str
 }
 
 func (d *Deps) tokenClaims(ctx context.Context, u *model.User, roleCodes []string) jwt.Claims {
-	oid := int64(0)
 	code := ""
-	if u.OperatorID != nil {
-		oid = *u.OperatorID
-		if op, err := d.Client.Operator.Get(ctx, oid); err == nil {
-			code = op.OperatorCode
-		}
+	if u.OperatorCode != nil {
+		code = *u.OperatorCode
 	}
 	return jwt.Claims{
 		UserID:       u.ID,
 		UserCode:     u.UserCode,
 		Username:     u.Username,
-		OperatorID:   oid,
 		OperatorCode: code,
 		RoleCodes:    roleCodes,
 		Salt:         u.Salt,
@@ -234,16 +228,9 @@ func (d *Deps) AllAPIPolicies(ctx context.Context, domain string) ([][]string, e
 	}
 	var policies [][]string
 	for _, a := range apis {
-		if d.Mode == ModeOff && isOperatorAPI(a.Path) {
-			continue
-		}
 		policies = append(policies, []string{RoleSuperAdmin, domain, a.Path, a.Method})
 	}
 	return policies, nil
-}
-
-func isOperatorAPI(path string) bool {
-	return strings.HasSuffix(path, "/operator/self") || strings.HasSuffix(path, "/operator/update")
 }
 
 func (d *Deps) ReplaceRoleAPIPolicies(roleCode, domain string, policies [][]string) error {

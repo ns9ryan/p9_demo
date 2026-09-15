@@ -2,8 +2,10 @@ package gamecurrencyservicelogic
 
 import (
 	"context"
+	"fmt"
 
 	"oa.98ent.com/p9/platform-game/rpc/ent"
+
 	"oa.98ent.com/p9/platform-game/rpc/internal/constant"
 	"oa.98ent.com/p9/platform-game/rpc/internal/logic"
 	"oa.98ent.com/p9/platform-game/rpc/internal/svc"
@@ -30,18 +32,16 @@ func NewGetGameCurrencyLogic(ctx context.Context, svcCtx *svc.ServiceContext) *G
 func (l *GetGameCurrencyLogic) GetGameCurrency(in *platformgame.GetGameCurrencyRequest) (*platformgame.GetGameCurrencyResp, error) {
 	l.Infof("[RPC GetGameCurrency] received request: id=%d", in.Id)
 
-	if l.svcCtx == nil || l.svcCtx.DB == nil {
-		l.Errorf("[RPC GetGameCurrency] Database not available")
+	if l.svcCtx == nil || l.svcCtx.DAOManager == nil {
+		l.Errorf("[RPC GetGameCurrency] DAO Manager not available")
 		return &platformgame.GetGameCurrencyResp{
 			Code:    constant.CodeInternalError,
-			Message: "Database not available",
+			Message: "DAO Manager not available",
 		}, nil
 	}
 
-	currency := &ent.GameCurrency{}
-	if err := l.svcCtx.DB.WithContext(l.ctx).
-		Where("id = ? AND deleted_at IS NULL", in.Id).
-		First(currency).Error; err != nil {
+	currency, err := l.svcCtx.DAOManager.GameCurrency.GetGameCurrencyByID(l.ctx, in.Id)
+	if err != nil {
 		l.Errorf("[RPC GetGameCurrency] query failed: %v", err)
 		return &platformgame.GetGameCurrencyResp{
 			Code:    constant.CodeInternalError,
@@ -49,9 +49,16 @@ func (l *GetGameCurrencyLogic) GetGameCurrency(in *platformgame.GetGameCurrencyR
 		}, nil
 	}
 
-	sysCurrencyMap := GetSysCurrencyMap(l.ctx, l.svcCtx)
+	sysCurrencyMap, err := l.svcCtx.DAOManager.Currency.GetCurrencyMap(l.ctx)
+	if err != nil {
+		l.Errorf("[RPC GetGameCurrency] query system currency failed: %v", err)
+		return &platformgame.GetGameCurrencyResp{
+			Code:    constant.CodeInternalError,
+			Message: "failed to get system currency: " + err.Error(),
+		}, nil
+	}
 
-	gameRecord, err := GetGameRecord(l.ctx, l.svcCtx, currency.GameId)
+	gameRecord, err := GetGameRecord(l.ctx, l.svcCtx, currency.GameID)
 	if err != nil {
 		l.Errorf("[RPC GetGameCurrency] query game failed: %v", err)
 		return &platformgame.GetGameCurrencyResp{
@@ -61,7 +68,7 @@ func (l *GetGameCurrencyLogic) GetGameCurrency(in *platformgame.GetGameCurrencyR
 	}
 
 	l.Infof("[RPC GetGameCurrency] query result: id=%d, game_id=%d, currency_id=%d, status=%d, deleted_at=%v",
-		currency.Id, currency.GameId, currency.CurrencyId, currency.Status, currency.DeletedAt)
+		currency.ID, currency.GameID, currency.CurrencyID, currency.Status, currency.DeletedAt)
 
 	return &platformgame.GetGameCurrencyResp{
 		Code:    constant.CodeSuccess,
@@ -70,33 +77,9 @@ func (l *GetGameCurrencyLogic) GetGameCurrency(in *platformgame.GetGameCurrencyR
 	}, nil
 }
 
-func GetSysCurrencyMap(ctx context.Context, svcCtx *svc.ServiceContext) map[int64]interface{} {
-	sysCurrencyRecords := []*ent.SysCurrency{}
-	err := svcCtx.DB.WithContext(ctx).Model(&ent.SysCurrency{}).
-		Select("id", "currency_code", "name_i18n").
-		Find(&sysCurrencyRecords).Error
-	if err != nil {
-		// handle error appropriately, e.g., log and return an empty map
-		logx.Errorf("[RPC GetGameCurrencyList] query system currency failed: %v", err)
-		return map[int64]interface{}{}
-	}
-	currencyMap := make(map[int64]interface{})
-	for _, sc := range sysCurrencyRecords {
-		currencyMap[sc.Id] = map[string]string{
-			"currency_code": sc.CurrencyCode,
-			"name_i18n":     sc.NameI18n,
-		}
-	}
-	return currencyMap
-}
-
 func GetGameRecord(ctx context.Context, svcCtx *svc.ServiceContext, gameId int64) (*ent.Game, error) {
-	gameRecord := &ent.Game{}
-	if err := svcCtx.DB.WithContext(ctx).
-		Select("game_code", "name_i18n").
-		Where("source_id = ? AND deleted_at IS NULL", gameId).
-		First(gameRecord).Error; err != nil {
-		return &ent.Game{}, err
+	if svcCtx == nil || svcCtx.DAOManager == nil {
+		return nil, fmt.Errorf("DAO Manager not available")
 	}
-	return gameRecord, nil
+	return svcCtx.DAOManager.Game.GetGameByID(ctx, gameId)
 }

@@ -71,3 +71,16 @@ const (
 	SyncScopeGame         = "GAME"
 	SyncScopeGameCurrency = "CURRENCY"
 )
+
+const (
+	CategoryBiz     = "game.category"
+	ProviderBiz     = "game.provider"
+	ChannelBiz      = "game.channel"
+	GameCurrencyBiz = "game.currency"
+)
+
+const (
+	SyncActionCreate = "create"
+	SyncActionUpdate = "update"
+	SyncActionNoop   = "noop"
+)

@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operator"
+	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoradmin"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoragentlineallocation"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatordomain"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatorlanguageallocation"
@@ -238,6 +239,21 @@ func (_u *OperatorUpdate) AddDomains(v ...*OperatorDomain) *OperatorUpdate {
 	return _u.AddDomainIDs(ids...)
 }
 
+// AddAdminIDs adds the "admins" edge to the OperatorAdmin entity by IDs.
+func (_u *OperatorUpdate) AddAdminIDs(ids ...int64) *OperatorUpdate {
+	_u.mutation.AddAdminIDs(ids...)
+	return _u
+}
+
+// AddAdmins adds the "admins" edges to the OperatorAdmin entity.
+func (_u *OperatorUpdate) AddAdmins(v ...*OperatorAdmin) *OperatorUpdate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddAdminIDs(ids...)
+}
+
 // AddLanguageAllocationIDs adds the "language_allocations" edge to the OperatorLanguageAllocation entity by IDs.
 func (_u *OperatorUpdate) AddLanguageAllocationIDs(ids ...int64) *OperatorUpdate {
 	_u.mutation.AddLanguageAllocationIDs(ids...)
@@ -313,6 +329,27 @@ func (_u *OperatorUpdate) RemoveDomains(v ...*OperatorDomain) *OperatorUpdate {
 		ids[i] = v[i].ID
 	}
 	return _u.RemoveDomainIDs(ids...)
+}
+
+// ClearAdmins clears all "admins" edges to the OperatorAdmin entity.
+func (_u *OperatorUpdate) ClearAdmins() *OperatorUpdate {
+	_u.mutation.ClearAdmins()
+	return _u
+}
+
+// RemoveAdminIDs removes the "admins" edge to OperatorAdmin entities by IDs.
+func (_u *OperatorUpdate) RemoveAdminIDs(ids ...int64) *OperatorUpdate {
+	_u.mutation.RemoveAdminIDs(ids...)
+	return _u
+}
+
+// RemoveAdmins removes "admins" edges to OperatorAdmin entities.
+func (_u *OperatorUpdate) RemoveAdmins(v ...*OperatorAdmin) *OperatorUpdate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveAdminIDs(ids...)
 }
 
 // ClearLanguageAllocations clears all "language_allocations" edges to the OperatorLanguageAllocation entity.
@@ -586,6 +623,51 @@ func (_u *OperatorUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(operatordomain.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.AdminsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   operator.AdminsTable,
+			Columns: []string{operator.AdminsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(operatoradmin.FieldID, field.TypeInt64),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedAdminsIDs(); len(nodes) > 0 && !_u.mutation.AdminsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   operator.AdminsTable,
+			Columns: []string{operator.AdminsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(operatoradmin.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.AdminsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   operator.AdminsTable,
+			Columns: []string{operator.AdminsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(operatoradmin.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -953,6 +1035,21 @@ func (_u *OperatorUpdateOne) AddDomains(v ...*OperatorDomain) *OperatorUpdateOne
 	return _u.AddDomainIDs(ids...)
 }
 
+// AddAdminIDs adds the "admins" edge to the OperatorAdmin entity by IDs.
+func (_u *OperatorUpdateOne) AddAdminIDs(ids ...int64) *OperatorUpdateOne {
+	_u.mutation.AddAdminIDs(ids...)
+	return _u
+}
+
+// AddAdmins adds the "admins" edges to the OperatorAdmin entity.
+func (_u *OperatorUpdateOne) AddAdmins(v ...*OperatorAdmin) *OperatorUpdateOne {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddAdminIDs(ids...)
+}
+
 // AddLanguageAllocationIDs adds the "language_allocations" edge to the OperatorLanguageAllocation entity by IDs.
 func (_u *OperatorUpdateOne) AddLanguageAllocationIDs(ids ...int64) *OperatorUpdateOne {
 	_u.mutation.AddLanguageAllocationIDs(ids...)
@@ -1028,6 +1125,27 @@ func (_u *OperatorUpdateOne) RemoveDomains(v ...*OperatorDomain) *OperatorUpdate
 		ids[i] = v[i].ID
 	}
 	return _u.RemoveDomainIDs(ids...)
+}
+
+// ClearAdmins clears all "admins" edges to the OperatorAdmin entity.
+func (_u *OperatorUpdateOne) ClearAdmins() *OperatorUpdateOne {
+	_u.mutation.ClearAdmins()
+	return _u
+}
+
+// RemoveAdminIDs removes the "admins" edge to OperatorAdmin entities by IDs.
+func (_u *OperatorUpdateOne) RemoveAdminIDs(ids ...int64) *OperatorUpdateOne {
+	_u.mutation.RemoveAdminIDs(ids...)
+	return _u
+}
+
+// RemoveAdmins removes "admins" edges to OperatorAdmin entities.
+func (_u *OperatorUpdateOne) RemoveAdmins(v ...*OperatorAdmin) *OperatorUpdateOne {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveAdminIDs(ids...)
 }
 
 // ClearLanguageAllocations clears all "language_allocations" edges to the OperatorLanguageAllocation entity.
@@ -1331,6 +1449,51 @@ func (_u *OperatorUpdateOne) sqlSave(ctx context.Context) (_node *Operator, err 
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(operatordomain.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.AdminsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   operator.AdminsTable,
+			Columns: []string{operator.AdminsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(operatoradmin.FieldID, field.TypeInt64),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedAdminsIDs(); len(nodes) > 0 && !_u.mutation.AdminsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   operator.AdminsTable,
+			Columns: []string{operator.AdminsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(operatoradmin.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.AdminsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   operator.AdminsTable,
+			Columns: []string{operator.AdminsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(operatoradmin.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

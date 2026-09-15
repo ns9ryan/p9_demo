@@ -21,16 +21,16 @@ type LoginLogCreate struct {
 	hooks    []Hook
 }
 
-// SetOperatorID sets the "operator_id" field.
-func (_c *LoginLogCreate) SetOperatorID(v int64) *LoginLogCreate {
-	_c.mutation.SetOperatorID(v)
+// SetOperatorCode sets the "operator_code" field.
+func (_c *LoginLogCreate) SetOperatorCode(v string) *LoginLogCreate {
+	_c.mutation.SetOperatorCode(v)
 	return _c
 }
 
-// SetNillableOperatorID sets the "operator_id" field if the given value is not nil.
-func (_c *LoginLogCreate) SetNillableOperatorID(v *int64) *LoginLogCreate {
+// SetNillableOperatorCode sets the "operator_code" field if the given value is not nil.
+func (_c *LoginLogCreate) SetNillableOperatorCode(v *string) *LoginLogCreate {
 	if v != nil {
-		_c.SetOperatorID(*v)
+		_c.SetOperatorCode(*v)
 	}
 	return _c
 }
@@ -183,6 +183,11 @@ func (_c *LoginLogCreate) defaults() error {
 
 // check runs all checks and user-defined validators on the builder.
 func (_c *LoginLogCreate) check() error {
+	if v, ok := _c.mutation.OperatorCode(); ok {
+		if err := loginlog.OperatorCodeValidator(v); err != nil {
+			return &ValidationError{Name: "operator_code", err: fmt.Errorf(`ent: validator failed for field "LoginLog.operator_code": %w`, err)}
+		}
+	}
 	if _, ok := _c.mutation.Username(); !ok {
 		return &ValidationError{Name: "username", err: errors.New(`ent: missing required field "LoginLog.username"`)}
 	}
@@ -242,9 +247,9 @@ func (_c *LoginLogCreate) createSpec() (*LoginLog, *sqlgraph.CreateSpec) {
 		_node.ID = id
 		_spec.ID.Value = id
 	}
-	if value, ok := _c.mutation.OperatorID(); ok {
-		_spec.SetField(loginlog.FieldOperatorID, field.TypeInt64, value)
-		_node.OperatorID = &value
+	if value, ok := _c.mutation.OperatorCode(); ok {
+		_spec.SetField(loginlog.FieldOperatorCode, field.TypeString, value)
+		_node.OperatorCode = &value
 	}
 	if value, ok := _c.mutation.Username(); ok {
 		_spec.SetField(loginlog.FieldUsername, field.TypeString, value)

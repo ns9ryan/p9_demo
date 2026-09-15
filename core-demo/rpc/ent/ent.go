@@ -20,7 +20,6 @@ import (
 	"oa.98ent.com/p9/core/rpc/ent/i18nlang"
 	"oa.98ent.com/p9/core/rpc/ent/loginlog"
 	"oa.98ent.com/p9/core/rpc/ent/menu"
-	"oa.98ent.com/p9/core/rpc/ent/operator"
 	"oa.98ent.com/p9/core/rpc/ent/role"
 	"oa.98ent.com/p9/core/rpc/ent/user"
 )
@@ -91,7 +90,6 @@ func checkColumn(t, c string) error {
 			i18nlang.Table:       i18nlang.ValidColumn,
 			loginlog.Table:       loginlog.ValidColumn,
 			menu.Table:           menu.ValidColumn,
-			operator.Table:       operator.ValidColumn,
 			role.Table:           role.ValidColumn,
 			user.Table:           user.ValidColumn,
 		})

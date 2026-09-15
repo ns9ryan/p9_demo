@@ -8,6 +8,7 @@ import "types/platform_operator_ping.proto";
 import "types/platform_operator_operator.proto";
 import "types/platform_operator_profile.proto";
 import "types/platform_operator_domain.proto";
+import "types/platform_operator_admin.proto";
 import "types/platform_operator_basic_resource_allocation.proto";
 import "types/platform_operator_language_allocation.proto";
 import "types/platform_operator_region_allocation.proto";
@@ -71,6 +72,27 @@ service OperatorDomainService {
 
   // 删除分站域名
   rpc Delete(platform_operator_domain.DeleteDomainRequest) returns (platform_operator_domain.DeleteDomainResponse);
+}
+
+// 分站管理员服务
+service OperatorAdminService {
+  // 创建分站管理员
+  rpc Create(platform_operator_admin.CreateAdminRequest) returns (platform_operator_admin.CreateAdminResponse);
+
+  // 获取分站管理员列表
+  rpc List(platform_operator_admin.ListAdminsRequest) returns (platform_operator_admin.ListAdminsResponse);
+
+  // 重置分站管理员密码
+  rpc ResetPassword(platform_operator_admin.ResetAdminPasswordRequest) returns (platform_operator_admin.ResetAdminPasswordResponse);
+
+  // 更新分站管理员
+  rpc Update(platform_operator_admin.UpdateAdminRequest) returns (platform_operator_admin.UpdateAdminResponse);
+
+  // 更新分站管理员状态
+  rpc UpdateStatus(platform_operator_admin.UpdateAdminStatusRequest) returns (platform_operator_admin.UpdateAdminStatusResponse);
+
+  // 按分站删除管理员
+  rpc DeleteByOperatorId(platform_operator_admin.DeleteAdminsByOperatorIdRequest) returns (platform_operator_admin.DeleteAdminsByOperatorIdResponse);
 }
 
 // 分站基础资源分配服务

@@ -55,7 +55,7 @@ func TestUpdateI18nLangReqKeepsZeroFlags(t *testing.T) {
 
 func TestUpdateI18nLangReqOmitsUnset(t *testing.T) {
 	got := UpdateI18nLangReq(&types.UpdateI18nLangReq{Id: 1})
-	if got.Lang != nil || got.Name != nil || got.Disabled != nil || got.SortNo != nil {
+	if got.Lang != nil || got.Name != nil || got.I18NKey != nil || got.Disabled != nil || got.SortNo != nil {
 		t.Fatalf("expected omitted fields to stay nil, got %+v", got)
 	}
 }
@@ -138,6 +138,48 @@ func TestMenuInfoTranslatesTitleFromDict(t *testing.T) {
 	})
 	if miss.TransTitle != "custom" {
 		t.Fatalf("passthrough=%q", miss.TransTitle)
+	}
+}
+
+func TestI18nLangInfoTranslatesNameFromDict(t *testing.T) {
+	i18n.InvalidateAll()
+	t.Cleanup(func() {
+		i18n.SetDictLoader(nil)
+		i18n.InvalidateAll()
+	})
+	i18n.SetDictLoader(func(_ context.Context, code, group, lang string) (map[string]string, error) {
+		if group != i18n.GroupLang || lang != i18n.LangZH {
+			return map[string]string{}, nil
+		}
+		if code == i18n.CodeOperator {
+			return map[string]string{"lang.zh-CN": "分站简体"}, nil
+		}
+		return map[string]string{"lang.zh-CN": "简体中文"}, nil
+	})
+	ctx := i18n.WithLang(context.Background(), i18n.LangZH)
+	got := I18nLangInfo(ctx, i18n.CodePlatform, &coreclient.I18NLangInfo{
+		Id: 1, Lang: i18n.LangZH, Name: "简体中文", I18NKey: "lang.zh-CN",
+	})
+	if got.Name != "简体中文" || got.I18nKey != "lang.zh-CN" || got.I18nName != "简体中文" {
+		t.Fatalf("got=%+v", got)
+	}
+	op := I18nLangInfo(ctx, i18n.CodeOperator, &coreclient.I18NLangInfo{
+		Id: 1, Lang: i18n.LangZH, Name: "简体中文", I18NKey: "lang.zh-CN",
+	})
+	if op.Name != "简体中文" || op.I18nName != "分站简体" {
+		t.Fatalf("operator name=%q i18n_name=%q", op.Name, op.I18nName)
+	}
+	fallback := I18nLangInfo(ctx, i18n.CodePlatform, &coreclient.I18NLangInfo{
+		Id: 2, Lang: "ja-JP", Name: "日本語", I18NKey: "lang.ja-JP",
+	})
+	if fallback.Name != "日本語" || fallback.I18nKey != "lang.ja-JP" || fallback.I18nName != "日本語" {
+		t.Fatalf("fallback=%+v", fallback)
+	}
+	emptyKey := I18nLangInfo(ctx, i18n.CodePlatform, &coreclient.I18NLangInfo{
+		Id: 3, Lang: "ko-KR", Name: "한국어",
+	})
+	if emptyKey.Name != "한국어" || emptyKey.I18nKey != "" || emptyKey.I18nName != "한국어" {
+		t.Fatalf("empty key=%+v", emptyKey)
 	}
 }
 

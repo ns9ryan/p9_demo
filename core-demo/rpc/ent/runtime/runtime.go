@@ -13,7 +13,6 @@ import (
 	"oa.98ent.com/p9/core/rpc/ent/i18nlang"
 	"oa.98ent.com/p9/core/rpc/ent/loginlog"
 	"oa.98ent.com/p9/core/rpc/ent/menu"
-	"oa.98ent.com/p9/core/rpc/ent/operator"
 	"oa.98ent.com/p9/core/rpc/ent/role"
 	"oa.98ent.com/p9/core/rpc/ent/schema"
 	"oa.98ent.com/p9/core/rpc/ent/user"
@@ -67,8 +66,14 @@ func init() {
 	adminactionlog.Hooks[0] = adminactionlogMixinHooks0[0]
 	adminactionlogMixinInters0 := adminactionlogMixin[0].Interceptors()
 	adminactionlog.Interceptors[0] = adminactionlogMixinInters0[0]
+	adminactionlogMixinFields0 := adminactionlogMixin[0].Fields()
+	_ = adminactionlogMixinFields0
 	adminactionlogFields := schema.AdminActionLog{}.Fields()
 	_ = adminactionlogFields
+	// adminactionlogDescOperatorCode is the schema descriptor for operator_code field.
+	adminactionlogDescOperatorCode := adminactionlogMixinFields0[0].Descriptor()
+	// adminactionlog.OperatorCodeValidator is a validator for the "operator_code" field. It is called by the builders before save.
+	adminactionlog.OperatorCodeValidator = adminactionlogDescOperatorCode.Validators[0].(func(string) error)
 	// adminactionlogDescRequestMethod is the schema descriptor for request_method field.
 	adminactionlogDescRequestMethod := adminactionlogFields[2].Descriptor()
 	// adminactionlog.RequestMethodValidator is a validator for the "request_method" field. It is called by the builders before save.
@@ -138,8 +143,14 @@ func init() {
 	errorlog.Hooks[0] = errorlogMixinHooks0[0]
 	errorlogMixinInters0 := errorlogMixin[0].Interceptors()
 	errorlog.Interceptors[0] = errorlogMixinInters0[0]
+	errorlogMixinFields0 := errorlogMixin[0].Fields()
+	_ = errorlogMixinFields0
 	errorlogFields := schema.ErrorLog{}.Fields()
 	_ = errorlogFields
+	// errorlogDescOperatorCode is the schema descriptor for operator_code field.
+	errorlogDescOperatorCode := errorlogMixinFields0[0].Descriptor()
+	// errorlog.OperatorCodeValidator is a validator for the "operator_code" field. It is called by the builders before save.
+	errorlog.OperatorCodeValidator = errorlogDescOperatorCode.Validators[0].(func(string) error)
 	// errorlogDescRequestMethod is the schema descriptor for request_method field.
 	errorlogDescRequestMethod := errorlogFields[2].Descriptor()
 	// errorlog.RequestMethodValidator is a validator for the "request_method" field. It is called by the builders before save.
@@ -226,12 +237,18 @@ func init() {
 	i18nlang.DefaultName = i18nlangDescName.Default.(string)
 	// i18nlang.NameValidator is a validator for the "name" field. It is called by the builders before save.
 	i18nlang.NameValidator = i18nlangDescName.Validators[0].(func(string) error)
+	// i18nlangDescI18nKey is the schema descriptor for i18n_key field.
+	i18nlangDescI18nKey := i18nlangFields[3].Descriptor()
+	// i18nlang.DefaultI18nKey holds the default value on creation for the i18n_key field.
+	i18nlang.DefaultI18nKey = i18nlangDescI18nKey.Default.(string)
+	// i18nlang.I18nKeyValidator is a validator for the "i18n_key" field. It is called by the builders before save.
+	i18nlang.I18nKeyValidator = i18nlangDescI18nKey.Validators[0].(func(string) error)
 	// i18nlangDescDisabled is the schema descriptor for disabled field.
-	i18nlangDescDisabled := i18nlangFields[3].Descriptor()
+	i18nlangDescDisabled := i18nlangFields[4].Descriptor()
 	// i18nlang.DefaultDisabled holds the default value on creation for the disabled field.
 	i18nlang.DefaultDisabled = i18nlangDescDisabled.Default.(int16)
 	// i18nlangDescSortNo is the schema descriptor for sort_no field.
-	i18nlangDescSortNo := i18nlangFields[4].Descriptor()
+	i18nlangDescSortNo := i18nlangFields[5].Descriptor()
 	// i18nlang.DefaultSortNo holds the default value on creation for the sort_no field.
 	i18nlang.DefaultSortNo = i18nlangDescSortNo.Default.(int)
 	loginlogMixin := schema.LoginLog{}.Mixin()
@@ -239,8 +256,14 @@ func init() {
 	loginlog.Hooks[0] = loginlogMixinHooks0[0]
 	loginlogMixinInters0 := loginlogMixin[0].Interceptors()
 	loginlog.Interceptors[0] = loginlogMixinInters0[0]
+	loginlogMixinFields0 := loginlogMixin[0].Fields()
+	_ = loginlogMixinFields0
 	loginlogFields := schema.LoginLog{}.Fields()
 	_ = loginlogFields
+	// loginlogDescOperatorCode is the schema descriptor for operator_code field.
+	loginlogDescOperatorCode := loginlogMixinFields0[0].Descriptor()
+	// loginlog.OperatorCodeValidator is a validator for the "operator_code" field. It is called by the builders before save.
+	loginlog.OperatorCodeValidator = loginlogDescOperatorCode.Validators[0].(func(string) error)
 	// loginlogDescUsername is the schema descriptor for username field.
 	loginlogDescUsername := loginlogFields[2].Descriptor()
 	// loginlog.UsernameValidator is a validator for the "username" field. It is called by the builders before save.
@@ -330,45 +353,6 @@ func init() {
 	menuDescDisabled := menuFields[12].Descriptor()
 	// menu.DefaultDisabled holds the default value on creation for the disabled field.
 	menu.DefaultDisabled = menuDescDisabled.Default.(int16)
-	operatorMixin := schema.Operator{}.Mixin()
-	operatorMixinFields0 := operatorMixin[0].Fields()
-	_ = operatorMixinFields0
-	operatorFields := schema.Operator{}.Fields()
-	_ = operatorFields
-	// operatorDescCreatedAt is the schema descriptor for created_at field.
-	operatorDescCreatedAt := operatorMixinFields0[0].Descriptor()
-	// operator.DefaultCreatedAt holds the default value on creation for the created_at field.
-	operator.DefaultCreatedAt = operatorDescCreatedAt.Default.(func() time.Time)
-	// operatorDescUpdatedAt is the schema descriptor for updated_at field.
-	operatorDescUpdatedAt := operatorMixinFields0[1].Descriptor()
-	// operator.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	operator.DefaultUpdatedAt = operatorDescUpdatedAt.Default.(func() time.Time)
-	// operator.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	operator.UpdateDefaultUpdatedAt = operatorDescUpdatedAt.UpdateDefault.(func() time.Time)
-	// operatorDescOperatorCode is the schema descriptor for operator_code field.
-	operatorDescOperatorCode := operatorFields[1].Descriptor()
-	// operator.OperatorCodeValidator is a validator for the "operator_code" field. It is called by the builders before save.
-	operator.OperatorCodeValidator = operatorDescOperatorCode.Validators[0].(func(string) error)
-	// operatorDescTimezoneCode is the schema descriptor for timezone_code field.
-	operatorDescTimezoneCode := operatorFields[2].Descriptor()
-	// operator.TimezoneCodeValidator is a validator for the "timezone_code" field. It is called by the builders before save.
-	operator.TimezoneCodeValidator = operatorDescTimezoneCode.Validators[0].(func(string) error)
-	// operatorDescSettlementCurrencyCode is the schema descriptor for settlement_currency_code field.
-	operatorDescSettlementCurrencyCode := operatorFields[3].Descriptor()
-	// operator.SettlementCurrencyCodeValidator is a validator for the "settlement_currency_code" field. It is called by the builders before save.
-	operator.SettlementCurrencyCodeValidator = operatorDescSettlementCurrencyCode.Validators[0].(func(string) error)
-	// operatorDescStatus is the schema descriptor for status field.
-	operatorDescStatus := operatorFields[4].Descriptor()
-	// operator.DefaultStatus holds the default value on creation for the status field.
-	operator.DefaultStatus = operatorDescStatus.Default.(int16)
-	// operatorDescRequiredConfigVersion is the schema descriptor for required_config_version field.
-	operatorDescRequiredConfigVersion := operatorFields[5].Descriptor()
-	// operator.DefaultRequiredConfigVersion holds the default value on creation for the required_config_version field.
-	operator.DefaultRequiredConfigVersion = operatorDescRequiredConfigVersion.Default.(int)
-	// operatorDescCompletedConfigVersion is the schema descriptor for completed_config_version field.
-	operatorDescCompletedConfigVersion := operatorFields[6].Descriptor()
-	// operator.DefaultCompletedConfigVersion holds the default value on creation for the completed_config_version field.
-	operator.DefaultCompletedConfigVersion = operatorDescCompletedConfigVersion.Default.(int)
 	roleMixin := schema.Role{}.Mixin()
 	roleMixinHooks1 := roleMixin[1].Hooks()
 	roleMixinHooks2 := roleMixin[2].Hooks()
@@ -380,6 +364,8 @@ func init() {
 	role.Interceptors[1] = roleMixinInters2[0]
 	roleMixinFields0 := roleMixin[0].Fields()
 	_ = roleMixinFields0
+	roleMixinFields2 := roleMixin[2].Fields()
+	_ = roleMixinFields2
 	roleFields := schema.Role{}.Fields()
 	_ = roleFields
 	// roleDescCreatedAt is the schema descriptor for created_at field.
@@ -392,6 +378,10 @@ func init() {
 	role.DefaultUpdatedAt = roleDescUpdatedAt.Default.(func() time.Time)
 	// role.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	role.UpdateDefaultUpdatedAt = roleDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// roleDescOperatorCode is the schema descriptor for operator_code field.
+	roleDescOperatorCode := roleMixinFields2[0].Descriptor()
+	// role.OperatorCodeValidator is a validator for the "operator_code" field. It is called by the builders before save.
+	role.OperatorCodeValidator = roleDescOperatorCode.Validators[0].(func(string) error)
 	// roleDescRoleCode is the schema descriptor for role_code field.
 	roleDescRoleCode := roleFields[1].Descriptor()
 	// role.RoleCodeValidator is a validator for the "role_code" field. It is called by the builders before save.
@@ -427,6 +417,8 @@ func init() {
 	user.Interceptors[1] = userMixinInters2[0]
 	userMixinFields0 := userMixin[0].Fields()
 	_ = userMixinFields0
+	userMixinFields2 := userMixin[2].Fields()
+	_ = userMixinFields2
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescCreatedAt is the schema descriptor for created_at field.
@@ -439,6 +431,10 @@ func init() {
 	user.DefaultUpdatedAt = userDescUpdatedAt.Default.(func() time.Time)
 	// user.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	user.UpdateDefaultUpdatedAt = userDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// userDescOperatorCode is the schema descriptor for operator_code field.
+	userDescOperatorCode := userMixinFields2[0].Descriptor()
+	// user.OperatorCodeValidator is a validator for the "operator_code" field. It is called by the builders before save.
+	user.OperatorCodeValidator = userDescOperatorCode.Validators[0].(func(string) error)
 	// userDescUserCode is the schema descriptor for user_code field.
 	userDescUserCode := userFields[1].Descriptor()
 	// user.UserCodeValidator is a validator for the "user_code" field. It is called by the builders before save.

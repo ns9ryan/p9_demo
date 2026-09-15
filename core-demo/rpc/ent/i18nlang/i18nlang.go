@@ -21,6 +21,8 @@ const (
 	FieldLang = "lang"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
+	// FieldI18nKey holds the string denoting the i18n_key field in the database.
+	FieldI18nKey = "i18n_key"
 	// FieldDisabled holds the string denoting the disabled field in the database.
 	FieldDisabled = "disabled"
 	// FieldSortNo holds the string denoting the sort_no field in the database.
@@ -36,6 +38,7 @@ var Columns = []string{
 	FieldUpdatedAt,
 	FieldLang,
 	FieldName,
+	FieldI18nKey,
 	FieldDisabled,
 	FieldSortNo,
 }
@@ -63,6 +66,10 @@ var (
 	DefaultName string
 	// NameValidator is a validator for the "name" field. It is called by the builders before save.
 	NameValidator func(string) error
+	// DefaultI18nKey holds the default value on creation for the "i18n_key" field.
+	DefaultI18nKey string
+	// I18nKeyValidator is a validator for the "i18n_key" field. It is called by the builders before save.
+	I18nKeyValidator func(string) error
 	// DefaultDisabled holds the default value on creation for the "disabled" field.
 	DefaultDisabled int16
 	// DefaultSortNo holds the default value on creation for the "sort_no" field.
@@ -95,6 +102,11 @@ func ByLang(opts ...sql.OrderTermOption) OrderOption {
 // ByName orders the results by the name field.
 func ByName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldName, opts...).ToFunc()
+}
+
+// ByI18nKey orders the results by the i18n_key field.
+func ByI18nKey(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldI18nKey, opts...).ToFunc()
 }
 
 // ByDisabled orders the results by the disabled field.

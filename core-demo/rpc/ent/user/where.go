@@ -70,9 +70,9 @@ func DeletedAt(v time.Time) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldDeletedAt, v))
 }
 
-// OperatorID applies equality check predicate on the "operator_id" field. It's identical to OperatorIDEQ.
-func OperatorID(v int64) predicate.User {
-	return predicate.User(sql.FieldEQ(FieldOperatorID, v))
+// OperatorCode applies equality check predicate on the "operator_code" field. It's identical to OperatorCodeEQ.
+func OperatorCode(v string) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldOperatorCode, v))
 }
 
 // UserCode applies equality check predicate on the "user_code" field. It's identical to UserCodeEQ.
@@ -265,54 +265,79 @@ func DeletedAtNotNil() predicate.User {
 	return predicate.User(sql.FieldNotNull(FieldDeletedAt))
 }
 
-// OperatorIDEQ applies the EQ predicate on the "operator_id" field.
-func OperatorIDEQ(v int64) predicate.User {
-	return predicate.User(sql.FieldEQ(FieldOperatorID, v))
+// OperatorCodeEQ applies the EQ predicate on the "operator_code" field.
+func OperatorCodeEQ(v string) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldOperatorCode, v))
 }
 
-// OperatorIDNEQ applies the NEQ predicate on the "operator_id" field.
-func OperatorIDNEQ(v int64) predicate.User {
-	return predicate.User(sql.FieldNEQ(FieldOperatorID, v))
+// OperatorCodeNEQ applies the NEQ predicate on the "operator_code" field.
+func OperatorCodeNEQ(v string) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldOperatorCode, v))
 }
 
-// OperatorIDIn applies the In predicate on the "operator_id" field.
-func OperatorIDIn(vs ...int64) predicate.User {
-	return predicate.User(sql.FieldIn(FieldOperatorID, vs...))
+// OperatorCodeIn applies the In predicate on the "operator_code" field.
+func OperatorCodeIn(vs ...string) predicate.User {
+	return predicate.User(sql.FieldIn(FieldOperatorCode, vs...))
 }
 
-// OperatorIDNotIn applies the NotIn predicate on the "operator_id" field.
-func OperatorIDNotIn(vs ...int64) predicate.User {
-	return predicate.User(sql.FieldNotIn(FieldOperatorID, vs...))
+// OperatorCodeNotIn applies the NotIn predicate on the "operator_code" field.
+func OperatorCodeNotIn(vs ...string) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldOperatorCode, vs...))
 }
 
-// OperatorIDGT applies the GT predicate on the "operator_id" field.
-func OperatorIDGT(v int64) predicate.User {
-	return predicate.User(sql.FieldGT(FieldOperatorID, v))
+// OperatorCodeGT applies the GT predicate on the "operator_code" field.
+func OperatorCodeGT(v string) predicate.User {
+	return predicate.User(sql.FieldGT(FieldOperatorCode, v))
 }
 
-// OperatorIDGTE applies the GTE predicate on the "operator_id" field.
-func OperatorIDGTE(v int64) predicate.User {
-	return predicate.User(sql.FieldGTE(FieldOperatorID, v))
+// OperatorCodeGTE applies the GTE predicate on the "operator_code" field.
+func OperatorCodeGTE(v string) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldOperatorCode, v))
 }
 
-// OperatorIDLT applies the LT predicate on the "operator_id" field.
-func OperatorIDLT(v int64) predicate.User {
-	return predicate.User(sql.FieldLT(FieldOperatorID, v))
+// OperatorCodeLT applies the LT predicate on the "operator_code" field.
+func OperatorCodeLT(v string) predicate.User {
+	return predicate.User(sql.FieldLT(FieldOperatorCode, v))
 }
 
-// OperatorIDLTE applies the LTE predicate on the "operator_id" field.
-func OperatorIDLTE(v int64) predicate.User {
-	return predicate.User(sql.FieldLTE(FieldOperatorID, v))
+// OperatorCodeLTE applies the LTE predicate on the "operator_code" field.
+func OperatorCodeLTE(v string) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldOperatorCode, v))
 }
 
-// OperatorIDIsNil applies the IsNil predicate on the "operator_id" field.
-func OperatorIDIsNil() predicate.User {
-	return predicate.User(sql.FieldIsNull(FieldOperatorID))
+// OperatorCodeContains applies the Contains predicate on the "operator_code" field.
+func OperatorCodeContains(v string) predicate.User {
+	return predicate.User(sql.FieldContains(FieldOperatorCode, v))
 }
 
-// OperatorIDNotNil applies the NotNil predicate on the "operator_id" field.
-func OperatorIDNotNil() predicate.User {
-	return predicate.User(sql.FieldNotNull(FieldOperatorID))
+// OperatorCodeHasPrefix applies the HasPrefix predicate on the "operator_code" field.
+func OperatorCodeHasPrefix(v string) predicate.User {
+	return predicate.User(sql.FieldHasPrefix(FieldOperatorCode, v))
+}
+
+// OperatorCodeHasSuffix applies the HasSuffix predicate on the "operator_code" field.
+func OperatorCodeHasSuffix(v string) predicate.User {
+	return predicate.User(sql.FieldHasSuffix(FieldOperatorCode, v))
+}
+
+// OperatorCodeIsNil applies the IsNil predicate on the "operator_code" field.
+func OperatorCodeIsNil() predicate.User {
+	return predicate.User(sql.FieldIsNull(FieldOperatorCode))
+}
+
+// OperatorCodeNotNil applies the NotNil predicate on the "operator_code" field.
+func OperatorCodeNotNil() predicate.User {
+	return predicate.User(sql.FieldNotNull(FieldOperatorCode))
+}
+
+// OperatorCodeEqualFold applies the EqualFold predicate on the "operator_code" field.
+func OperatorCodeEqualFold(v string) predicate.User {
+	return predicate.User(sql.FieldEqualFold(FieldOperatorCode, v))
+}
+
+// OperatorCodeContainsFold applies the ContainsFold predicate on the "operator_code" field.
+func OperatorCodeContainsFold(v string) predicate.User {
+	return predicate.User(sql.FieldContainsFold(FieldOperatorCode, v))
 }
 
 // UserCodeEQ applies the EQ predicate on the "user_code" field.

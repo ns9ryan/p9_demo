@@ -12,7 +12,7 @@ func userFromEnt(u *ent.User) *model.User {
 	return &model.User{
 		ID:                 u.ID,
 		UserCode:           u.UserCode,
-		OperatorID:         u.OperatorID,
+		OperatorCode:       u.OperatorCode,
 		Username:           u.Username,
 		PasswordHash:       u.PasswordHash,
 		Salt:               u.Salt,
@@ -53,17 +53,17 @@ func roleFromEnt(r *ent.Role) *model.Role {
 		return nil
 	}
 	return &model.Role{
-		ID:          r.ID,
-		OperatorID:  r.OperatorID,
-		RoleCode:    r.RoleCode,
-		RoleName:    r.RoleName,
-		Description: r.Description,
-		Status:      r.Status,
-		IsSystem:    r.IsSystem,
-		SortNo:      r.SortNo,
-		CreatedAt:   r.CreatedAt,
-		UpdatedAt:   r.UpdatedAt,
-		DeletedAt:   r.DeletedAt,
+		ID:           r.ID,
+		OperatorCode: r.OperatorCode,
+		RoleCode:     r.RoleCode,
+		RoleName:     r.RoleName,
+		Description:  r.Description,
+		Status:       r.Status,
+		IsSystem:     r.IsSystem,
+		SortNo:       r.SortNo,
+		CreatedAt:    r.CreatedAt,
+		UpdatedAt:    r.UpdatedAt,
+		DeletedAt:    r.DeletedAt,
 	}
 }
 
@@ -73,24 +73,6 @@ func rolesFromEnt(list []*ent.Role) []model.Role {
 		out = append(out, *roleFromEnt(r))
 	}
 	return out
-}
-
-func operatorFromEnt(op *ent.Operator) *model.Operator {
-	if op == nil {
-		return nil
-	}
-	return &model.Operator{
-		ID:                     op.ID,
-		OperatorCode:           op.OperatorCode,
-		TimezoneCode:           op.TimezoneCode,
-		SettlementCurrencyCode: op.SettlementCurrencyCode,
-		Status:                 op.Status,
-		RequiredConfigVersion:  op.RequiredConfigVersion,
-		CompletedConfigVersion: op.CompletedConfigVersion,
-		ConfigCompletedAt:      op.ConfigCompletedAt,
-		CreatedAt:              op.CreatedAt,
-		UpdatedAt:              op.UpdatedAt,
-	}
 }
 
 func menuFromEnt(m *ent.Menu) model.Menu {
@@ -169,6 +151,7 @@ func i18nLangFromEnt(row *ent.I18nLang) model.I18nLang {
 		ID:        row.ID,
 		Lang:      row.Lang,
 		Name:      row.Name,
+		I18nKey:   row.I18nKey,
 		Disabled:  row.Disabled,
 		SortNo:    row.SortNo,
 		CreatedAt: row.CreatedAt,
@@ -188,7 +171,7 @@ func loginLogFromEnt(row *ent.LoginLog) model.LoginLog {
 	return model.LoginLog{
 		ID:            row.ID,
 		UserID:        row.UserID,
-		OperatorID:    row.OperatorID,
+		OperatorCode:  row.OperatorCode,
 		Username:      row.Username,
 		LoginResult:   row.LoginResult,
 		FailureReason: row.FailureReason,
@@ -211,7 +194,7 @@ func adminActionLogFromEnt(row *ent.AdminActionLog) model.AdminActionLog {
 	out := model.AdminActionLog{
 		ID:             row.ID,
 		UserID:         row.UserID,
-		OperatorID:     row.OperatorID,
+		OperatorCode:   row.OperatorCode,
 		RequestMethod:  row.RequestMethod,
 		RequestPath:    row.RequestPath,
 		RequestQuery:   row.RequestQuery,
@@ -242,7 +225,7 @@ func errorLogFromEnt(row *ent.ErrorLog) model.ErrorLog {
 	out := model.ErrorLog{
 		ID:             row.ID,
 		UserID:         row.UserID,
-		OperatorID:     row.OperatorID,
+		OperatorCode:   row.OperatorCode,
 		RequestMethod:  row.RequestMethod,
 		RequestPath:    row.RequestPath,
 		RequestQuery:   row.RequestQuery,

@@ -48,7 +48,7 @@ func UserPublic(ctx context.Context, in *coreclient.UserPublic) *types.UserPubli
 	}
 	return &types.UserPublic{
 		Id: in.Id, UserCode: in.UserCode, Username: in.Username, DisplayName: in.DisplayName,
-		OperatorId: in.GetOperatorId(), IsSuperAdmin: in.IsSuperAdmin, Status: in.Status,
+		OperatorCode: in.GetOperatorCode(), IsSuperAdmin: in.IsSuperAdmin, Status: in.Status,
 		RoleCodes: codes, RoleNames: trans, HomePath: in.HomePath,
 		CreatedAt: in.CreatedAt, LastLoginAt: in.GetLastLoginAt(),
 		Mobile: in.GetMobile(), Email: in.GetEmail(),
@@ -121,24 +121,12 @@ func menuNode(ctx context.Context, code string, n *coreclient.MenuNode) types.Me
 	}
 }
 
-func OperatorInfo(in *coreclient.OperatorInfo) *types.OperatorInfo {
-	if in == nil {
-		return nil
-	}
-	return &types.OperatorInfo{
-		Id: in.Id, OperatorCode: in.OperatorCode, TimezoneCode: in.TimezoneCode,
-		SettlementCurrencyCode: in.SettlementCurrencyCode, Status: in.Status,
-		RequiredConfigVersion: in.RequiredConfigVersion, CompletedConfigVersion: in.CompletedConfigVersion,
-		ConfigCompletedAt: in.ConfigCompletedAt, CreatedAt: in.CreatedAt, UpdatedAt: in.UpdatedAt,
-	}
-}
-
 func RoleInfo(ctx context.Context, in *coreclient.RoleInfo) *types.RoleInfo {
 	if in == nil {
 		return nil
 	}
 	return &types.RoleInfo{
-		Id: in.Id, OperatorId: in.GetOperatorId(), RoleCode: in.RoleCode, RoleName: i18n.T(ctx, in.RoleName),
+		Id: in.Id, OperatorCode: in.GetOperatorCode(), RoleCode: in.RoleCode, RoleName: i18n.T(ctx, in.RoleName),
 		Description: i18n.T(ctx, in.GetDescription()), Status: in.Status, IsSystem: in.IsSystem, SortNo: in.SortNo,
 		CreatedAt: in.CreatedAt, UpdatedAt: in.UpdatedAt,
 	}
@@ -257,12 +245,6 @@ func UpdateUserIpWhitelistReq(in *types.UpdateUserIpWhitelistReq) *coreclient.Up
 	}
 	return &coreclient.UpdateUserIpWhitelistReq{
 		Id: in.Id, IpWhitelistEnabled: in.IpWhitelistEnabled, IpWhitelist: list,
-	}
-}
-
-func UpdateOperatorReq(in *types.UpdateOperatorReq) *coreclient.UpdateOperatorReq {
-	return &coreclient.UpdateOperatorReq{
-		TimezoneCode: strPtr(in.TimezoneCode), SettlementCurrencyCode: strPtr(in.SettlementCurrencyCode),
 	}
 }
 
@@ -523,37 +505,43 @@ func I18nDict(in *coreclient.I18NDictResp) *types.I18nDictResp {
 	return &types.I18nDictResp{Items: items}
 }
 
-func I18nLangInfo(in *coreclient.I18NLangInfo) *types.I18nLangInfo {
+func I18nLangInfo(ctx context.Context, code string, in *coreclient.I18NLangInfo) *types.I18nLangInfo {
 	if in == nil {
 		return nil
 	}
+	i18nName := in.Name
+	if in.I18NKey != "" {
+		if t := i18n.TG(ctx, code, i18n.GroupLang, in.I18NKey); t != "" && t != in.I18NKey {
+			i18nName = t
+		}
+	}
 	return &types.I18nLangInfo{
-		Id: in.Id, Lang: in.Lang, Name: in.Name, Disabled: in.Disabled,
+		Id: in.Id, Lang: in.Lang, Name: in.Name, I18nKey: in.I18NKey, I18nName: i18nName, Disabled: in.Disabled,
 		CreatedAt: in.CreatedAt, UpdatedAt: in.UpdatedAt, SortNo: in.SortNo,
 	}
 }
 
-func I18nLangInfos(in []*coreclient.I18NLangInfo) []types.I18nLangInfo {
+func I18nLangInfos(ctx context.Context, code string, in []*coreclient.I18NLangInfo) []types.I18nLangInfo {
 	out := make([]types.I18nLangInfo, 0, len(in))
 	for _, row := range in {
-		if p := I18nLangInfo(row); p != nil {
+		if p := I18nLangInfo(ctx, code, row); p != nil {
 			out = append(out, *p)
 		}
 	}
 	return out
 }
 
-func I18nLangList(in *coreclient.I18NLangListResp) *types.I18nLangListResp {
-	return &types.I18nLangListResp{List: I18nLangInfos(in.GetList()), Total: in.GetTotal()}
+func I18nLangList(ctx context.Context, code string, in *coreclient.I18NLangListResp) *types.I18nLangListResp {
+	return &types.I18nLangListResp{List: I18nLangInfos(ctx, code, in.GetList()), Total: in.GetTotal()}
 }
 
 func CreateI18nLangReq(in *types.CreateI18nLangReq) *coreclient.CreateI18NLangReq {
-	return &coreclient.CreateI18NLangReq{Lang: in.Lang, Name: in.Name, Disabled: in.Disabled, SortNo: in.SortNo}
+	return &coreclient.CreateI18NLangReq{Lang: in.Lang, Name: in.Name, I18NKey: in.I18nKey, Disabled: in.Disabled, SortNo: in.SortNo}
 }
 
 func UpdateI18nLangReq(in *types.UpdateI18nLangReq) *coreclient.UpdateI18NLangReq {
 	return &coreclient.UpdateI18NLangReq{
-		Id: in.Id, Lang: strPtr(in.Lang), Name: strPtr(in.Name), Disabled: in.Disabled, SortNo: in.SortNo,
+		Id: in.Id, Lang: strPtr(in.Lang), Name: strPtr(in.Name), I18NKey: strPtr(in.I18nKey), Disabled: in.Disabled, SortNo: in.SortNo,
 	}
 }
 
@@ -587,7 +575,7 @@ func errorLogInfo(in *coreclient.ErrorLogInfo) types.ErrorLogInfo {
 		DurationMs:     in.DurationMs,
 		ClientIp:       in.ClientIp,
 		UserAgent:      in.GetUserAgent(),
-		OperatorId:     in.GetOperatorId(),
+		OperatorCode:   in.GetOperatorCode(),
 		CreatedAt:      in.CreatedAt,
 	}
 }

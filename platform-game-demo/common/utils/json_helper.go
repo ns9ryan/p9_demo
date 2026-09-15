@@ -3,12 +3,10 @@ package utils
 import (
 	"encoding/json"
 	"time"
-
-	"oa.98ent.com/p9/platform-game/common/model"
 )
 
 // MustMarshalJSON 将JSONMap序列化为JSON字符串
-func MustMarshalJSON(data model.JSONMap) []byte {
+func MustMarshalJSON(data map[string]interface{}) []byte {
 	if data == nil {
 		return []byte("{}")
 	}
@@ -17,11 +15,11 @@ func MustMarshalJSON(data model.JSONMap) []byte {
 }
 
 // MustParseJSON 将JSON字符串解析为JSONMap
-func MustParseJSON(data []byte) model.JSONMap {
-	var result model.JSONMap
+func MustParseJSON(data []byte) map[string]interface{} {
+	var result map[string]interface{}
 	_ = json.Unmarshal(data, &result)
 	if result == nil {
-		result = make(model.JSONMap)
+		result = make(map[string]interface{})
 	}
 	return result
 }

@@ -32,7 +32,6 @@ func (a *auth) CheckToken(ctx context.Context, token string) (*ctxdata.Claims, e
 		UserID:       resp.UserId,
 		UserCode:     resp.UserCode,
 		Username:     resp.Username,
-		OperatorID:   resp.OperatorId,
 		OperatorCode: resp.OperatorCode,
 		RoleCodes:    codes,
 		Salt:         resp.Salt,
@@ -48,7 +47,7 @@ func (a *auth) Enforce(ctx context.Context, claims *ctxdata.Claims, path, method
 	req := &coreclient.EnforceReq{Path: path, Method: method}
 	if claims != nil {
 		req.RoleCodes = claims.RoleCodes
-		req.OperatorId = claims.OperatorID
+		req.OperatorCode = claims.OperatorCode
 	}
 	resp, err := a.cli.Enforce(ctx, req)
 	if err != nil {

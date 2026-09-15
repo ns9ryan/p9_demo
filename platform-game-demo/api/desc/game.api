@@ -2,7 +2,7 @@ syntax = "v1"
 
 @server (
 	group: game
-	middleware: Auth
+	middleware: Jwt,ActionLog,Authority
 	prefix: /admin/game
 )
 service platform_game {
@@ -20,7 +20,7 @@ service platform_game {
 // ========== Game ==========
 type GameCurrencyInfo {
 	CurrencyID       int64  `json:"currency_id" comment:"币种ID"`
-	CurrencyNameI18n string `json:"currency_name_i18n" comment:"币种名称（多语言JSON）"`
+	CurrencyName     string `json:"currency_name" comment:"币种名称"`
 }
 
 type GameResp {
@@ -29,18 +29,17 @@ type GameResp {
 	GameCode          string             `json:"game_code" comment:"游戏编码"`
 	SourceGameCode    string             `json:"source_game_code" comment:"上游游戏编码"`
 	SourceProviderKey string             `json:"source_provider_key,omitempty" comment:"上游厂商Key"`
-	SourceNameI18n    string             `json:"source_name_i18n" comment:"上游游戏名称（多语言JSON）"`
+	Name    	      string             `json:"name" comment:"上游游戏名称（多语言JSON）"`
 	SourceImageUrl    string             `json:"source_image_url,omitempty" comment:"上游游戏图片URL"`
 	SourceSortNo      int32              `json:"source_sort_no,omitempty" comment:"上游排序号"`
 	SourceStatus      int16              `json:"source_status" comment:"上游状态：1启用/2禁用"`
 	CategoryID        int64              `json:"category_id" comment:"分类ID"`
 	ProviderID        int64              `json:"provider_id" comment:"厂商ID"`
 	ChannelID         int64              `json:"channel_id,omitempty" comment:"渠道ID"`
-	CategoryNameI18n  string             `json:"category_name_i18n,omitempty" comment:"分类名称（多语言JSON）"`
-	ProviderNameI18n  string             `json:"provider_name_i18n,omitempty" comment:"厂商名称（多语言JSON）"`
-	ChannelNameI18n   string             `json:"channel_name_i18n,omitempty" comment:"渠道名称（多语言JSON）"`
+	CategoryName  	  string             `json:"category_name_i18n,omitempty" comment:"分类名称"`
+	ProviderName  	  string             `json:"provider_name_i18n,omitempty" comment:"厂商名称"`
+	ChannelName   	  string             `json:"channel_name_i18n,omitempty" comment:"渠道名称"`
 	ProviderKey       string             `json:"provider_key,omitempty" comment:"厂商Key"`
-	NameI18n          string             `json:"name_i18n" comment:"游戏名称（多语言JSON）"`
 	GameCurrencyInfo  []GameCurrencyInfo `json:"game_currency_info" comment:"游戏币种信息"`
 	ImageUrl          string             `json:"image_url,omitempty" comment:"游戏图片URL"`
 	SortNo            int32              `json:"sort_no" comment:"排序号"`
@@ -77,7 +76,7 @@ type GameGetReq {
 
 type GameUpdateReq {
 	ID               int64  `json:"id" binding:"required" comment:"游戏ID"`
-	NameI18n         string `json:"name_i18n,optional" comment:"游戏名称（多语言JSON）"`
+	Name         	 string `json:"name,optional" comment:"游戏名称"`
 	ImageUrl         string `json:"image_url,optional" comment:"游戏图片URL"`
 	SortNo           int32  `json:"sort_no,optional" comment:"排序号"`
 	SupportsEmbed    *bool   `json:"supports_embed,optional" comment:"是否支持嵌入"`

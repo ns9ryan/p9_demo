@@ -107,7 +107,7 @@ message ErrorLogInfo {
   int32 duration_ms = 13;
   string client_ip = 14;
   optional string user_agent = 15;
-  optional int64 operator_id = 16;
+  optional string operator_code = 16;
   int64 created_at = 17;
 }
 

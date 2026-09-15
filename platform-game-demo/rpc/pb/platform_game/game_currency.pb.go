@@ -23,21 +23,21 @@ const (
 
 // GameCurrencyInfo 货币信息
 type GameCurrencyInfo struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Id               int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	GameId           int64                  `protobuf:"varint,2,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`
-	GameCode         string                 `protobuf:"bytes,3,opt,name=game_code,json=gameCode,proto3" json:"game_code,omitempty"`
-	GameNameI18N     string                 `protobuf:"bytes,4,opt,name=game_name_i18n,json=gameNameI18n,proto3" json:"game_name_i18n,omitempty"`
-	CurrencyId       int64                  `protobuf:"varint,5,opt,name=currency_id,json=currencyId,proto3" json:"currency_id,omitempty"`
-	CurrencyCode     string                 `protobuf:"bytes,6,opt,name=currency_code,json=currencyCode,proto3" json:"currency_code,omitempty"`
-	CurrencyNameI18N string                 `protobuf:"bytes,7,opt,name=currency_name_i18n,json=currencyNameI18n,proto3" json:"currency_name_i18n,omitempty"`
-	Status           int32                  `protobuf:"varint,8,opt,name=status,proto3" json:"status,omitempty"`
-	SourceStatus     int32                  `protobuf:"varint,9,opt,name=source_status,json=sourceStatus,proto3" json:"source_status,omitempty"`
-	IsDeleted        int32                  `protobuf:"varint,10,opt,name=is_deleted,json=isDeleted,proto3" json:"is_deleted,omitempty"`
-	CreatedAt        int64                  `protobuf:"varint,11,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt        int64                  `protobuf:"varint,12,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Id              int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	GameId          int64                  `protobuf:"varint,2,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`
+	GameCode        string                 `protobuf:"bytes,3,opt,name=game_code,json=gameCode,proto3" json:"game_code,omitempty"`
+	GameName        string                 `protobuf:"bytes,4,opt,name=game_name,json=gameName,proto3" json:"game_name,omitempty"`
+	CurrencyId      int64                  `protobuf:"varint,5,opt,name=currency_id,json=currencyId,proto3" json:"currency_id,omitempty"`
+	CurrencyCode    string                 `protobuf:"bytes,6,opt,name=currency_code,json=currencyCode,proto3" json:"currency_code,omitempty"`
+	CurrencyNameKey string                 `protobuf:"bytes,7,opt,name=currency_name_key,json=currencyNameKey,proto3" json:"currency_name_key,omitempty"`
+	Status          int32                  `protobuf:"varint,8,opt,name=status,proto3" json:"status,omitempty"`
+	SourceStatus    int32                  `protobuf:"varint,9,opt,name=source_status,json=sourceStatus,proto3" json:"source_status,omitempty"`
+	IsDeleted       int32                  `protobuf:"varint,10,opt,name=is_deleted,json=isDeleted,proto3" json:"is_deleted,omitempty"`
+	CreatedAt       int64                  `protobuf:"varint,11,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt       int64                  `protobuf:"varint,12,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *GameCurrencyInfo) Reset() {
@@ -91,9 +91,9 @@ func (x *GameCurrencyInfo) GetGameCode() string {
 	return ""
 }
 
-func (x *GameCurrencyInfo) GetGameNameI18N() string {
+func (x *GameCurrencyInfo) GetGameName() string {
 	if x != nil {
-		return x.GameNameI18N
+		return x.GameName
 	}
 	return ""
 }
@@ -112,9 +112,9 @@ func (x *GameCurrencyInfo) GetCurrencyCode() string {
 	return ""
 }
 
-func (x *GameCurrencyInfo) GetCurrencyNameI18N() string {
+func (x *GameCurrencyInfo) GetCurrencyNameKey() string {
 	if x != nil {
-		return x.CurrencyNameI18N
+		return x.CurrencyNameKey
 	}
 	return ""
 }
@@ -163,8 +163,6 @@ type GetGameCurrencyListRequest struct {
 	CurrencyId    int64                  `protobuf:"varint,4,opt,name=currency_id,json=currencyId,proto3" json:"currency_id,omitempty"`
 	Status        int32                  `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`
 	IsDeleted     int32                  `protobuf:"varint,6,opt,name=is_deleted,json=isDeleted,proto3" json:"is_deleted,omitempty"`
-	SortBy        string                 `protobuf:"bytes,7,opt,name=sort_by,json=sortBy,proto3" json:"sort_by,omitempty"`          // id/created_at
-	SortOrder     string                 `protobuf:"bytes,8,opt,name=sort_order,json=sortOrder,proto3" json:"sort_order,omitempty"` // asc/desc
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -239,20 +237,6 @@ func (x *GetGameCurrencyListRequest) GetIsDeleted() int32 {
 		return x.IsDeleted
 	}
 	return 0
-}
-
-func (x *GetGameCurrencyListRequest) GetSortBy() string {
-	if x != nil {
-		return x.SortBy
-	}
-	return ""
-}
-
-func (x *GetGameCurrencyListRequest) GetSortOrder() string {
-	if x != nil {
-		return x.SortOrder
-	}
-	return ""
 }
 
 // GetGameCurrencyListResp 游戏货币列表响应
@@ -572,16 +556,16 @@ var File_types_game_currency_proto protoreflect.FileDescriptor
 
 const file_types_game_currency_proto_rawDesc = "" +
 	"\n" +
-	"\x19types/game_currency.proto\x12\rplatform_game\"\x8c\x03\n" +
+	"\x19types/game_currency.proto\x12\rplatform_game\"\x81\x03\n" +
 	"\x10GameCurrencyInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\agame_id\x18\x02 \x01(\x03R\x06gameId\x12\x1b\n" +
-	"\tgame_code\x18\x03 \x01(\tR\bgameCode\x12$\n" +
-	"\x0egame_name_i18n\x18\x04 \x01(\tR\fgameNameI18n\x12\x1f\n" +
+	"\tgame_code\x18\x03 \x01(\tR\bgameCode\x12\x1b\n" +
+	"\tgame_name\x18\x04 \x01(\tR\bgameName\x12\x1f\n" +
 	"\vcurrency_id\x18\x05 \x01(\x03R\n" +
 	"currencyId\x12#\n" +
-	"\rcurrency_code\x18\x06 \x01(\tR\fcurrencyCode\x12,\n" +
-	"\x12currency_name_i18n\x18\a \x01(\tR\x10currencyNameI18n\x12\x16\n" +
+	"\rcurrency_code\x18\x06 \x01(\tR\fcurrencyCode\x12*\n" +
+	"\x11currency_name_key\x18\a \x01(\tR\x0fcurrencyNameKey\x12\x16\n" +
 	"\x06status\x18\b \x01(\x05R\x06status\x12#\n" +
 	"\rsource_status\x18\t \x01(\x05R\fsourceStatus\x12\x1d\n" +
 	"\n" +
@@ -590,7 +574,7 @@ const file_types_game_currency_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\v \x01(\x03R\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\f \x01(\x03R\tupdatedAt\"\xf6\x01\n" +
+	"updated_at\x18\f \x01(\x03R\tupdatedAt\"\xbe\x01\n" +
 	"\x1aGetGameCurrencyListRequest\x12\x12\n" +
 	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1b\n" +
 	"\tpage_size\x18\x02 \x01(\x05R\bpageSize\x12\x17\n" +
@@ -599,10 +583,7 @@ const file_types_game_currency_proto_rawDesc = "" +
 	"currencyId\x12\x16\n" +
 	"\x06status\x18\x05 \x01(\x05R\x06status\x12\x1d\n" +
 	"\n" +
-	"is_deleted\x18\x06 \x01(\x05R\tisDeleted\x12\x17\n" +
-	"\asort_by\x18\a \x01(\tR\x06sortBy\x12\x1d\n" +
-	"\n" +
-	"sort_order\x18\b \x01(\tR\tsortOrder\"\xc3\x01\n" +
+	"is_deleted\x18\x06 \x01(\x05R\tisDeleted\"\xc3\x01\n" +
 	"\x17GetGameCurrencyListResp\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\x05R\x04code\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x123\n" +

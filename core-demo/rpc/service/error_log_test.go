@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"oa.98ent.com/p9/core/common/ctxdata"
-	"oa.98ent.com/p9/core/rpc/model"
 )
 
 func TestCreateErrorLogNilClient(t *testing.T) {
@@ -62,40 +61,23 @@ func TestCreateErrorLogSkipsMissingUser(t *testing.T) {
 func TestListErrorLogsFilterAndTenant(t *testing.T) {
 	d := testDeps(t, ModeOn)
 	ctx := context.Background()
-	op1, err := d.Client.Operator.Create().
-		SetOperatorCode("op1").
-		SetTimezoneCode("UTC").
-		SetSettlementCurrencyCode("USD").
-		SetStatus(model.StatusNormal).
-		Save(ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
-	op2, err := d.Client.Operator.Create().
-		SetOperatorCode("op2").
-		SetTimezoneCode("UTC").
-		SetSettlementCurrencyCode("USD").
-		SetStatus(model.StatusNormal).
-		Save(ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
-	u1 := createUserWithRole(t, d, "alice", "pass", &op1.ID)
+	code1, code2 := "op1", "op2"
+	u1 := createUserWithRole(t, d, "alice", "pass", &code1)
 	now := time.Now()
 	if err := d.Client.ErrorLog.Create().
 		SetUserID(u1.ID).SetRequestMethod("POST").SetRequestPath("/admin/user/create").
 		SetServiceName("core-api").SetResponseStatus(500).SetClientIP("1.1.1.1").
-		SetSubject("boom").SetOperatorID(op1.ID).SetCreatedAt(now).Exec(ctx); err != nil {
+		SetSubject("boom").SetOperatorCode(code1).SetCreatedAt(now).Exec(ctx); err != nil {
 		t.Fatal(err)
 	}
 	if err := d.Client.ErrorLog.Create().
 		SetRequestMethod("GRPC").SetRequestPath("/core.Core/login").
 		SetServiceName("core-rpc").SetResponseStatus(500).SetClientIP("2.2.2.2").
-		SetOperatorID(op2.ID).SetCreatedAt(now).Exec(ctx); err != nil {
+		SetOperatorCode(code2).SetCreatedAt(now).Exec(ctx); err != nil {
 		t.Fatal(err)
 	}
 
-	list, total, err := d.ListErrorLogs(ctx, &ctxdata.Claims{OperatorID: op1.ID}, ErrorLogListReq{})
+	list, total, err := d.ListErrorLogs(ctx, &ctxdata.Claims{OperatorCode: code1}, ErrorLogListReq{})
 	if err != nil {
 		t.Fatal(err)
 	}

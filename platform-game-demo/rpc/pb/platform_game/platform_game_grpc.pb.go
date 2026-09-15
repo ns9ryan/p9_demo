@@ -1069,6 +1069,7 @@ var GameCurrencyService_ServiceDesc = grpc.ServiceDesc{
 const (
 	GameSyncCheckpointService_GetGameSyncCheckpoint_FullMethodName     = "/platform_game.GameSyncCheckpointService/GetGameSyncCheckpoint"
 	GameSyncCheckpointService_GetGameSyncCheckpointList_FullMethodName = "/platform_game.GameSyncCheckpointService/GetGameSyncCheckpointList"
+	GameSyncCheckpointService_GetI18NNameMap_FullMethodName            = "/platform_game.GameSyncCheckpointService/GetI18nNameMap"
 )
 
 // GameSyncCheckpointServiceClient is the client API for GameSyncCheckpointService service.
@@ -1081,6 +1082,8 @@ type GameSyncCheckpointServiceClient interface {
 	GetGameSyncCheckpoint(ctx context.Context, in *GetGameSyncCheckpointRequest, opts ...grpc.CallOption) (*GetGameSyncCheckpointResp, error)
 	// 获取同步检查点列表
 	GetGameSyncCheckpointList(ctx context.Context, in *GetGameSyncCheckpointListRequest, opts ...grpc.CallOption) (*GetGameSyncCheckpointListResp, error)
+	// 获取多语言映射文件name_map
+	GetI18NNameMap(ctx context.Context, in *GetI18NNameMapRequest, opts ...grpc.CallOption) (*GetI18NNameMapResp, error)
 }
 
 type gameSyncCheckpointServiceClient struct {
@@ -1111,6 +1114,16 @@ func (c *gameSyncCheckpointServiceClient) GetGameSyncCheckpointList(ctx context.
 	return out, nil
 }
 
+func (c *gameSyncCheckpointServiceClient) GetI18NNameMap(ctx context.Context, in *GetI18NNameMapRequest, opts ...grpc.CallOption) (*GetI18NNameMapResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetI18NNameMapResp)
+	err := c.cc.Invoke(ctx, GameSyncCheckpointService_GetI18NNameMap_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GameSyncCheckpointServiceServer is the server API for GameSyncCheckpointService service.
 // All implementations must embed UnimplementedGameSyncCheckpointServiceServer
 // for forward compatibility.
@@ -1121,6 +1134,8 @@ type GameSyncCheckpointServiceServer interface {
 	GetGameSyncCheckpoint(context.Context, *GetGameSyncCheckpointRequest) (*GetGameSyncCheckpointResp, error)
 	// 获取同步检查点列表
 	GetGameSyncCheckpointList(context.Context, *GetGameSyncCheckpointListRequest) (*GetGameSyncCheckpointListResp, error)
+	// 获取多语言映射文件name_map
+	GetI18NNameMap(context.Context, *GetI18NNameMapRequest) (*GetI18NNameMapResp, error)
 	mustEmbedUnimplementedGameSyncCheckpointServiceServer()
 }
 
@@ -1136,6 +1151,9 @@ func (UnimplementedGameSyncCheckpointServiceServer) GetGameSyncCheckpoint(contex
 }
 func (UnimplementedGameSyncCheckpointServiceServer) GetGameSyncCheckpointList(context.Context, *GetGameSyncCheckpointListRequest) (*GetGameSyncCheckpointListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetGameSyncCheckpointList not implemented")
+}
+func (UnimplementedGameSyncCheckpointServiceServer) GetI18NNameMap(context.Context, *GetI18NNameMapRequest) (*GetI18NNameMapResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetI18NNameMap not implemented")
 }
 func (UnimplementedGameSyncCheckpointServiceServer) mustEmbedUnimplementedGameSyncCheckpointServiceServer() {
 }
@@ -1195,6 +1213,24 @@ func _GameSyncCheckpointService_GetGameSyncCheckpointList_Handler(srv interface{
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GameSyncCheckpointService_GetI18NNameMap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetI18NNameMapRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameSyncCheckpointServiceServer).GetI18NNameMap(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GameSyncCheckpointService_GetI18NNameMap_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameSyncCheckpointServiceServer).GetI18NNameMap(ctx, req.(*GetI18NNameMapRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GameSyncCheckpointService_ServiceDesc is the grpc.ServiceDesc for GameSyncCheckpointService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1209,6 +1245,10 @@ var GameSyncCheckpointService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetGameSyncCheckpointList",
 			Handler:    _GameSyncCheckpointService_GetGameSyncCheckpointList_Handler,
+		},
+		{
+			MethodName: "GetI18nNameMap",
+			Handler:    _GameSyncCheckpointService_GetI18NNameMap_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

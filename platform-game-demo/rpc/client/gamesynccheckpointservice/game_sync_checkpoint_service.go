@@ -19,6 +19,8 @@ type (
 		GetGameSyncCheckpoint(ctx context.Context, in *GetGameSyncCheckpointRequest, opts ...grpc.CallOption) (*GetGameSyncCheckpointResp, error)
 		// 获取同步检查点列表
 		GetGameSyncCheckpointList(ctx context.Context, in *GetGameSyncCheckpointListRequest, opts ...grpc.CallOption) (*GetGameSyncCheckpointListResp, error)
+		// 获取多语言映射文件name_map
+		GetI18NNameMap(ctx context.Context, in *GetI18NNameMapRequest, opts ...grpc.CallOption) (*GetI18NNameMapResp, error)
 	}
 
 	defaultGameSyncCheckpointService struct {
@@ -42,4 +44,10 @@ func (m *defaultGameSyncCheckpointService) GetGameSyncCheckpoint(ctx context.Con
 func (m *defaultGameSyncCheckpointService) GetGameSyncCheckpointList(ctx context.Context, in *GetGameSyncCheckpointListRequest, opts ...grpc.CallOption) (*GetGameSyncCheckpointListResp, error) {
 	client := platform_game.NewGameSyncCheckpointServiceClient(m.cli.Conn())
 	return client.GetGameSyncCheckpointList(ctx, in, opts...)
+}
+
+// 获取多语言映射文件name_map
+func (m *defaultGameSyncCheckpointService) GetI18NNameMap(ctx context.Context, in *GetI18NNameMapRequest, opts ...grpc.CallOption) (*GetI18NNameMapResp, error) {
+	client := platform_game.NewGameSyncCheckpointServiceClient(m.cli.Conn())
+	return client.GetI18NNameMap(ctx, in, opts...)
 }

@@ -12,24 +12,25 @@ import (
 	"oa.98ent.com/p9/core/rpc/ent/i18n"
 )
 
-// I18n is the model entity for the I18n schema.
+// I18n Table | 多语言词条表
 type I18n struct {
 	config `json:"-"`
 	// ID of the ent.
+	// Primary key | 主键
 	ID int64 `json:"id,omitempty"`
 	// Created At | 创建时间
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Updated At | 更新时间
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	// I18nCode holds the value of the "i18n_code" field.
+	// Site code | 站点编码
 	I18nCode string `json:"i18n_code,omitempty"`
-	// I18nGroup holds the value of the "i18n_group" field.
+	// Group menu/api/front | 分组
 	I18nGroup string `json:"i18n_group,omitempty"`
-	// TransKey holds the value of the "trans_key" field.
+	// Translation key | 词条 key
 	TransKey string `json:"trans_key,omitempty"`
-	// Lang holds the value of the "lang" field.
+	// Language code | 语言码
 	Lang string `json:"lang,omitempty"`
-	// Value holds the value of the "value" field.
+	// Translated text | 译文
 	Value        string `json:"value,omitempty"`
 	selectValues sql.SelectValues
 }

@@ -12,30 +12,31 @@ import (
 	"oa.98ent.com/p9/core/rpc/ent/role"
 )
 
-// Role is the model entity for the Role schema.
+// Role Table | 角色表
 type Role struct {
 	config `json:"-"`
 	// ID of the ent.
+	// Primary key | 主键
 	ID int64 `json:"id,omitempty"`
 	// Created At | 创建时间
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Updated At | 更新时间
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	// DeletedAt holds the value of the "deleted_at" field.
+	// Deleted At | 删除时间
 	DeletedAt *time.Time `json:"deleted_at,omitempty"`
-	// OperatorID holds the value of the "operator_id" field.
-	OperatorID *int64 `json:"operator_id,omitempty"`
-	// RoleCode holds the value of the "role_code" field.
+	// Operator Code | 分站编码
+	OperatorCode *string `json:"operator_code,omitempty"`
+	// Role code | 角色编码
 	RoleCode string `json:"role_code,omitempty"`
-	// RoleName holds the value of the "role_name" field.
+	// Role name | 角色名
 	RoleName string `json:"role_name,omitempty"`
-	// Description holds the value of the "description" field.
+	// Description | 描述
 	Description *string `json:"description,omitempty"`
-	// Status holds the value of the "status" field.
+	// Status 1 enabled 2 disabled | 状态 1 启用 2 停用
 	Status int16 `json:"status,omitempty"`
-	// IsSystem holds the value of the "is_system" field.
+	// System role | 是否系统角色
 	IsSystem bool `json:"is_system,omitempty"`
-	// SortNo holds the value of the "sort_no" field.
+	// Sort order | 排序
 	SortNo int `json:"sort_no,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoleQuery when eager-loading is set.
@@ -79,9 +80,9 @@ func (*Role) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case role.FieldIsSystem:
 			values[i] = new(sql.NullBool)
-		case role.FieldID, role.FieldOperatorID, role.FieldStatus, role.FieldSortNo:
+		case role.FieldID, role.FieldStatus, role.FieldSortNo:
 			values[i] = new(sql.NullInt64)
-		case role.FieldRoleCode, role.FieldRoleName, role.FieldDescription:
+		case role.FieldOperatorCode, role.FieldRoleCode, role.FieldRoleName, role.FieldDescription:
 			values[i] = new(sql.NullString)
 		case role.FieldCreatedAt, role.FieldUpdatedAt, role.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
@@ -125,12 +126,12 @@ func (_m *Role) assignValues(columns []string, values []any) error {
 				_m.DeletedAt = new(time.Time)
 				*_m.DeletedAt = value.Time
 			}
-		case role.FieldOperatorID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field operator_id", values[i])
+		case role.FieldOperatorCode:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field operator_code", values[i])
 			} else if value.Valid {
-				_m.OperatorID = new(int64)
-				*_m.OperatorID = value.Int64
+				_m.OperatorCode = new(string)
+				*_m.OperatorCode = value.String
 			}
 		case role.FieldRoleCode:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -226,9 +227,9 @@ func (_m *Role) String() string {
 		builder.WriteString(v.Format(time.ANSIC))
 	}
 	builder.WriteString(", ")
-	if v := _m.OperatorID; v != nil {
-		builder.WriteString("operator_id=")
-		builder.WriteString(fmt.Sprintf("%v", *v))
+	if v := _m.OperatorCode; v != nil {
+		builder.WriteString("operator_code=")
+		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")
 	builder.WriteString("role_code=")

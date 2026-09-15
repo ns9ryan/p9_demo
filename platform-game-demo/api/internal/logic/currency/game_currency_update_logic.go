@@ -11,7 +11,7 @@ import (
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
 	"oa.98ent.com/p9/platform-game/common/constant"
-	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
+	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"github.com/bytedance/gopkg/util/logger"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -37,7 +37,7 @@ func (l *GameCurrencyUpdateLogic) GameCurrencyUpdate(req *types.GameCurrencyUpda
 		return nil, fmt.Errorf("gRPC client not available")
 	}
 
-	grpcReq := &platformgame.UpdateGameCurrencyRequest{
+	grpcReq := &platform_game.UpdateGameCurrencyRequest{
 		Id:          req.ID,
 		Status:      int32(req.Status),
 		ForceLogout: req.ForceLogout,
@@ -59,7 +59,7 @@ func (l *GameCurrencyUpdateLogic) GameCurrencyUpdate(req *types.GameCurrencyUpda
 		return nil, fmt.Errorf("gRPC error: %s", grpcResp.Message)
 	}
 
-	resp = logic.CurrencyProtoToResponse(grpcResp.Data)
+	resp = logic.CurrencyProtoToResponse(l.ctx, grpcResp.Data)
 
 	logger.Infof("[API GameCurrencyUpdate] success: id=%d", req.ID)
 	return resp, nil

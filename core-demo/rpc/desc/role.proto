@@ -2,7 +2,7 @@ syntax = "proto3";
 
 message RoleInfo {
   int64 id = 1;
-  optional int64 operator_id = 2;
+  optional string operator_code = 2;
   string role_code = 3;
   string role_name = 4;
   optional string description = 5;

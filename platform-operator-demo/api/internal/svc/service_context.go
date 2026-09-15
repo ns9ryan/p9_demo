@@ -18,6 +18,7 @@ import (
 	"oa.98ent.com/p9/platform-operator/rpc/client/agentlineallocationservice"
 	"oa.98ent.com/p9/platform-operator/rpc/client/basicresourceallocationservice"
 	"oa.98ent.com/p9/platform-operator/rpc/client/languageallocationservice"
+	"oa.98ent.com/p9/platform-operator/rpc/client/operatoradminservice"
 	"oa.98ent.com/p9/platform-operator/rpc/client/operatordomainservice"
 	"oa.98ent.com/p9/platform-operator/rpc/client/operatorprofileservice"
 	"oa.98ent.com/p9/platform-operator/rpc/client/operatorservice"
@@ -42,6 +43,7 @@ type ServiceContext struct {
 	OperatorRpc                operatorservice.OperatorService                               // 分站RPC
 	OperatorProfileRpc         operatorprofileservice.OperatorProfileService                 // 分站档案RPC
 	OperatorDomainRpc          operatordomainservice.OperatorDomainService                   // 分站域名RPC
+	OperatorAdminRpc           operatoradminservice.OperatorAdminService                     // 分站管理员RPC
 	BasicResourceAllocationRpc basicresourceallocationservice.BasicResourceAllocationService // 基础资源分配RPC
 	LanguageAllocationRpc      languageallocationservice.LanguageAllocationService           // 语言分配RPC
 	RegionAllocationRpc        regionallocationservice.RegionAllocationService               // 经营地区分配RPC
@@ -114,6 +116,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		OperatorRpc:                operatorservice.NewOperatorService(platformOperatorClient),                               // 分站RPC
 		OperatorProfileRpc:         operatorprofileservice.NewOperatorProfileService(platformOperatorClient),                 // 分站档案RPC
 		OperatorDomainRpc:          operatordomainservice.NewOperatorDomainService(platformOperatorClient),                   // 分站域名RPC
+		OperatorAdminRpc:           operatoradminservice.NewOperatorAdminService(platformOperatorClient),                     // 分站管理员RPC
 		BasicResourceAllocationRpc: basicresourceallocationservice.NewBasicResourceAllocationService(platformOperatorClient), // 基础资源分配RPC
 		LanguageAllocationRpc:      languageallocationservice.NewLanguageAllocationService(platformOperatorClient),           // 语言分配RPC
 		RegionAllocationRpc:        regionallocationservice.NewRegionAllocationService(platformOperatorClient),               // 经营地区分配RPC

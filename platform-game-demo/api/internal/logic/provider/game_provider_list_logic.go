@@ -12,7 +12,7 @@ import (
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
 	"oa.98ent.com/p9/platform-game/common/constant"
-	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
+	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -39,15 +39,12 @@ func (l *GameProviderListLogic) GameProviderList(req *types.GameProviderListReq)
 		return nil, fmt.Errorf("gRPC client not available")
 	}
 
-	grpcReq := &platformgame.GetGameProviderListRequest{
+	grpcReq := &platform_game.GetGameProviderListRequest{
 		Page:         int32(req.Page),
 		PageSize:     int32(req.PageSize),
 		ProviderCode: req.ProviderCode,
-		Name:         req.Name,
 		Status:       int32(req.Status),
 		IsDeleted:    int32(req.IsDeleted),
-		SortBy:       req.SortBy,
-		SortOrder:    req.SortOrder,
 	}
 
 	client := l.svcCtx.GrpcClient.GetGameProviderServiceClient()
@@ -67,9 +64,9 @@ func (l *GameProviderListLogic) GameProviderList(req *types.GameProviderListReq)
 		return nil, fmt.Errorf("gRPC error: %s", grpcResp.Message)
 	}
 
-	items := make([]types.GameProviderResp, 0, len(grpcResp.Data))
-	for _, item := range grpcResp.Data {
-		items = append(items, *logic.ProviderProtoToResponse(item))
+	items := make([]types.GameProviderResp, 0, len(grpcResp.Items))
+	for _, item := range grpcResp.Items {
+		items = append(items, *logic.ProviderProtoToResponse(l.ctx, item))
 	}
 
 	resp = &types.GameProviderListResp{

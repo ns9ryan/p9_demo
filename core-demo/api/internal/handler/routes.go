@@ -11,7 +11,6 @@ import (
 	i18n "oa.98ent.com/p9/core/api/internal/handler/i18n"
 	log "oa.98ent.com/p9/core/api/internal/handler/log"
 	menu "oa.98ent.com/p9/core/api/internal/handler/menu"
-	operator "oa.98ent.com/p9/core/api/internal/handler/operator"
 	public "oa.98ent.com/p9/core/api/internal/handler/public"
 	role "oa.98ent.com/p9/core/api/internal/handler/role"
 	user "oa.98ent.com/p9/core/api/internal/handler/user"
@@ -147,27 +146,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Method:  http.MethodPost,
 					Path:    "/user/ipWhitelist",
 					Handler: user.UpdateUserIpWhitelistHandler(serverCtx),
-				},
-			}...,
-		),
-		rest.WithPrefix("/admin"),
-	)
-
-	server.AddRoutes(
-		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
-			[]rest.Route{
-				{
-					// 当前分站信息
-					Method:  http.MethodGet,
-					Path:    "/operator/self",
-					Handler: operator.GetOperatorHandler(serverCtx),
-				},
-				{
-					// 更新当前分站
-					Method:  http.MethodPost,
-					Path:    "/operator/update",
-					Handler: operator.UpdateOperatorHandler(serverCtx),
 				},
 			}...,
 		),

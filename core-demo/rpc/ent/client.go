@@ -23,7 +23,6 @@ import (
 	"oa.98ent.com/p9/core/rpc/ent/i18nlang"
 	"oa.98ent.com/p9/core/rpc/ent/loginlog"
 	"oa.98ent.com/p9/core/rpc/ent/menu"
-	"oa.98ent.com/p9/core/rpc/ent/operator"
 	"oa.98ent.com/p9/core/rpc/ent/role"
 	"oa.98ent.com/p9/core/rpc/ent/user"
 
@@ -51,8 +50,6 @@ type Client struct {
 	LoginLog *LoginLogClient
 	// Menu is the client for interacting with the Menu builders.
 	Menu *MenuClient
-	// Operator is the client for interacting with the Operator builders.
-	Operator *OperatorClient
 	// Role is the client for interacting with the Role builders.
 	Role *RoleClient
 	// User is the client for interacting with the User builders.
@@ -76,7 +73,6 @@ func (c *Client) init() {
 	c.I18nLang = NewI18nLangClient(c.config)
 	c.LoginLog = NewLoginLogClient(c.config)
 	c.Menu = NewMenuClient(c.config)
-	c.Operator = NewOperatorClient(c.config)
 	c.Role = NewRoleClient(c.config)
 	c.User = NewUserClient(c.config)
 }
@@ -179,7 +175,6 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		I18nLang:       NewI18nLangClient(cfg),
 		LoginLog:       NewLoginLogClient(cfg),
 		Menu:           NewMenuClient(cfg),
-		Operator:       NewOperatorClient(cfg),
 		Role:           NewRoleClient(cfg),
 		User:           NewUserClient(cfg),
 	}, nil
@@ -209,7 +204,6 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		I18nLang:       NewI18nLangClient(cfg),
 		LoginLog:       NewLoginLogClient(cfg),
 		Menu:           NewMenuClient(cfg),
-		Operator:       NewOperatorClient(cfg),
 		Role:           NewRoleClient(cfg),
 		User:           NewUserClient(cfg),
 	}, nil
@@ -242,7 +236,7 @@ func (c *Client) Close() error {
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
 		c.API, c.AdminActionLog, c.CasbinRule, c.ErrorLog, c.I18n, c.I18nLang,
-		c.LoginLog, c.Menu, c.Operator, c.Role, c.User,
+		c.LoginLog, c.Menu, c.Role, c.User,
 	} {
 		n.Use(hooks...)
 	}
@@ -253,7 +247,7 @@ func (c *Client) Use(hooks ...Hook) {
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
 		c.API, c.AdminActionLog, c.CasbinRule, c.ErrorLog, c.I18n, c.I18nLang,
-		c.LoginLog, c.Menu, c.Operator, c.Role, c.User,
+		c.LoginLog, c.Menu, c.Role, c.User,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -278,8 +272,6 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.LoginLog.mutate(ctx, m)
 	case *MenuMutation:
 		return c.Menu.mutate(ctx, m)
-	case *OperatorMutation:
-		return c.Operator.mutate(ctx, m)
 	case *RoleMutation:
 		return c.Role.mutate(ctx, m)
 	case *UserMutation:
@@ -1423,139 +1415,6 @@ func (c *MenuClient) mutate(ctx context.Context, m *MenuMutation) (Value, error)
 	}
 }
 
-// OperatorClient is a client for the Operator schema.
-type OperatorClient struct {
-	config
-}
-
-// NewOperatorClient returns a client for the Operator from the given config.
-func NewOperatorClient(c config) *OperatorClient {
-	return &OperatorClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `operator.Hooks(f(g(h())))`.
-func (c *OperatorClient) Use(hooks ...Hook) {
-	c.hooks.Operator = append(c.hooks.Operator, hooks...)
-}
-
-// Intercept adds a list of query interceptors to the interceptors stack.
-// A call to `Intercept(f, g, h)` equals to `operator.Intercept(f(g(h())))`.
-func (c *OperatorClient) Intercept(interceptors ...Interceptor) {
-	c.inters.Operator = append(c.inters.Operator, interceptors...)
-}
-
-// Create returns a builder for creating a Operator entity.
-func (c *OperatorClient) Create() *OperatorCreate {
-	mutation := newOperatorMutation(c.config, OpCreate)
-	return &OperatorCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// CreateBulk returns a builder for creating a bulk of Operator entities.
-func (c *OperatorClient) CreateBulk(builders ...*OperatorCreate) *OperatorCreateBulk {
-	return &OperatorCreateBulk{config: c.config, builders: builders}
-}
-
-// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
-// a builder and applies setFunc on it.
-func (c *OperatorClient) MapCreateBulk(slice any, setFunc func(*OperatorCreate, int)) *OperatorCreateBulk {
-	rv := reflect.ValueOf(slice)
-	if rv.Kind() != reflect.Slice {
-		return &OperatorCreateBulk{err: fmt.Errorf("calling to OperatorClient.MapCreateBulk with wrong type %T, need slice", slice)}
-	}
-	builders := make([]*OperatorCreate, rv.Len())
-	for i := 0; i < rv.Len(); i++ {
-		builders[i] = c.Create()
-		setFunc(builders[i], i)
-	}
-	return &OperatorCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for Operator.
-func (c *OperatorClient) Update() *OperatorUpdate {
-	mutation := newOperatorMutation(c.config, OpUpdate)
-	return &OperatorUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *OperatorClient) UpdateOne(_m *Operator) *OperatorUpdateOne {
-	mutation := newOperatorMutation(c.config, OpUpdateOne, withOperator(_m))
-	return &OperatorUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *OperatorClient) UpdateOneID(id int64) *OperatorUpdateOne {
-	mutation := newOperatorMutation(c.config, OpUpdateOne, withOperatorID(id))
-	return &OperatorUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for Operator.
-func (c *OperatorClient) Delete() *OperatorDelete {
-	mutation := newOperatorMutation(c.config, OpDelete)
-	return &OperatorDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a builder for deleting the given entity.
-func (c *OperatorClient) DeleteOne(_m *Operator) *OperatorDeleteOne {
-	return c.DeleteOneID(_m.ID)
-}
-
-// DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *OperatorClient) DeleteOneID(id int64) *OperatorDeleteOne {
-	builder := c.Delete().Where(operator.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &OperatorDeleteOne{builder}
-}
-
-// Query returns a query builder for Operator.
-func (c *OperatorClient) Query() *OperatorQuery {
-	return &OperatorQuery{
-		config: c.config,
-		ctx:    &QueryContext{Type: TypeOperator},
-		inters: c.Interceptors(),
-	}
-}
-
-// Get returns a Operator entity by its id.
-func (c *OperatorClient) Get(ctx context.Context, id int64) (*Operator, error) {
-	return c.Query().Where(operator.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *OperatorClient) GetX(ctx context.Context, id int64) *Operator {
-	obj, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return obj
-}
-
-// Hooks returns the client hooks.
-func (c *OperatorClient) Hooks() []Hook {
-	return c.hooks.Operator
-}
-
-// Interceptors returns the client interceptors.
-func (c *OperatorClient) Interceptors() []Interceptor {
-	return c.inters.Operator
-}
-
-func (c *OperatorClient) mutate(ctx context.Context, m *OperatorMutation) (Value, error) {
-	switch m.Op() {
-	case OpCreate:
-		return (&OperatorCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpUpdate:
-		return (&OperatorUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpUpdateOne:
-		return (&OperatorUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpDelete, OpDeleteOne:
-		return (&OperatorDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
-	default:
-		return nil, fmt.Errorf("ent: unknown Operator mutation op: %q", m.Op())
-	}
-}
-
 // RoleClient is a client for the Role schema.
 type RoleClient struct {
 	config
@@ -1925,12 +1784,12 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		API, AdminActionLog, CasbinRule, ErrorLog, I18n, I18nLang, LoginLog, Menu,
-		Operator, Role, User []ent.Hook
+		API, AdminActionLog, CasbinRule, ErrorLog, I18n, I18nLang, LoginLog, Menu, Role,
+		User []ent.Hook
 	}
 	inters struct {
-		API, AdminActionLog, CasbinRule, ErrorLog, I18n, I18nLang, LoginLog, Menu,
-		Operator, Role, User []ent.Interceptor
+		API, AdminActionLog, CasbinRule, ErrorLog, I18n, I18nLang, LoginLog, Menu, Role,
+		User []ent.Interceptor
 	}
 )
 

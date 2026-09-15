@@ -55,6 +55,8 @@ type OperatorEdges struct {
 	Profile *OperatorProfile `json:"profile,omitempty"`
 	// Domains holds the value of the domains edge.
 	Domains []*OperatorDomain `json:"domains,omitempty"`
+	// Admins holds the value of the admins edge.
+	Admins []*OperatorAdmin `json:"admins,omitempty"`
 	// LanguageAllocations holds the value of the language_allocations edge.
 	LanguageAllocations []*OperatorLanguageAllocation `json:"language_allocations,omitempty"`
 	// RegionAllocations holds the value of the region_allocations edge.
@@ -63,7 +65,7 @@ type OperatorEdges struct {
 	AgentLineAllocations []*OperatorAgentLineAllocation `json:"agent_line_allocations,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [5]bool
+	loadedTypes [6]bool
 }
 
 // ProfileOrErr returns the Profile value or an error if the edge
@@ -86,10 +88,19 @@ func (e OperatorEdges) DomainsOrErr() ([]*OperatorDomain, error) {
 	return nil, &NotLoadedError{edge: "domains"}
 }
 
+// AdminsOrErr returns the Admins value or an error if the edge
+// was not loaded in eager-loading.
+func (e OperatorEdges) AdminsOrErr() ([]*OperatorAdmin, error) {
+	if e.loadedTypes[2] {
+		return e.Admins, nil
+	}
+	return nil, &NotLoadedError{edge: "admins"}
+}
+
 // LanguageAllocationsOrErr returns the LanguageAllocations value or an error if the edge
 // was not loaded in eager-loading.
 func (e OperatorEdges) LanguageAllocationsOrErr() ([]*OperatorLanguageAllocation, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[3] {
 		return e.LanguageAllocations, nil
 	}
 	return nil, &NotLoadedError{edge: "language_allocations"}
@@ -98,7 +109,7 @@ func (e OperatorEdges) LanguageAllocationsOrErr() ([]*OperatorLanguageAllocation
 // RegionAllocationsOrErr returns the RegionAllocations value or an error if the edge
 // was not loaded in eager-loading.
 func (e OperatorEdges) RegionAllocationsOrErr() ([]*OperatorRegionAllocation, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[4] {
 		return e.RegionAllocations, nil
 	}
 	return nil, &NotLoadedError{edge: "region_allocations"}
@@ -107,7 +118,7 @@ func (e OperatorEdges) RegionAllocationsOrErr() ([]*OperatorRegionAllocation, er
 // AgentLineAllocationsOrErr returns the AgentLineAllocations value or an error if the edge
 // was not loaded in eager-loading.
 func (e OperatorEdges) AgentLineAllocationsOrErr() ([]*OperatorAgentLineAllocation, error) {
-	if e.loadedTypes[4] {
+	if e.loadedTypes[5] {
 		return e.AgentLineAllocations, nil
 	}
 	return nil, &NotLoadedError{edge: "agent_line_allocations"}
@@ -241,6 +252,11 @@ func (_m *Operator) QueryProfile() *OperatorProfileQuery {
 // QueryDomains queries the "domains" edge of the Operator entity.
 func (_m *Operator) QueryDomains() *OperatorDomainQuery {
 	return NewOperatorClient(_m.config).QueryDomains(_m)
+}
+
+// QueryAdmins queries the "admins" edge of the Operator entity.
+func (_m *Operator) QueryAdmins() *OperatorAdminQuery {
+	return NewOperatorClient(_m.config).QueryAdmins(_m)
 }
 
 // QueryLanguageAllocations queries the "language_allocations" edge of the Operator entity.

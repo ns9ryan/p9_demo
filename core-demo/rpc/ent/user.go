@@ -13,44 +13,45 @@ import (
 	"oa.98ent.com/p9/core/rpc/ent/user"
 )
 
-// User is the model entity for the User schema.
+// User Table | 用户表
 type User struct {
 	config `json:"-"`
 	// ID of the ent.
+	// Primary key | 主键
 	ID int64 `json:"id,omitempty"`
 	// Created At | 创建时间
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Updated At | 更新时间
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	// DeletedAt holds the value of the "deleted_at" field.
+	// Deleted At | 删除时间
 	DeletedAt *time.Time `json:"deleted_at,omitempty"`
-	// OperatorID holds the value of the "operator_id" field.
-	OperatorID *int64 `json:"operator_id,omitempty"`
-	// UserCode holds the value of the "user_code" field.
+	// Operator Code | 分站编码
+	OperatorCode *string `json:"operator_code,omitempty"`
+	// User code | 用户编码
 	UserCode string `json:"user_code,omitempty"`
-	// Username holds the value of the "username" field.
+	// Login name | 登录名
 	Username string `json:"username,omitempty"`
-	// PasswordHash holds the value of the "password_hash" field.
+	// Password hash | 密码哈希
 	PasswordHash string `json:"-"`
-	// Salt holds the value of the "salt" field.
+	// Token salt | 令牌盐
 	Salt string `json:"-"`
-	// DisplayName holds the value of the "display_name" field.
+	// Display name | 显示名
 	DisplayName string `json:"display_name,omitempty"`
-	// Mobile holds the value of the "mobile" field.
+	// Mobile | 手机号
 	Mobile *string `json:"mobile,omitempty"`
-	// Email holds the value of the "email" field.
+	// Email | 邮箱
 	Email *string `json:"email,omitempty"`
-	// Status holds the value of the "status" field.
+	// Status 1 enabled 2 disabled | 状态 1 启用 2 停用
 	Status int16 `json:"status,omitempty"`
-	// IsSuperAdmin holds the value of the "is_super_admin" field.
+	// Super admin | 是否超管
 	IsSuperAdmin bool `json:"is_super_admin,omitempty"`
-	// LastLoginAt holds the value of the "last_login_at" field.
+	// Last login time | 最后登录时间
 	LastLoginAt *time.Time `json:"last_login_at,omitempty"`
-	// LastLoginIP holds the value of the "last_login_ip" field.
+	// Last login IP | 最后登录 IP
 	LastLoginIP *string `json:"last_login_ip,omitempty"`
-	// IPWhitelistEnabled holds the value of the "ip_whitelist_enabled" field.
+	// IP whitelist switch 0 off 1 on | IP 白名单开关 0 关 1 开
 	IPWhitelistEnabled int16 `json:"ip_whitelist_enabled,omitempty"`
-	// IPWhitelist holds the value of the "ip_whitelist" field.
+	// Allowed login IPs or CIDRs | 允许登录的 IP / CIDR
 	IPWhitelist []string `json:"ip_whitelist,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserQuery when eager-loading is set.
@@ -118,9 +119,9 @@ func (*User) scanValues(columns []string) ([]any, error) {
 			values[i] = new([]byte)
 		case user.FieldIsSuperAdmin:
 			values[i] = new(sql.NullBool)
-		case user.FieldID, user.FieldOperatorID, user.FieldStatus, user.FieldIPWhitelistEnabled:
+		case user.FieldID, user.FieldStatus, user.FieldIPWhitelistEnabled:
 			values[i] = new(sql.NullInt64)
-		case user.FieldUserCode, user.FieldUsername, user.FieldPasswordHash, user.FieldSalt, user.FieldDisplayName, user.FieldMobile, user.FieldEmail, user.FieldLastLoginIP:
+		case user.FieldOperatorCode, user.FieldUserCode, user.FieldUsername, user.FieldPasswordHash, user.FieldSalt, user.FieldDisplayName, user.FieldMobile, user.FieldEmail, user.FieldLastLoginIP:
 			values[i] = new(sql.NullString)
 		case user.FieldCreatedAt, user.FieldUpdatedAt, user.FieldDeletedAt, user.FieldLastLoginAt:
 			values[i] = new(sql.NullTime)
@@ -164,12 +165,12 @@ func (_m *User) assignValues(columns []string, values []any) error {
 				_m.DeletedAt = new(time.Time)
 				*_m.DeletedAt = value.Time
 			}
-		case user.FieldOperatorID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field operator_id", values[i])
+		case user.FieldOperatorCode:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field operator_code", values[i])
 			} else if value.Valid {
-				_m.OperatorID = new(int64)
-				*_m.OperatorID = value.Int64
+				_m.OperatorCode = new(string)
+				*_m.OperatorCode = value.String
 			}
 		case user.FieldUserCode:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -322,9 +323,9 @@ func (_m *User) String() string {
 		builder.WriteString(v.Format(time.ANSIC))
 	}
 	builder.WriteString(", ")
-	if v := _m.OperatorID; v != nil {
-		builder.WriteString("operator_id=")
-		builder.WriteString(fmt.Sprintf("%v", *v))
+	if v := _m.OperatorCode; v != nil {
+		builder.WriteString("operator_code=")
+		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")
 	builder.WriteString("user_code=")

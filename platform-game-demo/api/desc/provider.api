@@ -2,7 +2,7 @@ syntax = "v1"
 
 @server (
 	group: provider
-	middleware: Auth
+	middleware: Jwt,ActionLog,Authority
 	prefix: /admin/game-provider
 )
 service platform_game {
@@ -23,8 +23,7 @@ type GameProviderResp {
 	SourceID           int64  `json:"source_id" comment:"上游厂商ID"`
 	ProviderCode       string `json:"provider_code" comment:"厂商编码"`
 	SourceProviderCode string `json:"source_provider_code" comment:"上游厂商编码"`
-	SourceNameI18n     string `json:"source_name_i18n" comment:"上游厂商名称（多语言JSON）"`
-	NameI18n           string `json:"name_i18n" comment:"厂商名称（多语言JSON）"`
+	Name           	   string `json:"name" comment:"厂商名称（多语言JSON）"`
 	SourceLogoUrl      string `json:"source_logo_url,omitempty" comment:"上游厂商Logo URL"`
 	LogoUrl            string `json:"logo_url,omitempty" comment:"厂商Logo URL"`
 	SourceSortNo       int32  `json:"source_sort_no,omitempty" comment:"上游排序号"`

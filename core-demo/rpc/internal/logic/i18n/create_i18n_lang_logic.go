@@ -28,7 +28,7 @@ func NewCreateI18nLangLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cr
 
 func (l *CreateI18nLangLogic) CreateI18NLang(in *core.CreateI18NLangReq) (*core.I18NLangInfo, error) {
 	row, err := l.svcCtx.Deps.CreateI18nLang(l.ctx, service.CreateI18nLangReq{
-		Lang: in.GetLang(), Name: in.GetName(), Disabled: int16(in.GetDisabled()), SortNo: int(in.GetSortNo()),
+		Lang: in.GetLang(), Name: in.GetName(), I18nKey: in.GetI18NKey(), Disabled: int16(in.GetDisabled()), SortNo: int(in.GetSortNo()),
 	})
 	if err != nil {
 		return nil, xerr.RpcErr(err)

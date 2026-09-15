@@ -13,36 +13,37 @@ import (
 	"oa.98ent.com/p9/core/rpc/ent/user"
 )
 
-// AdminActionLog is the model entity for the AdminActionLog schema.
+// Admin Action Log Table | 操作日志表
 type AdminActionLog struct {
 	config `json:"-"`
 	// ID of the ent.
+	// Primary key | 主键
 	ID int64 `json:"id,omitempty"`
-	// OperatorID holds the value of the "operator_id" field.
-	OperatorID *int64 `json:"operator_id,omitempty"`
-	// UserID holds the value of the "user_id" field.
+	// Operator Code | 分站编码
+	OperatorCode *string `json:"operator_code,omitempty"`
+	// User ID | 用户 ID
 	UserID int64 `json:"user_id,omitempty"`
-	// RequestMethod holds the value of the "request_method" field.
+	// HTTP method | 请求方法
 	RequestMethod string `json:"request_method,omitempty"`
-	// RequestPath holds the value of the "request_path" field.
+	// Request path | 请求路径
 	RequestPath string `json:"request_path,omitempty"`
-	// RequestQuery holds the value of the "request_query" field.
+	// Query string | 查询串
 	RequestQuery *string `json:"request_query,omitempty"`
-	// RequestBody holds the value of the "request_body" field.
+	// Request body | 请求体
 	RequestBody *string `json:"request_body,omitempty"`
-	// ActionResult holds the value of the "action_result" field.
+	// Action result 1 success 2 fail | 操作结果 1 成功 2 失败
 	ActionResult int16 `json:"action_result,omitempty"`
-	// ResponseStatus holds the value of the "response_status" field.
+	// HTTP status | 响应状态码
 	ResponseStatus int `json:"response_status,omitempty"`
-	// ResponseBody holds the value of the "response_body" field.
+	// Response body | 响应体
 	ResponseBody *string `json:"response_body,omitempty"`
-	// DurationMs holds the value of the "duration_ms" field.
+	// Duration ms | 耗时毫秒
 	DurationMs int `json:"duration_ms,omitempty"`
-	// ClientIP holds the value of the "client_ip" field.
+	// Client IP | 客户端 IP
 	ClientIP string `json:"client_ip,omitempty"`
-	// UserAgent holds the value of the "user_agent" field.
+	// User agent | 客户端标识
 	UserAgent *string `json:"user_agent,omitempty"`
-	// CreatedAt holds the value of the "created_at" field.
+	// Created at | 创建时间
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the AdminActionLogQuery when eager-loading is set.
@@ -75,9 +76,9 @@ func (*AdminActionLog) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case adminactionlog.FieldID, adminactionlog.FieldOperatorID, adminactionlog.FieldUserID, adminactionlog.FieldActionResult, adminactionlog.FieldResponseStatus, adminactionlog.FieldDurationMs:
+		case adminactionlog.FieldID, adminactionlog.FieldUserID, adminactionlog.FieldActionResult, adminactionlog.FieldResponseStatus, adminactionlog.FieldDurationMs:
 			values[i] = new(sql.NullInt64)
-		case adminactionlog.FieldRequestMethod, adminactionlog.FieldRequestPath, adminactionlog.FieldRequestQuery, adminactionlog.FieldRequestBody, adminactionlog.FieldResponseBody, adminactionlog.FieldClientIP, adminactionlog.FieldUserAgent:
+		case adminactionlog.FieldOperatorCode, adminactionlog.FieldRequestMethod, adminactionlog.FieldRequestPath, adminactionlog.FieldRequestQuery, adminactionlog.FieldRequestBody, adminactionlog.FieldResponseBody, adminactionlog.FieldClientIP, adminactionlog.FieldUserAgent:
 			values[i] = new(sql.NullString)
 		case adminactionlog.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
@@ -102,12 +103,12 @@ func (_m *AdminActionLog) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			_m.ID = int64(value.Int64)
-		case adminactionlog.FieldOperatorID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field operator_id", values[i])
+		case adminactionlog.FieldOperatorCode:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field operator_code", values[i])
 			} else if value.Valid {
-				_m.OperatorID = new(int64)
-				*_m.OperatorID = value.Int64
+				_m.OperatorCode = new(string)
+				*_m.OperatorCode = value.String
 			}
 		case adminactionlog.FieldUserID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -226,9 +227,9 @@ func (_m *AdminActionLog) String() string {
 	var builder strings.Builder
 	builder.WriteString("AdminActionLog(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
-	if v := _m.OperatorID; v != nil {
-		builder.WriteString("operator_id=")
-		builder.WriteString(fmt.Sprintf("%v", *v))
+	if v := _m.OperatorCode; v != nil {
+		builder.WriteString("operator_code=")
+		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")
 	builder.WriteString("user_id=")

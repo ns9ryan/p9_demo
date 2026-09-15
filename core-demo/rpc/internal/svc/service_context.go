@@ -67,17 +67,17 @@ func NewServiceContext(c config.Config) *ServiceContext {
 }
 
 func attachTenant(c *ent.Client) {
-	fOperatorID := intercept.TraverseFunc(func(ctx context.Context, q intercept.Query) error {
-		entmixin.FilterOperatorID(ctx, q)
+	fOperatorCode := intercept.TraverseFunc(func(ctx context.Context, q intercept.Query) error {
+		entmixin.FilterOperatorCode(ctx, q)
 		return nil
 	})
 	fSoftDelete := intercept.TraverseFunc(func(ctx context.Context, q intercept.Query) error {
 		entmixin.FilterSoftDelete(ctx, q)
 		return nil
 	})
-	c.User.Intercept(fOperatorID, fSoftDelete)
-	c.Role.Intercept(fOperatorID, fSoftDelete)
-	c.LoginLog.Intercept(fOperatorID)
-	c.AdminActionLog.Intercept(fOperatorID)
-	c.ErrorLog.Intercept(fOperatorID)
+	c.User.Intercept(fOperatorCode, fSoftDelete)
+	c.Role.Intercept(fOperatorCode, fSoftDelete)
+	c.LoginLog.Intercept(fOperatorCode)
+	c.AdminActionLog.Intercept(fOperatorCode)
+	c.ErrorLog.Intercept(fOperatorCode)
 }

@@ -241,17 +241,6 @@ func (s *CoreServer) GetMenuList(ctx context.Context, in *core.Empty) (*core.Men
 	return l.GetMenuList(in)
 }
 
-// Operator management
-func (s *CoreServer) GetOperator(ctx context.Context, in *core.Empty) (*core.OperatorInfo, error) {
-	l := operator.NewGetOperatorLogic(ctx, s.svcCtx)
-	return l.GetOperator(in)
-}
-
-func (s *CoreServer) UpdateOperator(ctx context.Context, in *core.UpdateOperatorReq) (*core.Empty, error) {
-	l := operator.NewUpdateOperatorLogic(ctx, s.svcCtx)
-	return l.UpdateOperator(in)
-}
-
 func (s *CoreServer) IssuePreviewToken(ctx context.Context, in *core.IssuePreviewTokenReq) (*core.IssuePreviewTokenResp, error) {
 	l := operator.NewIssuePreviewTokenLogic(ctx, s.svcCtx)
 	return l.IssuePreviewToken(in)

@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operator"
+	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoradmin"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoragentlineallocation"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatordomain"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatorlanguageallocation"
@@ -30,6 +31,7 @@ const (
 
 	// Node types.
 	TypeOperator                    = "Operator"
+	TypeOperatorAdmin               = "OperatorAdmin"
 	TypeOperatorAgentLineAllocation = "OperatorAgentLineAllocation"
 	TypeOperatorDomain              = "OperatorDomain"
 	TypeOperatorLanguageAllocation  = "OperatorLanguageAllocation"
@@ -64,6 +66,9 @@ type OperatorMutation struct {
 	domains                       map[int64]struct{}
 	removeddomains                map[int64]struct{}
 	cleareddomains                bool
+	admins                        map[int64]struct{}
+	removedadmins                 map[int64]struct{}
+	clearedadmins                 bool
 	language_allocations          map[int64]struct{}
 	removedlanguage_allocations   map[int64]struct{}
 	clearedlanguage_allocations   bool
@@ -806,6 +811,60 @@ func (m *OperatorMutation) ResetDomains() {
 	m.removeddomains = nil
 }
 
+// AddAdminIDs adds the "admins" edge to the OperatorAdmin entity by ids.
+func (m *OperatorMutation) AddAdminIDs(ids ...int64) {
+	if m.admins == nil {
+		m.admins = make(map[int64]struct{})
+	}
+	for i := range ids {
+		m.admins[ids[i]] = struct{}{}
+	}
+}
+
+// ClearAdmins clears the "admins" edge to the OperatorAdmin entity.
+func (m *OperatorMutation) ClearAdmins() {
+	m.clearedadmins = true
+}
+
+// AdminsCleared reports if the "admins" edge to the OperatorAdmin entity was cleared.
+func (m *OperatorMutation) AdminsCleared() bool {
+	return m.clearedadmins
+}
+
+// RemoveAdminIDs removes the "admins" edge to the OperatorAdmin entity by IDs.
+func (m *OperatorMutation) RemoveAdminIDs(ids ...int64) {
+	if m.removedadmins == nil {
+		m.removedadmins = make(map[int64]struct{})
+	}
+	for i := range ids {
+		delete(m.admins, ids[i])
+		m.removedadmins[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedAdmins returns the removed IDs of the "admins" edge to the OperatorAdmin entity.
+func (m *OperatorMutation) RemovedAdminsIDs() (ids []int64) {
+	for id := range m.removedadmins {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// AdminsIDs returns the "admins" edge IDs in the mutation.
+func (m *OperatorMutation) AdminsIDs() (ids []int64) {
+	for id := range m.admins {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetAdmins resets all changes to the "admins" edge.
+func (m *OperatorMutation) ResetAdmins() {
+	m.admins = nil
+	m.clearedadmins = false
+	m.removedadmins = nil
+}
+
 // AddLanguageAllocationIDs adds the "language_allocations" edge to the OperatorLanguageAllocation entity by ids.
 func (m *OperatorMutation) AddLanguageAllocationIDs(ids ...int64) {
 	if m.language_allocations == nil {
@@ -1348,12 +1407,15 @@ func (m *OperatorMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *OperatorMutation) AddedEdges() []string {
-	edges := make([]string, 0, 5)
+	edges := make([]string, 0, 6)
 	if m.profile != nil {
 		edges = append(edges, operator.EdgeProfile)
 	}
 	if m.domains != nil {
 		edges = append(edges, operator.EdgeDomains)
+	}
+	if m.admins != nil {
+		edges = append(edges, operator.EdgeAdmins)
 	}
 	if m.language_allocations != nil {
 		edges = append(edges, operator.EdgeLanguageAllocations)
@@ -1381,6 +1443,12 @@ func (m *OperatorMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case operator.EdgeAdmins:
+		ids := make([]ent.Value, 0, len(m.admins))
+		for id := range m.admins {
+			ids = append(ids, id)
+		}
+		return ids
 	case operator.EdgeLanguageAllocations:
 		ids := make([]ent.Value, 0, len(m.language_allocations))
 		for id := range m.language_allocations {
@@ -1405,9 +1473,12 @@ func (m *OperatorMutation) AddedIDs(name string) []ent.Value {
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *OperatorMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 5)
+	edges := make([]string, 0, 6)
 	if m.removeddomains != nil {
 		edges = append(edges, operator.EdgeDomains)
+	}
+	if m.removedadmins != nil {
+		edges = append(edges, operator.EdgeAdmins)
 	}
 	if m.removedlanguage_allocations != nil {
 		edges = append(edges, operator.EdgeLanguageAllocations)
@@ -1428,6 +1499,12 @@ func (m *OperatorMutation) RemovedIDs(name string) []ent.Value {
 	case operator.EdgeDomains:
 		ids := make([]ent.Value, 0, len(m.removeddomains))
 		for id := range m.removeddomains {
+			ids = append(ids, id)
+		}
+		return ids
+	case operator.EdgeAdmins:
+		ids := make([]ent.Value, 0, len(m.removedadmins))
+		for id := range m.removedadmins {
 			ids = append(ids, id)
 		}
 		return ids
@@ -1455,12 +1532,15 @@ func (m *OperatorMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *OperatorMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 5)
+	edges := make([]string, 0, 6)
 	if m.clearedprofile {
 		edges = append(edges, operator.EdgeProfile)
 	}
 	if m.cleareddomains {
 		edges = append(edges, operator.EdgeDomains)
+	}
+	if m.clearedadmins {
+		edges = append(edges, operator.EdgeAdmins)
 	}
 	if m.clearedlanguage_allocations {
 		edges = append(edges, operator.EdgeLanguageAllocations)
@@ -1482,6 +1562,8 @@ func (m *OperatorMutation) EdgeCleared(name string) bool {
 		return m.clearedprofile
 	case operator.EdgeDomains:
 		return m.cleareddomains
+	case operator.EdgeAdmins:
+		return m.clearedadmins
 	case operator.EdgeLanguageAllocations:
 		return m.clearedlanguage_allocations
 	case operator.EdgeRegionAllocations:
@@ -1513,6 +1595,9 @@ func (m *OperatorMutation) ResetEdge(name string) error {
 	case operator.EdgeDomains:
 		m.ResetDomains()
 		return nil
+	case operator.EdgeAdmins:
+		m.ResetAdmins()
+		return nil
 	case operator.EdgeLanguageAllocations:
 		m.ResetLanguageAllocations()
 		return nil
@@ -1524,6 +1609,752 @@ func (m *OperatorMutation) ResetEdge(name string) error {
 		return nil
 	}
 	return fmt.Errorf("unknown Operator edge %s", name)
+}
+
+// OperatorAdminMutation represents an operation that mutates the OperatorAdmin nodes in the graph.
+type OperatorAdminMutation struct {
+	config
+	op              Op
+	typ             string
+	id              *int64
+	status          *int64
+	addstatus       *int64
+	created_at      *time.Time
+	updated_at      *time.Time
+	username        *string
+	password        *string
+	display_name    *string
+	clearedFields   map[string]struct{}
+	operator        *int64
+	clearedoperator bool
+	done            bool
+	oldValue        func(context.Context) (*OperatorAdmin, error)
+	predicates      []predicate.OperatorAdmin
+}
+
+var _ ent.Mutation = (*OperatorAdminMutation)(nil)
+
+// operatoradminOption allows management of the mutation configuration using functional options.
+type operatoradminOption func(*OperatorAdminMutation)
+
+// newOperatorAdminMutation creates new mutation for the OperatorAdmin entity.
+func newOperatorAdminMutation(c config, op Op, opts ...operatoradminOption) *OperatorAdminMutation {
+	m := &OperatorAdminMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeOperatorAdmin,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withOperatorAdminID sets the ID field of the mutation.
+func withOperatorAdminID(id int64) operatoradminOption {
+	return func(m *OperatorAdminMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *OperatorAdmin
+		)
+		m.oldValue = func(ctx context.Context) (*OperatorAdmin, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().OperatorAdmin.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withOperatorAdmin sets the old OperatorAdmin of the mutation.
+func withOperatorAdmin(node *OperatorAdmin) operatoradminOption {
+	return func(m *OperatorAdminMutation) {
+		m.oldValue = func(context.Context) (*OperatorAdmin, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m OperatorAdminMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m OperatorAdminMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of OperatorAdmin entities.
+func (m *OperatorAdminMutation) SetID(id int64) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *OperatorAdminMutation) ID() (id int64, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *OperatorAdminMutation) IDs(ctx context.Context) ([]int64, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int64{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().OperatorAdmin.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetStatus sets the "status" field.
+func (m *OperatorAdminMutation) SetStatus(i int64) {
+	m.status = &i
+	m.addstatus = nil
+}
+
+// Status returns the value of the "status" field in the mutation.
+func (m *OperatorAdminMutation) Status() (r int64, exists bool) {
+	v := m.status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStatus returns the old "status" field's value of the OperatorAdmin entity.
+// If the OperatorAdmin object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorAdminMutation) OldStatus(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
+	}
+	return oldValue.Status, nil
+}
+
+// AddStatus adds i to the "status" field.
+func (m *OperatorAdminMutation) AddStatus(i int64) {
+	if m.addstatus != nil {
+		*m.addstatus += i
+	} else {
+		m.addstatus = &i
+	}
+}
+
+// AddedStatus returns the value that was added to the "status" field in this mutation.
+func (m *OperatorAdminMutation) AddedStatus() (r int64, exists bool) {
+	v := m.addstatus
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetStatus resets all changes to the "status" field.
+func (m *OperatorAdminMutation) ResetStatus() {
+	m.status = nil
+	m.addstatus = nil
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *OperatorAdminMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *OperatorAdminMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the OperatorAdmin entity.
+// If the OperatorAdmin object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorAdminMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *OperatorAdminMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *OperatorAdminMutation) SetUpdatedAt(t time.Time) {
+	m.updated_at = &t
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *OperatorAdminMutation) UpdatedAt() (r time.Time, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the OperatorAdmin entity.
+// If the OperatorAdmin object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorAdminMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *OperatorAdminMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+}
+
+// SetOperatorID sets the "operator_id" field.
+func (m *OperatorAdminMutation) SetOperatorID(i int64) {
+	m.operator = &i
+}
+
+// OperatorID returns the value of the "operator_id" field in the mutation.
+func (m *OperatorAdminMutation) OperatorID() (r int64, exists bool) {
+	v := m.operator
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOperatorID returns the old "operator_id" field's value of the OperatorAdmin entity.
+// If the OperatorAdmin object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorAdminMutation) OldOperatorID(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOperatorID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOperatorID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOperatorID: %w", err)
+	}
+	return oldValue.OperatorID, nil
+}
+
+// ResetOperatorID resets all changes to the "operator_id" field.
+func (m *OperatorAdminMutation) ResetOperatorID() {
+	m.operator = nil
+}
+
+// SetUsername sets the "username" field.
+func (m *OperatorAdminMutation) SetUsername(s string) {
+	m.username = &s
+}
+
+// Username returns the value of the "username" field in the mutation.
+func (m *OperatorAdminMutation) Username() (r string, exists bool) {
+	v := m.username
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUsername returns the old "username" field's value of the OperatorAdmin entity.
+// If the OperatorAdmin object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorAdminMutation) OldUsername(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUsername is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUsername requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUsername: %w", err)
+	}
+	return oldValue.Username, nil
+}
+
+// ResetUsername resets all changes to the "username" field.
+func (m *OperatorAdminMutation) ResetUsername() {
+	m.username = nil
+}
+
+// SetPassword sets the "password" field.
+func (m *OperatorAdminMutation) SetPassword(s string) {
+	m.password = &s
+}
+
+// Password returns the value of the "password" field in the mutation.
+func (m *OperatorAdminMutation) Password() (r string, exists bool) {
+	v := m.password
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPassword returns the old "password" field's value of the OperatorAdmin entity.
+// If the OperatorAdmin object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorAdminMutation) OldPassword(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPassword is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPassword requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPassword: %w", err)
+	}
+	return oldValue.Password, nil
+}
+
+// ResetPassword resets all changes to the "password" field.
+func (m *OperatorAdminMutation) ResetPassword() {
+	m.password = nil
+}
+
+// SetDisplayName sets the "display_name" field.
+func (m *OperatorAdminMutation) SetDisplayName(s string) {
+	m.display_name = &s
+}
+
+// DisplayName returns the value of the "display_name" field in the mutation.
+func (m *OperatorAdminMutation) DisplayName() (r string, exists bool) {
+	v := m.display_name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDisplayName returns the old "display_name" field's value of the OperatorAdmin entity.
+// If the OperatorAdmin object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorAdminMutation) OldDisplayName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDisplayName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDisplayName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDisplayName: %w", err)
+	}
+	return oldValue.DisplayName, nil
+}
+
+// ResetDisplayName resets all changes to the "display_name" field.
+func (m *OperatorAdminMutation) ResetDisplayName() {
+	m.display_name = nil
+}
+
+// ClearOperator clears the "operator" edge to the Operator entity.
+func (m *OperatorAdminMutation) ClearOperator() {
+	m.clearedoperator = true
+	m.clearedFields[operatoradmin.FieldOperatorID] = struct{}{}
+}
+
+// OperatorCleared reports if the "operator" edge to the Operator entity was cleared.
+func (m *OperatorAdminMutation) OperatorCleared() bool {
+	return m.clearedoperator
+}
+
+// OperatorIDs returns the "operator" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// OperatorID instead. It exists only for internal usage by the builders.
+func (m *OperatorAdminMutation) OperatorIDs() (ids []int64) {
+	if id := m.operator; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetOperator resets all changes to the "operator" edge.
+func (m *OperatorAdminMutation) ResetOperator() {
+	m.operator = nil
+	m.clearedoperator = false
+}
+
+// Where appends a list predicates to the OperatorAdminMutation builder.
+func (m *OperatorAdminMutation) Where(ps ...predicate.OperatorAdmin) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the OperatorAdminMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *OperatorAdminMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.OperatorAdmin, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *OperatorAdminMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *OperatorAdminMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (OperatorAdmin).
+func (m *OperatorAdminMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *OperatorAdminMutation) Fields() []string {
+	fields := make([]string, 0, 7)
+	if m.status != nil {
+		fields = append(fields, operatoradmin.FieldStatus)
+	}
+	if m.created_at != nil {
+		fields = append(fields, operatoradmin.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, operatoradmin.FieldUpdatedAt)
+	}
+	if m.operator != nil {
+		fields = append(fields, operatoradmin.FieldOperatorID)
+	}
+	if m.username != nil {
+		fields = append(fields, operatoradmin.FieldUsername)
+	}
+	if m.password != nil {
+		fields = append(fields, operatoradmin.FieldPassword)
+	}
+	if m.display_name != nil {
+		fields = append(fields, operatoradmin.FieldDisplayName)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *OperatorAdminMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case operatoradmin.FieldStatus:
+		return m.Status()
+	case operatoradmin.FieldCreatedAt:
+		return m.CreatedAt()
+	case operatoradmin.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case operatoradmin.FieldOperatorID:
+		return m.OperatorID()
+	case operatoradmin.FieldUsername:
+		return m.Username()
+	case operatoradmin.FieldPassword:
+		return m.Password()
+	case operatoradmin.FieldDisplayName:
+		return m.DisplayName()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *OperatorAdminMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case operatoradmin.FieldStatus:
+		return m.OldStatus(ctx)
+	case operatoradmin.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case operatoradmin.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case operatoradmin.FieldOperatorID:
+		return m.OldOperatorID(ctx)
+	case operatoradmin.FieldUsername:
+		return m.OldUsername(ctx)
+	case operatoradmin.FieldPassword:
+		return m.OldPassword(ctx)
+	case operatoradmin.FieldDisplayName:
+		return m.OldDisplayName(ctx)
+	}
+	return nil, fmt.Errorf("unknown OperatorAdmin field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *OperatorAdminMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case operatoradmin.FieldStatus:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStatus(v)
+		return nil
+	case operatoradmin.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case operatoradmin.FieldUpdatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case operatoradmin.FieldOperatorID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOperatorID(v)
+		return nil
+	case operatoradmin.FieldUsername:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUsername(v)
+		return nil
+	case operatoradmin.FieldPassword:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPassword(v)
+		return nil
+	case operatoradmin.FieldDisplayName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDisplayName(v)
+		return nil
+	}
+	return fmt.Errorf("unknown OperatorAdmin field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *OperatorAdminMutation) AddedFields() []string {
+	var fields []string
+	if m.addstatus != nil {
+		fields = append(fields, operatoradmin.FieldStatus)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *OperatorAdminMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case operatoradmin.FieldStatus:
+		return m.AddedStatus()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *OperatorAdminMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case operatoradmin.FieldStatus:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddStatus(v)
+		return nil
+	}
+	return fmt.Errorf("unknown OperatorAdmin numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *OperatorAdminMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *OperatorAdminMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *OperatorAdminMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown OperatorAdmin nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *OperatorAdminMutation) ResetField(name string) error {
+	switch name {
+	case operatoradmin.FieldStatus:
+		m.ResetStatus()
+		return nil
+	case operatoradmin.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case operatoradmin.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case operatoradmin.FieldOperatorID:
+		m.ResetOperatorID()
+		return nil
+	case operatoradmin.FieldUsername:
+		m.ResetUsername()
+		return nil
+	case operatoradmin.FieldPassword:
+		m.ResetPassword()
+		return nil
+	case operatoradmin.FieldDisplayName:
+		m.ResetDisplayName()
+		return nil
+	}
+	return fmt.Errorf("unknown OperatorAdmin field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *OperatorAdminMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.operator != nil {
+		edges = append(edges, operatoradmin.EdgeOperator)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *OperatorAdminMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case operatoradmin.EdgeOperator:
+		if id := m.operator; id != nil {
+			return []ent.Value{*id}
+		}
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *OperatorAdminMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *OperatorAdminMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *OperatorAdminMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.clearedoperator {
+		edges = append(edges, operatoradmin.EdgeOperator)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *OperatorAdminMutation) EdgeCleared(name string) bool {
+	switch name {
+	case operatoradmin.EdgeOperator:
+		return m.clearedoperator
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *OperatorAdminMutation) ClearEdge(name string) error {
+	switch name {
+	case operatoradmin.EdgeOperator:
+		m.ClearOperator()
+		return nil
+	}
+	return fmt.Errorf("unknown OperatorAdmin unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *OperatorAdminMutation) ResetEdge(name string) error {
+	switch name {
+	case operatoradmin.EdgeOperator:
+		m.ResetOperator()
+		return nil
+	}
+	return fmt.Errorf("unknown OperatorAdmin edge %s", name)
 }
 
 // OperatorAgentLineAllocationMutation represents an operation that mutates the OperatorAgentLineAllocation nodes in the graph.

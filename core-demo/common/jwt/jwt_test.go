@@ -12,7 +12,6 @@ func TestSignParseRoundTrip(t *testing.T) {
 		UserID:       1,
 		UserCode:     "abc",
 		Username:     "admin",
-		OperatorID:   12,
 		OperatorCode: "demo",
 		RoleCodes:    []string{"super_admin"},
 		Salt:         "s1",
@@ -29,7 +28,7 @@ func TestSignParseRoundTrip(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if c.UserID != 1 || c.Salt != "s1" || c.OperatorID != 12 || c.OperatorCode != "demo" || c.TokenType != TokenAccess || c.ClientIP != "10.0.0.1" {
+	if c.UserID != 1 || c.Salt != "s1" || c.OperatorCode != "demo" || c.TokenType != TokenAccess || c.ClientIP != "10.0.0.1" {
 		t.Fatalf("claims %+v", c)
 	}
 	if _, err := Parse("other", tok); err == nil {
@@ -63,7 +62,6 @@ func TestSignParsePreview(t *testing.T) {
 		UserID:       8,
 		UserCode:     "u8",
 		Username:     "admin",
-		OperatorID:   12,
 		OperatorCode: "demo",
 		RoleCodes:    []string{"super_admin"},
 		Salt:         "s1",
@@ -80,7 +78,7 @@ func TestSignParsePreview(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if c.UserID != 8 || c.Username != "admin" || c.Salt != "s1" || c.OperatorID != 12 || c.TokenType != TokenPreview || !c.IsPlatform {
+	if c.UserID != 8 || c.Username != "admin" || c.Salt != "s1" || c.OperatorCode != "demo" || c.TokenType != TokenPreview || !c.IsPlatform {
 		t.Fatalf("claims %+v", c)
 	}
 	if _, err := ParseTyped("secret", tok, TokenRefresh); err == nil {

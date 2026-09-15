@@ -9,7 +9,6 @@ import (
 	"oa.98ent.com/p9/core/rpc/casbinx"
 	"oa.98ent.com/p9/core/rpc/ent"
 	"oa.98ent.com/p9/core/rpc/ent/menu"
-	"oa.98ent.com/p9/core/rpc/ent/operator"
 	"oa.98ent.com/p9/core/rpc/ent/role"
 	"oa.98ent.com/p9/core/rpc/ent/user"
 	"oa.98ent.com/p9/core/rpc/model"
@@ -23,12 +22,10 @@ type CreateAdminReq struct {
 }
 
 type CreateOperatorAdminReq struct {
-	OperatorCode           string `json:"operator_code"`
-	TimezoneCode           string `json:"timezone_code"`
-	SettlementCurrencyCode string `json:"settlement_currency_code"`
-	Username               string `json:"username"`
-	Password               string `json:"password"`
-	DisplayName            string `json:"display_name"`
+	OperatorCode string `json:"operator_code"`
+	Username     string `json:"username"`
+	Password     string `json:"password"`
+	DisplayName  string `json:"display_name"`
 }
 
 // CreatePlatformAdmin 创建总网超级管理员
@@ -50,48 +47,20 @@ func CreateOperatorAdmin(ctx context.Context, d *service.Deps, req CreateOperato
 	if req.OperatorCode == "" || req.Username == "" || req.Password == "" {
 		return nil, xerr.BadRequest(i18n.AuthBootstrapFieldsRequired)
 	}
-	if req.TimezoneCode == "" {
-		req.TimezoneCode = "UTC"
-	}
-	if req.SettlementCurrencyCode == "" {
-		req.SettlementCurrencyCode = "USD"
-	}
 	if req.DisplayName == "" {
 		req.DisplayName = req.Username
 	}
-	op, err := ensureOperator(ctx, d, req)
-	if err != nil {
-		return nil, err
-	}
-	oid := op.ID
+	code := req.OperatorCode
 	return createRoot(ctx, d, createRootReq{
-		OperatorID: &oid, Username: req.Username, Password: req.Password, DisplayName: req.DisplayName,
+		OperatorCode: &code, Username: req.Username, Password: req.Password, DisplayName: req.DisplayName,
 	})
 }
 
-func ensureOperator(ctx context.Context, d *service.Deps, req CreateOperatorAdminReq) (*ent.Operator, error) {
-	op, err := d.Client.Operator.Query().Where(operator.OperatorCodeEQ(req.OperatorCode)).Only(ctx)
-	if err == nil {
-		return op, nil
-	}
-	if !ent.IsNotFound(err) {
-		return nil, err
-	}
-	return d.Client.Operator.Create().
-		SetOperatorCode(req.OperatorCode).
-		SetTimezoneCode(req.TimezoneCode).
-		SetSettlementCurrencyCode(req.SettlementCurrencyCode).
-		SetStatus(model.StatusNormal).
-		SetRequiredConfigVersion(1).
-		SetCompletedConfigVersion(0).
-		Save(ctx)
-}
-
 type createRootReq struct {
-	OperatorID  *int64
-	Username    string
-	Password    string
-	DisplayName string
+	OperatorCode *string
+	Username     string
+	Password     string
+	DisplayName  string
 }
 
 func createRoot(ctx context.Context, d *service.Deps, req createRootReq) (*model.User, error) {
@@ -103,7 +72,7 @@ func createRoot(ctx context.Context, d *service.Deps, req createRootReq) (*model
 	if req.DisplayName == "" {
 		req.DisplayName = req.Username
 	}
-	if err := assertNoRoot(ctx, d, req.OperatorID); err != nil {
+	if err := assertNoRoot(ctx, d, req.OperatorCode); err != nil {
 		return nil, err
 	}
 	hash, err := service.HashPassword(req.Password)
@@ -126,12 +95,12 @@ func createRoot(ctx context.Context, d *service.Deps, req createRootReq) (*model
 	return userModel(created), nil
 }
 
-func assertNoRoot(ctx context.Context, d *service.Deps, operatorID *int64) error {
+func assertNoRoot(ctx context.Context, d *service.Deps, operatorCode *string) error {
 	q := d.Client.User.Query().Where(user.DeletedAtIsNil(), user.IsSuperAdminEQ(true))
-	if operatorID == nil {
-		q = q.Where(user.OperatorIDIsNil())
+	if operatorCode == nil || *operatorCode == "" {
+		q = q.Where(user.OperatorCodeIsNil())
 	} else {
-		q = q.Where(user.OperatorIDEQ(*operatorID))
+		q = q.Where(user.OperatorCodeEQ(*operatorCode))
 	}
 	n, err := q.Count(ctx)
 	if err != nil {
@@ -144,7 +113,7 @@ func assertNoRoot(ctx context.Context, d *service.Deps, operatorID *int64) error
 }
 
 func insertRoot(ctx context.Context, d *service.Deps, req createRootReq, hash, salt string) (*ent.User, error) {
-	roleRow, err := ensureSuperRole(ctx, d.Client, req.OperatorID)
+	roleRow, err := ensureSuperRole(ctx, d.Client, req.OperatorCode)
 	if err != nil {
 		return nil, err
 	}
@@ -153,7 +122,7 @@ func insertRoot(ctx context.Context, d *service.Deps, req createRootReq, hash, s
 	}
 	u, err := d.Client.User.Create().
 		SetUserCode(service.NewUserCode()).
-		SetNillableOperatorID(req.OperatorID).
+		SetNillableOperatorCode(req.OperatorCode).
 		SetUsername(req.Username).
 		SetPasswordHash(hash).
 		SetSalt(salt).
@@ -167,7 +136,7 @@ func insertRoot(ctx context.Context, d *service.Deps, req createRootReq, hash, s
 	if err := d.Client.User.UpdateOneID(u.ID).AddRoleIDs(roleRow.ID).Exec(ctx); err != nil {
 		return nil, err
 	}
-	dom := casbinx.Domain(req.OperatorID)
+	dom := casbinx.Domain(req.OperatorCode)
 	policies, err := d.AllAPIPolicies(ctx, dom)
 	if err != nil {
 		return nil, err
@@ -194,17 +163,17 @@ func grantAllMenus(ctx context.Context, c *ent.Client, roleID int64) error {
 	return upd.Exec(ctx)
 }
 
-func ensureSuperRole(ctx context.Context, c *ent.Client, operatorID *int64) (*ent.Role, error) {
+func ensureSuperRole(ctx context.Context, c *ent.Client, operatorCode *string) (*ent.Role, error) {
 	q := c.Role.Query().Where(role.RoleCodeEqualFold(service.RoleSuperAdmin))
-	if operatorID == nil {
-		q = q.Where(role.OperatorIDIsNil())
+	if operatorCode == nil || *operatorCode == "" {
+		q = q.Where(role.OperatorCodeIsNil())
 	} else {
-		q = q.Where(role.OperatorIDEQ(*operatorID))
+		q = q.Where(role.OperatorCodeEQ(*operatorCode))
 	}
 	row, err := q.Only(ctx)
 	if ent.IsNotFound(err) {
 		return c.Role.Create().
-			SetNillableOperatorID(operatorID).
+			SetNillableOperatorCode(operatorCode).
 			SetRoleCode(service.RoleSuperAdmin).
 			SetRoleName("role.superAdmin").
 			SetStatus(model.StatusNormal).
@@ -244,7 +213,7 @@ func userModel(u *ent.User) *model.User {
 	return &model.User{
 		ID:           u.ID,
 		UserCode:     u.UserCode,
-		OperatorID:   u.OperatorID,
+		OperatorCode: u.OperatorCode,
 		Username:     u.Username,
 		PasswordHash: u.PasswordHash,
 		Salt:         u.Salt,

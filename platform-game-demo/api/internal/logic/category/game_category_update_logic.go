@@ -10,7 +10,7 @@ import (
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
 	"oa.98ent.com/p9/platform-game/common/constant"
-	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
+	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"github.com/bytedance/gopkg/util/logger"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -38,9 +38,8 @@ func (l *GameCategoryUpdateLogic) GameCategoryUpdate(req *types.GameCategoryUpda
 	}
 
 	// 构建 gRPC 请求
-	grpcReq := &platformgame.UpdateGameCategoryRequest{
+	grpcReq := &platform_game.UpdateGameCategoryRequest{
 		Id:          req.ID,
-		NameI18N:    req.NameI18n,
 		SortNo:      req.SortNo,
 		Status:      int32(req.Status),
 		ForceLogout: req.ForceLogout,
@@ -73,7 +72,6 @@ func (l *GameCategoryUpdateLogic) GameCategoryUpdate(req *types.GameCategoryUpda
 	resp = &types.GameCategoryResp{
 		ID:           grpcResp.Data.Id,
 		CategoryCode: grpcResp.Data.CategoryCode,
-		NameI18n:     grpcResp.Data.NameI18N,
 		Status:       int16(grpcResp.Data.Status),
 	}
 

@@ -94,6 +94,7 @@ func (Operator) Edges() []ent.Edge {
 		edge.To("profile", OperatorProfile.Type).
 			Unique(),
 		edge.To("domains", OperatorDomain.Type),
+		edge.To("admins", OperatorAdmin.Type),
 		edge.To("language_allocations", OperatorLanguageAllocation.Type),
 		edge.To("region_allocations", OperatorRegionAllocation.Type),
 		edge.To("agent_line_allocations", OperatorAgentLineAllocation.Type),

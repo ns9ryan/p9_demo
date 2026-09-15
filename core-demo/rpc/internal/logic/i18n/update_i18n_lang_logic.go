@@ -31,6 +31,7 @@ func (l *UpdateI18nLangLogic) UpdateI18NLang(in *core.UpdateI18NLangReq) (*core.
 		ID:       in.GetId(),
 		Lang:     in.Lang,
 		Name:     in.Name,
+		I18nKey:  in.I18NKey,
 		Disabled: logic.ToInt16Ptr(in.Disabled),
 		SortNo:   logic.ToIntPtr(in.SortNo),
 	})

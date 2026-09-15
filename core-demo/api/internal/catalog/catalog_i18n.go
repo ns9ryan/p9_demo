@@ -7,10 +7,25 @@ import (
 
 func langSeeds() []*coreclient.CreateI18NLangReq {
 	return []*coreclient.CreateI18NLangReq{
-		{Lang: i18n.LangZH, Name: "简体中文", SortNo: 1},
-		{Lang: i18n.LangHK, Name: "繁體中文", SortNo: 2},
-		{Lang: i18n.LangEN, Name: "English", SortNo: 3},
+		{Lang: i18n.LangZH, Name: "简体中文", I18NKey: "lang.zh-CN", SortNo: 1},
+		{Lang: i18n.LangHK, Name: "繁體中文", I18NKey: "lang.zh-HK", SortNo: 2},
+		{Lang: i18n.LangEN, Name: "English", I18NKey: "lang.en-US", SortNo: 3},
 	}
+}
+
+func langI18n(i18nCode string) []*coreclient.I18NItem {
+	var out []*coreclient.I18NItem
+	add := func(key, zh, hk, en string) {
+		out = append(out,
+			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupLang, TransKey: key, Lang: i18n.LangZH, Value: zh},
+			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupLang, TransKey: key, Lang: i18n.LangHK, Value: hk},
+			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupLang, TransKey: key, Lang: i18n.LangEN, Value: en},
+		)
+	}
+	add("lang.zh-CN", "简体中文", "簡體中文", "Simplified Chinese")
+	add("lang.zh-HK", "繁体中文", "繁體中文", "Traditional Chinese")
+	add("lang.en-US", "英语", "英語", "English")
+	return out
 }
 
 func menuI18n(i18nCode string) []*coreclient.I18NItem {
@@ -53,8 +68,6 @@ func apiI18n(i18nCode string) []*coreclient.I18NItem {
 			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupAPI, TransKey: key, Lang: i18n.LangEN, Value: en},
 		)
 	}
-	add("api.operatorSelf", "当前厅", "當前廳", "Current operator")
-	add("api.operatorUpdate", "更新当前厅", "更新當前廳", "Update current operator")
 	add("api.userCreate", "创建后台用户", "創建後台用戶", "Create admin user")
 	add("api.userUpdate", "更新后台用户", "更新後台用戶", "Update admin user")
 	add("api.userDelete", "删除后台用户", "刪除後台用戶", "Delete admin user")
@@ -107,9 +120,9 @@ func frontI18n(i18nCode string) []*coreclient.I18NItem {
 	}
 	addLogin := func(key, zh, hk, en string) {
 		out = append(out,
-			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupLogin, TransKey: key, Lang: i18n.LangZH, Value: zh},
-			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupLogin, TransKey: key, Lang: i18n.LangHK, Value: hk},
-			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupLogin, TransKey: key, Lang: i18n.LangEN, Value: en},
+			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupFront, TransKey: key, Lang: i18n.LangZH, Value: zh},
+			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupFront, TransKey: key, Lang: i18n.LangHK, Value: hk},
+			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupFront, TransKey: key, Lang: i18n.LangEN, Value: en},
 		)
 	}
 	add("common.column.operations", "操作", "操作", "Operations")

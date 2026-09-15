@@ -42,6 +42,8 @@ const (
 	EdgeProfile = "profile"
 	// EdgeDomains holds the string denoting the domains edge name in mutations.
 	EdgeDomains = "domains"
+	// EdgeAdmins holds the string denoting the admins edge name in mutations.
+	EdgeAdmins = "admins"
 	// EdgeLanguageAllocations holds the string denoting the language_allocations edge name in mutations.
 	EdgeLanguageAllocations = "language_allocations"
 	// EdgeRegionAllocations holds the string denoting the region_allocations edge name in mutations.
@@ -64,6 +66,13 @@ const (
 	DomainsInverseTable = "operator_domain"
 	// DomainsColumn is the table column denoting the domains relation/edge.
 	DomainsColumn = "operator_id"
+	// AdminsTable is the table that holds the admins relation/edge.
+	AdminsTable = "operator_admin"
+	// AdminsInverseTable is the table name for the OperatorAdmin entity.
+	// It exists in this package in order to avoid circular dependency with the "operatoradmin" package.
+	AdminsInverseTable = "operator_admin"
+	// AdminsColumn is the table column denoting the admins relation/edge.
+	AdminsColumn = "operator_id"
 	// LanguageAllocationsTable is the table that holds the language_allocations relation/edge.
 	LanguageAllocationsTable = "operator_language_allocation"
 	// LanguageAllocationsInverseTable is the table name for the OperatorLanguageAllocation entity.
@@ -236,6 +245,20 @@ func ByDomains(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	}
 }
 
+// ByAdminsCount orders the results by admins count.
+func ByAdminsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newAdminsStep(), opts...)
+	}
+}
+
+// ByAdmins orders the results by admins terms.
+func ByAdmins(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newAdminsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
 // ByLanguageAllocationsCount orders the results by language_allocations count.
 func ByLanguageAllocationsCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -289,6 +312,13 @@ func newDomainsStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(DomainsInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, false, DomainsTable, DomainsColumn),
+	)
+}
+func newAdminsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(AdminsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, AdminsTable, AdminsColumn),
 	)
 }
 func newLanguageAllocationsStep() *sqlgraph.Step {

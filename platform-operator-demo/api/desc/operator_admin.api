@@ -1,14 +1,96 @@
 syntax = "v1"
 
+import "types/common.api"
+
 type (
+	// 分站管理员信息
+	OperatorAdminInfo {
+		// 管理员ID
+		Id int64 `json:"id"`
+		// 分站ID
+		OperatorId int64 `json:"operator_id"`
+		// 分站名称
+		OperatorName string `json:"operator_name"`
+		// 账号
+		Username string `json:"username"`
+		// 显示名称
+		DisplayName string `json:"display_name"`
+		// 状态: 1启用, 2停用
+		Status int64 `json:"status"`
+		// 创建时间, Unix毫秒时间戳
+		CreatedAt int64 `json:"created_at"`
+		// 更新时间, Unix毫秒时间戳
+		UpdatedAt int64 `json:"updated_at"`
+	}
 	// 创建分站管理员请求
-	CreateOperatorAdminRequest  {}
+	CreateOperatorAdminRequest {
+		// 分站ID
+		OperatorId int64 `json:"operator_id" validate:"required,gt=0"`
+		// 账号
+		Username string `json:"username" validate:"required,notblank,max=64"`
+		// 密码
+		Password string `json:"password" validate:"required,min=6,max=32"`
+		// 显示名称
+		DisplayName string `json:"display_name" validate:"required,notblank,max=100"`
+		// 状态: 1启用, 2停用
+		Status *int64 `json:"status,optional" validate:"omitempty,oneof=1 2"`
+	}
 	// 创建分站管理员响应
-	CreateOperatorAdminResponse  {}
+	CreateOperatorAdminResponse {
+		// 管理员ID
+		Id int64 `json:"id"`
+	}
 	// 获取分站管理员列表请求
-	ListOperatorAdminsRequest  {}
+	ListOperatorAdminsRequest {
+		// 分页参数
+		PageRequest
+		// 分站ID
+		OperatorId *int64 `form:"operator_id,optional" validate:"omitempty,gt=0"`
+		// 搜索关键字, 匹配账号或显示名称
+		Keyword *string `form:"keyword,optional" validate:"omitempty,max=100"`
+		// 状态: 1启用, 2停用
+		Status *int64 `form:"status,optional" validate:"omitempty,oneof=1 2"`
+	}
 	// 获取分站管理员列表响应
-	ListOperatorAdminsResponse  {}
+	ListOperatorAdminsResponse {
+		// 数据总数
+		Total int64 `json:"total"`
+		// 管理员列表
+		List []OperatorAdminInfo `json:"list"`
+	}
+	// 重置分站管理员密码请求
+	ResetOperatorAdminPasswordRequest {
+		// 管理员ID
+		Id int64 `json:"id" validate:"required,gt=0"`
+		// 新密码
+		Password string `json:"password" validate:"required,min=6,max=32"`
+	}
+	// 重置分站管理员密码响应
+	ResetOperatorAdminPasswordResponse  {}
+	// 更新分站管理员请求
+	UpdateOperatorAdminRequest {
+		// 管理员ID
+		Id int64 `json:"id" validate:"required,gt=0"`
+		// 账号
+		Username *string `json:"username,optional" validate:"omitempty,notblank,max=64"`
+		// 密码
+		Password *string `json:"password,optional" validate:"omitempty,min=6,max=32"`
+		// 显示名称
+		DisplayName *string `json:"display_name,optional" validate:"omitempty,notblank,max=100"`
+		// 状态: 1启用, 2停用
+		Status *int64 `json:"status,optional" validate:"omitempty,oneof=1 2"`
+	}
+	// 更新分站管理员响应
+	UpdateOperatorAdminResponse  {}
+	// 更新分站管理员状态请求
+	UpdateOperatorAdminStatusRequest {
+		// 管理员ID
+		Id int64 `json:"id" validate:"required,gt=0"`
+		// 状态: 1启用, 2停用
+		Status int64 `json:"status" validate:"required,oneof=1 2"`
+	}
+	// 更新分站管理员状态响应
+	UpdateOperatorAdminStatusResponse  {}
 )
 
 @server (
@@ -24,6 +106,16 @@ service platform_operator {
 	// 获取分站管理员列表
 	@handler ListOperatorAdmins
 	get /list (ListOperatorAdminsRequest) returns (ListOperatorAdminsResponse)
-// todo: 其余接口根据业务补充
-}
 
+	// 重置分站管理员密码
+	@handler ResetOperatorAdminPassword
+	post /resetPassword (ResetOperatorAdminPasswordRequest) returns (ResetOperatorAdminPasswordResponse)
+
+	// 更新分站管理员
+	@handler UpdateOperatorAdmin
+	post /update (UpdateOperatorAdminRequest) returns (UpdateOperatorAdminResponse)
+
+	// 更新分站管理员状态
+	@handler UpdateOperatorAdminStatus
+	post /updateStatus (UpdateOperatorAdminStatusRequest) returns (UpdateOperatorAdminStatusResponse)
+}

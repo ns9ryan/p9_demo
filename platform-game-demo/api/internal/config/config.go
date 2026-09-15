@@ -16,4 +16,5 @@ type Config struct {
 	Kafka      kafka.Config     `yaml:"Kafka" json:"Kafka"`
 	// Core 服务 RPC 配置，用于鉴权
 	CoreRpc GrpcClientConfig `yaml:"CoreRpc" json:"CoreRpc"`
+	IsLocal bool             `yaml:"IsLocal" json:"IsLocal"`
 }

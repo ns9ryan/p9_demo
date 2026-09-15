@@ -36,7 +36,6 @@ message CheckTokenResp {
   int64 user_id = 1;
   string user_code = 2;
   string username = 3;
-  int64 operator_id = 4;
   repeated string role_codes = 5;
   string salt = 6;
   int64 expires_at = 7;
@@ -47,7 +46,7 @@ message CheckTokenResp {
 
 message EnforceReq {
   repeated string role_codes = 1;
-  int64 operator_id = 2;
+  string operator_code = 2;
   string path = 3;
   string method = 4;
 }
@@ -66,8 +65,6 @@ message BootstrapAdminReq {
 message BootstrapOperatorReq {
   string init_token = 1;
   string operator_code = 2;
-  string timezone_code = 3;
-  string settlement_currency_code = 4;
   string username = 5;
   string password = 6;
   string display_name = 7;

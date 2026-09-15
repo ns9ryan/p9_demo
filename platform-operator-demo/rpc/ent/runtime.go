@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operator"
+	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoradmin"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoragentlineallocation"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatordomain"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatorlanguageallocation"
@@ -131,6 +132,83 @@ func init() {
 	operatorDescRemark := operatorFields[9].Descriptor()
 	// operator.RemarkValidator is a validator for the "remark" field. It is called by the builders before save.
 	operator.RemarkValidator = operatorDescRemark.Validators[0].(func(string) error)
+	operatoradminMixin := schema.OperatorAdmin{}.Mixin()
+	operatoradminMixinFields1 := operatoradminMixin[1].Fields()
+	_ = operatoradminMixinFields1
+	operatoradminMixinFields2 := operatoradminMixin[2].Fields()
+	_ = operatoradminMixinFields2
+	operatoradminFields := schema.OperatorAdmin{}.Fields()
+	_ = operatoradminFields
+	// operatoradminDescStatus is the schema descriptor for status field.
+	operatoradminDescStatus := operatoradminMixinFields1[0].Descriptor()
+	// operatoradmin.DefaultStatus holds the default value on creation for the status field.
+	operatoradmin.DefaultStatus = operatoradminDescStatus.Default.(int64)
+	// operatoradmin.StatusValidator is a validator for the "status" field. It is called by the builders before save.
+	operatoradmin.StatusValidator = operatoradminDescStatus.Validators[0].(func(int64) error)
+	// operatoradminDescCreatedAt is the schema descriptor for created_at field.
+	operatoradminDescCreatedAt := operatoradminMixinFields2[0].Descriptor()
+	// operatoradmin.DefaultCreatedAt holds the default value on creation for the created_at field.
+	operatoradmin.DefaultCreatedAt = operatoradminDescCreatedAt.Default.(func() time.Time)
+	// operatoradminDescUpdatedAt is the schema descriptor for updated_at field.
+	operatoradminDescUpdatedAt := operatoradminMixinFields2[1].Descriptor()
+	// operatoradmin.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	operatoradmin.DefaultUpdatedAt = operatoradminDescUpdatedAt.Default.(func() time.Time)
+	// operatoradmin.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	operatoradmin.UpdateDefaultUpdatedAt = operatoradminDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// operatoradminDescUsername is the schema descriptor for username field.
+	operatoradminDescUsername := operatoradminFields[1].Descriptor()
+	// operatoradmin.UsernameValidator is a validator for the "username" field. It is called by the builders before save.
+	operatoradmin.UsernameValidator = func() func(string) error {
+		validators := operatoradminDescUsername.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(username string) error {
+			for _, fn := range fns {
+				if err := fn(username); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// operatoradminDescPassword is the schema descriptor for password field.
+	operatoradminDescPassword := operatoradminFields[2].Descriptor()
+	// operatoradmin.PasswordValidator is a validator for the "password" field. It is called by the builders before save.
+	operatoradmin.PasswordValidator = func() func(string) error {
+		validators := operatoradminDescPassword.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(password string) error {
+			for _, fn := range fns {
+				if err := fn(password); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// operatoradminDescDisplayName is the schema descriptor for display_name field.
+	operatoradminDescDisplayName := operatoradminFields[3].Descriptor()
+	// operatoradmin.DisplayNameValidator is a validator for the "display_name" field. It is called by the builders before save.
+	operatoradmin.DisplayNameValidator = func() func(string) error {
+		validators := operatoradminDescDisplayName.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(display_name string) error {
+			for _, fn := range fns {
+				if err := fn(display_name); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	operatoragentlineallocationFields := schema.OperatorAgentLineAllocation{}.Fields()
 	_ = operatoragentlineallocationFields
 	// operatoragentlineallocationDescAgentLineCode is the schema descriptor for agent_line_code field.

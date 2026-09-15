@@ -11,7 +11,7 @@ import (
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
 	"oa.98ent.com/p9/platform-game/common/constant"
-	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
+	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -38,7 +38,7 @@ func (l *GameCurrencyGetLogic) GameCurrencyGet(req *types.GameCurrencyGetReq) (r
 		return nil, fmt.Errorf("gRPC client not available")
 	}
 
-	grpcReq := &platformgame.GetGameCurrencyRequest{
+	grpcReq := &platform_game.GetGameCurrencyRequest{
 		Id: req.ID,
 	}
 
@@ -62,7 +62,7 @@ func (l *GameCurrencyGetLogic) GameCurrencyGet(req *types.GameCurrencyGetReq) (r
 	item := grpcResp.Data
 	l.Infof("[API GameCurrencyGet] gRPC response: id=%d, game_id=%d, currency_id=%d", item.Id, item.GameId, item.CurrencyId)
 
-	resp = logic.CurrencyProtoToResponse(item)
+	resp = logic.CurrencyProtoToResponse(l.ctx, item)
 
 	l.Infof("[API GameCurrencyGet] success: id=%d, game_id=%d, currency_id=%d", item.Id, item.GameId, item.CurrencyId)
 	return resp, nil

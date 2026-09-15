@@ -10,7 +10,7 @@ import (
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
 	"oa.98ent.com/p9/platform-game/common/constant"
-	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
+	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"fmt"
 
@@ -39,7 +39,7 @@ func (l *GameProviderGetLogic) GameProviderGet(req *types.GameProviderGetReq) (r
 		return nil, fmt.Errorf("gRPC client not available")
 	}
 
-	grpcReq := &platformgame.GetGameProviderRequest{
+	grpcReq := &platform_game.GetGameProviderRequest{
 		Id: req.ID,
 	}
 
@@ -61,7 +61,7 @@ func (l *GameProviderGetLogic) GameProviderGet(req *types.GameProviderGetReq) (r
 	}
 
 	item := grpcResp.Data
-	resp = logic.ProviderProtoToResponse(item)
+	resp = logic.ProviderProtoToResponse(l.ctx, item)
 
 	l.Infof("[API GameProviderGet] success: id=%d", item.Id)
 	return resp, nil

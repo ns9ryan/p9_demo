@@ -6,4 +6,4 @@ database:
 
 # 对外 gRPC。改完需重启。
 rpc:
-  listen_on: 0.0.0.0:19002
+  listen_on: 0.0.0.0:19006

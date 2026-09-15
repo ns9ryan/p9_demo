@@ -42,6 +42,10 @@ func menus() []*coreclient.RegisterMenuReq {
 
 		// 管理员账号
 		{Name: "OperatorAdmin", Title: "menu.route.operatorAdmin", Path: "/operator/admin", MenuType: menuTypeMenu, Component: "operator/admin/index", ParentName: "OperatorManagement", Sort: 33},
+		{Name: "OperatorAdminCreate", Title: "menu.route.operatorAdminCreate", MenuType: menuTypeButton, Permission: "operatorAdmin:create", ParentName: "OperatorAdmin", Sort: 331},
+		{Name: "OperatorAdminUpdate", Title: "menu.route.operatorAdminUpdate", MenuType: menuTypeButton, Permission: "operatorAdmin:update", ParentName: "OperatorAdmin", Sort: 332},
+		{Name: "OperatorAdminResetPassword", Title: "menu.route.operatorAdminResetPassword", MenuType: menuTypeButton, Permission: "operatorAdmin:resetPassword", ParentName: "OperatorAdmin", Sort: 333},
+		{Name: "OperatorAdminUpdateStatus", Title: "menu.route.operatorAdminUpdateStatus", MenuType: menuTypeButton, Permission: "operatorAdmin:updateStatus", ParentName: "OperatorAdmin", Sort: 334},
 
 		// 基础资源分配
 		{Name: "BasicResourceAllocation", Title: "menu.route.basicResourceAllocation", Path: "/operator/basic-resource-allocation", MenuType: menuTypeMenu, Component: "operator/basic-resource-allocation/index", ParentName: "OperatorManagement", Sort: 34},
@@ -75,6 +79,13 @@ func apis() []*coreclient.CreateApiReq {
 		{Path: "/admin/operator/domain/get", Method: http.MethodGet, Description: "api.operatorDomainGet", ApiGroup: "operator_domain", ServiceName: "platform-operator-api"},
 		{Path: "/admin/operator/domain/list", Method: http.MethodGet, Description: "api.operatorDomainList", ApiGroup: "operator_domain", ServiceName: "platform-operator-api"},
 		{Path: "/admin/operator/domain/delete", Method: http.MethodPost, Description: "api.operatorDomainDelete", ApiGroup: "operator_domain", ServiceName: "platform-operator-api"},
+
+		// 分站管理员
+		{Path: "/admin/operator/admin/list", Method: http.MethodGet, Description: "api.operatorAdminList", ApiGroup: "operator_admin", ServiceName: "platform-operator-api"},
+		{Path: "/admin/operator/admin/create", Method: http.MethodPost, Description: "api.operatorAdminCreate", ApiGroup: "operator_admin", ServiceName: "platform-operator-api"},
+		{Path: "/admin/operator/admin/update", Method: http.MethodPost, Description: "api.operatorAdminUpdate", ApiGroup: "operator_admin", ServiceName: "platform-operator-api"},
+		{Path: "/admin/operator/admin/resetPassword", Method: http.MethodPost, Description: "api.operatorAdminResetPassword", ApiGroup: "operator_admin", ServiceName: "platform-operator-api"},
+		{Path: "/admin/operator/admin/updateStatus", Method: http.MethodPost, Description: "api.operatorAdminUpdateStatus", ApiGroup: "operator_admin", ServiceName: "platform-operator-api"},
 
 		// 基础资源分配
 		{Path: "/admin/operator/basic-resource-allocation/list", Method: http.MethodGet, Description: "api.basicResourceAllocationList", ApiGroup: "basic_resource_allocation", ServiceName: "platform-operator-api"},

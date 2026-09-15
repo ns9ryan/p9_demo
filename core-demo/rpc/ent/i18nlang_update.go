@@ -62,6 +62,20 @@ func (_u *I18nLangUpdate) SetNillableName(v *string) *I18nLangUpdate {
 	return _u
 }
 
+// SetI18nKey sets the "i18n_key" field.
+func (_u *I18nLangUpdate) SetI18nKey(v string) *I18nLangUpdate {
+	_u.mutation.SetI18nKey(v)
+	return _u
+}
+
+// SetNillableI18nKey sets the "i18n_key" field if the given value is not nil.
+func (_u *I18nLangUpdate) SetNillableI18nKey(v *string) *I18nLangUpdate {
+	if v != nil {
+		_u.SetI18nKey(*v)
+	}
+	return _u
+}
+
 // SetDisabled sets the "disabled" field.
 func (_u *I18nLangUpdate) SetDisabled(v int16) *I18nLangUpdate {
 	_u.mutation.ResetDisabled()
@@ -157,6 +171,11 @@ func (_u *I18nLangUpdate) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "I18nLang.name": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.I18nKey(); ok {
+		if err := i18nlang.I18nKeyValidator(v); err != nil {
+			return &ValidationError{Name: "i18n_key", err: fmt.Errorf(`ent: validator failed for field "I18nLang.i18n_key": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -180,6 +199,9 @@ func (_u *I18nLangUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(i18nlang.FieldName, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.I18nKey(); ok {
+		_spec.SetField(i18nlang.FieldI18nKey, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Disabled(); ok {
 		_spec.SetField(i18nlang.FieldDisabled, field.TypeInt16, value)
@@ -243,6 +265,20 @@ func (_u *I18nLangUpdateOne) SetName(v string) *I18nLangUpdateOne {
 func (_u *I18nLangUpdateOne) SetNillableName(v *string) *I18nLangUpdateOne {
 	if v != nil {
 		_u.SetName(*v)
+	}
+	return _u
+}
+
+// SetI18nKey sets the "i18n_key" field.
+func (_u *I18nLangUpdateOne) SetI18nKey(v string) *I18nLangUpdateOne {
+	_u.mutation.SetI18nKey(v)
+	return _u
+}
+
+// SetNillableI18nKey sets the "i18n_key" field if the given value is not nil.
+func (_u *I18nLangUpdateOne) SetNillableI18nKey(v *string) *I18nLangUpdateOne {
+	if v != nil {
+		_u.SetI18nKey(*v)
 	}
 	return _u
 }
@@ -355,6 +391,11 @@ func (_u *I18nLangUpdateOne) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "I18nLang.name": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.I18nKey(); ok {
+		if err := i18nlang.I18nKeyValidator(v); err != nil {
+			return &ValidationError{Name: "i18n_key", err: fmt.Errorf(`ent: validator failed for field "I18nLang.i18n_key": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -395,6 +436,9 @@ func (_u *I18nLangUpdateOne) sqlSave(ctx context.Context) (_node *I18nLang, err 
 	}
 	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(i18nlang.FieldName, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.I18nKey(); ok {
+		_spec.SetField(i18nlang.FieldI18nKey, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Disabled(); ok {
 		_spec.SetField(i18nlang.FieldDisabled, field.TypeInt16, value)

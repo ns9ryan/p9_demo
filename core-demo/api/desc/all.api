@@ -10,7 +10,6 @@ info (
 import "base.api"
 import "./core/public.api"
 import "./core/user.api"
-import "./core/operator.api"
 import "./core/role.api"
 import "./core/menu.api"
 import "./core/i18n.api"

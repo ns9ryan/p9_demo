@@ -38,7 +38,7 @@ func TestErrorLogMiddlewareWrites5xx(t *testing.T) {
 		response.FailCtx(r.Context(), w, http.ErrAbortHandler)
 	})
 	req := httptest.NewRequest(http.MethodPost, "/admin/user/create?x=1", strings.NewReader(`{"password":"secret"}`))
-	req = req.WithContext(ctxdata.WithClaims(req.Context(), &ctxdata.Claims{UserID: 9, OperatorID: 3}))
+	req = req.WithContext(ctxdata.WithClaims(req.Context(), &ctxdata.Claims{UserID: 9, OperatorCode: "A"}))
 	rr := httptest.NewRecorder()
 	h(rr, req)
 	if rr.Code != http.StatusInternalServerError {
@@ -63,7 +63,7 @@ func TestErrorLogMiddlewareReadsInnerJWTClaims(t *testing.T) {
 	ch := make(chan errorlog.Record, 1)
 	jwtLike := func(next http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
-			ctx := ctxdata.WithClaims(r.Context(), &ctxdata.Claims{UserID: 9, OperatorID: 3})
+			ctx := ctxdata.WithClaims(r.Context(), &ctxdata.Claims{UserID: 9, OperatorCode: "A"})
 			next(w, r.WithContext(ctx))
 		}
 	}

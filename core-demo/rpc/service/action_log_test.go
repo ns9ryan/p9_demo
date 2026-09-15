@@ -19,41 +19,24 @@ func TestCreateAdminActionLogNilClient(t *testing.T) {
 func TestListAdminActionLogsFilterAndTenant(t *testing.T) {
 	d := testDeps(t, ModeOn)
 	ctx := context.Background()
-	op1, err := d.Client.Operator.Create().
-		SetOperatorCode("op1").
-		SetTimezoneCode("UTC").
-		SetSettlementCurrencyCode("USD").
-		SetStatus(model.StatusNormal).
-		Save(ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
-	op2, err := d.Client.Operator.Create().
-		SetOperatorCode("op2").
-		SetTimezoneCode("UTC").
-		SetSettlementCurrencyCode("USD").
-		SetStatus(model.StatusNormal).
-		Save(ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
-	u1 := createUserWithRole(t, d, "alice", "pass", &op1.ID)
-	u2 := createUserWithRole(t, d, "bob", "pass", &op2.ID)
+	code1, code2 := "op1", "op2"
+	u1 := createUserWithRole(t, d, "alice", "pass", &code1)
+	u2 := createUserWithRole(t, d, "bob", "pass", &code2)
 	now := time.Now()
 	if err := d.Client.AdminActionLog.Create().
 		SetUserID(u1.ID).SetRequestMethod("POST").SetRequestPath("/admin/user/create").
 		SetActionResult(model.ActionResultSuccess).SetResponseStatus(200).SetClientIP("1.1.1.1").
-		SetOperatorID(op1.ID).SetCreatedAt(now).Exec(ctx); err != nil {
+		SetOperatorCode(code1).SetCreatedAt(now).Exec(ctx); err != nil {
 		t.Fatal(err)
 	}
 	if err := d.Client.AdminActionLog.Create().
 		SetUserID(u2.ID).SetRequestMethod("POST").SetRequestPath("/admin/role/update").
 		SetActionResult(model.ActionResultFail).SetResponseStatus(400).SetClientIP("2.2.2.2").
-		SetOperatorID(op2.ID).SetCreatedAt(now).Exec(ctx); err != nil {
+		SetOperatorCode(code2).SetCreatedAt(now).Exec(ctx); err != nil {
 		t.Fatal(err)
 	}
 
-	claims := &ctxdata.Claims{OperatorID: op1.ID}
+	claims := &ctxdata.Claims{OperatorCode: code1}
 	list, total, err := d.ListAdminActionLogs(ctx, claims, AdminActionLogListReq{})
 	if err != nil {
 		t.Fatal(err)
@@ -61,8 +44,8 @@ func TestListAdminActionLogsFilterAndTenant(t *testing.T) {
 	if total != 1 || len(list) != 1 || list[0].Username != "alice" {
 		t.Fatalf("tenant list total=%d list=%+v", total, list)
 	}
-	if list[0].OperatorID == nil || *list[0].OperatorID != op1.ID {
-		t.Fatalf("tenant operator_id %+v", list[0].OperatorID)
+	if list[0].OperatorCode == nil || *list[0].OperatorCode != code1 {
+		t.Fatalf("tenant operator_code %+v", list[0].OperatorCode)
 	}
 
 	d.Mode = ModeOff
@@ -83,14 +66,14 @@ func TestListAdminActionLogsFilterAndTenant(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if total != 1 || fails[0].Username != "plat" || fails[0].OperatorID != nil {
+	if total != 1 || fails[0].Username != "plat" || fails[0].OperatorCode != nil {
 		t.Fatalf("fail filter total=%d list=%+v", total, fails)
 	}
 	byPath, total, err := d.ListAdminActionLogs(ctx, &ctxdata.Claims{}, AdminActionLogListReq{RequestPath: "/admin/user"})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if total != 1 || byPath[0].RequestPath != "/admin/user/create" || byPath[0].OperatorID != nil {
+	if total != 1 || byPath[0].RequestPath != "/admin/user/create" || byPath[0].OperatorCode != nil {
 		t.Fatalf("path filter total=%d list=%+v", total, byPath)
 	}
 }
@@ -122,24 +105,16 @@ func TestCreateAdminActionLogWrites(t *testing.T) {
 	if rows[0].UserAgent == nil || *rows[0].UserAgent != "ua" {
 		t.Fatalf("ua %+v", rows[0].UserAgent)
 	}
-	if rows[0].OperatorID != nil {
-		t.Fatalf("mode off operator_id=%v", rows[0].OperatorID)
+	if rows[0].OperatorCode != nil {
+		t.Fatalf("mode off operator_code=%v", rows[0].OperatorCode)
 	}
 }
 
-func TestCreateAdminActionLogWritesOperatorID(t *testing.T) {
+func TestCreateAdminActionLogWritesOperatorCode(t *testing.T) {
 	d := testDeps(t, ModeOn)
-	ctx := context.Background()
-	op, err := d.Client.Operator.Create().
-		SetOperatorCode("op1").
-		SetTimezoneCode("UTC").
-		SetSettlementCurrencyCode("USD").
-		SetStatus(model.StatusNormal).
-		Save(ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
-	u := createUserWithRole(t, d, "admin", "pass", &op.ID)
+	ctx := ctxdata.WithClaims(context.Background(), &ctxdata.Claims{OperatorCode: "op1"})
+	code := "op1"
+	u := createUserWithRole(t, d, "admin", "pass", &code)
 	d.CreateAdminActionLog(ctx, CreateAdminActionLogReq{
 		UserID:         u.ID,
 		RequestMethod:  "POST",
@@ -148,11 +123,11 @@ func TestCreateAdminActionLogWritesOperatorID(t *testing.T) {
 		ResponseStatus: 200,
 		ClientIP:       "127.0.0.1",
 	})
-	rows, err := d.Client.AdminActionLog.Query().All(ctx)
+	rows, err := d.Client.AdminActionLog.Query().All(context.Background())
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(rows) != 1 || rows[0].OperatorID == nil || *rows[0].OperatorID != op.ID {
-		t.Fatalf("operator_id %+v", rows)
+	if len(rows) != 1 || rows[0].OperatorCode == nil || *rows[0].OperatorCode != "op1" {
+		t.Fatalf("operator_code %+v", rows)
 	}
 }

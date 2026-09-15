@@ -11,7 +11,7 @@ import (
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
 	"oa.98ent.com/p9/platform-game/common/constant"
-	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
+	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -38,7 +38,7 @@ func (l *GameCategoryGetLogic) GameCategoryGet(req *types.GameCategoryGetReq) (r
 		return nil, fmt.Errorf("gRPC client not available")
 	}
 
-	grpcReq := &platformgame.GetGameCategoryRequest{
+	grpcReq := &platform_game.GetGameCategoryRequest{
 		Id: req.ID,
 	}
 
@@ -64,7 +64,7 @@ func (l *GameCategoryGetLogic) GameCategoryGet(req *types.GameCategoryGetReq) (r
 	}
 
 	item := grpcResp.Data
-	resp = logic.CategoryProtoToResponse(item)
+	resp = logic.CategoryProtoToResponse(l.ctx, item)
 
 	l.Infof("[API GameCategoryGet] success: id=%d", item.Id)
 	return resp, nil

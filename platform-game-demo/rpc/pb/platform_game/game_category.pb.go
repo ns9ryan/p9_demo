@@ -21,39 +21,38 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// CategoryInfo 分类信息
-type CategoryInfo struct {
+// GameCategoryInfo 分类信息
+type GameCategoryInfo struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
 	Id                 int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	SourceId           int64                  `protobuf:"varint,2,opt,name=source_id,json=sourceId,proto3" json:"source_id,omitempty"`
 	CategoryCode       string                 `protobuf:"bytes,3,opt,name=category_code,json=categoryCode,proto3" json:"category_code,omitempty"`
 	SourceCategoryCode string                 `protobuf:"bytes,4,opt,name=source_category_code,json=sourceCategoryCode,proto3" json:"source_category_code,omitempty"`
-	NameI18N           string                 `protobuf:"bytes,5,opt,name=name_i18n,json=nameI18n,proto3" json:"name_i18n,omitempty"`
-	SourceNameI18N     string                 `protobuf:"bytes,6,opt,name=source_name_i18n,json=sourceNameI18n,proto3" json:"source_name_i18n,omitempty"`
-	SortNo             int32                  `protobuf:"varint,7,opt,name=sort_no,json=sortNo,proto3" json:"sort_no,omitempty"`
-	Status             int32                  `protobuf:"varint,8,opt,name=status,proto3" json:"status,omitempty"`
-	SourceStatus       int32                  `protobuf:"varint,9,opt,name=source_status,json=sourceStatus,proto3" json:"source_status,omitempty"`
-	IsDeleted          int32                  `protobuf:"varint,10,opt,name=is_deleted,json=isDeleted,proto3" json:"is_deleted,omitempty"`
-	CreatedAt          int64                  `protobuf:"varint,11,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt          int64                  `protobuf:"varint,12,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	NameKey            string                 `protobuf:"bytes,5,opt,name=name_key,json=nameKey,proto3" json:"name_key,omitempty"`
+	SortNo             int32                  `protobuf:"varint,6,opt,name=sort_no,json=sortNo,proto3" json:"sort_no,omitempty"`
+	Status             int32                  `protobuf:"varint,7,opt,name=status,proto3" json:"status,omitempty"`
+	SourceStatus       int32                  `protobuf:"varint,8,opt,name=source_status,json=sourceStatus,proto3" json:"source_status,omitempty"`
+	IsDeleted          int32                  `protobuf:"varint,9,opt,name=is_deleted,json=isDeleted,proto3" json:"is_deleted,omitempty"`
+	CreatedAt          int64                  `protobuf:"varint,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt          int64                  `protobuf:"varint,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
 
-func (x *CategoryInfo) Reset() {
-	*x = CategoryInfo{}
+func (x *GameCategoryInfo) Reset() {
+	*x = GameCategoryInfo{}
 	mi := &file_types_game_category_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CategoryInfo) String() string {
+func (x *GameCategoryInfo) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CategoryInfo) ProtoMessage() {}
+func (*GameCategoryInfo) ProtoMessage() {}
 
-func (x *CategoryInfo) ProtoReflect() protoreflect.Message {
+func (x *GameCategoryInfo) ProtoReflect() protoreflect.Message {
 	mi := &file_types_game_category_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -65,89 +64,82 @@ func (x *CategoryInfo) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CategoryInfo.ProtoReflect.Descriptor instead.
-func (*CategoryInfo) Descriptor() ([]byte, []int) {
+// Deprecated: Use GameCategoryInfo.ProtoReflect.Descriptor instead.
+func (*GameCategoryInfo) Descriptor() ([]byte, []int) {
 	return file_types_game_category_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *CategoryInfo) GetId() int64 {
+func (x *GameCategoryInfo) GetId() int64 {
 	if x != nil {
 		return x.Id
 	}
 	return 0
 }
 
-func (x *CategoryInfo) GetSourceId() int64 {
+func (x *GameCategoryInfo) GetSourceId() int64 {
 	if x != nil {
 		return x.SourceId
 	}
 	return 0
 }
 
-func (x *CategoryInfo) GetCategoryCode() string {
+func (x *GameCategoryInfo) GetCategoryCode() string {
 	if x != nil {
 		return x.CategoryCode
 	}
 	return ""
 }
 
-func (x *CategoryInfo) GetSourceCategoryCode() string {
+func (x *GameCategoryInfo) GetSourceCategoryCode() string {
 	if x != nil {
 		return x.SourceCategoryCode
 	}
 	return ""
 }
 
-func (x *CategoryInfo) GetNameI18N() string {
+func (x *GameCategoryInfo) GetNameKey() string {
 	if x != nil {
-		return x.NameI18N
+		return x.NameKey
 	}
 	return ""
 }
 
-func (x *CategoryInfo) GetSourceNameI18N() string {
-	if x != nil {
-		return x.SourceNameI18N
-	}
-	return ""
-}
-
-func (x *CategoryInfo) GetSortNo() int32 {
+func (x *GameCategoryInfo) GetSortNo() int32 {
 	if x != nil {
 		return x.SortNo
 	}
 	return 0
 }
 
-func (x *CategoryInfo) GetStatus() int32 {
+func (x *GameCategoryInfo) GetStatus() int32 {
 	if x != nil {
 		return x.Status
 	}
 	return 0
 }
 
-func (x *CategoryInfo) GetSourceStatus() int32 {
+func (x *GameCategoryInfo) GetSourceStatus() int32 {
 	if x != nil {
 		return x.SourceStatus
 	}
 	return 0
 }
 
-func (x *CategoryInfo) GetIsDeleted() int32 {
+func (x *GameCategoryInfo) GetIsDeleted() int32 {
 	if x != nil {
 		return x.IsDeleted
 	}
 	return 0
 }
 
-func (x *CategoryInfo) GetCreatedAt() int64 {
+func (x *GameCategoryInfo) GetCreatedAt() int64 {
 	if x != nil {
 		return x.CreatedAt
 	}
 	return 0
 }
 
-func (x *CategoryInfo) GetUpdatedAt() int64 {
+func (x *GameCategoryInfo) GetUpdatedAt() int64 {
 	if x != nil {
 		return x.UpdatedAt
 	}
@@ -160,11 +152,8 @@ type GetGameCategoryListRequest struct {
 	Page          int32                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
 	PageSize      int32                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
 	CategoryCode  string                 `protobuf:"bytes,3,opt,name=category_code,json=categoryCode,proto3" json:"category_code,omitempty"`
-	Name          string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
-	Status        int32                  `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`
-	IsDeleted     int32                  `protobuf:"varint,6,opt,name=is_deleted,json=isDeleted,proto3" json:"is_deleted,omitempty"`
-	SortBy        string                 `protobuf:"bytes,7,opt,name=sort_by,json=sortBy,proto3" json:"sort_by,omitempty"`          // id/sort_no/created_at
-	SortOrder     string                 `protobuf:"bytes,8,opt,name=sort_order,json=sortOrder,proto3" json:"sort_order,omitempty"` // asc/desc
+	Status        int32                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`
+	IsDeleted     int32                  `protobuf:"varint,5,opt,name=is_deleted,json=isDeleted,proto3" json:"is_deleted,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -220,13 +209,6 @@ func (x *GetGameCategoryListRequest) GetCategoryCode() string {
 	return ""
 }
 
-func (x *GetGameCategoryListRequest) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
 func (x *GetGameCategoryListRequest) GetStatus() int32 {
 	if x != nil {
 		return x.Status
@@ -241,26 +223,12 @@ func (x *GetGameCategoryListRequest) GetIsDeleted() int32 {
 	return 0
 }
 
-func (x *GetGameCategoryListRequest) GetSortBy() string {
-	if x != nil {
-		return x.SortBy
-	}
-	return ""
-}
-
-func (x *GetGameCategoryListRequest) GetSortOrder() string {
-	if x != nil {
-		return x.SortOrder
-	}
-	return ""
-}
-
 // GetGameCategoryListResp 游戏分类列表响应
 type GetGameCategoryListResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Code          int32                  `protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty"`
 	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
-	Data          []*CategoryInfo        `protobuf:"bytes,3,rep,name=data,proto3" json:"data,omitempty"`
+	Items         []*GameCategoryInfo    `protobuf:"bytes,3,rep,name=items,proto3" json:"items,omitempty"`
 	Total         int64                  `protobuf:"varint,4,opt,name=total,proto3" json:"total,omitempty"`
 	Page          int32                  `protobuf:"varint,5,opt,name=page,proto3" json:"page,omitempty"`
 	PageSize      int32                  `protobuf:"varint,6,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
@@ -312,9 +280,9 @@ func (x *GetGameCategoryListResp) GetMessage() string {
 	return ""
 }
 
-func (x *GetGameCategoryListResp) GetData() []*CategoryInfo {
+func (x *GetGameCategoryListResp) GetItems() []*GameCategoryInfo {
 	if x != nil {
-		return x.Data
+		return x.Items
 	}
 	return nil
 }
@@ -390,7 +358,7 @@ type GetGameCategoryResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Code          int32                  `protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty"`
 	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
-	Data          *CategoryInfo          `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
+	Data          *GameCategoryInfo      `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -439,7 +407,7 @@ func (x *GetGameCategoryResp) GetMessage() string {
 	return ""
 }
 
-func (x *GetGameCategoryResp) GetData() *CategoryInfo {
+func (x *GetGameCategoryResp) GetData() *GameCategoryInfo {
 	if x != nil {
 		return x.Data
 	}
@@ -450,10 +418,9 @@ func (x *GetGameCategoryResp) GetData() *CategoryInfo {
 type UpdateGameCategoryRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	NameI18N      string                 `protobuf:"bytes,2,opt,name=name_i18n,json=nameI18n,proto3" json:"name_i18n,omitempty"`
-	SortNo        int32                  `protobuf:"varint,3,opt,name=sort_no,json=sortNo,proto3" json:"sort_no,omitempty"`
-	Status        int32                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`
-	ForceLogout   bool                   `protobuf:"varint,5,opt,name=force_logout,json=forceLogout,proto3" json:"force_logout,omitempty"`
+	SortNo        int32                  `protobuf:"varint,2,opt,name=sort_no,json=sortNo,proto3" json:"sort_no,omitempty"`
+	Status        int32                  `protobuf:"varint,3,opt,name=status,proto3" json:"status,omitempty"`
+	ForceLogout   bool                   `protobuf:"varint,4,opt,name=force_logout,json=forceLogout,proto3" json:"force_logout,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -495,13 +462,6 @@ func (x *UpdateGameCategoryRequest) GetId() int64 {
 	return 0
 }
 
-func (x *UpdateGameCategoryRequest) GetNameI18N() string {
-	if x != nil {
-		return x.NameI18N
-	}
-	return ""
-}
-
 func (x *UpdateGameCategoryRequest) GetSortNo() int32 {
 	if x != nil {
 		return x.SortNo
@@ -528,7 +488,7 @@ type UpdateGameCategoryResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Code          int32                  `protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty"`
 	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
-	Data          *CategoryInfo          `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
+	Data          *GameCategoryInfo      `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -577,7 +537,7 @@ func (x *UpdateGameCategoryResp) GetMessage() string {
 	return ""
 }
 
-func (x *UpdateGameCategoryResp) GetData() *CategoryInfo {
+func (x *UpdateGameCategoryResp) GetData() *GameCategoryInfo {
 	if x != nil {
 		return x.Data
 	}
@@ -588,58 +548,52 @@ var File_types_game_category_proto protoreflect.FileDescriptor
 
 const file_types_game_category_proto_rawDesc = "" +
 	"\n" +
-	"\x19types/game_category.proto\x12\rplatform_game\"\x8c\x03\n" +
-	"\fCategoryInfo\x12\x0e\n" +
+	"\x19types/game_category.proto\x12\rplatform_game\"\xe4\x02\n" +
+	"\x10GameCategoryInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1b\n" +
 	"\tsource_id\x18\x02 \x01(\x03R\bsourceId\x12#\n" +
 	"\rcategory_code\x18\x03 \x01(\tR\fcategoryCode\x120\n" +
-	"\x14source_category_code\x18\x04 \x01(\tR\x12sourceCategoryCode\x12\x1b\n" +
-	"\tname_i18n\x18\x05 \x01(\tR\bnameI18n\x12(\n" +
-	"\x10source_name_i18n\x18\x06 \x01(\tR\x0esourceNameI18n\x12\x17\n" +
-	"\asort_no\x18\a \x01(\x05R\x06sortNo\x12\x16\n" +
-	"\x06status\x18\b \x01(\x05R\x06status\x12#\n" +
-	"\rsource_status\x18\t \x01(\x05R\fsourceStatus\x12\x1d\n" +
+	"\x14source_category_code\x18\x04 \x01(\tR\x12sourceCategoryCode\x12\x19\n" +
+	"\bname_key\x18\x05 \x01(\tR\anameKey\x12\x17\n" +
+	"\asort_no\x18\x06 \x01(\x05R\x06sortNo\x12\x16\n" +
+	"\x06status\x18\a \x01(\x05R\x06status\x12#\n" +
+	"\rsource_status\x18\b \x01(\x05R\fsourceStatus\x12\x1d\n" +
 	"\n" +
-	"is_deleted\x18\n" +
-	" \x01(\x05R\tisDeleted\x12\x1d\n" +
+	"is_deleted\x18\t \x01(\x05R\tisDeleted\x12\x1d\n" +
 	"\n" +
-	"created_at\x18\v \x01(\x03R\tcreatedAt\x12\x1d\n" +
+	"created_at\x18\n" +
+	" \x01(\x03R\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\f \x01(\x03R\tupdatedAt\"\xf5\x01\n" +
+	"updated_at\x18\v \x01(\x03R\tupdatedAt\"\xa9\x01\n" +
 	"\x1aGetGameCategoryListRequest\x12\x12\n" +
 	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1b\n" +
 	"\tpage_size\x18\x02 \x01(\x05R\bpageSize\x12#\n" +
-	"\rcategory_code\x18\x03 \x01(\tR\fcategoryCode\x12\x12\n" +
-	"\x04name\x18\x04 \x01(\tR\x04name\x12\x16\n" +
-	"\x06status\x18\x05 \x01(\x05R\x06status\x12\x1d\n" +
+	"\rcategory_code\x18\x03 \x01(\tR\fcategoryCode\x12\x16\n" +
+	"\x06status\x18\x04 \x01(\x05R\x06status\x12\x1d\n" +
 	"\n" +
-	"is_deleted\x18\x06 \x01(\x05R\tisDeleted\x12\x17\n" +
-	"\asort_by\x18\a \x01(\tR\x06sortBy\x12\x1d\n" +
-	"\n" +
-	"sort_order\x18\b \x01(\tR\tsortOrder\"\xbf\x01\n" +
+	"is_deleted\x18\x05 \x01(\x05R\tisDeleted\"\xc5\x01\n" +
 	"\x17GetGameCategoryListResp\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\x05R\x04code\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\x12/\n" +
-	"\x04data\x18\x03 \x03(\v2\x1b.platform_game.CategoryInfoR\x04data\x12\x14\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x125\n" +
+	"\x05items\x18\x03 \x03(\v2\x1f.platform_game.GameCategoryInfoR\x05items\x12\x14\n" +
 	"\x05total\x18\x04 \x01(\x03R\x05total\x12\x12\n" +
 	"\x04page\x18\x05 \x01(\x05R\x04page\x12\x1b\n" +
 	"\tpage_size\x18\x06 \x01(\x05R\bpageSize\"(\n" +
 	"\x16GetGameCategoryRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"t\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"x\n" +
 	"\x13GetGameCategoryResp\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\x05R\x04code\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\x12/\n" +
-	"\x04data\x18\x03 \x01(\v2\x1b.platform_game.CategoryInfoR\x04data\"\x9c\x01\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x123\n" +
+	"\x04data\x18\x03 \x01(\v2\x1f.platform_game.GameCategoryInfoR\x04data\"\x7f\n" +
 	"\x19UpdateGameCategoryRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1b\n" +
-	"\tname_i18n\x18\x02 \x01(\tR\bnameI18n\x12\x17\n" +
-	"\asort_no\x18\x03 \x01(\x05R\x06sortNo\x12\x16\n" +
-	"\x06status\x18\x04 \x01(\x05R\x06status\x12!\n" +
-	"\fforce_logout\x18\x05 \x01(\bR\vforceLogout\"w\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
+	"\asort_no\x18\x02 \x01(\x05R\x06sortNo\x12\x16\n" +
+	"\x06status\x18\x03 \x01(\x05R\x06status\x12!\n" +
+	"\fforce_logout\x18\x04 \x01(\bR\vforceLogout\"{\n" +
 	"\x16UpdateGameCategoryResp\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\x05R\x04code\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\x12/\n" +
-	"\x04data\x18\x03 \x01(\v2\x1b.platform_game.CategoryInfoR\x04dataB4Z2oa.98ent.com/p9/platform-game/rpc/pb/platform_gameb\x06proto3"
+	"\amessage\x18\x02 \x01(\tR\amessage\x123\n" +
+	"\x04data\x18\x03 \x01(\v2\x1f.platform_game.GameCategoryInfoR\x04dataB4Z2oa.98ent.com/p9/platform-game/rpc/pb/platform_gameb\x06proto3"
 
 var (
 	file_types_game_category_proto_rawDescOnce sync.Once
@@ -655,7 +609,7 @@ func file_types_game_category_proto_rawDescGZIP() []byte {
 
 var file_types_game_category_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_types_game_category_proto_goTypes = []any{
-	(*CategoryInfo)(nil),               // 0: platform_game.CategoryInfo
+	(*GameCategoryInfo)(nil),           // 0: platform_game.GameCategoryInfo
 	(*GetGameCategoryListRequest)(nil), // 1: platform_game.GetGameCategoryListRequest
 	(*GetGameCategoryListResp)(nil),    // 2: platform_game.GetGameCategoryListResp
 	(*GetGameCategoryRequest)(nil),     // 3: platform_game.GetGameCategoryRequest
@@ -664,9 +618,9 @@ var file_types_game_category_proto_goTypes = []any{
 	(*UpdateGameCategoryResp)(nil),     // 6: platform_game.UpdateGameCategoryResp
 }
 var file_types_game_category_proto_depIdxs = []int32{
-	0, // 0: platform_game.GetGameCategoryListResp.data:type_name -> platform_game.CategoryInfo
-	0, // 1: platform_game.GetGameCategoryResp.data:type_name -> platform_game.CategoryInfo
-	0, // 2: platform_game.UpdateGameCategoryResp.data:type_name -> platform_game.CategoryInfo
+	0, // 0: platform_game.GetGameCategoryListResp.items:type_name -> platform_game.GameCategoryInfo
+	0, // 1: platform_game.GetGameCategoryResp.data:type_name -> platform_game.GameCategoryInfo
+	0, // 2: platform_game.UpdateGameCategoryResp.data:type_name -> platform_game.GameCategoryInfo
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name

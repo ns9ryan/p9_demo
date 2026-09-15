@@ -2,7 +2,7 @@ syntax = "v1"
 
 @server (
 	group: category
-	middleware: Auth
+	middleware: Jwt,ActionLog,Authority
 	prefix: /admin/game-category
 )
 service platform_game {
@@ -28,8 +28,7 @@ type GameCategoryResp {
 	SourceID           int64  `json:"source_id" comment:"上游分类ID"`
 	CategoryCode       string `json:"category_code" comment:"分类编码"`
 	SourceCategoryCode string `json:"source_category_code" comment:"上游分类编码"`
-	SourceNameI18n     string `json:"source_name_i18n" comment:"上游分类名称（多语言JSON）"`
-	NameI18n           string `json:"name_i18n" comment:"分类名称（多语言JSON）"`
+	Name           	   string `json:"name" comment:"分类名称"`
 	SourceSortNo       int32  `json:"source_sort_no,omitempty" comment:"上游排序号"`
 	SortNo             int32  `json:"sort_no" comment:"排序号"`
 	SourceStatus       int16  `json:"source_status" comment:"上游状态：1启用/2禁用"`

@@ -2,7 +2,7 @@ syntax = "v1"
 
 @server (
 	group: channel
-	middleware: Auth
+	middleware: Jwt,ActionLog,Authority
 	prefix: /admin/game-channel
 )
 service platform_game {
@@ -23,8 +23,7 @@ type GameChannelResp {
 	SourceID          int64              `json:"source_id" comment:"上游渠道ID"`
 	ChannelCode       string             `json:"channel_code" comment:"渠道编码"`
 	SourceChannelCode string             `json:"source_channel_code" comment:"上游渠道编码"`
-	SourceNameI18n    string             `json:"source_name_i18n" comment:"上游渠道名称（多语言JSON）"`
-	NameI18n          string             `json:"name_i18n" comment:"渠道名称（多语言JSON）"`
+	Name    		  string             `json:"name" comment:"上游渠道名称"`
 	SourceSortNo      int32              `json:"source_sort_no" comment:"上游排序号"`
 	SortNo            int32              `json:"sort_no" comment:"排序号"`
 	SourceStatus      int16              `json:"source_status" comment:"上游状态：1启用/2禁用"`

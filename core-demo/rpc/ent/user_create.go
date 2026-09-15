@@ -66,16 +66,16 @@ func (_c *UserCreate) SetNillableDeletedAt(v *time.Time) *UserCreate {
 	return _c
 }
 
-// SetOperatorID sets the "operator_id" field.
-func (_c *UserCreate) SetOperatorID(v int64) *UserCreate {
-	_c.mutation.SetOperatorID(v)
+// SetOperatorCode sets the "operator_code" field.
+func (_c *UserCreate) SetOperatorCode(v string) *UserCreate {
+	_c.mutation.SetOperatorCode(v)
 	return _c
 }
 
-// SetNillableOperatorID sets the "operator_id" field if the given value is not nil.
-func (_c *UserCreate) SetNillableOperatorID(v *int64) *UserCreate {
+// SetNillableOperatorCode sets the "operator_code" field if the given value is not nil.
+func (_c *UserCreate) SetNillableOperatorCode(v *string) *UserCreate {
 	if v != nil {
-		_c.SetOperatorID(*v)
+		_c.SetOperatorCode(*v)
 	}
 	return _c
 }
@@ -352,6 +352,11 @@ func (_c *UserCreate) defaults() error {
 
 // check runs all checks and user-defined validators on the builder.
 func (_c *UserCreate) check() error {
+	if v, ok := _c.mutation.OperatorCode(); ok {
+		if err := user.OperatorCodeValidator(v); err != nil {
+			return &ValidationError{Name: "operator_code", err: fmt.Errorf(`ent: validator failed for field "User.operator_code": %w`, err)}
+		}
+	}
 	if _, ok := _c.mutation.UserCode(); !ok {
 		return &ValidationError{Name: "user_code", err: errors.New(`ent: missing required field "User.user_code"`)}
 	}
@@ -455,9 +460,9 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.SetField(user.FieldDeletedAt, field.TypeTime, value)
 		_node.DeletedAt = &value
 	}
-	if value, ok := _c.mutation.OperatorID(); ok {
-		_spec.SetField(user.FieldOperatorID, field.TypeInt64, value)
-		_node.OperatorID = &value
+	if value, ok := _c.mutation.OperatorCode(); ok {
+		_spec.SetField(user.FieldOperatorCode, field.TypeString, value)
+		_node.OperatorCode = &value
 	}
 	if value, ok := _c.mutation.UserCode(); ok {
 		_spec.SetField(user.FieldUserCode, field.TypeString, value)

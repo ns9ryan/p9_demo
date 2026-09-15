@@ -18,7 +18,6 @@ type Claims struct {
 	UserID       int64    `json:"user_id"`
 	UserCode     string   `json:"user_code"`
 	Username     string   `json:"username"`
-	OperatorID   int64    `json:"operator_id"`
 	OperatorCode string   `json:"operator_code"`
 	RoleCodes    []string `json:"role_codes"`
 	Salt         string   `json:"salt"`

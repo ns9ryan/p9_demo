@@ -18,6 +18,7 @@ const (
 	GroupAPI   = "api"   // 接口多语言组
 	GroupFront = "front" // 前端多语言组
 	GroupLogin = "login" // 登录多语言组
+	GroupLang  = "lang"  // 语言显示名多语言组
 )
 
 // CodeByPartnerMode 按 PartnerMode 选择站点 i18n_code。on → operator，其余 → platform。

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"oa.98ent.com/p9/platform-game/rpc/ent"
 	"oa.98ent.com/p9/platform-game/rpc/internal/constant"
 	"oa.98ent.com/p9/platform-game/rpc/internal/logic"
 	"oa.98ent.com/p9/platform-game/rpc/internal/svc"
@@ -31,18 +30,16 @@ func NewGetGameChannelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 func (l *GetGameChannelLogic) GetGameChannel(in *platformgame.GetGameChannelRequest) (*platformgame.GetGameChannelResp, error) {
 	l.Infof("[RPC GetGameChannel] received req: id=%d", in.Id)
 
-	if l.svcCtx == nil || l.svcCtx.DB == nil {
-		l.Error("[RPC GetGameChannel] database not available")
+	if l.svcCtx == nil || l.svcCtx.DAOManager == nil {
+		l.Error("[RPC GetGameChannel] DAO Manager not available")
 		return &platformgame.GetGameChannelResp{
 			Code:    constant.CodeInternalError,
-			Message: "database not available",
+			Message: "DAO Manager not available",
 		}, nil
 	}
 
-	channel := &ent.GameChannel{}
-	if err := l.svcCtx.DB.WithContext(l.ctx).
-		Where("id = ? AND deleted_at IS NULL", in.Id).
-		First(channel).Error; err != nil {
+	channel, err := l.svcCtx.DAOManager.GameChannel.GetGameChannelByID(l.ctx, in.Id)
+	if err != nil {
 		l.Errorf("[RPC GetGameChannel] query failed: %v", err)
 		return &platformgame.GetGameChannelResp{
 			Code:    constant.CodeInternalError,
@@ -56,6 +53,6 @@ func (l *GetGameChannelLogic) GetGameChannel(in *platformgame.GetGameChannelRequ
 		Data:    logic.ChannelModelToProto(channel),
 	}
 
-	l.Infof("[RPC GetGameChannel] success: id=%d", channel.Id)
+	l.Infof("[RPC GetGameChannel] success: id=%d", channel.ID)
 	return resp, nil
 }

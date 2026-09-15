@@ -6,15 +6,17 @@ package svc
 import (
 	"context"
 	"encoding/json"
+	"net"
 	"net/http"
 	"strings"
 	"sync"
 	"time"
 
 	"github.com/zeromicro/go-zero/rest"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
-	"oa.98ent.com/p9/core/common/ctxdata"
+	"github.com/zeromicro/go-zero/zrpc"
+	"oa.98ent.com/p9/core/common/coreadapt"
+	"oa.98ent.com/p9/core/common/middleware"
+	coremiddleware "oa.98ent.com/p9/core/common/middleware"
 	"oa.98ent.com/p9/core/rpc/coreclient"
 	"oa.98ent.com/p9/platform-game/api/internal/config"
 	"oa.98ent.com/p9/platform-game/api/internal/grpc_client"
@@ -23,11 +25,19 @@ import (
 )
 
 type ServiceContext struct {
-	Config          config.Config
-	GrpcClient      *grpc_client.ClientManager
-	CoreAuth        *auth.CoreAuth   // Core 服务鉴权客户端
-	Auth            rest.Middleware  // 认证中间件
+	Config     config.Config
+	GrpcClient *grpc_client.ClientManager
+	Core       coreclient.Core // Core RPC客户端
+	CoreAuth   *auth.CoreAuth  // Core 服务鉴权客户端
+	// Auth            rest.Middleware  // 认证中间件
 	SyncRateLimiter *SyncRateLimiter // 同步操作频率限制器
+
+	Jwt       rest.Middleware // JWT认证中间件
+	Authority rest.Middleware // 权限校验中间件
+
+	// 日志
+	ActionLog rest.Middleware // 操作日志中间件
+	ErrorLog  rest.Middleware // 错误日志中间件
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -51,16 +61,12 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	// 初始化 Core 服务鉴权客户端
 	logger.Info("[ServiceContext] 开始初始化 Core 鉴权客户端...")
 	logger.Infof("[ServiceContext] CoreRpc.Target = '%s'", c.CoreRpc.Target)
-	var coreAuth *auth.CoreAuth
+	var coreAuth middleware.Client
+	var coreCli coreclient.Core
 
 	if c.CoreRpc.Target == "" {
 		logger.Warn("[ServiceContext] ⚠ CoreRpc.Target 未配置，鉴权功能不可用")
 	} else {
-		// 创建 Core 服务的 gRPC 连接
-		opts := []grpc.DialOption{
-			grpc.WithTransportCredentials(insecure.NewCredentials()),
-		}
-
 		ctx := context.Background()
 		if c.CoreRpc.Timeout > 0 {
 			var cancel context.CancelFunc
@@ -68,80 +74,94 @@ func NewServiceContext(c config.Config) *ServiceContext {
 			defer cancel()
 		}
 
-		coreConn, err := grpc.DialContext(ctx, c.CoreRpc.Target, opts...)
-		if err != nil {
-			logger.Errorf("[ServiceContext] ✗ Core gRPC 连接初始化失败: %v", err)
-			panic("failed to connect to Core gRPC service: " + err.Error())
-		}
-
-		// 包装连接以实现 zrpc.Client 接口
-		zrpcClient := &grpc_client.ZrpcConnWrapper{coreConn}
-
 		// 创建 Core 客户端并初始化鉴权
-		coreCli := coreclient.NewCore(zrpcClient)
-		coreAuth = auth.NewCoreAuth(coreCli)
+		// coreCli = coreclient.NewCore(zrpcClient)
+		coreClient := zrpc.MustNewClient(zrpc.RpcClientConf{
+			Target:  c.CoreRpc.Target,
+			Timeout: int64(c.CoreRpc.Timeout),
+		})
+		coreCli = coreclient.NewCore(coreClient)
+
+		// 设置Core多语言词典加载器
+		coreadapt.SetDictLoader(coreCli)
+
+		// 创建Core认证适配器
+		coreAuth = coreadapt.Auth(coreCli)
+
 		logger.Info("[ServiceContext] ✓ Core 鉴权客户端初始化成功")
 	}
 
 	logger.Info("[ServiceContext] ✓ ServiceContext 初始化完成")
 
 	// 创建认证中间件
-	authMiddleware := createAuthMiddleware(coreAuth)
+	// authMiddleware := createAuthMiddleware(coreAuth)
+	jwt := coremiddleware.JWT(coreAuth)
+	authority := coremiddleware.Authority(coreAuth)
+	logger.Infof("[ServiceContext] isLocal = %v", c.IsLocal)
+	if isLocal := c.IsLocal; isLocal {
+		// 如果是本地环境，跳过权限校验
+		jwt = func(next http.HandlerFunc) http.HandlerFunc {
+			return func(w http.ResponseWriter, r *http.Request) {
+				next(w, r)
+			}
+		}
+		authority = func(next http.HandlerFunc) http.HandlerFunc {
+			return func(w http.ResponseWriter, r *http.Request) {
+				next(w, r)
+			}
+		}
+	}
 
 	return &ServiceContext{
-		Config:          c,
-		GrpcClient:      grpcClient,
-		CoreAuth:        coreAuth,
-		Auth:            authMiddleware,
+		Config:     c,
+		GrpcClient: grpcClient,
+		Core:       coreCli,
+		// Auth:            authMiddleware,
 		SyncRateLimiter: NewSyncRateLimiter(),
+		Jwt:             jwt,       // JWT认证中间件
+		Authority:       authority, // 权限校验中间件
+
+		// 日志
+		ActionLog: coremiddleware.ActionLog(coreadapt.ActionRecorder(coreCli)),       // 操作日志中间件
+		ErrorLog:  coremiddleware.ErrorLog(c.Name, coreadapt.ErrorRecorder(coreCli)), // 错误日志中间件
 	}
 }
 
-// createAuthMiddleware 创建认证中间件
-func createAuthMiddleware(coreAuth *auth.CoreAuth) rest.Middleware {
-	return func(next http.HandlerFunc) http.HandlerFunc {
-		return func(w http.ResponseWriter, r *http.Request) {
-			// 如果 CoreAuth 未配置，返回错误
-			if coreAuth == nil {
-				logger.Warn("[Auth] ⚠ CoreAuth 未配置，无法进行鉴权")
-				respondJSON(w, http.StatusUnauthorized, 401, "未登录")
-				return
-			}
-
-			// 获取 Authorization 请求头
-			authHeader := r.Header.Get("Authorization")
-			if authHeader == "" {
-				logger.Warn("[Auth] ⚠ 缺少 Authorization 请求头")
-				respondJSON(w, http.StatusUnauthorized, 401, "未登录")
-				return
-			}
-
-			// 解析 Bearer token
-			parts := strings.SplitN(authHeader, " ", 2)
-			if len(parts) != 2 || parts[0] != "Bearer" {
-				logger.Warn("[Auth] ⚠ Authorization 请求头格式不正确")
-				respondJSON(w, http.StatusUnauthorized, 401, "未登录")
-				return
-			}
-
-			token := parts[1]
-
-			// 调用 Core 服务验证 token
-			claims, err := coreAuth.CheckToken(r.Context(), token)
-			if err != nil {
-				logger.Warnf("[Auth] ⚠ Token 验证失败: %v", err)
-				respondJSON(w, http.StatusUnauthorized, 401, "未登录")
-				return
-			}
-
-			// 使用 ctxdata.WithClaims 将 claims 存储到 context 中
-			// 这样 handler 就可以通过 ctxdata.ClaimsFromCtx() 获取用户信息
-			ctx := ctxdata.WithClaims(r.Context(), claims)
-			logger.Infof("[Auth] ✓ Token 验证成功，用户: %s", claims.Username)
-
-			next(w, r.WithContext(ctx))
-		}
+// getClientIP 获取客户端 IP，支持代理情况下的 X-Forwarded-For 头
+func getClientIP(r *http.Request) string {
+	if r == nil {
+		return ""
 	}
+	// 优先从 X-Forwarded-For 获取（由代理设置）
+	if x := r.Header.Get("X-Forwarded-For"); x != "" {
+		return normalizeIP(strings.TrimSpace(strings.Split(x, ",")[0]))
+	}
+	// 其次尝试从 X-Real-IP 获取
+	if x := r.Header.Get("X-Real-IP"); x != "" {
+		return normalizeIP(strings.TrimSpace(x))
+	}
+	// 最后从 RemoteAddr 获取
+	host, _, err := net.SplitHostPort(r.RemoteAddr)
+	if err != nil {
+		return normalizeIP(r.RemoteAddr)
+	}
+	return normalizeIP(host)
+}
+
+// normalizeIP 规范化 IP：去空白、去方括号，并把 IPv4-mapped IPv6 转成 IPv4
+func normalizeIP(raw string) string {
+	raw = strings.TrimSpace(raw)
+	raw = strings.TrimPrefix(raw, "[")
+	raw = strings.TrimSuffix(raw, "]")
+	ip := net.ParseIP(raw)
+	if ip == nil {
+		return raw
+	}
+	// 如果是 IPv4-mapped IPv6，转成 IPv4
+	if v4 := ip.To4(); v4 != nil {
+		return v4.String()
+	}
+	return ip.String()
 }
 
 // respondJSON 返回 JSON 格式的响应

@@ -204,7 +204,7 @@ services:
     container_name: oss-rpc
     restart: always
     ports:
-      - "19002:19002"
+      - "19006:19006"
     volumes:
       - ./etc/oss/oss-rpc.yaml:/app/etc/oss.yaml:ro
       - ./etc/oss/init_default_settings.yaml:/app/etc/init_default_settings.yaml:ro
@@ -223,13 +223,42 @@ services:
     container_name: oss-api
     restart: always
     ports:
-      - "18002:18002"
+      - "18006:18006"
     volumes:
       - ./etc/oss/oss-api.yaml:/app/etc/oss.yaml:ro
     depends_on:
       - core-rpc
       - oss-rpc
       - minio
+    networks:
+      - p9-platform-network
+
+  operator-rpc:
+    image: ${DOCKER_REPO:-192.168.0.15:5000/p9}/platform-operator-rpc:${VERSION:-1.0.0}
+    container_name: platform-operator-rpc
+    restart: always
+    ports:
+      - "19002:19002"
+    volumes:
+      - ./etc/operator/rpc/platform_operator.yaml:/app/etc/platform_operator.yaml:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - p9-platform-network
+
+  operator-api:
+    image: ${DOCKER_REPO:-192.168.0.15:5000/p9}/platform-operator-api:${VERSION:-1.0.0}
+    container_name: platform-operator-api
+    restart: always
+    ports:
+      - "18002:18002"
+    volumes:
+      - ./etc/operator/api/platform_operator.yaml:/app/etc/platform_operator.yaml:ro
+    depends_on:
+      - operator-rpc
+      - base-rpc
+      - core-rpc
     networks:
       - p9-platform-network
 

@@ -64,16 +64,16 @@ func (_c *RoleCreate) SetNillableDeletedAt(v *time.Time) *RoleCreate {
 	return _c
 }
 
-// SetOperatorID sets the "operator_id" field.
-func (_c *RoleCreate) SetOperatorID(v int64) *RoleCreate {
-	_c.mutation.SetOperatorID(v)
+// SetOperatorCode sets the "operator_code" field.
+func (_c *RoleCreate) SetOperatorCode(v string) *RoleCreate {
+	_c.mutation.SetOperatorCode(v)
 	return _c
 }
 
-// SetNillableOperatorID sets the "operator_id" field if the given value is not nil.
-func (_c *RoleCreate) SetNillableOperatorID(v *int64) *RoleCreate {
+// SetNillableOperatorCode sets the "operator_code" field if the given value is not nil.
+func (_c *RoleCreate) SetNillableOperatorCode(v *string) *RoleCreate {
 	if v != nil {
-		_c.SetOperatorID(*v)
+		_c.SetOperatorCode(*v)
 	}
 	return _c
 }
@@ -250,6 +250,11 @@ func (_c *RoleCreate) defaults() error {
 
 // check runs all checks and user-defined validators on the builder.
 func (_c *RoleCreate) check() error {
+	if v, ok := _c.mutation.OperatorCode(); ok {
+		if err := role.OperatorCodeValidator(v); err != nil {
+			return &ValidationError{Name: "operator_code", err: fmt.Errorf(`ent: validator failed for field "Role.operator_code": %w`, err)}
+		}
+	}
 	if _, ok := _c.mutation.RoleCode(); !ok {
 		return &ValidationError{Name: "role_code", err: errors.New(`ent: missing required field "Role.role_code"`)}
 	}
@@ -324,9 +329,9 @@ func (_c *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 		_spec.SetField(role.FieldDeletedAt, field.TypeTime, value)
 		_node.DeletedAt = &value
 	}
-	if value, ok := _c.mutation.OperatorID(); ok {
-		_spec.SetField(role.FieldOperatorID, field.TypeInt64, value)
-		_node.OperatorID = &value
+	if value, ok := _c.mutation.OperatorCode(); ok {
+		_spec.SetField(role.FieldOperatorCode, field.TypeString, value)
+		_node.OperatorCode = &value
 	}
 	if value, ok := _c.mutation.RoleCode(); ok {
 		_spec.SetField(role.FieldRoleCode, field.TypeString, value)

@@ -29,30 +29,23 @@ func (_u *AdminActionLogUpdate) Where(ps ...predicate.AdminActionLog) *AdminActi
 	return _u
 }
 
-// SetOperatorID sets the "operator_id" field.
-func (_u *AdminActionLogUpdate) SetOperatorID(v int64) *AdminActionLogUpdate {
-	_u.mutation.ResetOperatorID()
-	_u.mutation.SetOperatorID(v)
+// SetOperatorCode sets the "operator_code" field.
+func (_u *AdminActionLogUpdate) SetOperatorCode(v string) *AdminActionLogUpdate {
+	_u.mutation.SetOperatorCode(v)
 	return _u
 }
 
-// SetNillableOperatorID sets the "operator_id" field if the given value is not nil.
-func (_u *AdminActionLogUpdate) SetNillableOperatorID(v *int64) *AdminActionLogUpdate {
+// SetNillableOperatorCode sets the "operator_code" field if the given value is not nil.
+func (_u *AdminActionLogUpdate) SetNillableOperatorCode(v *string) *AdminActionLogUpdate {
 	if v != nil {
-		_u.SetOperatorID(*v)
+		_u.SetOperatorCode(*v)
 	}
 	return _u
 }
 
-// AddOperatorID adds value to the "operator_id" field.
-func (_u *AdminActionLogUpdate) AddOperatorID(v int64) *AdminActionLogUpdate {
-	_u.mutation.AddOperatorID(v)
-	return _u
-}
-
-// ClearOperatorID clears the value of the "operator_id" field.
-func (_u *AdminActionLogUpdate) ClearOperatorID() *AdminActionLogUpdate {
-	_u.mutation.ClearOperatorID()
+// ClearOperatorCode clears the value of the "operator_code" field.
+func (_u *AdminActionLogUpdate) ClearOperatorCode() *AdminActionLogUpdate {
+	_u.mutation.ClearOperatorCode()
 	return _u
 }
 
@@ -314,6 +307,11 @@ func (_u *AdminActionLogUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (_u *AdminActionLogUpdate) check() error {
+	if v, ok := _u.mutation.OperatorCode(); ok {
+		if err := adminactionlog.OperatorCodeValidator(v); err != nil {
+			return &ValidationError{Name: "operator_code", err: fmt.Errorf(`ent: validator failed for field "AdminActionLog.operator_code": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.RequestMethod(); ok {
 		if err := adminactionlog.RequestMethodValidator(v); err != nil {
 			return &ValidationError{Name: "request_method", err: fmt.Errorf(`ent: validator failed for field "AdminActionLog.request_method": %w`, err)}
@@ -347,14 +345,11 @@ func (_u *AdminActionLogUpdate) sqlSave(ctx context.Context) (_node int, err err
 			}
 		}
 	}
-	if value, ok := _u.mutation.OperatorID(); ok {
-		_spec.SetField(adminactionlog.FieldOperatorID, field.TypeInt64, value)
+	if value, ok := _u.mutation.OperatorCode(); ok {
+		_spec.SetField(adminactionlog.FieldOperatorCode, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.AddedOperatorID(); ok {
-		_spec.AddField(adminactionlog.FieldOperatorID, field.TypeInt64, value)
-	}
-	if _u.mutation.OperatorIDCleared() {
-		_spec.ClearField(adminactionlog.FieldOperatorID, field.TypeInt64)
+	if _u.mutation.OperatorCodeCleared() {
+		_spec.ClearField(adminactionlog.FieldOperatorCode, field.TypeString)
 	}
 	if value, ok := _u.mutation.RequestMethod(); ok {
 		_spec.SetField(adminactionlog.FieldRequestMethod, field.TypeString, value)
@@ -459,30 +454,23 @@ type AdminActionLogUpdateOne struct {
 	mutation *AdminActionLogMutation
 }
 
-// SetOperatorID sets the "operator_id" field.
-func (_u *AdminActionLogUpdateOne) SetOperatorID(v int64) *AdminActionLogUpdateOne {
-	_u.mutation.ResetOperatorID()
-	_u.mutation.SetOperatorID(v)
+// SetOperatorCode sets the "operator_code" field.
+func (_u *AdminActionLogUpdateOne) SetOperatorCode(v string) *AdminActionLogUpdateOne {
+	_u.mutation.SetOperatorCode(v)
 	return _u
 }
 
-// SetNillableOperatorID sets the "operator_id" field if the given value is not nil.
-func (_u *AdminActionLogUpdateOne) SetNillableOperatorID(v *int64) *AdminActionLogUpdateOne {
+// SetNillableOperatorCode sets the "operator_code" field if the given value is not nil.
+func (_u *AdminActionLogUpdateOne) SetNillableOperatorCode(v *string) *AdminActionLogUpdateOne {
 	if v != nil {
-		_u.SetOperatorID(*v)
+		_u.SetOperatorCode(*v)
 	}
 	return _u
 }
 
-// AddOperatorID adds value to the "operator_id" field.
-func (_u *AdminActionLogUpdateOne) AddOperatorID(v int64) *AdminActionLogUpdateOne {
-	_u.mutation.AddOperatorID(v)
-	return _u
-}
-
-// ClearOperatorID clears the value of the "operator_id" field.
-func (_u *AdminActionLogUpdateOne) ClearOperatorID() *AdminActionLogUpdateOne {
-	_u.mutation.ClearOperatorID()
+// ClearOperatorCode clears the value of the "operator_code" field.
+func (_u *AdminActionLogUpdateOne) ClearOperatorCode() *AdminActionLogUpdateOne {
+	_u.mutation.ClearOperatorCode()
 	return _u
 }
 
@@ -757,6 +745,11 @@ func (_u *AdminActionLogUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (_u *AdminActionLogUpdateOne) check() error {
+	if v, ok := _u.mutation.OperatorCode(); ok {
+		if err := adminactionlog.OperatorCodeValidator(v); err != nil {
+			return &ValidationError{Name: "operator_code", err: fmt.Errorf(`ent: validator failed for field "AdminActionLog.operator_code": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.RequestMethod(); ok {
 		if err := adminactionlog.RequestMethodValidator(v); err != nil {
 			return &ValidationError{Name: "request_method", err: fmt.Errorf(`ent: validator failed for field "AdminActionLog.request_method": %w`, err)}
@@ -807,14 +800,11 @@ func (_u *AdminActionLogUpdateOne) sqlSave(ctx context.Context) (_node *AdminAct
 			}
 		}
 	}
-	if value, ok := _u.mutation.OperatorID(); ok {
-		_spec.SetField(adminactionlog.FieldOperatorID, field.TypeInt64, value)
+	if value, ok := _u.mutation.OperatorCode(); ok {
+		_spec.SetField(adminactionlog.FieldOperatorCode, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.AddedOperatorID(); ok {
-		_spec.AddField(adminactionlog.FieldOperatorID, field.TypeInt64, value)
-	}
-	if _u.mutation.OperatorIDCleared() {
-		_spec.ClearField(adminactionlog.FieldOperatorID, field.TypeInt64)
+	if _u.mutation.OperatorCodeCleared() {
+		_spec.ClearField(adminactionlog.FieldOperatorCode, field.TypeString)
 	}
 	if value, ok := _u.mutation.RequestMethod(); ok {
 		_spec.SetField(adminactionlog.FieldRequestMethod, field.TypeString, value)

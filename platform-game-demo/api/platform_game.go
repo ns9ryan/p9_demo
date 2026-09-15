@@ -9,12 +9,15 @@ import (
 	"fmt"
 	"net/http"
 
+	"oa.98ent.com/p9/platform-game/api/internal/catalog"
 	"oa.98ent.com/p9/platform-game/api/internal/config"
 	"oa.98ent.com/p9/platform-game/api/internal/handler"
+	"oa.98ent.com/p9/platform-game/api/internal/middleware"
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/common/response"
 
 	"github.com/zeromicro/go-zero/core/conf"
+	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest"
 )
 
@@ -30,7 +33,12 @@ func main() {
 	server := rest.MustNewServer(c.RestConf)
 	defer server.Stop()
 
+	// 注册全局中间件
+	server.Use(middleware.LanguageMiddleware())
+
 	ctx := svc.NewServiceContext(c)
+	// 注册菜单、API目录、多语言数据
+	logx.Must(catalog.Register(ctx))
 	handler.RegisterHandlers(server, ctx)
 	registerSwagger(server)
 

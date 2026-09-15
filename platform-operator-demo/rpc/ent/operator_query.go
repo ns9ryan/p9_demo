@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operator"
+	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoradmin"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoragentlineallocation"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatordomain"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatorlanguageallocation"
@@ -30,6 +31,7 @@ type OperatorQuery struct {
 	predicates               []predicate.Operator
 	withProfile              *OperatorProfileQuery
 	withDomains              *OperatorDomainQuery
+	withAdmins               *OperatorAdminQuery
 	withLanguageAllocations  *OperatorLanguageAllocationQuery
 	withRegionAllocations    *OperatorRegionAllocationQuery
 	withAgentLineAllocations *OperatorAgentLineAllocationQuery
@@ -106,6 +108,28 @@ func (_q *OperatorQuery) QueryDomains() *OperatorDomainQuery {
 			sqlgraph.From(operator.Table, operator.FieldID, selector),
 			sqlgraph.To(operatordomain.Table, operatordomain.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, operator.DomainsTable, operator.DomainsColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryAdmins chains the current query on the "admins" edge.
+func (_q *OperatorQuery) QueryAdmins() *OperatorAdminQuery {
+	query := (&OperatorAdminClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(operator.Table, operator.FieldID, selector),
+			sqlgraph.To(operatoradmin.Table, operatoradmin.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, operator.AdminsTable, operator.AdminsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
@@ -373,6 +397,7 @@ func (_q *OperatorQuery) Clone() *OperatorQuery {
 		predicates:               append([]predicate.Operator{}, _q.predicates...),
 		withProfile:              _q.withProfile.Clone(),
 		withDomains:              _q.withDomains.Clone(),
+		withAdmins:               _q.withAdmins.Clone(),
 		withLanguageAllocations:  _q.withLanguageAllocations.Clone(),
 		withRegionAllocations:    _q.withRegionAllocations.Clone(),
 		withAgentLineAllocations: _q.withAgentLineAllocations.Clone(),
@@ -401,6 +426,17 @@ func (_q *OperatorQuery) WithDomains(opts ...func(*OperatorDomainQuery)) *Operat
 		opt(query)
 	}
 	_q.withDomains = query
+	return _q
+}
+
+// WithAdmins tells the query-builder to eager-load the nodes that are connected to
+// the "admins" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *OperatorQuery) WithAdmins(opts ...func(*OperatorAdminQuery)) *OperatorQuery {
+	query := (&OperatorAdminClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withAdmins = query
 	return _q
 }
 
@@ -515,9 +551,10 @@ func (_q *OperatorQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Ope
 	var (
 		nodes       = []*Operator{}
 		_spec       = _q.querySpec()
-		loadedTypes = [5]bool{
+		loadedTypes = [6]bool{
 			_q.withProfile != nil,
 			_q.withDomains != nil,
+			_q.withAdmins != nil,
 			_q.withLanguageAllocations != nil,
 			_q.withRegionAllocations != nil,
 			_q.withAgentLineAllocations != nil,
@@ -551,6 +588,13 @@ func (_q *OperatorQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Ope
 		if err := _q.loadDomains(ctx, query, nodes,
 			func(n *Operator) { n.Edges.Domains = []*OperatorDomain{} },
 			func(n *Operator, e *OperatorDomain) { n.Edges.Domains = append(n.Edges.Domains, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := _q.withAdmins; query != nil {
+		if err := _q.loadAdmins(ctx, query, nodes,
+			func(n *Operator) { n.Edges.Admins = []*OperatorAdmin{} },
+			func(n *Operator, e *OperatorAdmin) { n.Edges.Admins = append(n.Edges.Admins, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -626,6 +670,36 @@ func (_q *OperatorQuery) loadDomains(ctx context.Context, query *OperatorDomainQ
 	}
 	query.Where(predicate.OperatorDomain(func(s *sql.Selector) {
 		s.Where(sql.InValues(s.C(operator.DomainsColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.OperatorID
+		node, ok := nodeids[fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "operator_id" returned %v for node %v`, fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (_q *OperatorQuery) loadAdmins(ctx context.Context, query *OperatorAdminQuery, nodes []*Operator, init func(*Operator), assign func(*Operator, *OperatorAdmin)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int64]*Operator)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(operatoradmin.FieldOperatorID)
+	}
+	query.Where(predicate.OperatorAdmin(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(operator.AdminsColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {

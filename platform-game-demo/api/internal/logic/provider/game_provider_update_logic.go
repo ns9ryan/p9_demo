@@ -12,7 +12,7 @@ import (
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
 	"oa.98ent.com/p9/platform-game/common/constant"
-	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
+	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"github.com/bytedance/gopkg/util/logger"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -38,9 +38,8 @@ func (l *GameProviderUpdateLogic) GameProviderUpdate(req *types.GameProviderUpda
 		return nil, fmt.Errorf("gRPC client not available")
 	}
 
-	grpcReq := &platformgame.UpdateGameProviderRequest{
+	grpcReq := &platform_game.UpdateGameProviderRequest{
 		Id:          req.ID,
-		NameI18N:    req.NameI18n,
 		SortNo:      req.SortNo,
 		Status:      int32(req.Status),
 		LogoUrl:     req.LogoUrl,
@@ -68,7 +67,7 @@ func (l *GameProviderUpdateLogic) GameProviderUpdate(req *types.GameProviderUpda
 		return nil, fmt.Errorf("gRPC response data is empty")
 	}
 
-	resp = logic.ProviderProtoToResponse(grpcResp.Data)
+	resp = logic.ProviderProtoToResponse(l.ctx, grpcResp.Data)
 
 	logger.Infof("[API GameProviderUpdate] success: id=%d", req.ID)
 	return resp, nil

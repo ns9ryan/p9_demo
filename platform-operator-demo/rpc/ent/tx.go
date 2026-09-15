@@ -14,6 +14,8 @@ type Tx struct {
 	config
 	// Operator is the client for interacting with the Operator builders.
 	Operator *OperatorClient
+	// OperatorAdmin is the client for interacting with the OperatorAdmin builders.
+	OperatorAdmin *OperatorAdminClient
 	// OperatorAgentLineAllocation is the client for interacting with the OperatorAgentLineAllocation builders.
 	OperatorAgentLineAllocation *OperatorAgentLineAllocationClient
 	// OperatorDomain is the client for interacting with the OperatorDomain builders.
@@ -156,6 +158,7 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Operator = NewOperatorClient(tx.config)
+	tx.OperatorAdmin = NewOperatorAdminClient(tx.config)
 	tx.OperatorAgentLineAllocation = NewOperatorAgentLineAllocationClient(tx.config)
 	tx.OperatorDomain = NewOperatorDomainClient(tx.config)
 	tx.OperatorLanguageAllocation = NewOperatorLanguageAllocationClient(tx.config)

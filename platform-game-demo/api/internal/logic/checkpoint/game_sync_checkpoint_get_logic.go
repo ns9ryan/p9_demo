@@ -58,7 +58,6 @@ func (l *GameSyncCheckpointGetLogic) GameSyncCheckpointGet(req *types.GameSyncCh
 	}
 
 	resp = logic.CheckpointProtoToResponse(grpcResp.Data)
-
 	l.Infof("[API GameSyncCheckpointGet] query success: sync_scope=%s", req.SyncScope)
 	return resp, nil
 }

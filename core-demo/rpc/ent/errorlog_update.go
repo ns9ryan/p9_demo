@@ -29,30 +29,23 @@ func (_u *ErrorLogUpdate) Where(ps ...predicate.ErrorLog) *ErrorLogUpdate {
 	return _u
 }
 
-// SetOperatorID sets the "operator_id" field.
-func (_u *ErrorLogUpdate) SetOperatorID(v int64) *ErrorLogUpdate {
-	_u.mutation.ResetOperatorID()
-	_u.mutation.SetOperatorID(v)
+// SetOperatorCode sets the "operator_code" field.
+func (_u *ErrorLogUpdate) SetOperatorCode(v string) *ErrorLogUpdate {
+	_u.mutation.SetOperatorCode(v)
 	return _u
 }
 
-// SetNillableOperatorID sets the "operator_id" field if the given value is not nil.
-func (_u *ErrorLogUpdate) SetNillableOperatorID(v *int64) *ErrorLogUpdate {
+// SetNillableOperatorCode sets the "operator_code" field if the given value is not nil.
+func (_u *ErrorLogUpdate) SetNillableOperatorCode(v *string) *ErrorLogUpdate {
 	if v != nil {
-		_u.SetOperatorID(*v)
+		_u.SetOperatorCode(*v)
 	}
 	return _u
 }
 
-// AddOperatorID adds value to the "operator_id" field.
-func (_u *ErrorLogUpdate) AddOperatorID(v int64) *ErrorLogUpdate {
-	_u.mutation.AddOperatorID(v)
-	return _u
-}
-
-// ClearOperatorID clears the value of the "operator_id" field.
-func (_u *ErrorLogUpdate) ClearOperatorID() *ErrorLogUpdate {
-	_u.mutation.ClearOperatorID()
+// ClearOperatorCode clears the value of the "operator_code" field.
+func (_u *ErrorLogUpdate) ClearOperatorCode() *ErrorLogUpdate {
+	_u.mutation.ClearOperatorCode()
 	return _u
 }
 
@@ -353,6 +346,11 @@ func (_u *ErrorLogUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (_u *ErrorLogUpdate) check() error {
+	if v, ok := _u.mutation.OperatorCode(); ok {
+		if err := errorlog.OperatorCodeValidator(v); err != nil {
+			return &ValidationError{Name: "operator_code", err: fmt.Errorf(`ent: validator failed for field "ErrorLog.operator_code": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.RequestMethod(); ok {
 		if err := errorlog.RequestMethodValidator(v); err != nil {
 			return &ValidationError{Name: "request_method", err: fmt.Errorf(`ent: validator failed for field "ErrorLog.request_method": %w`, err)}
@@ -388,14 +386,11 @@ func (_u *ErrorLogUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			}
 		}
 	}
-	if value, ok := _u.mutation.OperatorID(); ok {
-		_spec.SetField(errorlog.FieldOperatorID, field.TypeInt64, value)
+	if value, ok := _u.mutation.OperatorCode(); ok {
+		_spec.SetField(errorlog.FieldOperatorCode, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.AddedOperatorID(); ok {
-		_spec.AddField(errorlog.FieldOperatorID, field.TypeInt64, value)
-	}
-	if _u.mutation.OperatorIDCleared() {
-		_spec.ClearField(errorlog.FieldOperatorID, field.TypeInt64)
+	if _u.mutation.OperatorCodeCleared() {
+		_spec.ClearField(errorlog.FieldOperatorCode, field.TypeString)
 	}
 	if value, ok := _u.mutation.RequestMethod(); ok {
 		_spec.SetField(errorlog.FieldRequestMethod, field.TypeString, value)
@@ -509,30 +504,23 @@ type ErrorLogUpdateOne struct {
 	mutation *ErrorLogMutation
 }
 
-// SetOperatorID sets the "operator_id" field.
-func (_u *ErrorLogUpdateOne) SetOperatorID(v int64) *ErrorLogUpdateOne {
-	_u.mutation.ResetOperatorID()
-	_u.mutation.SetOperatorID(v)
+// SetOperatorCode sets the "operator_code" field.
+func (_u *ErrorLogUpdateOne) SetOperatorCode(v string) *ErrorLogUpdateOne {
+	_u.mutation.SetOperatorCode(v)
 	return _u
 }
 
-// SetNillableOperatorID sets the "operator_id" field if the given value is not nil.
-func (_u *ErrorLogUpdateOne) SetNillableOperatorID(v *int64) *ErrorLogUpdateOne {
+// SetNillableOperatorCode sets the "operator_code" field if the given value is not nil.
+func (_u *ErrorLogUpdateOne) SetNillableOperatorCode(v *string) *ErrorLogUpdateOne {
 	if v != nil {
-		_u.SetOperatorID(*v)
+		_u.SetOperatorCode(*v)
 	}
 	return _u
 }
 
-// AddOperatorID adds value to the "operator_id" field.
-func (_u *ErrorLogUpdateOne) AddOperatorID(v int64) *ErrorLogUpdateOne {
-	_u.mutation.AddOperatorID(v)
-	return _u
-}
-
-// ClearOperatorID clears the value of the "operator_id" field.
-func (_u *ErrorLogUpdateOne) ClearOperatorID() *ErrorLogUpdateOne {
-	_u.mutation.ClearOperatorID()
+// ClearOperatorCode clears the value of the "operator_code" field.
+func (_u *ErrorLogUpdateOne) ClearOperatorCode() *ErrorLogUpdateOne {
+	_u.mutation.ClearOperatorCode()
 	return _u
 }
 
@@ -846,6 +834,11 @@ func (_u *ErrorLogUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (_u *ErrorLogUpdateOne) check() error {
+	if v, ok := _u.mutation.OperatorCode(); ok {
+		if err := errorlog.OperatorCodeValidator(v); err != nil {
+			return &ValidationError{Name: "operator_code", err: fmt.Errorf(`ent: validator failed for field "ErrorLog.operator_code": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.RequestMethod(); ok {
 		if err := errorlog.RequestMethodValidator(v); err != nil {
 			return &ValidationError{Name: "request_method", err: fmt.Errorf(`ent: validator failed for field "ErrorLog.request_method": %w`, err)}
@@ -898,14 +891,11 @@ func (_u *ErrorLogUpdateOne) sqlSave(ctx context.Context) (_node *ErrorLog, err 
 			}
 		}
 	}
-	if value, ok := _u.mutation.OperatorID(); ok {
-		_spec.SetField(errorlog.FieldOperatorID, field.TypeInt64, value)
+	if value, ok := _u.mutation.OperatorCode(); ok {
+		_spec.SetField(errorlog.FieldOperatorCode, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.AddedOperatorID(); ok {
-		_spec.AddField(errorlog.FieldOperatorID, field.TypeInt64, value)
-	}
-	if _u.mutation.OperatorIDCleared() {
-		_spec.ClearField(errorlog.FieldOperatorID, field.TypeInt64)
+	if _u.mutation.OperatorCodeCleared() {
+		_spec.ClearField(errorlog.FieldOperatorCode, field.TypeString)
 	}
 	if value, ok := _u.mutation.RequestMethod(); ok {
 		_spec.SetField(errorlog.FieldRequestMethod, field.TypeString, value)

@@ -19,7 +19,7 @@ import (
 
 type CreateErrorLogReq struct {
 	UserID         int64
-	OperatorID     int64
+	OperatorCode   string
 	RequestMethod  string
 	RequestPath    string
 	RequestQuery   string
@@ -83,14 +83,14 @@ func (d *Deps) CreateErrorLog(ctx context.Context, req CreateErrorLogReq) {
 			c.SetUserID(req.UserID)
 		}
 	}
-	opID := req.OperatorID
-	if opID == 0 {
+	opCode := strings.TrimSpace(req.OperatorCode)
+	if opCode == "" {
 		if claims := ctxdata.ClaimsFromCtx(ctx); claims != nil {
-			opID = claims.OperatorID
+			opCode = claims.OperatorCode
 		}
 	}
-	if opID != 0 {
-		c.SetOperatorID(opID)
+	if opCode != "" {
+		c.SetOperatorCode(opCode)
 	}
 	if s := strings.TrimSpace(req.RequestQuery); s != "" {
 		c.SetRequestQuery(s)
@@ -119,7 +119,7 @@ func (d *Deps) ListErrorLogs(ctx context.Context, claims *ctxdata.Claims, req Er
 	if claims == nil {
 		return nil, 0, xerr.Unauthorized(i18n.Unauthorized)
 	}
-	if d.Mode == ModeOn && claims.OperatorID == 0 {
+	if d.Mode == ModeOn && claims.OperatorCode == "" {
 		return nil, 0, xerr.Unauthorized(i18n.Unauthorized)
 	}
 	ctx = ctxdata.WithClaims(ctx, claims)

@@ -1,61 +1,60 @@
 package logic
 
 import (
-	"database/sql"
+	"fmt"
 	"time"
 
 	"oa.98ent.com/p9/platform-game/rpc/ent"
+	"oa.98ent.com/p9/platform-game/rpc/internal/constant"
 	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 )
 
-func CategoryModelToProto(category *ent.GameCategory) *platformgame.CategoryInfo {
-	return &platformgame.CategoryInfo{
-		Id:                 category.Id,
-		SourceId:           category.SourceId,
+func GameCategoryModelToProto(category *ent.GameCategory) *platformgame.GameCategoryInfo {
+	return &platformgame.GameCategoryInfo{
+		Id:                 category.ID,
+		SourceId:           category.SourceID,
+		NameKey:            fmt.Sprintf("%s.%s.name", constant.CategoryBiz, category.SourceCategoryCode),
 		CategoryCode:       category.CategoryCode,
 		SourceCategoryCode: category.SourceCategoryCode,
-		NameI18N:           category.NameI18n,
-		SourceNameI18N:     category.SourceNameI18n,
 		SortNo:             int32(category.SortNo),
 		Status:             int32(category.Status),
 		SourceStatus:       int32(category.SourceStatus),
-		IsDeleted:          IsDel(category.DeletedAt.Time),
+		IsDeleted:          IsDel(category.DeletedAt),
 		CreatedAt:          category.CreatedAt.Unix(),
 		UpdatedAt:          category.UpdatedAt.Unix(),
 	}
 }
 
-func CategoryModelToProtoList(categories []*ent.GameCategory) []*platformgame.CategoryInfo {
-	categoriesProto := make([]*platformgame.CategoryInfo, 0, len(categories))
+func GameCategoryModelToProtoList(categories []*ent.GameCategory) []*platformgame.GameCategoryInfo {
+	categoriesProto := make([]*platformgame.GameCategoryInfo, 0, len(categories))
 	for _, category := range categories {
 		if category == nil {
 			continue
 		}
-		categoriesProto = append(categoriesProto, CategoryModelToProto(category))
+		categoriesProto = append(categoriesProto, GameCategoryModelToProto(category))
 	}
 	return categoriesProto
 }
 
-func ChannelModelToProto(channel *ent.GameChannel) *platformgame.GameChannelResp {
-	return &platformgame.GameChannelResp{
-		Id:                channel.Id,
-		SourceId:          channel.SourceId,
+func ChannelModelToProto(channel *ent.GameChannel) *platformgame.GameChannelInfo {
+	return &platformgame.GameChannelInfo{
+		Id:                channel.ID,
+		SourceId:          channel.SourceID,
+		NameKey:           fmt.Sprintf("%s.%s.name", constant.ChannelBiz, channel.SourceChannelCode),
 		ChannelCode:       channel.ChannelCode,
 		SourceChannelCode: channel.SourceChannelCode,
-		NameI18N:          channel.NameI18n,
-		SourceNameI18N:    channel.SourceNameI18n,
 		SortNo:            int32(channel.SortNo),
 		SourceSortNo:      int32(channel.SourceSortNo),
 		Status:            int32(channel.Status),
 		SourceStatus:      int32(channel.SourceStatus),
-		IsDeleted:         IsDel(channel.DeletedAt.Time),
+		IsDeleted:         IsDel(channel.DeletedAt),
 		CreatedAt:         channel.CreatedAt.Unix(),
 		UpdatedAt:         channel.UpdatedAt.Unix(),
 	}
 }
 
-func ChannelModelToProtoList(channels []*ent.GameChannel) []*platformgame.GameChannelResp {
-	channelsProto := make([]*platformgame.GameChannelResp, 0, len(channels))
+func ChannelModelToProtoList(channels []*ent.GameChannel) []*platformgame.GameChannelInfo {
+	channelsProto := make([]*platformgame.GameChannelInfo, 0, len(channels))
 	for _, channel := range channels {
 		if channel == nil {
 			continue
@@ -65,43 +64,42 @@ func ChannelModelToProtoList(channels []*ent.GameChannel) []*platformgame.GameCh
 	return channelsProto
 }
 
-func CurrencyModelToProto(currency *ent.GameCurrency, gameRecord *ent.Game, sysCurrencyMap map[int64]interface{}) *platformgame.GameCurrencyInfo {
+func CurrencyModelToProto(currency *ent.GameCurrency, gameRecord *ent.Game, sysCurrencyMap map[int64]*ent.Currency) *platformgame.GameCurrencyInfo {
 	currencyCode := ""
-	currencyNameI18n := ""
-	if sysCurrency, ok := sysCurrencyMap[currency.CurrencyId]; ok {
-		currencyCode = sysCurrency.(map[string]string)["currency_code"]
-		currencyNameI18n = sysCurrency.(map[string]string)["name_i18n"]
+	currencyNameKey := ""
+	if sysCurrency, ok := sysCurrencyMap[currency.CurrencyID]; ok {
+		currencyCode = sysCurrency.Code
+		currencyNameKey = sysCurrency.NameKey
 	}
 	return &platformgame.GameCurrencyInfo{
-		Id:               currency.Id,
-		GameId:           currency.GameId,
-		GameCode:         gameRecord.GameCode,
-		GameNameI18N:     gameRecord.NameI18n,
-		CurrencyId:       currency.CurrencyId,
-		CurrencyCode:     currencyCode,
-		CurrencyNameI18N: currencyNameI18n,
-		Status:           int32(currency.Status),
-		SourceStatus:     int32(currency.SourceStatus),
-		IsDeleted:        IsDel(currency.DeletedAt.Time),
-		CreatedAt:        currency.CreatedAt.Unix(),
-		UpdatedAt:        currency.UpdatedAt.Unix(),
+		Id:              currency.ID,
+		GameId:          currency.GameID,
+		GameCode:        gameRecord.GameCode,
+		GameName:        gameRecord.Name,
+		CurrencyId:      currency.CurrencyID,
+		CurrencyCode:    currencyCode,
+		CurrencyNameKey: currencyNameKey,
+		Status:          int32(currency.Status),
+		SourceStatus:    int32(currency.SourceStatus),
+		IsDeleted:       IsDel(currency.DeletedAt),
+		CreatedAt:       currency.CreatedAt.Unix(),
+		UpdatedAt:       currency.UpdatedAt.Unix(),
 	}
 }
 
 func ProviderModelToProto(provider *ent.GameProvider) *platformgame.ProviderInfo {
 	return &platformgame.ProviderInfo{
-		Id:                 provider.Id,
-		SourceId:           provider.SourceId,
+		Id:                 provider.ID,
+		SourceId:           provider.SourceID,
+		NameKey:            fmt.Sprintf("%s.%s.name", constant.ProviderBiz, provider.SourceProviderCode),
 		ProviderCode:       provider.ProviderCode,
 		SourceProviderCode: provider.SourceProviderCode,
-		NameI18N:           provider.NameI18n,
-		SourceNameI18N:     provider.SourceNameI18n,
-		LogoUrl:            provider.LogoUrl.String,
-		SourceLogoUrl:      provider.SourceLogoUrl.String,
+		LogoUrl:            provider.LogoURL,
+		SourceLogoUrl:      provider.SourceLogoURL,
 		SortNo:             int32(provider.SortNo),
 		Status:             int32(provider.Status),
 		SourceStatus:       int32(provider.SourceStatus),
-		IsDeleted:          IsDel(provider.DeletedAt.Time),
+		IsDeleted:          IsDel(provider.DeletedAt),
 		CreatedAt:          provider.CreatedAt.Unix(),
 		UpdatedAt:          provider.UpdatedAt.Unix(),
 	}
@@ -119,36 +117,35 @@ func ProviderModelToProtoList(providers []*ent.GameProvider) []*platformgame.Pro
 }
 
 type GameInfoExt struct {
-	CategoryNameI18N string
-	ProviderNameI18N string
-	ChannelNameI18N  string
+	CategoryCode     string
+	ProviderCode     string
+	ChannelCode      string
 	GameCurrencyInfo string
 }
 
 func GameModelToProto(gameRecord *ent.Game, ext *GameInfoExt) *platformgame.GameInfo {
 	return &platformgame.GameInfo{
-		Id:               gameRecord.Id,
-		SourceId:         derefNullInt64(gameRecord.SourceId),
+		Id:               gameRecord.ID,
+		SourceId:         gameRecord.SourceID,
 		GameCode:         gameRecord.GameCode,
 		SourceGameCode:   gameRecord.SourceGameCode,
-		NameI18N:         gameRecord.NameI18n,
-		SourceNameI18N:   gameRecord.SourceNameI18n,
+		Name:             gameRecord.Name,
 		Status:           int32(gameRecord.Status),
 		SourceStatus:     int32(gameRecord.SourceStatus),
-		CatId:            gameRecord.CategoryId,
-		VenId:            gameRecord.ProviderId,
-		ChanId:           derefNullInt64(gameRecord.ChannelId),
-		CategoryNameI18N: ext.CategoryNameI18N,
-		ProviderNameI18N: ext.ProviderNameI18N,
-		ChannelNameI18N:  ext.ChannelNameI18N,
+		CatId:            gameRecord.CategoryID,
+		VenId:            gameRecord.ProviderID,
+		ChanId:           gameRecord.ChannelID,
+		CategoryNameKey:  fmt.Sprintf("%s.%s.name", constant.CategoryBiz, ext.CategoryCode),
+		ProviderNameKey:  fmt.Sprintf("%s.%s.name", constant.ProviderBiz, ext.ProviderCode),
+		ChannelNameKey:   fmt.Sprintf("%s.%s.name", constant.ChannelBiz, ext.ChannelCode),
 		GameCurrencyInfo: ext.GameCurrencyInfo,
-		ProviderKey:      gameRecord.ProviderKey.String,
-		ImageUrl:         derefNullString(gameRecord.ImageUrl),
-		SourceImageUrl:   derefNullString(gameRecord.SourceImageUrl),
+		ProviderKey:      gameRecord.ProviderKey,
+		ImageUrl:         gameRecord.ImageURL,
+		SourceImageUrl:   gameRecord.SourceImageURL,
 		SortNo:           gameRecord.SortNo,
 		SupportsEmbed:    gameRecord.SupportsEmbed,
 		SupportsRedirect: gameRecord.SupportsRedirect,
-		IsDeleted:        IsDel(gameRecord.DeletedAt.Time),
+		IsDeleted:        IsDel(gameRecord.DeletedAt),
 		CreatedAt:        gameRecord.CreatedAt.Unix(),
 		UpdatedAt:        gameRecord.UpdatedAt.Unix(),
 	}
@@ -156,7 +153,7 @@ func GameModelToProto(gameRecord *ent.Game, ext *GameInfoExt) *platformgame.Game
 
 func CheckpointModelToProto(checkpoint *ent.GameSyncCheckpoint) *platformgame.GameSyncCheckpointInfo {
 	return &platformgame.GameSyncCheckpointInfo{
-		Id:              checkpoint.Id,
+		Id:              checkpoint.ID,
 		SyncScope:       checkpoint.SyncScope,
 		CheckpointValue: checkpoint.CheckpointValue,
 		RemoteTotal:     checkpoint.RemoteTotal,
@@ -169,7 +166,7 @@ func CheckpointModelToProto(checkpoint *ent.GameSyncCheckpoint) *platformgame.Ga
 		SyncStatus:      int32(checkpoint.SyncStatus),
 		LastSyncAt:      checkpoint.LastSyncAt.Unix(),
 		LastSuccessAt:   checkpoint.LastSuccessAt.Unix(),
-		LastError:       derefNullString(checkpoint.LastErrorMessage),
+		LastError:       checkpoint.LastErrorMessage,
 		CreatedAt:       checkpoint.CreatedAt.Unix(),
 		UpdatedAt:       checkpoint.UpdatedAt.Unix(),
 	}
@@ -184,27 +181,6 @@ func CheckpointModelToProtoList(checkpoints []*ent.GameSyncCheckpoint) []*platfo
 		checkpointsProto = append(checkpointsProto, CheckpointModelToProto(checkpoint))
 	}
 	return checkpointsProto
-}
-
-func derefString(s *string) string {
-	if s == nil {
-		return ""
-	}
-	return *s
-}
-
-func derefNullString(s sql.NullString) string {
-	if !s.Valid {
-		return ""
-	}
-	return s.String
-}
-
-func derefNullInt64(n sql.NullInt64) int64 {
-	if !n.Valid {
-		return 0
-	}
-	return n.Int64
 }
 
 // IsDel 检查是否已被软删除（DeletedAt 不为零值）

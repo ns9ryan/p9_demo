@@ -12,7 +12,7 @@ import (
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
 	"oa.98ent.com/p9/platform-game/common/constant"
-	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
+	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 )
 
 type GameChannelListLogic struct {
@@ -40,15 +40,12 @@ func (l *GameChannelListLogic) GameChannelList(req *types.GameChannelListReq) (r
 	}
 
 	// 构建 gRPC 请求（类型转换）
-	grpcReq := &platformgame.GetGameChannelListRequest{
+	grpcReq := &platform_game.GetGameChannelListRequest{
 		Page:        int32(req.Page),
 		PageSize:    int32(req.PageSize),
 		ChannelCode: req.ChannelCode,
-		Name:        req.Name,
 		Status:      int32(req.Status),
 		IsDeleted:   int32(req.IsDeleted),
-		SortBy:      req.SortBy,
-		SortOrder:   req.SortOrder,
 	}
 
 	// 调用 RPC 服务
@@ -77,7 +74,7 @@ func (l *GameChannelListLogic) GameChannelList(req *types.GameChannelListReq) (r
 			continue
 		}
 
-		items = append(items, *logic.ChannelProtoToResponse(item))
+		items = append(items, *logic.ChannelProtoToResponse(l.ctx, item))
 	}
 
 	resp = &types.GameChannelListResp{

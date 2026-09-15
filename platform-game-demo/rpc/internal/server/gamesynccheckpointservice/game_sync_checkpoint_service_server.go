@@ -34,3 +34,9 @@ func (s *GameSyncCheckpointServiceServer) GetGameSyncCheckpointList(ctx context.
 	l := gamesynccheckpointservicelogic.NewGetGameSyncCheckpointListLogic(ctx, s.svcCtx)
 	return l.GetGameSyncCheckpointList(in)
 }
+
+// 获取多语言映射文件name_map
+func (s *GameSyncCheckpointServiceServer) GetI18NNameMap(ctx context.Context, in *platform_game.GetI18NNameMapRequest) (*platform_game.GetI18NNameMapResp, error) {
+	l := gamesynccheckpointservicelogic.NewGetI18nNameMapLogic(ctx, s.svcCtx)
+	return l.GetI18NNameMap(in)
+}

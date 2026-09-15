@@ -74,6 +74,11 @@ func Name(v string) predicate.I18nLang {
 	return predicate.I18nLang(sql.FieldEQ(FieldName, v))
 }
 
+// I18nKey applies equality check predicate on the "i18n_key" field. It's identical to I18nKeyEQ.
+func I18nKey(v string) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldEQ(FieldI18nKey, v))
+}
+
 // Disabled applies equality check predicate on the "disabled" field. It's identical to DisabledEQ.
 func Disabled(v int16) predicate.I18nLang {
 	return predicate.I18nLang(sql.FieldEQ(FieldDisabled, v))
@@ -292,6 +297,71 @@ func NameEqualFold(v string) predicate.I18nLang {
 // NameContainsFold applies the ContainsFold predicate on the "name" field.
 func NameContainsFold(v string) predicate.I18nLang {
 	return predicate.I18nLang(sql.FieldContainsFold(FieldName, v))
+}
+
+// I18nKeyEQ applies the EQ predicate on the "i18n_key" field.
+func I18nKeyEQ(v string) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldEQ(FieldI18nKey, v))
+}
+
+// I18nKeyNEQ applies the NEQ predicate on the "i18n_key" field.
+func I18nKeyNEQ(v string) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldNEQ(FieldI18nKey, v))
+}
+
+// I18nKeyIn applies the In predicate on the "i18n_key" field.
+func I18nKeyIn(vs ...string) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldIn(FieldI18nKey, vs...))
+}
+
+// I18nKeyNotIn applies the NotIn predicate on the "i18n_key" field.
+func I18nKeyNotIn(vs ...string) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldNotIn(FieldI18nKey, vs...))
+}
+
+// I18nKeyGT applies the GT predicate on the "i18n_key" field.
+func I18nKeyGT(v string) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldGT(FieldI18nKey, v))
+}
+
+// I18nKeyGTE applies the GTE predicate on the "i18n_key" field.
+func I18nKeyGTE(v string) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldGTE(FieldI18nKey, v))
+}
+
+// I18nKeyLT applies the LT predicate on the "i18n_key" field.
+func I18nKeyLT(v string) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldLT(FieldI18nKey, v))
+}
+
+// I18nKeyLTE applies the LTE predicate on the "i18n_key" field.
+func I18nKeyLTE(v string) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldLTE(FieldI18nKey, v))
+}
+
+// I18nKeyContains applies the Contains predicate on the "i18n_key" field.
+func I18nKeyContains(v string) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldContains(FieldI18nKey, v))
+}
+
+// I18nKeyHasPrefix applies the HasPrefix predicate on the "i18n_key" field.
+func I18nKeyHasPrefix(v string) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldHasPrefix(FieldI18nKey, v))
+}
+
+// I18nKeyHasSuffix applies the HasSuffix predicate on the "i18n_key" field.
+func I18nKeyHasSuffix(v string) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldHasSuffix(FieldI18nKey, v))
+}
+
+// I18nKeyEqualFold applies the EqualFold predicate on the "i18n_key" field.
+func I18nKeyEqualFold(v string) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldEqualFold(FieldI18nKey, v))
+}
+
+// I18nKeyContainsFold applies the ContainsFold predicate on the "i18n_key" field.
+func I18nKeyContainsFold(v string) predicate.I18nLang {
+	return predicate.I18nLang(sql.FieldContainsFold(FieldI18nKey, v))
 }
 
 // DisabledEQ applies the EQ predicate on the "disabled" field.

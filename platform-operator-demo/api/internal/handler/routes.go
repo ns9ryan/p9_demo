@@ -151,6 +151,21 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Path:    "/list",
 					Handler: operator_admin.ListOperatorAdminsHandler(serverCtx),
 				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/resetPassword",
+					Handler: operator_admin.ResetOperatorAdminPasswordHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/update",
+					Handler: operator_admin.UpdateOperatorAdminHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/updateStatus",
+					Handler: operator_admin.UpdateOperatorAdminStatusHandler(serverCtx),
+				},
 			}...,
 		),
 		rest.WithPrefix("/admin/operator/admin"),

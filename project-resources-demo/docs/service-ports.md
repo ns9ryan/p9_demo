@@ -10,15 +10,15 @@ P9 默认开发端口按部署域划分，同一业务域的 API 和 RPC 使用�
 
 ## Platform
 
-| 服务 | API | RPC |
-|---|---:|---:|
-| core | `18000` | `19000` |
-| platform-base | `18001` | `19001` |
+| 服务                | API | RPC |
+|-------------------|---:|---:|
+| core              | `18000` | `19000` |
+| platform-base     | `18001` | `19001` |
 | platform-operator | `18002` | `19002` |
-| platform-game | `18003` | `19003` |
-| platform-message | `18004` | `19004` |
-| integration | `18005` | `19005` |
-| file | `18006` | `19006` |
+| platform-game     | `18003` | `19003` |
+| platform-message  | `18004` | `19004` |
+| integration       | `18005` | `19005` |
+| oss               | `18006` | `19006` |
 
 ## Node Dispatch
 

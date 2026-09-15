@@ -68,6 +68,20 @@ func (_c *I18nLangCreate) SetNillableName(v *string) *I18nLangCreate {
 	return _c
 }
 
+// SetI18nKey sets the "i18n_key" field.
+func (_c *I18nLangCreate) SetI18nKey(v string) *I18nLangCreate {
+	_c.mutation.SetI18nKey(v)
+	return _c
+}
+
+// SetNillableI18nKey sets the "i18n_key" field if the given value is not nil.
+func (_c *I18nLangCreate) SetNillableI18nKey(v *string) *I18nLangCreate {
+	if v != nil {
+		_c.SetI18nKey(*v)
+	}
+	return _c
+}
+
 // SetDisabled sets the "disabled" field.
 func (_c *I18nLangCreate) SetDisabled(v int16) *I18nLangCreate {
 	_c.mutation.SetDisabled(v)
@@ -149,6 +163,10 @@ func (_c *I18nLangCreate) defaults() {
 		v := i18nlang.DefaultName
 		_c.mutation.SetName(v)
 	}
+	if _, ok := _c.mutation.I18nKey(); !ok {
+		v := i18nlang.DefaultI18nKey
+		_c.mutation.SetI18nKey(v)
+	}
 	if _, ok := _c.mutation.Disabled(); !ok {
 		v := i18nlang.DefaultDisabled
 		_c.mutation.SetDisabled(v)
@@ -175,6 +193,14 @@ func (_c *I18nLangCreate) check() error {
 	if v, ok := _c.mutation.Name(); ok {
 		if err := i18nlang.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "I18nLang.name": %w`, err)}
+		}
+	}
+	if _, ok := _c.mutation.I18nKey(); !ok {
+		return &ValidationError{Name: "i18n_key", err: errors.New(`ent: missing required field "I18nLang.i18n_key"`)}
+	}
+	if v, ok := _c.mutation.I18nKey(); ok {
+		if err := i18nlang.I18nKeyValidator(v); err != nil {
+			return &ValidationError{Name: "i18n_key", err: fmt.Errorf(`ent: validator failed for field "I18nLang.i18n_key": %w`, err)}
 		}
 	}
 	if _, ok := _c.mutation.Disabled(); !ok {
@@ -230,6 +256,10 @@ func (_c *I18nLangCreate) createSpec() (*I18nLang, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.Name(); ok {
 		_spec.SetField(i18nlang.FieldName, field.TypeString, value)
 		_node.Name = value
+	}
+	if value, ok := _c.mutation.I18nKey(); ok {
+		_spec.SetField(i18nlang.FieldI18nKey, field.TypeString, value)
+		_node.I18nKey = value
 	}
 	if value, ok := _c.mutation.Disabled(); ok {
 		_spec.SetField(i18nlang.FieldDisabled, field.TypeInt16, value)

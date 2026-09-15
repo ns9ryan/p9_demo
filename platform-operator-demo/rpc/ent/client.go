@@ -16,6 +16,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operator"
+	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoradmin"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoragentlineallocation"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatordomain"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatorlanguageallocation"
@@ -30,6 +31,8 @@ type Client struct {
 	Schema *migrate.Schema
 	// Operator is the client for interacting with the Operator builders.
 	Operator *OperatorClient
+	// OperatorAdmin is the client for interacting with the OperatorAdmin builders.
+	OperatorAdmin *OperatorAdminClient
 	// OperatorAgentLineAllocation is the client for interacting with the OperatorAgentLineAllocation builders.
 	OperatorAgentLineAllocation *OperatorAgentLineAllocationClient
 	// OperatorDomain is the client for interacting with the OperatorDomain builders.
@@ -52,6 +55,7 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Operator = NewOperatorClient(c.config)
+	c.OperatorAdmin = NewOperatorAdminClient(c.config)
 	c.OperatorAgentLineAllocation = NewOperatorAgentLineAllocationClient(c.config)
 	c.OperatorDomain = NewOperatorDomainClient(c.config)
 	c.OperatorLanguageAllocation = NewOperatorLanguageAllocationClient(c.config)
@@ -150,6 +154,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		ctx:                         ctx,
 		config:                      cfg,
 		Operator:                    NewOperatorClient(cfg),
+		OperatorAdmin:               NewOperatorAdminClient(cfg),
 		OperatorAgentLineAllocation: NewOperatorAgentLineAllocationClient(cfg),
 		OperatorDomain:              NewOperatorDomainClient(cfg),
 		OperatorLanguageAllocation:  NewOperatorLanguageAllocationClient(cfg),
@@ -175,6 +180,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		ctx:                         ctx,
 		config:                      cfg,
 		Operator:                    NewOperatorClient(cfg),
+		OperatorAdmin:               NewOperatorAdminClient(cfg),
 		OperatorAgentLineAllocation: NewOperatorAgentLineAllocationClient(cfg),
 		OperatorDomain:              NewOperatorDomainClient(cfg),
 		OperatorLanguageAllocation:  NewOperatorLanguageAllocationClient(cfg),
@@ -209,7 +215,7 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.Operator, c.OperatorAgentLineAllocation, c.OperatorDomain,
+		c.Operator, c.OperatorAdmin, c.OperatorAgentLineAllocation, c.OperatorDomain,
 		c.OperatorLanguageAllocation, c.OperatorProfile, c.OperatorRegionAllocation,
 	} {
 		n.Use(hooks...)
@@ -220,7 +226,7 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.Operator, c.OperatorAgentLineAllocation, c.OperatorDomain,
+		c.Operator, c.OperatorAdmin, c.OperatorAgentLineAllocation, c.OperatorDomain,
 		c.OperatorLanguageAllocation, c.OperatorProfile, c.OperatorRegionAllocation,
 	} {
 		n.Intercept(interceptors...)
@@ -232,6 +238,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
 	case *OperatorMutation:
 		return c.Operator.mutate(ctx, m)
+	case *OperatorAdminMutation:
+		return c.OperatorAdmin.mutate(ctx, m)
 	case *OperatorAgentLineAllocationMutation:
 		return c.OperatorAgentLineAllocation.mutate(ctx, m)
 	case *OperatorDomainMutation:
@@ -387,6 +395,22 @@ func (c *OperatorClient) QueryDomains(_m *Operator) *OperatorDomainQuery {
 	return query
 }
 
+// QueryAdmins queries the admins edge of a Operator.
+func (c *OperatorClient) QueryAdmins(_m *Operator) *OperatorAdminQuery {
+	query := (&OperatorAdminClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(operator.Table, operator.FieldID, id),
+			sqlgraph.To(operatoradmin.Table, operatoradmin.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, operator.AdminsTable, operator.AdminsColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // QueryLanguageAllocations queries the language_allocations edge of a Operator.
 func (c *OperatorClient) QueryLanguageAllocations(_m *Operator) *OperatorLanguageAllocationQuery {
 	query := (&OperatorLanguageAllocationClient{config: c.config}).Query()
@@ -457,6 +481,155 @@ func (c *OperatorClient) mutate(ctx context.Context, m *OperatorMutation) (Value
 		return (&OperatorDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown Operator mutation op: %q", m.Op())
+	}
+}
+
+// OperatorAdminClient is a client for the OperatorAdmin schema.
+type OperatorAdminClient struct {
+	config
+}
+
+// NewOperatorAdminClient returns a client for the OperatorAdmin from the given config.
+func NewOperatorAdminClient(c config) *OperatorAdminClient {
+	return &OperatorAdminClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `operatoradmin.Hooks(f(g(h())))`.
+func (c *OperatorAdminClient) Use(hooks ...Hook) {
+	c.hooks.OperatorAdmin = append(c.hooks.OperatorAdmin, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `operatoradmin.Intercept(f(g(h())))`.
+func (c *OperatorAdminClient) Intercept(interceptors ...Interceptor) {
+	c.inters.OperatorAdmin = append(c.inters.OperatorAdmin, interceptors...)
+}
+
+// Create returns a builder for creating a OperatorAdmin entity.
+func (c *OperatorAdminClient) Create() *OperatorAdminCreate {
+	mutation := newOperatorAdminMutation(c.config, OpCreate)
+	return &OperatorAdminCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of OperatorAdmin entities.
+func (c *OperatorAdminClient) CreateBulk(builders ...*OperatorAdminCreate) *OperatorAdminCreateBulk {
+	return &OperatorAdminCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *OperatorAdminClient) MapCreateBulk(slice any, setFunc func(*OperatorAdminCreate, int)) *OperatorAdminCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &OperatorAdminCreateBulk{err: fmt.Errorf("calling to OperatorAdminClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*OperatorAdminCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &OperatorAdminCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for OperatorAdmin.
+func (c *OperatorAdminClient) Update() *OperatorAdminUpdate {
+	mutation := newOperatorAdminMutation(c.config, OpUpdate)
+	return &OperatorAdminUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *OperatorAdminClient) UpdateOne(_m *OperatorAdmin) *OperatorAdminUpdateOne {
+	mutation := newOperatorAdminMutation(c.config, OpUpdateOne, withOperatorAdmin(_m))
+	return &OperatorAdminUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *OperatorAdminClient) UpdateOneID(id int64) *OperatorAdminUpdateOne {
+	mutation := newOperatorAdminMutation(c.config, OpUpdateOne, withOperatorAdminID(id))
+	return &OperatorAdminUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for OperatorAdmin.
+func (c *OperatorAdminClient) Delete() *OperatorAdminDelete {
+	mutation := newOperatorAdminMutation(c.config, OpDelete)
+	return &OperatorAdminDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *OperatorAdminClient) DeleteOne(_m *OperatorAdmin) *OperatorAdminDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *OperatorAdminClient) DeleteOneID(id int64) *OperatorAdminDeleteOne {
+	builder := c.Delete().Where(operatoradmin.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &OperatorAdminDeleteOne{builder}
+}
+
+// Query returns a query builder for OperatorAdmin.
+func (c *OperatorAdminClient) Query() *OperatorAdminQuery {
+	return &OperatorAdminQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeOperatorAdmin},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a OperatorAdmin entity by its id.
+func (c *OperatorAdminClient) Get(ctx context.Context, id int64) (*OperatorAdmin, error) {
+	return c.Query().Where(operatoradmin.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *OperatorAdminClient) GetX(ctx context.Context, id int64) *OperatorAdmin {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryOperator queries the operator edge of a OperatorAdmin.
+func (c *OperatorAdminClient) QueryOperator(_m *OperatorAdmin) *OperatorQuery {
+	query := (&OperatorClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(operatoradmin.Table, operatoradmin.FieldID, id),
+			sqlgraph.To(operator.Table, operator.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, operatoradmin.OperatorTable, operatoradmin.OperatorColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *OperatorAdminClient) Hooks() []Hook {
+	return c.hooks.OperatorAdmin
+}
+
+// Interceptors returns the client interceptors.
+func (c *OperatorAdminClient) Interceptors() []Interceptor {
+	return c.inters.OperatorAdmin
+}
+
+func (c *OperatorAdminClient) mutate(ctx context.Context, m *OperatorAdminMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&OperatorAdminCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&OperatorAdminUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&OperatorAdminUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&OperatorAdminDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown OperatorAdmin mutation op: %q", m.Op())
 	}
 }
 
@@ -1208,12 +1381,12 @@ func (c *OperatorRegionAllocationClient) mutate(ctx context.Context, m *Operator
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Operator, OperatorAgentLineAllocation, OperatorDomain,
+		Operator, OperatorAdmin, OperatorAgentLineAllocation, OperatorDomain,
 		OperatorLanguageAllocation, OperatorProfile,
 		OperatorRegionAllocation []ent.Hook
 	}
 	inters struct {
-		Operator, OperatorAgentLineAllocation, OperatorDomain,
+		Operator, OperatorAdmin, OperatorAgentLineAllocation, OperatorDomain,
 		OperatorLanguageAllocation, OperatorProfile,
 		OperatorRegionAllocation []ent.Interceptor
 	}

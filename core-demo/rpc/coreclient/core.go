@@ -66,7 +66,6 @@ type (
 	MenuListResp             = core.MenuListResp
 	MenuNode                 = core.MenuNode
 	MenuTreeResp             = core.MenuTreeResp
-	OperatorInfo             = core.OperatorInfo
 	PageReq                  = core.PageReq
 	PasswordReq              = core.PasswordReq
 	PermResp                 = core.PermResp
@@ -85,7 +84,6 @@ type (
 	UpdateI18NLangReq        = core.UpdateI18NLangReq
 	UpdateI18NReq            = core.UpdateI18NReq
 	UpdateMenuReq            = core.UpdateMenuReq
-	UpdateOperatorReq        = core.UpdateOperatorReq
 	UpdateRoleReq            = core.UpdateRoleReq
 	UpdateUserIpWhitelistReq = core.UpdateUserIpWhitelistReq
 	UpdateUserReq            = core.UpdateUserReq
@@ -139,9 +137,6 @@ type (
 		UpdateMenu(ctx context.Context, in *UpdateMenuReq, opts ...grpc.CallOption) (*Empty, error)
 		DeleteMenu(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*Empty, error)
 		GetMenuList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*MenuListResp, error)
-		// Operator management
-		GetOperator(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*OperatorInfo, error)
-		UpdateOperator(ctx context.Context, in *UpdateOperatorReq, opts ...grpc.CallOption) (*Empty, error)
 		IssuePreviewToken(ctx context.Context, in *IssuePreviewTokenReq, opts ...grpc.CallOption) (*IssuePreviewTokenResp, error)
 		// Role management
 		CreateRole(ctx context.Context, in *CreateRoleReq, opts ...grpc.CallOption) (*RoleInfo, error)
@@ -381,17 +376,6 @@ func (m *defaultCore) DeleteMenu(ctx context.Context, in *IDsReq, opts ...grpc.C
 func (m *defaultCore) GetMenuList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*MenuListResp, error) {
 	client := core.NewCoreClient(m.cli.Conn())
 	return client.GetMenuList(ctx, in, opts...)
-}
-
-// Operator management
-func (m *defaultCore) GetOperator(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*OperatorInfo, error) {
-	client := core.NewCoreClient(m.cli.Conn())
-	return client.GetOperator(ctx, in, opts...)
-}
-
-func (m *defaultCore) UpdateOperator(ctx context.Context, in *UpdateOperatorReq, opts ...grpc.CallOption) (*Empty, error) {
-	client := core.NewCoreClient(m.cli.Conn())
-	return client.UpdateOperator(ctx, in, opts...)
 }
 
 func (m *defaultCore) IssuePreviewToken(ctx context.Context, in *IssuePreviewTokenReq, opts ...grpc.CallOption) (*IssuePreviewTokenResp, error) {

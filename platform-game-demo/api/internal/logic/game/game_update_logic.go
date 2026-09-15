@@ -11,7 +11,7 @@ import (
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
 	"oa.98ent.com/p9/platform-game/common/constant"
-	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
+	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"github.com/bytedance/gopkg/util/logger"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -56,9 +56,9 @@ func (l *GameUpdateLogic) GameUpdate(req *types.GameUpdateReq) (resp *types.Game
 		}
 	}
 
-	grpcReq := &platformgame.UpdateGameRequest{
+	grpcReq := &platform_game.UpdateGameRequest{
 		Id:               req.ID,
-		NameI18N:         req.NameI18n,
+		Name:             req.Name,
 		SortNo:           req.SortNo,
 		Status:           int32(req.Status),
 		ImageUrl:         req.ImageUrl,
@@ -82,8 +82,7 @@ func (l *GameUpdateLogic) GameUpdate(req *types.GameUpdateReq) (resp *types.Game
 		logger.Errorf("[API GameUpdate] gRPC error: Code=%d, Message=%s", grpcResp.Code, grpcResp.Message)
 		return nil, fmt.Errorf("gRPC error: %s", grpcResp.Message)
 	}
-
-	resp = logic.GameProtoToResponse(grpcResp.Data)
+	resp = logic.GameProtoToResponse(l.ctx, grpcResp.Data)
 
 	logger.Infof("[API GameUpdate] success: id=%d", req.ID)
 	return resp, nil

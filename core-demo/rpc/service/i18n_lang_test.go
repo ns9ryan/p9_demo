@@ -10,9 +10,9 @@ import (
 
 func testLangSeeds() []CreateI18nLangReq {
 	return []CreateI18nLangReq{
-		{Lang: i18n.LangZH, Name: "简体中文", SortNo: 1},
-		{Lang: i18n.LangHK, Name: "繁體中文", SortNo: 2},
-		{Lang: i18n.LangEN, Name: "English", SortNo: 3},
+		{Lang: i18n.LangZH, Name: "简体中文", I18nKey: "lang.zh-CN", SortNo: 1},
+		{Lang: i18n.LangHK, Name: "繁體中文", I18nKey: "lang.zh-HK", SortNo: 2},
+		{Lang: i18n.LangEN, Name: "English", I18nKey: "lang.en-US", SortNo: 3},
 	}
 }
 
@@ -26,7 +26,7 @@ func TestUpsertI18nLangsSeedsAndKeepsExisting(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(list) != 3 || list[0].Lang != i18n.LangZH || list[0].Name != "简体中文" {
+	if len(list) != 3 || list[0].Lang != i18n.LangZH || list[0].Name != "简体中文" || list[0].I18nKey != "lang.zh-CN" {
 		t.Fatalf("seeded=%+v", list)
 	}
 	zh, err := d.i18nLangByID(ctx, list[0].ID)
@@ -72,6 +72,32 @@ func TestUpsertI18nLangsSeedsAndKeepsExisting(t *testing.T) {
 	}
 	if zh.Name != "中文" {
 		t.Fatalf("non-empty name must not be overwritten: %+v", zh)
+	}
+	if err := d.Client.I18nLang.UpdateOneID(zh.ID).SetI18nKey("").Exec(ctx); err != nil {
+		t.Fatal(err)
+	}
+	if err := d.UpsertI18nLangs(ctx, testLangSeeds()); err != nil {
+		t.Fatal(err)
+	}
+	zh, err = d.i18nLangByID(ctx, zh.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if zh.I18nKey != "lang.zh-CN" {
+		t.Fatalf("empty i18n_key should be backfilled: %+v", zh)
+	}
+	if err := d.Client.I18nLang.UpdateOneID(zh.ID).SetI18nKey("lang.custom").Exec(ctx); err != nil {
+		t.Fatal(err)
+	}
+	if err := d.UpsertI18nLangs(ctx, testLangSeeds()); err != nil {
+		t.Fatal(err)
+	}
+	zh, err = d.i18nLangByID(ctx, zh.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if zh.I18nKey != "lang.custom" {
+		t.Fatalf("non-empty i18n_key must not be overwritten: %+v", zh)
 	}
 }
 

@@ -12,7 +12,7 @@ import (
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
 	"oa.98ent.com/p9/platform-game/common/constant"
-	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
+	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 )
 
 type GameChannelGetLogic struct {
@@ -39,7 +39,7 @@ func (l *GameChannelGetLogic) GameChannelGet(req *types.GameChannelGetReq) (resp
 	}
 
 	// 构建 gRPC 请求
-	grpcReq := &platformgame.GetGameChannelRequest{
+	grpcReq := &platform_game.GetGameChannelRequest{
 		Id: req.ID,
 	}
 
@@ -64,7 +64,7 @@ func (l *GameChannelGetLogic) GameChannelGet(req *types.GameChannelGetReq) (resp
 	}
 
 	item := grpcResp.Data
-	resp = logic.ChannelProtoToResponse(item)
+	resp = logic.ChannelProtoToResponse(l.ctx, item)
 
 	l.Infof("[API GameChannelGet] success: id=%d", item.Id)
 	return resp, nil

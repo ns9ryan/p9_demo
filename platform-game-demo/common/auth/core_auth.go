@@ -62,3 +62,10 @@ func (a *CoreAuth) Enforce(ctx context.Context, claims *ctxdata.Claims, path, me
 
 	return resp.Allowed, nil
 }
+
+// RegisterCatalog 注册菜单、API目录、多语言数据
+// 参数: ctx 上下文, req 注册请求
+// 返回: 注册响应, 错误信息
+func (a *CoreAuth) RegisterCatalog(ctx context.Context, req *coreclient.RegisterCatalogReq) (*coreclient.Empty, error) {
+	return a.cli.RegisterCatalog(ctx, req)
+}

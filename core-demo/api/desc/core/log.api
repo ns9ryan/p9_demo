@@ -151,8 +151,8 @@ type ErrorLogInfo {
 	ClientIp       string `json:"client_ip"`
 	// User agent | 浏览器和设备标识
 	UserAgent      string `json:"user_agent,optional"`
-	// Operator ID | 厅ID
-	OperatorId     int64  `json:"operator_id,optional"`
+	// Operator code | 分站编码
+	OperatorCode   string `json:"operator_code,optional"`
 	// Created at unix | 发生时间
 	CreatedAt      int64  `json:"created_at"`
 }

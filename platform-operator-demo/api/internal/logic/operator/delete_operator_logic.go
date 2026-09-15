@@ -47,7 +47,16 @@ func (l *DeleteOperatorLogic) DeleteOperator(req *types.DeleteOperatorRequest) (
 		return nil, grpcerror.InvalidArgument(i18nkey.ConstraintError)
 	}
 
-	// TODO Core提供按分站清理管理员账号的RPC后在这里接入
+	// 按分站清理管理员账号，统一放 OperatorRpc.Delete 中处理
+	// _, err = l.svcCtx.OperatorAdminRpc.DeleteByOperatorId(
+	// 	l.ctx,
+	// 	&adminpb.DeleteAdminsByOperatorIdRequest{
+	// 		OperatorId: req.Id, // 分站ID
+	// 	},
+	// )
+	// if err != nil {
+	// 	return nil, err
+	// }
 
 	// TODO platform-game提供按分站清理游戏资源分配的RPC后在这里接入
 

@@ -14,7 +14,7 @@ import (
 	"github.com/bytedance/gopkg/util/logger"
 	"github.com/zeromicro/go-zero/core/logx"
 	"oa.98ent.com/p9/platform-game/api/internal/logic"
-	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
+	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 )
 
 type GameChannelUpdateLogic struct {
@@ -37,9 +37,8 @@ func (l *GameChannelUpdateLogic) GameChannelUpdate(req *types.GameChannelUpdateR
 		return nil, fmt.Errorf("gRPC client not available")
 	}
 
-	grpcReq := &platformgame.UpdateGameChannelRequest{
+	grpcReq := &platform_game.UpdateGameChannelRequest{
 		Id:          req.ID,
-		NameI18N:    req.NameI18n,
 		SortNo:      req.SortNo,
 		Status:      int32(req.Status),
 		ForceLogout: req.ForceLogout,
@@ -61,7 +60,7 @@ func (l *GameChannelUpdateLogic) GameChannelUpdate(req *types.GameChannelUpdateR
 		return nil, fmt.Errorf("gRPC error: %s", grpcResp.Message)
 	}
 
-	resp = logic.ChannelProtoToResponse(grpcResp.Data)
+	resp = logic.ChannelProtoToResponse(l.ctx, grpcResp.Data)
 
 	logger.Infof("[API GameChannelUpdate] success: id=%d", req.ID)
 	return resp, nil

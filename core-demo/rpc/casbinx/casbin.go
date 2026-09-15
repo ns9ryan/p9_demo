@@ -2,7 +2,6 @@ package casbinx
 
 import (
 	"log"
-	"strconv"
 
 	"oa.98ent.com/p9/core/rpc/ent"
 
@@ -76,16 +75,9 @@ func redisOptions(rds redis.UniversalClient) (redis.Options, bool) {
 	}
 }
 
-func Domain(operatorID *int64) string {
-	if operatorID == nil || *operatorID == 0 {
+func Domain(operatorCode *string) string {
+	if operatorCode == nil {
 		return ""
 	}
-	return strconv.FormatInt(*operatorID, 10)
-}
-
-func DomainID(id int64) string {
-	if id == 0 {
-		return ""
-	}
-	return strconv.FormatInt(id, 10)
+	return *operatorCode
 }

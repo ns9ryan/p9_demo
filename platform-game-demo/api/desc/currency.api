@@ -2,7 +2,7 @@ syntax = "v1"
 
 @server (
 	group: currency
-	middleware: Auth
+	middleware: Jwt,ActionLog,Authority
 	prefix: /admin/game-currency
 )
 service platform_game {
@@ -23,9 +23,9 @@ type GameCurrencyResp {
 	GameID           int64  `json:"game_id" comment:"游戏ID"`
 	CurrencyID       int64  `json:"currency_id" comment:"货币ID"`
 	GameCode         string `json:"game_code,omitempty" comment:"游戏编码"`
-	GameNameI18n     string `json:"game_name_i18n,omitempty" comment:"游戏名称（多语言JSON）"`
+	GameName         string `json:"game_name,omitempty" comment:"游戏名称（多语言JSON）"`
 	CurrencyCode     string `json:"currency_code,omitempty" comment:"币种编码"`
-	CurrencyNameI18n string `json:"currency_name_i18n,omitempty" comment:"币种名称（多语言JSON）"`
+	CurrencyName     string `json:"currency_name,omitempty" comment:"币种名称（多语言JSON）"`
 	SourceStatus     int16  `json:"source_status" comment:"上游状态：1启用/2禁用"`
 	Status           int16  `json:"status" comment:"状态：1启用/2禁用"`
 	IsDeleted        int16  `json:"is_deleted" comment:"软删除：0正常/1已删除"`

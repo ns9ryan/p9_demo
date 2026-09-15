@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"oa.98ent.com/p9/platform-game/rpc/ent"
+	"oa.98ent.com/p9/platform-game/rpc/ent/gamesynccheckpoint"
 	"oa.98ent.com/p9/platform-game/rpc/internal/constant"
 	"oa.98ent.com/p9/platform-game/rpc/internal/logic"
 	"oa.98ent.com/p9/platform-game/rpc/internal/svc"
@@ -38,20 +39,19 @@ func (l *GetGameSyncCheckpointLogic) GetGameSyncCheckpoint(in *platformgame.GetG
 		}, nil
 	}
 
-	checkpoint := &ent.GameSyncCheckpoint{}
-	query := l.svcCtx.DB.WithContext(l.ctx)
+	query := l.svcCtx.DB.GameSyncCheckpoint.Query()
 
 	// 如果指定了 sync_scope，按 sync_scope 查询；否则获取最近一条记录
 	if in.Id != 0 {
-		query = query.Where("id = ?", in.Id)
+		query = query.Where(gamesynccheckpoint.IDEQ(in.Id))
 	}
 	if in.SyncScope != "" {
-		query = query.Where("sync_scope = ?", in.SyncScope)
-		query = query.Order("last_sync_at DESC")
+		query = query.Where(gamesynccheckpoint.SyncScopeEQ(in.SyncScope))
 	}
-	query = query.Order("last_sync_at DESC")
+	query = query.Order(ent.Desc(gamesynccheckpoint.FieldLastSyncAt))
 
-	if err := query.First(checkpoint).Error; err != nil {
+	checkpoint, err := query.First(l.ctx)
+	if err != nil {
 		l.Errorf("[RPC GetGameSyncCheckpoint] query failed: %v", err)
 		return &platformgame.GetGameSyncCheckpointResp{
 			Code:    constant.CodeInternalError,

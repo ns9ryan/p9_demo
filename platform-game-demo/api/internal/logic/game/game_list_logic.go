@@ -11,7 +11,7 @@ import (
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
 	"oa.98ent.com/p9/platform-game/common/constant"
-	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
+	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -39,7 +39,7 @@ func (l *GameListLogic) GameList(req *types.GameListReq) (resp *types.GameListRe
 		return nil, fmt.Errorf("gRPC client not available")
 	}
 
-	grpcReq := &platformgame.GetGameListRequest{
+	grpcReq := &platform_game.GetGameListRequest{
 		Page:       int32(req.Page),
 		PageSize:   int32(req.PageSize),
 		GameCode:   req.GameCode,
@@ -49,8 +49,6 @@ func (l *GameListLogic) GameList(req *types.GameListReq) (resp *types.GameListRe
 		ChannelId:  req.ChannelID,
 		Status:     int32(req.Status),
 		IsDeleted:  int32(req.IsDeleted),
-		SortBy:     req.SortBy,
-		SortOrder:  req.SortOrder,
 	}
 
 	grpcResp, err := l.svcCtx.GrpcClient.GetGameServiceClient().GetGameList(l.ctx, grpcReq)
@@ -65,10 +63,10 @@ func (l *GameListLogic) GameList(req *types.GameListReq) (resp *types.GameListRe
 	}
 
 	// 转换 proto 消息为 API 响应类型
-	items := make([]types.GameResp, 0, len(grpcResp.Data))
-	for _, data := range grpcResp.Data {
+	items := make([]types.GameResp, 0, len(grpcResp.Items))
+	for _, data := range grpcResp.Items {
 		l.Infof("[API GameList] rpc item: id=%d, cat_id=%d, ven_id=%d, chan_id=%d", data.Id, data.CatId, data.VenId, data.ChanId)
-		items = append(items, *logic.GameProtoToResponse(data))
+		items = append(items, *logic.GameProtoToResponse(l.ctx, data))
 		mapped := items[len(items)-1]
 		l.Infof("[API GameList] mapped item: id=%d, category_id=%d, provider_id=%d, channel_id=%d", mapped.ID, mapped.CategoryID, mapped.ProviderID, mapped.ChannelID)
 	}

@@ -30,9 +30,6 @@ type LoginLog func(*sql.Selector)
 // Menu is the predicate function for menu builders.
 type Menu func(*sql.Selector)
 
-// Operator is the predicate function for operator builders.
-type Operator func(*sql.Selector)
-
 // Role is the predicate function for role builders.
 type Role func(*sql.Selector)
 

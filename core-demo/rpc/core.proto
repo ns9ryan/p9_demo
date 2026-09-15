@@ -94,8 +94,6 @@ message BootstrapAdminReq {
 message BootstrapOperatorReq {
   string init_token = 1;
   string operator_code = 2;
-  string timezone_code = 3;
-  string settlement_currency_code = 4;
   string username = 5;
   string password = 6;
   string display_name = 7;
@@ -109,7 +107,6 @@ message CheckTokenResp {
   int64 user_id = 1;
   string user_code = 2;
   string username = 3;
-  int64 operator_id = 4;
   repeated string role_codes = 5;
   string salt = 6;
   int64 expires_at = 7;
@@ -162,6 +159,7 @@ message CreateI18nLangReq {
   int32 disabled = 2;
   string name = 4;
   int32 sort_no = 5;
+  string i18n_key = 6;
 }
 
 message CreateI18nReq {
@@ -209,7 +207,7 @@ message Empty {}
 
 message EnforceReq {
   repeated string role_codes = 1;
-  int64 operator_id = 2;
+  string operator_code = 2;
   string path = 3;
   string method = 4;
 }
@@ -234,7 +232,7 @@ message ErrorLogInfo {
   int32 duration_ms = 13;
   string client_ip = 14;
   optional string user_agent = 15;
-  optional int64 operator_id = 16;
+  optional string operator_code = 16;
   int64 created_at = 17;
 }
 
@@ -291,6 +289,7 @@ message I18nLangInfo {
   int64 updated_at = 6;
   string name = 7;
   int32 sort_no = 8;
+  string i18n_key = 9;
 }
 
 message I18nLangListReq {
@@ -434,19 +433,6 @@ message MenuTreeResp {
   repeated MenuNode list = 1;
 }
 
-message OperatorInfo {
-  int64 id = 1;
-  string operator_code = 2;
-  string timezone_code = 3;
-  string settlement_currency_code = 4;
-  int32 status = 5;
-  int32 required_config_version = 6;
-  int32 completed_config_version = 7;
-  int64 config_completed_at = 8;
-  int64 created_at = 9;
-  int64 updated_at = 10;
-}
-
 message PageReq {
   int32 page = 1;
   int32 page_size = 2;
@@ -499,7 +485,7 @@ message RoleIdReq {
 
 message RoleInfo {
   int64 id = 1;
-  optional int64 operator_id = 2;
+  optional string operator_code = 2;
   string role_code = 3;
   string role_name = 4;
   optional string description = 5;
@@ -556,6 +542,7 @@ message UpdateI18nLangReq {
   optional int32 disabled = 3;
   optional string name = 5;
   optional int32 sort_no = 6;
+  optional string i18n_key = 7;
 }
 
 message UpdateI18nReq {
@@ -581,11 +568,6 @@ message UpdateMenuReq {
   optional int32 hide_menu = 11;
   optional int32 sort = 12;
   optional int32 disabled = 13;
-}
-
-message UpdateOperatorReq {
-  optional string timezone_code = 1;
-  optional string settlement_currency_code = 2;
 }
 
 message UpdateRoleReq {
@@ -630,7 +612,7 @@ message UserPublic {
   string user_code = 2;
   string username = 3;
   string display_name = 4;
-  optional int64 operator_id = 5;
+  optional string operator_code = 5;
   bool is_super_admin = 6;
   int32 status = 7;
   repeated string role_codes = 8;
@@ -731,11 +713,6 @@ service Core {
   rpc deleteMenu(IDsReq) returns (Empty);
   //  group: menu
   rpc getMenuList(Empty) returns (MenuListResp);
-  //  Operator management
-  //  group: operator
-  rpc getOperator(Empty) returns (OperatorInfo);
-  //  group: operator
-  rpc updateOperator(UpdateOperatorReq) returns (Empty);
   //  group: operator
   rpc issuePreviewToken(IssuePreviewTokenReq) returns (IssuePreviewTokenResp);
   //  Role management

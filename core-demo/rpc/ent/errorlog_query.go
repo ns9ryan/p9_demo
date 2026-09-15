@@ -298,12 +298,12 @@ func (_q *ErrorLogQuery) WithUser(opts ...func(*UserQuery)) *ErrorLogQuery {
 // Example:
 //
 //	var v []struct {
-//		OperatorID int64 `json:"operator_id,omitempty"`
+//		OperatorCode string `json:"operator_code,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.ErrorLog.Query().
-//		GroupBy(errorlog.FieldOperatorID).
+//		GroupBy(errorlog.FieldOperatorCode).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (_q *ErrorLogQuery) GroupBy(field string, fields ...string) *ErrorLogGroupBy {
@@ -321,11 +321,11 @@ func (_q *ErrorLogQuery) GroupBy(field string, fields ...string) *ErrorLogGroupB
 // Example:
 //
 //	var v []struct {
-//		OperatorID int64 `json:"operator_id,omitempty"`
+//		OperatorCode string `json:"operator_code,omitempty"`
 //	}
 //
 //	client.ErrorLog.Query().
-//		Select(errorlog.FieldOperatorID).
+//		Select(errorlog.FieldOperatorCode).
 //		Scan(ctx, &v)
 func (_q *ErrorLogQuery) Select(fields ...string) *ErrorLogSelect {
 	_q.ctx.Fields = append(_q.ctx.Fields, fields...)

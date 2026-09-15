@@ -17,11 +17,12 @@ func TestDomain(t *testing.T) {
 	if Domain(nil) != "" {
 		t.Fatal("nil should be empty domain")
 	}
-	id := int64(12)
-	if Domain(&id) != "12" {
-		t.Fatalf("got %q", Domain(&id))
+	code := "demo"
+	if Domain(&code) != "demo" {
+		t.Fatalf("got %q", Domain(&code))
 	}
-	if DomainID(0) != "" || DomainID(7) != "7" {
-		t.Fatal("DomainID")
+	empty := ""
+	if Domain(&empty) != "" {
+		t.Fatal("empty code should be empty domain")
 	}
 }

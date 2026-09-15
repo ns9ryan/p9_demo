@@ -4,7 +4,7 @@
 
 core-api 默认 `http://192.168.0.15:18000`，前缀 `/admin`。JSON 字段以 `[api/desc](../api/desc)` 为准。
 
-`PartnerMode` 在 `rpc/etc/core.yaml`：`"on"` 分分站，`"off"` 平台。`on` 时 `operator_id` 只信 JWT，忽略请求体里的分站字段。
+`PartnerMode` 在 `rpc/etc/core.yaml`：`"on"` 分分站，`"off"` 平台。`on` 时 `operator_code` 只信 JWT，忽略请求体里的分站字段。
 
 ## 接口索引
 
@@ -21,10 +21,7 @@ core-api 默认 `http://192.168.0.15:18000`，前缀 `/admin`。JSON 字段以 `
   - [GET /admin/user/perm](#get-adminuserperm)
   - [GET /admin/menu/role](#get-adminmenurole)
   - [POST /admin/user/password/self](#post-adminuserpasswordself)
-- [JWT + Casbin](#jwt--casbin)
-  - [分站（](#分站on-使用)`on` [使用）](#分站on-使用)
-    - [GET /admin/operator/self](#get-adminoperatorself)
-    - [POST /admin/operator/update](#post-adminoperatorupdate)
+  - [JWT + Casbin](#jwt--casbin)
   - [用户](#用户)
     - [POST /admin/user/create](#post-adminusercreate)
     - [POST /admin/user/update](#post-adminuserupdate)
@@ -110,6 +107,8 @@ access 过期（前端用 refresh 后续请求）：
 
 登录后请求头：`Authorization: Bearer <access_token>`。
 
+access / refresh / preview token 都会写入签发时的客户端 IP（已规范化，含 IPv4-mapped）。后续请求的客户端 IP 须与 token 内一致，否则 **401**（`auth.ipMismatch`），需重新登录。不要用 498。发版前签发、没有 `client_ip` 的旧 token 同样失效。`POST /admin/refresh` 也会比对 refresh token 内的 IP，新 token 仍绑定当前请求 IP。
+
 
 | 分组           | 中间件                        |
 | ------------ | -------------------------- |
@@ -156,14 +155,14 @@ access 过期（前端用 refresh 后续请求）：
 | code | 含义                                                               |
 | ---- | ---------------------------------------------------------------- |
 | 400  | 参数错误                                                             |
-| 401  | 未登录 / token 无效 / 需重新登录                                           |
+| 401  | 未登录 / token 无效 / 登录 IP 已变化需重新登录                                  |
 | 403  | 无权限或资源被禁用                                                        |
 | 404  | 不存在                                                              |
 | 498  | access token 过期：用 `refresh_token` 调 `POST /admin/refresh` 后重试原请求 |
 | 500  | 内部错误                                                             |
 
 
-refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环。
+refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环。客户端 IP 与 token 内不一致同样返回 **401**，需重新登录，不要走 refresh。
 
 ### 响应字段说明
 
@@ -191,41 +190,41 @@ refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环�
 `UserPublic`：
 
 
-| 字段               | 类型       | 说明                        |
-| ---------------- | -------- | ------------------------- |
-| `id`             | int64    | 用户主键                      |
-| `user_code`      | string   | 用户对外编码                    |
-| `username`       | string   | 登录名                       |
-| `display_name`   | string   | 显示名                       |
-| `operator_id`    | int64    | 所属分站；平台用户可省略或为 0          |
-| `is_super_admin` | bool     | 是否超管；创建用户接口不可设为 true      |
-| `status`         | int32    | `1` 启用，`2` 停用             |
-| `role_codes`     | string[] | 角色编码列表；与 `role_names` 同序、同长度，无角色为 `[]` |
-| `role_names`     | string[] | 角色名称；内置为 i18n key，响应已按语言翻译；无角色为 `[]` |
-| `home_path`      | string   | 登录后首页，默认 `/dashboard`     |
-| `created_at`     | int64    | 创建时间，Unix 秒               |
-| `last_login_at`  | int64    | 最后登录时间，Unix 秒；从未登录可省略或为 0 |
-| `mobile`         | string   | 手机号；未填写可省略或为空             |
-| `email`          | string   | 邮箱；未填写可省略或为空              |
-| `ip_whitelist_enabled` | int32 | `0` 关闭登录 IP 白名单（默认），`1` 开启 |
-| `ip_whitelist`  | string[] | 允许登录的 IP 或 CIDR；未配置为 `[]` |
+| 字段                     | 类型       | 说明                                     |
+| ---------------------- | -------- | -------------------------------------- |
+| `id`                   | int64    | 用户主键                                   |
+| `user_code`            | string   | 用户对外编码                                 |
+| `username`             | string   | 登录名                                    |
+| `display_name`         | string   | 显示名                                    |
+| `operator_code`        | string   | 所属分站编码；平台用户可省略或为空                      |
+| `is_super_admin`       | bool     | 是否超管；创建用户接口不可设为 true                   |
+| `status`               | int32    | `1` 启用，`2` 停用                          |
+| `role_codes`           | string[] | 角色编码列表；与 `role_names` 同序、同长度，无角色为 `[]` |
+| `role_names`           | string[] | 角色名称；内置为 i18n key，响应已按语言翻译；无角色为 `[]`   |
+| `home_path`            | string   | 登录后首页，默认 `/dashboard`                  |
+| `created_at`           | int64    | 创建时间，Unix 秒                            |
+| `last_login_at`        | int64    | 最后登录时间，Unix 秒；从未登录可省略或为 0              |
+| `mobile`               | string   | 手机号；未填写可省略或为空                          |
+| `email`                | string   | 邮箱；未填写可省略或为空                           |
+| `ip_whitelist_enabled` | int32    | `0` 关闭登录 IP 白名单（默认），`1` 开启             |
+| `ip_whitelist`         | string[] | 允许登录的 IP 或 CIDR；未配置为 `[]`              |
 
 
 `RoleInfo`：
 
 
-| 字段            | 类型     | 说明                             |
-| ------------- | ------ | ------------------------------ |
-| `id`          | int64  | 角色主键                           |
-| `operator_id` | int64  | 所属分站；平台角色可省略或为 0               |
-| `role_code`   | string | 角色编码，分站内唯一                     |
-| `role_name`   | string | 角色名称；内置为 i18n key，响应已按语言翻译     |
-| `description` | string | 备注                             |
-| `status`      | int32  | `1` 启用，`2` 停用；停用会清 Casbin      |
-| `is_system`   | bool   | 内置角色（如 `super_admin`）不可删、不可改编码 |
-| `sort_no`     | int32  | 排序，越小越前                        |
-| `created_at`  | int64  | 创建时间，Unix 秒                    |
-| `updated_at`  | int64  | 更新时间，Unix 秒                    |
+| 字段              | 类型     | 说明                             |
+| --------------- | ------ | ------------------------------ |
+| `id`            | int64  | 角色主键                           |
+| `operator_code` | string | 所属分站编码；平台角色可省略或为空              |
+| `role_code`     | string | 角色编码，分站内唯一                     |
+| `role_name`     | string | 角色名称；内置为 i18n key，响应已按语言翻译     |
+| `description`   | string | 备注                             |
+| `status`        | int32  | `1` 启用，`2` 停用；停用会清 Casbin      |
+| `is_system`     | bool   | 内置角色（如 `super_admin`）不可删、不可改编码 |
+| `sort_no`       | int32  | 排序，越小越前                        |
+| `created_at`    | int64  | 创建时间，Unix 秒                    |
+| `updated_at`    | int64  | 更新时间，Unix 秒                    |
 
 
 `MenuInfo` / `MenuNode`：
@@ -265,23 +264,6 @@ refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环�
 | `service_name` | string | 所属服务，如 `core-api`                                          |
 | `created_at`   | int64  | 创建时间，Unix 秒                                                |
 | `updated_at`   | int64  | 更新时间，Unix 秒                                                |
-
-
-`OperatorInfo`：
-
-
-| 字段                         | 类型     | 说明                   |
-| -------------------------- | ------ | -------------------- |
-| `id`                       | int64  | 分站主键                 |
-| `operator_code`            | string | 分站代码，不可改             |
-| `timezone_code`            | string | 时区，如 `Asia/Shanghai` |
-| `settlement_currency_code` | string | 结算币种，如 `CNY`         |
-| `status`                   | int32  | `1` 启用，`2` 停用        |
-| `required_config_version`  | int32  | 要求完成的配置版本            |
-| `completed_config_version` | int32  | 已完成的配置版本             |
-| `config_completed_at`      | int64  | 配置完成时间，Unix 秒，未完成可省略 |
-| `created_at`               | int64  | 创建时间，Unix 秒          |
-| `updated_at`               | int64  | 更新时间，Unix 秒          |
 
 
 列表类 `data`：
@@ -352,7 +334,7 @@ refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环�
       "user_code": "a1b2c3d4e5f6",
       "username": "admin",
       "display_name": "分站超管",
-      "operator_id": 1,
+      "operator_code": "demo",
       "is_super_admin": true,
       "status": 1,
       "role_codes": ["super_admin"],
@@ -369,7 +351,7 @@ refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环�
 
 ### POST /admin/refresh
 
-校验 refresh 密钥 + 用户 salt，下发新 token 对并拉黑旧 refresh。过期返回 401。
+校验 refresh 密钥 + 用户 salt + 客户端 IP，下发新 token 对并拉黑旧 refresh。过期或 IP 不一致返回 401。
 
 **请求**
 
@@ -403,7 +385,7 @@ refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环�
       "user_code": "a1b2c3d4e5f6",
       "username": "admin",
       "display_name": "分站超管",
-      "operator_id": 1,
+      "operator_code": "demo",
       "is_super_admin": true,
       "status": 1,
       "role_codes": ["super_admin"],
@@ -475,7 +457,7 @@ refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环�
     "user_code": "a1b2c3d4e5f6",
     "username": "admin",
     "display_name": "分站超管",
-    "operator_id": 1,
+    "operator_code": "demo",
     "is_super_admin": true,
     "status": 1,
     "role_codes": ["super_admin"],
@@ -598,7 +580,7 @@ refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环�
 
 ### GET /admin/i18n/lang/enabled
 
-已开启语言（`disabled=0`），无分页。按 `sort_no`、`lang`、`id` 升序。登录后切语言用。无请求参数。
+已开启语言（`disabled=0`），无分页。按 `sort_no`、`lang`、`id` 升序。登录后切语言用。无请求参数。`i18n_name` 已按请求 `X-Lang` 翻译，`i18n_key` 仍是词条 key，`name` 是库里的回退原文。
 
 **响应**
 
@@ -612,6 +594,8 @@ refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环�
         "id": 1,
         "lang": "zh-CN",
         "name": "简体中文",
+        "i18n_key": "lang.zh-CN",
+        "i18n_name": "简体中文",
         "disabled": 0,
         "sort_no": 1,
         "created_at": 1700000000,
@@ -621,6 +605,8 @@ refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环�
         "id": 2,
         "lang": "zh-HK",
         "name": "繁體中文",
+        "i18n_key": "lang.zh-HK",
+        "i18n_name": "繁体中文",
         "disabled": 0,
         "sort_no": 2,
         "created_at": 1700000000,
@@ -630,6 +616,8 @@ refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环�
         "id": 3,
         "lang": "en-US",
         "name": "English",
+        "i18n_key": "lang.en-US",
+        "i18n_name": "英语",
         "disabled": 0,
         "sort_no": 3,
         "created_at": 1700000000,
@@ -656,11 +644,11 @@ Query：`/admin/i18n/dict?i18n_code=platform&i18n_group=front&lang=zh-CN`
 **请求**
 
 
-| 字段           | 位置    | 必填  | 类型     | 说明                                          |
-| ------------ | ----- | --- | ------ | ------------------------------------------- |
-| `i18n_code`  | query | 是   | string | 站点编码，如 `platform` / `promo`                 |
-| `i18n_group` | query | 否   | string | 分组，如 login/`front` / `menu` / `api`；空则下发全部组 |
-| `lang`       | query | 否   | string | 语言码，如 `zh-CN，空则从ctx取`                       |
+| 字段           | 位置    | 必填  | 类型     | 说明                                                   |
+| ------------ | ----- | --- | ------ | ---------------------------------------------------- |
+| `i18n_code`  | query | 是   | string | 站点编码，如 `platform` / `promo`                          |
+| `i18n_group` | query | 否   | string | 分组，如 login/`front` / `menu` / `api` / `lang`；空则下发全部组 |
+| `lang`       | query | 否   | string | 语言码，如 `zh-CN，空则从ctx取`                                |
 
 
 **响应**
@@ -685,67 +673,9 @@ Query：`/admin/i18n/dict?i18n_code=platform&i18n_group=front&lang=zh-CN`
 
 需 JWT + Casbin。Header：`Authorization: Bearer <access_token>`。
 
-### 分站（`on` 使用）
-
-无 `operator/create|list|delete`。开分站只用 bootstrap / `CreateOperatorAdmin`。
-
-#### GET /admin/operator/self
-
-当前 JWT 对应分站。无请求参数。
-
-**响应**
-
-```json
-{
-  "code": 0,
-  "msg": "ok",
-  "data": {
-    "id": 1,
-    "operator_code": "demo",
-    "timezone_code": "Asia/Shanghai",
-    "settlement_currency_code": "CNY",
-    "status": 1,
-    "required_config_version": 0,
-    "completed_config_version": 0,
-    "created_at": 1700000000,
-    "updated_at": 1700000000
-  }
-}
-```
-
-
-
-#### POST /admin/operator/update
-
-不可改 `operator_code`。
-
-**请求**
-
-
-| 字段                         | 位置   | 必填  | 类型     | 说明                                       |
-| -------------------------- | ---- | --- | ------ | ---------------------------------------- |
-| `timezone_code`            | json | 否   | string | 时区，如 `Asia/Shanghai`；不可改 `operator_code` |
-| `settlement_currency_code` | json | 否   | string | 结算币种，如 `CNY`                             |
-
-
-```json
-{
-  "timezone_code": "UTC",
-  "settlement_currency_code": "USD"
-}
-```
-
-**响应**
-
-```json
-{ "code": 0, "msg": "ok", "data": { "result": "success" } }
-```
-
-
-
 ### 用户
 
-`off` 写 `operator_id=NULL`；`on` 写 JWT 分站。禁止设 `is_super_admin`。
+`off` 写 `operator_code=NULL`；`on` 写 JWT 分站编码。禁止设 `is_super_admin`。
 
 #### POST /admin/user/create
 
@@ -786,7 +716,7 @@ Query：`/admin/i18n/dict?i18n_code=platform&i18n_group=front&lang=zh-CN`
     "user_code": "f6e5d4c3b2a1",
     "username": "alice",
     "display_name": "运营",
-    "operator_id": 1,
+    "operator_code": "demo",
     "is_super_admin": false,
     "status": 1,
     "role_codes": ["editor"],
@@ -802,7 +732,7 @@ Query：`/admin/i18n/dict?i18n_code=platform&i18n_group=front&lang=zh-CN`
 
 #### POST /admin/user/update
 
-不可改 `operator_id` / `is_super_admin` / `salt`。
+不可改 `operator_code` / `is_super_admin` / `salt`。
 
 **请求**
 
@@ -908,7 +838,7 @@ Query：`/admin/i18n/dict?i18n_code=platform&i18n_group=front&lang=zh-CN`
         "user_code": "a1b2c3d4e5f6",
         "username": "admin",
         "display_name": "分站超管",
-        "operator_id": 1,
+        "operator_code": "demo",
         "is_super_admin": true,
         "status": 1,
         "role_codes": ["super_admin"],
@@ -922,7 +852,7 @@ Query：`/admin/i18n/dict?i18n_code=platform&i18n_group=front&lang=zh-CN`
         "user_code": "f6e5d4c3b2a1",
         "username": "alice",
         "display_name": "运营",
-        "operator_id": 1,
+        "operator_code": "demo",
         "is_super_admin": false,
         "status": 1,
         "role_codes": ["editor"],
@@ -962,7 +892,7 @@ Query：`/admin/user/detail?id=2`
     "user_code": "f6e5d4c3b2a1",
     "username": "alice",
     "display_name": "运营",
-    "operator_id": 1,
+    "operator_code": "demo",
     "is_super_admin": false,
     "status": 1,
     "role_codes": ["editor"],
@@ -1008,7 +938,7 @@ Query：`/admin/user/detail?id=2`
 
 #### POST /admin/user/roles
 
-用户与角色的 `operator_id` 必须同为 NULL 或同值。
+用户与角色的 `operator_code` 必须同为空或同值。
 
 **请求**
 
@@ -1043,11 +973,11 @@ Query：`/admin/user/detail?id=2`
 **请求**
 
 
-| 字段 | 位置 | 必填 | 类型 | 说明 |
-| --- | --- | --- | --- | --- |
-| `id` | json | 是 | int64 | 用户主键 |
-| `ip_whitelist_enabled` | json | 是 | int32 | `0` 关闭 / `1` 开启 |
-| `ip_whitelist` | json | 是 | string[] | IP 或 CIDR；保存前规范化单 IP 并去重。开启时不能为空 |
+| 字段                     | 位置   | 必填  | 类型       | 说明                               |
+| ---------------------- | ---- | --- | -------- | -------------------------------- |
+| `id`                   | json | 是   | int64    | 用户主键                             |
+| `ip_whitelist_enabled` | json | 是   | int32    | `0` 关闭 / `1` 开启                  |
+| `ip_whitelist`         | json | 是   | string[] | IP 或 CIDR；保存前规范化单 IP 并去重。开启时不能为空 |
 
 
 ```json
@@ -1068,7 +998,7 @@ Query：`/admin/user/detail?id=2`
 
 ### 角色
 
-接口不能把 `is_system` 设为 true。停用角色会清掉该 `(role_code, v1)` 的 Casbin 策略。`v1`：`off` 为 `""`，`on` 为 `operator_id` 十进制字符串。
+接口不能把 `is_system` 设为 true。停用角色会清掉该 `(role_code, v1)` 的 Casbin 策略。`v1`：`off` 为 `""`，`on` 为 `operator_code`。
 
 #### POST /admin/role/create
 
@@ -1102,7 +1032,7 @@ Query：`/admin/user/detail?id=2`
   "msg": "ok",
   "data": {
     "id": 2,
-    "operator_id": 1,
+    "operator_code": "demo",
     "role_code": "editor",
     "role_name": "运营",
     "description": "运营角色",
@@ -1202,7 +1132,7 @@ Query：`/admin/user/detail?id=2`
     "list": [
       {
         "id": 1,
-        "operator_id": 1,
+        "operator_code": "demo",
         "role_code": "super_admin",
         "role_name": "超级管理员",
         "description": "",
@@ -1214,7 +1144,7 @@ Query：`/admin/user/detail?id=2`
       },
       {
         "id": 2,
-        "operator_id": 1,
+        "operator_code": "demo",
         "role_code": "editor",
         "role_name": "运营",
         "description": "运营角色",
@@ -1252,7 +1182,7 @@ Query：`/admin/role/detail?id=2`
   "msg": "ok",
   "data": {
     "id": 2,
-    "operator_id": 1,
+    "operator_code": "demo",
     "role_code": "editor",
     "role_name": "运营",
     "description": "运营角色",
@@ -1604,7 +1534,7 @@ Query：`/admin/role/detail?id=2`
 
 词条按 `(i18n_code, trans_key, lang)` 唯一。`i18n_code` 区分业务站点/服务（`core`、`promo` 等），**不是**分站租户；空则服务端当作 `core`。同一 `trans_key`+`lang` 可在不同站点各有一条。`trans_key` 为业务标识，形如 `menu.route.dashboard`（group 拼进 key）。`i18n_group` 仍保留，供列表过滤和按组分发。创建/目录注册仍可传短 key（如 `route.dashboard`），服务端会拼成完整 key。菜单 `title` 仍存短 key。新增词条（含按 key 更新时新建、目录 upsert 新建）的 `lang` 必须已在 `sys_i18n_lang`。
 
-支持的语言存在 `sys_i18n_lang`（全局，不分站点）。core-api 启动时随 `RegisterCatalog` 幂等种子 `zh-CN` / 简体中文（`sort_no=1`）、`zh-HK` / 繁體中文（`sort_no=2`）、`en-US` / English（`sort_no=3`）；已存在不改 `disabled` / `sort_no`，仅当 `name` 为空时回填种子名称。该语言在 `sys_i18n` 已有词条时，不能改 `lang`、不能删除。拖拽排序见 [POST /admin/i18n/lang/reorder](#post-admini18nlangreorder)，按当前 `sort_no` 序列把 `id` 挪到 `target_id` 的位置后重写全表 `sort_no` 为 `1..n`。管理 CRUD（含 reorder）走 JWT + Casbin；已开启列表和词条下发仅 JWT（登录后切语言 / 拉文案），不进 Casbin 目录，见 [GET /admin/i18n/lang/enabled](#get-admini18nlangenabled)、[GET /admin/i18n/dict](#get-admini18ndict)。
+支持的语言存在 `sys_i18n_lang`（全局，不分站点）。core-api 启动时随 `RegisterCatalog` 幂等种子 `zh-CN` / 简体中文 / `i18n_key=lang.zh-CN`（`sort_no=1`）、`zh-HK` / 繁體中文 / `lang.zh-HK`（`sort_no=2`）、`en-US` / English / `lang.en-US`（`sort_no=3`）；已存在不改 `disabled` / `sort_no`，仅当 `name` 或 `i18n_key` 为空时回填。HTTP 出参 `name` 是库里的回退原文，`i18n_key` 是词条 key，`i18n_name` 按当前 `X-Lang` 用 `i18n.TG`（`i18n_group=lang`）翻译，无词条则回退 `name`。该语言在 `sys_i18n` 已有词条时，不能改 `lang`、不能删除。拖拽排序见 [POST /admin/i18n/lang/reorder](#post-admini18nlangreorder)，按当前 `sort_no` 序列把 `id` 挪到 `target_id` 的位置后重写全表 `sort_no` 为 `1..n`。管理 CRUD（含 reorder）走 JWT + Casbin；已开启列表和词条下发仅 JWT（登录后切语言 / 拉文案），不进 Casbin 目录，见 [GET /admin/i18n/lang/enabled](#get-admini18nlangenabled)、[GET /admin/i18n/dict](#get-admini18ndict)。
 
 #### POST /admin/i18n/create
 
@@ -1739,7 +1669,7 @@ Query：`/admin/role/detail?id=2`
 
 #### POST /admin/i18n/list
 
-**请求**
+**请求(卡片**`i18n_code:` platform总网,  operator分站, agent代理, user会员端**)**
 
 
 | 字段           | 位置   | 必填  | 类型     | 说明         |
@@ -1787,16 +1717,17 @@ Query：`/admin/role/detail?id=2`
 **请求**
 
 
-| 字段         | 位置   | 必填  | 类型     | 说明                       |
-| ---------- | ---- | --- | ------ | ------------------------ |
-| `lang`     | json | 是   | string | 语言码，trim 后全局唯一，如 `ja-JP` |
-| `name`     | json | 是   | string | 显示名，trim 后非空，如 `日本語`     |
-| `disabled` | json | 否   | int32  | 0 开启 / 1 停用，缺省 0         |
-| `sort_no`  | json | 否   | int32  | 排序，越小越前，缺省 0             |
+| 字段         | 位置   | 必填  | 类型     | 说明                                                   |
+| ---------- | ---- | --- | ------ | ---------------------------------------------------- |
+| `lang`     | json | 是   | string | 语言码，trim 后全局唯一，如 `ja-JP`                             |
+| `name`     | json | 是   | string | 显示名回退值，trim 后非空，如 `日本語`                              |
+| `i18n_key` | json | 否   | string | 多语言 key，如 `lang.ja-JP`；空则 HTTP `i18n_name` 回退 `name` |
+| `disabled` | json | 否   | int32  | 0 开启 / 1 停用，缺省 0                                     |
+| `sort_no`  | json | 否   | int32  | 排序，越小越前，缺省 0                                         |
 
 
 ```json
-{ "lang": "ja-JP", "name": "日本語", "disabled": 0, "sort_no": 10 }
+{ "lang": "ja-JP", "name": "日本語", "i18n_key": "lang.ja-JP", "disabled": 0, "sort_no": 10 }
 ```
 
 **响应**
@@ -1809,6 +1740,8 @@ Query：`/admin/role/detail?id=2`
     "id": 4,
     "lang": "ja-JP",
     "name": "日本語",
+    "i18n_key": "lang.ja-JP",
+    "i18n_name": "日本語",
     "disabled": 0,
     "sort_no": 10,
     "created_at": 1700000000,
@@ -1824,13 +1757,14 @@ Query：`/admin/role/detail?id=2`
 **请求**
 
 
-| 字段         | 位置   | 必填  | 类型     | 说明                 |
-| ---------- | ---- | --- | ------ | ------------------ |
-| `id`       | json | 是   | int64  | 语言主键               |
-| `lang`     | json | 否   | string | 语言码；该语言已有词条时不能改    |
-| `name`     | json | 否   | string | 显示名；传了则 trim 后不能为空 |
-| `disabled` | json | 否   | int32  | 0 / 1；不传表示不改       |
-| `sort_no`  | json | 否   | int32  | 排序，越小越前；不传不改。0 有效  |
+| 字段         | 位置   | 必填  | 类型     | 说明                    |
+| ---------- | ---- | --- | ------ | --------------------- |
+| `id`       | json | 是   | int64  | 语言主键                  |
+| `lang`     | json | 否   | string | 语言码；该语言已有词条时不能改       |
+| `name`     | json | 否   | string | 显示名回退值；传了则 trim 后不能为空 |
+| `i18n_key` | json | 否   | string | 多语言 key；不传不改          |
+| `disabled` | json | 否   | int32  | 0 / 1；不传表示不改          |
+| `sort_no`  | json | 否   | int32  | 排序，越小越前；不传不改。0 有效     |
 
 
 ```json
@@ -1897,7 +1831,7 @@ Query：`/admin/role/detail?id=2`
 
 #### POST /admin/i18n/lang/list
 
-无排序参数，固定按 `sort_no`、`lang`、`id` 升序。已开启列表同样按该顺序，且只含 `disabled=0`。
+无排序参数，固定按 `sort_no`、`lang`、`id` 升序。已开启列表同样按该顺序，且只含 `disabled=0`。`i18n_name` 已按请求 `X-Lang` 翻译。
 
 **请求**
 
@@ -1926,6 +1860,8 @@ Query：`/admin/role/detail?id=2`
         "id": 1,
         "lang": "zh-CN",
         "name": "简体中文",
+        "i18n_key": "lang.zh-CN",
+        "i18n_name": "简体中文",
         "disabled": 0,
         "sort_no": 1,
         "created_at": 1700000000,
@@ -2089,7 +2025,7 @@ Query：`/admin/role/detail?id=2`
         "duration_ms": 8,
         "client_ip": "127.0.0.1",
         "user_agent": "Mozilla/5.0",
-        "operator_id": 1,
+        "operator_code": "demo",
         "created_at": 1700000000
       }
     ],
@@ -2274,28 +2210,24 @@ Query：`/admin/role/detail?id=2`
 
 ### 2. CreateOperatorAdmin / `bootstrapOperator` 创建分站超级管理员账号
 
-`PartnerMode=on`。实现：`CreateOperatorAdmin`。分站已存在则复用，再创建本分站超管。
+`PartnerMode=on`。实现：`CreateOperatorAdmin`。只创建该 `operator_code` 下的分站超管用户、`super_admin` 角色，以及 Casbin domain=`operator_code`。已存在超管则拒绝。不再写分站表。
 
 **请求**（RPC `BootstrapOperatorReq`）
 
 
-| 字段                         | 位置  | 必填  | 类型     | 说明                           |
-| -------------------------- | --- | --- | ------ | ---------------------------- |
-| `init_token`               | rpc | 是   | string | 初始化口令，须与 yaml `InitToken` 一致 |
-| `operator_code`            | rpc | 是   | string | 分站代码，已存在则复用该分站               |
-| `timezone_code`            | rpc | 否   | string | 时区，缺省 `UTC`                  |
-| `settlement_currency_code` | rpc | 否   | string | 结算币种，缺省 `USD`                |
-| `username`                 | rpc | 是   | string | 本分站超管登录名                     |
-| `password`                 | rpc | 是   | string | 本分站超管密码                      |
-| `display_name`             | rpc | 否   | string | 显示名，缺省为 username             |
+| 字段              | 位置  | 必填  | 类型     | 说明                           |
+| --------------- | --- | --- | ------ | ---------------------------- |
+| `init_token`    | rpc | 是   | string | 初始化口令，须与 yaml `InitToken` 一致 |
+| `operator_code` | rpc | 是   | string | 分站编码                         |
+| `username`      | rpc | 是   | string | 本分站超管登录名                     |
+| `password`      | rpc | 是   | string | 本分站超管密码                      |
+| `display_name`  | rpc | 否   | string | 显示名，缺省为 username             |
 
 
 ```json
 {
   "init_token": "change-me-init-token",
   "operator_code": "demo",
-  "timezone_code": "Asia/Shanghai",
-  "settlement_currency_code": "CNY",
   "username": "admin",
   "password": "Admin@123",
   "display_name": "分站超管"
@@ -2310,7 +2242,7 @@ Query：`/admin/role/detail?id=2`
   "user_code": "a1b2c3d4e5f6",
   "username": "admin",
   "display_name": "分站超管",
-  "operator_id": 1,
+  "operator_code": "demo",
   "is_super_admin": true,
   "status": 1,
   "role_codes": ["super_admin"],
@@ -2399,12 +2331,13 @@ core-api 启动时注册系统管理菜单、`/admin/user|role|menu|api|authorit
 `i18n_langs[]`（`CreateI18nLangReq`）：
 
 
-| 字段         | 必填  | 类型     | 说明               |
-| ---------- | --- | ------ | ---------------- |
-| `lang`     | 是   | string | 语言码，全局唯一         |
-| `name`     | 是   | string | 显示名；已存在且当前名为空时回填 |
-| `disabled` | 否   | int32  | 仅新建时生效，缺省 0      |
-| `sort_no`  | 否   | int32  | 仅新建时写入，已存在不改     |
+| 字段         | 必填  | 类型     | 说明                  |
+| ---------- | --- | ------ | ------------------- |
+| `lang`     | 是   | string | 语言码，全局唯一            |
+| `name`     | 是   | string | 显示名回退值；已存在且当前名为空时回填 |
+| `i18n_key` | 否   | string | 多语言 key；已存在且当前为空时回填 |
+| `disabled` | 否   | int32  | 仅新建时生效，缺省 0         |
+| `sort_no`  | 否   | int32  | 仅新建时写入，已存在不改        |
 
 
 ```json

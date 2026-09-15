@@ -52,7 +52,7 @@ func (l *RegisterCatalogLogic) RegisterCatalog(in *core.RegisterCatalogReq) (*co
 	langs := make([]service.CreateI18nLangReq, 0, len(in.GetI18NLangs()))
 	for _, it := range in.GetI18NLangs() {
 		langs = append(langs, service.CreateI18nLangReq{
-			Lang: it.GetLang(), Name: it.GetName(), Disabled: int16(it.GetDisabled()), SortNo: int(it.GetSortNo()),
+			Lang: it.GetLang(), Name: it.GetName(), I18nKey: it.GetI18NKey(), Disabled: int16(it.GetDisabled()), SortNo: int(it.GetSortNo()),
 		})
 	}
 	if err := l.svcCtx.Deps.RegisterCatalog(l.ctx, menus, apis, items, langs); err != nil {

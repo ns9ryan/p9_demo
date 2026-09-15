@@ -13,7 +13,11 @@ import (
 type I18n struct{ ent.Schema }
 
 func (I18n) Annotations() []schema.Annotation {
-	return []schema.Annotation{entsql.Annotation{Table: "sys_i18n"}}
+	return []schema.Annotation{
+		entsql.WithComments(true),
+		schema.Comment("I18n Table | 多语言词条表"),
+		entsql.Annotation{Table: "sys_i18n"},
+	}
 }
 
 func (I18n) Mixin() []ent.Mixin {
@@ -22,12 +26,12 @@ func (I18n) Mixin() []ent.Mixin {
 
 func (I18n) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int64("id"),
-		field.String("i18n_code").MaxLen(32).Default("platform"),
-		field.String("i18n_group").MaxLen(64),
-		field.String("trans_key").MaxLen(255),
-		field.String("lang").MaxLen(16),
-		field.String("value").MaxLen(1024),
+		field.Int64("id").Comment("Primary key | 主键"),
+		field.String("i18n_code").MaxLen(32).Default("platform").Comment("Site code | 站点编码"),
+		field.String("i18n_group").MaxLen(64).Comment("Group menu/api/front | 分组"),
+		field.String("trans_key").MaxLen(255).Comment("Translation key | 词条 key"),
+		field.String("lang").MaxLen(16).Comment("Language code | 语言码"),
+		field.String("value").MaxLen(1024).Comment("Translated text | 译文"),
 	}
 }
 

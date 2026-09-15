@@ -12,7 +12,7 @@ import (
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
 	"oa.98ent.com/p9/platform-game/common/constant"
-	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
+	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 )
 
 type GameCurrencyListLogic struct {
@@ -37,15 +37,13 @@ func (l *GameCurrencyListLogic) GameCurrencyList(req *types.GameCurrencyListReq)
 		return nil, fmt.Errorf("gRPC client not available")
 	}
 
-	grpcReq := &platformgame.GetGameCurrencyListRequest{
+	grpcReq := &platform_game.GetGameCurrencyListRequest{
 		Page:       int32(req.Page),
 		PageSize:   int32(req.PageSize),
 		Status:     int32(req.Status),
 		IsDeleted:  int32(req.IsDeleted),
 		GameId:     req.GameID,
 		CurrencyId: req.CurrencyID,
-		SortBy:     req.SortBy,
-		SortOrder:  req.SortOrder,
 	}
 
 	client := l.svcCtx.GrpcClient.GetGameCurrencyServiceClient()
@@ -67,7 +65,7 @@ func (l *GameCurrencyListLogic) GameCurrencyList(req *types.GameCurrencyListReq)
 
 	items := make([]types.GameCurrencyResp, 0, len(grpcResp.Data))
 	for _, item := range grpcResp.Data {
-		items = append(items, *logic.CurrencyProtoToResponse(item))
+		items = append(items, *logic.CurrencyProtoToResponse(l.ctx, item))
 	}
 
 	resp = &types.GameCurrencyListResp{

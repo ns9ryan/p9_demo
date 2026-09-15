@@ -9,6 +9,9 @@ import (
 // Operator is the predicate function for operator builders.
 type Operator func(*sql.Selector)
 
+// OperatorAdmin is the predicate function for operatoradmin builders.
+type OperatorAdmin func(*sql.Selector)
+
 // OperatorAgentLineAllocation is the predicate function for operatoragentlineallocation builders.
 type OperatorAgentLineAllocation func(*sql.Selector)
 

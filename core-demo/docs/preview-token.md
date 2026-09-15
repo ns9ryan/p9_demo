@@ -47,16 +47,14 @@ flowchart TB
 
 ## 1. 签发
 
-无 JWT。RPC `Mode != on`、缺 `operator_code`、分站不存在/停用、没有启用的分站超管，分别返回 400 / 404 / 403。
+无 JWT。RPC `Mode != on`、缺 `operator_code`、没有启用的分站超管，分别返回 400 / 404。
 
 ```mermaid
 flowchart TB
   Req["POST /admin/previewToken<br/>{ operator_code }"]
   Mode{"RPC Mode == on ?"}
   Code{"operator_code 非空 ?"}
-  Op["查 Operator<br/>跳过租户过滤"]
-  St{"status 正常 ?"}
-  User["查该分站 is_super_admin<br/>未删除且启用"]
+  User["SkipTenant 查<br/>operator_code + is_super_admin<br/>未删除且启用"]
   Sign["jwt.Sign 同一把 Access 密钥<br/>token_type=preview<br/>is_platform=true<br/>role_codes=super_admin<br/>client_ip=当前请求 IP"]
   Out["access_token / expire<br/>operator_code / home_path=/dashboard"]
 
@@ -64,14 +62,14 @@ flowchart TB
   Mode -->|否| E400["400 仅分站模式可用"]
   Mode -->|是| Code
   Code -->|否| E400b["400 需要分站编码"]
-  Code -->|是| Op --> St
-  St -->|否| E403["403 分站已停用"]
-  St -->|是| User --> Sign --> Out
+  Code -->|是| User
+  User -->|找不到| E404["404 用户不存在"]
+  User -->|找到| Sign --> Out
 ```
 
 
 
-Claims 里带上分站超管的 `user_id` / `username` / `salt`，以及分站的 `operator_id` / `operator_code`。
+Claims 里带上分站超管的 `user_id` / `username` / `salt` / `operator_code`。
 
 ## 2. 后续请求怎么校验
 
@@ -84,7 +82,7 @@ flowchart TB
   Typ{"token_type == refresh ?"}
   BL{"Redis 黑名单 ?"}
   User["ActiveUserByID + salt"]
-  Tenant["Mode=on 时<br/>用户 operator_id 必须等于 claims"]
+  Tenant["Mode=on 时<br/>用户 operator_code 必须等于 claims"]
   Claims["写入 ctx<br/>保留 token_type / is_platform"]
   Prev{"token_type == preview<br/>且 previewWriteDenied ?"}
 
@@ -99,7 +97,7 @@ flowchart TB
 
 
 
-校验仍看库里的用户和角色，不单独走预览分支。分站超管被停用、salt 轮换、分站停用、token 过期或进黑名单，预览 token 一样失效。没有 refresh，过期只能重新签发。
+校验仍看库里的用户和角色，不单独走预览分支。分站超管被停用、salt 轮换、token 过期或进黑名单，预览 token 一样失效。没有 refresh，过期只能重新签发。
 
 ## 3. 只读规则
 

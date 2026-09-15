@@ -524,15 +524,12 @@ func (d *Deps) grantMenuToSupers(ctx context.Context, menuID int64) error {
 }
 
 func (d *Deps) grantAPIToSupers(ctx context.Context, path, method string) error {
-	if d.Mode == ModeOff && isOperatorAPI(path) {
-		return nil
-	}
 	roles, err := d.SuperRoles(ctx)
 	if err != nil {
 		return err
 	}
 	for _, row := range roles {
-		if _, err := d.Enforcer.AddPolicy(row.RoleCode, casbinx.Domain(row.OperatorID), path, method); err != nil {
+		if _, err := d.Enforcer.AddPolicy(row.RoleCode, casbinx.Domain(row.OperatorCode), path, method); err != nil {
 			return err
 		}
 	}

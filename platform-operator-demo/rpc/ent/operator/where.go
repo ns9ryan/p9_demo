@@ -821,6 +821,29 @@ func HasDomainsWith(preds ...predicate.OperatorDomain) predicate.Operator {
 	})
 }
 
+// HasAdmins applies the HasEdge predicate on the "admins" edge.
+func HasAdmins() predicate.Operator {
+	return predicate.Operator(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, AdminsTable, AdminsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasAdminsWith applies the HasEdge predicate on the "admins" edge with a given conditions (other predicates).
+func HasAdminsWith(preds ...predicate.OperatorAdmin) predicate.Operator {
+	return predicate.Operator(func(s *sql.Selector) {
+		step := newAdminsStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // HasLanguageAllocations applies the HasEdge predicate on the "language_allocations" edge.
 func HasLanguageAllocations() predicate.Operator {
 	return predicate.Operator(func(s *sql.Selector) {

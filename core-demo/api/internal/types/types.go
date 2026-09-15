@@ -33,8 +33,8 @@ type UserPublic struct {
 	Username string `json:"username"`
 	// Display name | 显示名
 	DisplayName string `json:"display_name"`
-	// Operator ID | 分站ID
-	OperatorId int64 `json:"operator_id,optional"`
+	// Operator code | 分站编码
+	OperatorCode string `json:"operator_code,optional"`
 	// Super admin | 是否超管
 	IsSuperAdmin bool `json:"is_super_admin"`
 	// Status | 状态
@@ -97,10 +97,6 @@ type BootstrapOperatorReq struct {
 	InitToken string `header:"X-Init-Token"`
 	// Operator code | 分站编码
 	OperatorCode string `json:"operator_code"`
-	// Timezone code | 时区
-	TimezoneCode string `json:"timezone_code,optional"`
-	// Settlement currency | 结算币种
-	SettlementCurrencyCode string `json:"settlement_currency_code,optional"`
 	// Username | 用户名
 	Username string `json:"username"`
 	// Password | 密码
@@ -253,44 +249,12 @@ type UpdateUserIpWhitelistReq struct {
 	IpWhitelist []string `json:"ip_whitelist"`
 }
 
-// Operator info | 分站信息
-type OperatorInfo struct {
-	// ID | 分站ID
-	Id int64 `json:"id"`
-	// Operator code | 分站编码
-	OperatorCode string `json:"operator_code"`
-	// Timezone code | 时区
-	TimezoneCode string `json:"timezone_code"`
-	// Settlement currency | 结算币种
-	SettlementCurrencyCode string `json:"settlement_currency_code"`
-	// Status | 状态
-	Status int32 `json:"status"`
-	// Required config version | 要求配置版本
-	RequiredConfigVersion int32 `json:"required_config_version"`
-	// Completed config version | 已完成配置版本
-	CompletedConfigVersion int32 `json:"completed_config_version"`
-	// Config completed at unix | 配置完成时间
-	ConfigCompletedAt int64 `json:"config_completed_at,optional"`
-	// Created at unix | 创建时间
-	CreatedAt int64 `json:"created_at"`
-	// Updated at unix | 更新时间
-	UpdatedAt int64 `json:"updated_at"`
-}
-
-// Update operator request | 更新分站
-type UpdateOperatorReq struct {
-	// Timezone code | 时区
-	TimezoneCode string `json:"timezone_code,optional"`
-	// Settlement currency | 结算币种
-	SettlementCurrencyCode string `json:"settlement_currency_code,optional"`
-}
-
 // Role info | 角色信息
 type RoleInfo struct {
 	// ID | 角色ID
 	Id int64 `json:"id"`
-	// Operator ID | 分站ID
-	OperatorId int64 `json:"operator_id,optional"`
+	// Operator code | 分站编码
+	OperatorCode string `json:"operator_code,optional"`
 	// Role code | 角色编码
 	RoleCode string `json:"role_code"`
 	// Role name | 角色名称
@@ -589,6 +553,10 @@ type I18nLangInfo struct {
 	Lang string `json:"lang"`
 	// Name | 显示名
 	Name string `json:"name"`
+	// I18n key | 多语言 key
+	I18nKey string `json:"i18n_key"`
+	// I18n name | 多语言显示名
+	I18nName string `json:"i18n_name"`
 	// Disabled | 是否停用
 	Disabled int32 `json:"disabled"`
 	// Sort | 排序，越小越前
@@ -605,6 +573,8 @@ type CreateI18nLangReq struct {
 	Lang string `json:"lang"`
 	// Name | 显示名
 	Name string `json:"name"`
+	// I18n key | 多语言 key
+	I18nKey string `json:"i18n_key,optional"`
 	// Disabled | 是否停用
 	Disabled int32 `json:"disabled,optional"`
 	// Sort | 排序，越小越前
@@ -619,6 +589,8 @@ type UpdateI18nLangReq struct {
 	Lang string `json:"lang,optional"`
 	// Name | 显示名
 	Name string `json:"name,optional"`
+	// I18n key | 多语言 key
+	I18nKey string `json:"i18n_key,optional"`
 	// Disabled | 是否停用
 	Disabled *int32 `json:"disabled,optional"`
 	// Sort | 排序，越小越前
@@ -917,8 +889,8 @@ type ErrorLogInfo struct {
 	ClientIp string `json:"client_ip"`
 	// User agent | 浏览器和设备标识
 	UserAgent string `json:"user_agent,optional"`
-	// Operator ID | 厅ID
-	OperatorId int64 `json:"operator_id,optional"`
+	// Operator code | 分站编码
+	OperatorCode string `json:"operator_code,optional"`
 	// Created at unix | 发生时间
 	CreatedAt int64 `json:"created_at"`
 }

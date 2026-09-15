@@ -12,38 +12,39 @@ import (
 	"oa.98ent.com/p9/core/rpc/ent/menu"
 )
 
-// Menu is the model entity for the Menu schema.
+// Menu Table | 菜单表
 type Menu struct {
 	config `json:"-"`
 	// ID of the ent.
+	// Primary key | 主键
 	ID int64 `json:"id,omitempty"`
 	// Created At | 创建时间
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Updated At | 更新时间
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	// ParentID holds the value of the "parent_id" field.
+	// Parent ID | 父级 ID
 	ParentID int64 `json:"parent_id,omitempty"`
-	// MenuType holds the value of the "menu_type" field.
+	// Menu type 0 directory 1 menu 2 button | 类型 0 目录 1 菜单 2 按钮
 	MenuType int16 `json:"menu_type,omitempty"`
-	// Path holds the value of the "path" field.
+	// Route path | 路由路径
 	Path string `json:"path,omitempty"`
-	// Name holds the value of the "name" field.
+	// Route name | 路由名
 	Name string `json:"name,omitempty"`
-	// Component holds the value of the "component" field.
+	// Component | 组件
 	Component string `json:"component,omitempty"`
-	// Redirect holds the value of the "redirect" field.
+	// Redirect | 重定向
 	Redirect string `json:"redirect,omitempty"`
-	// Title holds the value of the "title" field.
+	// Title i18n key | 标题词条
 	Title string `json:"title,omitempty"`
-	// Icon holds the value of the "icon" field.
+	// Icon | 图标
 	Icon string `json:"icon,omitempty"`
-	// Permission holds the value of the "permission" field.
+	// Permission code | 权限码
 	Permission string `json:"permission,omitempty"`
-	// HideMenu holds the value of the "hide_menu" field.
+	// Hide menu 0 no 1 yes | 隐藏菜单 0 否 1 是
 	HideMenu int16 `json:"hide_menu,omitempty"`
-	// Sort holds the value of the "sort" field.
+	// Sort order | 排序
 	Sort int `json:"sort,omitempty"`
-	// Disabled holds the value of the "disabled" field.
+	// Disabled 0 no 1 yes | 停用 0 否 1 是
 	Disabled int16 `json:"disabled,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the MenuQuery when eager-loading is set.

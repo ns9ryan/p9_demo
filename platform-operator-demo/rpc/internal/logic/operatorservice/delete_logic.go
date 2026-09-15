@@ -5,6 +5,7 @@ import (
 
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
 	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
+	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoradmin"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoragentlineallocation"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatordomain"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatorlanguageallocation"
@@ -104,6 +105,16 @@ func (l *DeleteLogic) Delete(in *operatorpb.DeleteOperatorRequest) (*operatorpb.
 	_, err = tx.OperatorProfile.
 		Delete().
 		Where(operatorprofile.OperatorIDEQ(in.Id)).
+		Exec(l.ctx)
+	if err != nil {
+		// 转换Ent错误为gRPC错误
+		return nil, enterror.Handle(l.Logger, err)
+	}
+
+	// 按分站清理管理员账号
+	_, err = tx.OperatorAdmin.
+		Delete().
+		Where(operatoradmin.OperatorIDEQ(in.Id)).
 		Exec(l.ctx)
 	if err != nil {
 		// 转换Ent错误为gRPC错误

@@ -30,8 +30,8 @@ func (l *CheckTokenLogic) CheckToken(in *core.CheckTokenReq) (*core.CheckTokenRe
 		return nil, xerr.RpcErr(err)
 	}
 	return &core.CheckTokenResp{
-		UserId: c.UserID, UserCode: c.UserCode, Username: c.Username, OperatorId: c.OperatorID,
-		RoleCodes: c.RoleCodes, Salt: c.Salt, ExpiresAt: c.ExpiresAt, OperatorCode: c.OperatorCode,
+		UserId: c.UserID, UserCode: c.UserCode, Username: c.Username, OperatorCode: c.OperatorCode,
+		RoleCodes: c.RoleCodes, Salt: c.Salt, ExpiresAt: c.ExpiresAt,
 		IsPlatform: c.IsPlatform, TokenType: c.TokenType,
 	}, nil
 }

@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+package platform_operator_admin;
+
+option go_package = "oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/adminpb";
+
+// 分站管理员信息
+message AdminInfo {
+  // 管理员ID
+  int64 id = 1;
+  // 分站ID
+  int64 operator_id = 2;
+  // 分站名称
+  string operator_name = 3;
+  // 账号
+  string username = 4;
+  // 显示名称
+  string display_name = 5;
+  // 状态: 1启用, 2停用
+  int64 status = 6;
+  // 创建时间, Unix毫秒时间戳
+  int64 created_at = 7;
+  // 更新时间, Unix毫秒时间戳
+  int64 updated_at = 8;
+}
+
+// 创建分站管理员请求
+message CreateAdminRequest {
+  // 分站ID
+  int64 operator_id = 1;
+  // 账号
+  string username = 2;
+  // 密码
+  string password = 3;
+  // 显示名称
+  string display_name = 4;
+  // 状态: 1启用, 2停用
+  optional int64 status = 5;
+}
+
+// 创建分站管理员响应
+message CreateAdminResponse {
+  // 管理员ID
+  int64 id = 1;
+}
+
+// 获取分站管理员列表请求
+message ListAdminsRequest {
+  // 页码, 从1开始
+  int64 page = 1;
+  // 每页数量
+  int64 page_size = 2;
+  // 分站ID
+  optional int64 operator_id = 3;
+  // 搜索关键字, 匹配账号或显示名称
+  optional string keyword = 4;
+  // 状态: 1启用, 2停用
+  optional int64 status = 5;
+}
+
+// 获取分站管理员列表响应
+message ListAdminsResponse {
+  // 数据总数
+  int64 total = 1;
+  // 管理员列表
+  repeated AdminInfo list = 2;
+}
+
+// 重置分站管理员密码请求
+message ResetAdminPasswordRequest {
+  // 管理员ID
+  int64 id = 1;
+  // 新密码
+  string password = 2;
+}
+
+// 重置分站管理员密码响应
+message ResetAdminPasswordResponse {}
+
+// 更新分站管理员请求
+message UpdateAdminRequest {
+  // 管理员ID
+  int64 id = 1;
+  // 账号
+  optional string username = 2;
+  // 显示名称
+  optional string display_name = 3;
+  // 状态: 1启用, 2停用
+  optional int64 status = 4;
+  // 密码
+  optional string password = 5;
+}
+
+// 更新分站管理员响应
+message UpdateAdminResponse {}
+
+// 更新分站管理员状态请求
+message UpdateAdminStatusRequest {
+  // 管理员ID
+  int64 id = 1;
+  // 状态: 1启用, 2停用
+  int64 status = 2;
+}
+
+// 更新分站管理员状态响应
+message UpdateAdminStatusResponse {}
+
+// 按分站删除管理员请求
+message DeleteAdminsByOperatorIdRequest {
+  // 分站ID
+  int64 operator_id = 1;
+}
+
+// 按分站删除管理员响应
+message DeleteAdminsByOperatorIdResponse {}

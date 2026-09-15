@@ -11,24 +11,25 @@ import (
 	"oa.98ent.com/p9/core/rpc/ent/casbinrule"
 )
 
-// CasbinRule is the model entity for the CasbinRule schema.
+// Casbin Rule Table | 权限策略表
 type CasbinRule struct {
 	config `json:"-"`
 	// ID of the ent.
+	// Primary key | 主键
 	ID int64 `json:"id,omitempty"`
-	// Ptype holds the value of the "ptype" field.
+	// Policy type | 策略类型
 	Ptype string `json:"ptype,omitempty"`
-	// V0 holds the value of the "v0" field.
+	// Subject / role | 主体 / 角色
 	V0 string `json:"v0,omitempty"`
-	// V1 holds the value of the "v1" field.
+	// Domain | 域
 	V1 string `json:"v1,omitempty"`
-	// V2 holds the value of the "v2" field.
+	// Object / path | 对象 / 路径
 	V2 string `json:"v2,omitempty"`
-	// V3 holds the value of the "v3" field.
+	// Action / method | 操作 / 方法
 	V3 string `json:"v3,omitempty"`
-	// V4 holds the value of the "v4" field.
+	// Extra | 扩展
 	V4 string `json:"v4,omitempty"`
-	// V5 holds the value of the "v5" field.
+	// Extra | 扩展
 	V5           string `json:"v5,omitempty"`
 	selectValues sql.SelectValues
 }

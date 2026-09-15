@@ -39,7 +39,7 @@ func (d *Deps) CreateRole(ctx context.Context, claims *ctxdata.Claims, req Creat
 	if req.Status == 0 {
 		req.Status = model.StatusNormal
 	}
-	if d.Mode == ModeOn && (claims == nil || claims.OperatorID == 0) {
+	if d.Mode == ModeOn && (claims == nil || claims.OperatorCode == "") {
 		return nil, xerr.Unauthorized(i18n.Unauthorized)
 	}
 	row, err := d.Client.Role.Create().
@@ -78,7 +78,7 @@ func (d *Deps) UpdateRole(ctx context.Context, claims *ctxdata.Claims, req Updat
 	if req.Status != nil {
 		upd.SetStatus(*req.Status)
 		if *req.Status == model.StatusDisabled {
-			dom := casbinx.Domain(r.OperatorID)
+			dom := casbinx.Domain(r.OperatorCode)
 			if _, err := d.Enforcer.RemoveFilteredPolicy(0, r.RoleCode, dom); err != nil {
 				return err
 			}
@@ -103,7 +103,7 @@ func (d *Deps) DeleteRoles(ctx context.Context, claims *ctxdata.Claims, ids []in
 		if n > 0 {
 			return xerr.BadRequest(i18n.RoleStillBoundToUsers)
 		}
-		dom := casbinx.Domain(r.OperatorID)
+		dom := casbinx.Domain(r.OperatorCode)
 		if _, err := d.Enforcer.RemoveFilteredPolicy(0, r.RoleCode, dom); err != nil {
 			return err
 		}

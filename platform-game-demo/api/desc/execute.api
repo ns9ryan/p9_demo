@@ -2,7 +2,7 @@ syntax = "v1"
 
 @server (
 	group: execute
-	middleware: Auth
+	middleware: Jwt,ActionLog,Authority
 	prefix: /admin/execute
 )
 service platform_game {

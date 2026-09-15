@@ -64,7 +64,7 @@ curl -s localhost:8889/admin/login \
 
 - 公开：`/login` `/refresh` `/bootstrap/admin` `/bootstrap/operator`
 - 仅 JWT：`/logout` `/logout/all` `/user/info` `/user/perm` `/menu/role` `/user/password/self`
-- JWT + Casbin：用户/角色/菜单/API/授权、厅 `operator/self|update`
+- JWT + Casbin：用户/角色/菜单/API/授权
 
 业务接口示例：`GET /admin/promo/list`（promo-api 启动时一次 `RegisterCatalog` 写入菜单「优惠中心 / 活动列表」和对应 API）。
 
@@ -72,9 +72,9 @@ curl -s localhost:8889/admin/login \
 
 1. HTTP 中间件用 `common/middleware.JWT` + `Authority`，内部调 Core `CheckToken` / `Enforce`。JWT 会 `ctxdata.WithClaims` / `WithRawToken`，同时写入 gRPC outgoing metadata。
 2. 调 RPC 时传入 HTTP 的 `ctx` 即可，gRPC 会自动带上 metadata。不要挂 Unary Client/Server Interceptor。RPC logic / Ent mixin 用 `ctxdata.ClaimsFromCtx`（无 Value 时从 incoming metadata 还原）。
-3. 业务 Ent schema 嵌入 `entmixin.TimeMixin` + `entmixin.TenantMixin`（`operator_id` 可空）。`claims.OperatorID != 0` 且未 `ctxdata.SkipTenant` 时自动按厅过滤；创建时自动盖章。
+3. 业务 Ent schema 嵌入 `entmixin.TimeMixin` + `entmixin.OperatorCodeMixin`（`operator_code` 可空）。`claims.OperatorCode != ""` 且未 `ctxdata.SkipTenant` 时自动按分站编码过滤；创建时自动盖章。
 4. `import _ "your/module/ent/runtime"`，启动时 `Schema.Create`。
-5. 菜单和需鉴权的 HTTP path 不要写进 core-rpc。各 HTTP 服务启动时调 RPC `RegisterCatalog`（菜单按 `name` upsert，API 按 method+path upsert，多语言按 group+key+lang upsert，支持的语言按 `lang` 幂等插入，并给各厅 `super_admin` 补授权）。`core-api` 注册系统管理菜单、`/admin/user|role|menu|api|i18n|authority|operator/*` 和默认语言 `zh-CN` / `zh-HK` / `en-US`；`example/promo-api` 注册「优惠中心 / 活动列表」和 `GET /admin/promo/list`。若先 bootstrap 再启对应 HTTP 服务，重启一次即可写入。仍可单独调 `RegisterApi`。
+5. 菜单和需鉴权的 HTTP path 不要写进 core-rpc。各 HTTP 服务启动时调 RPC `RegisterCatalog`（菜单按 `name` upsert，API 按 method+path upsert，多语言按 group+key+lang upsert，支持的语言按 `lang` 幂等插入，并给各厅 `super_admin` 补授权）。`core-api` 注册系统管理菜单、`/admin/user|role|menu|api|i18n|authority|*` 和默认语言 `zh-CN` / `zh-HK` / `en-US`；`example/promo-api` 注册「优惠中心 / 活动列表」和 `GET /admin/promo/list`。若先 bootstrap 再启对应 HTTP 服务，重启一次即可写入。仍可单独调 `RegisterApi`。
 
 
 

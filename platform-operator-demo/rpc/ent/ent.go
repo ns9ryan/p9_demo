@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operator"
+	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoradmin"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoragentlineallocation"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatordomain"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatorlanguageallocation"
@@ -79,6 +80,7 @@ func checkColumn(t, c string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
 			operator.Table:                    operator.ValidColumn,
+			operatoradmin.Table:               operatoradmin.ValidColumn,
 			operatoragentlineallocation.Table: operatoragentlineallocation.ValidColumn,
 			operatordomain.Table:              operatordomain.ValidColumn,
 			operatorlanguageallocation.Table:  operatorlanguageallocation.ValidColumn,

@@ -55,9 +55,9 @@ func IDLTE(id int64) predicate.LoginLog {
 	return predicate.LoginLog(sql.FieldLTE(FieldID, id))
 }
 
-// OperatorID applies equality check predicate on the "operator_id" field. It's identical to OperatorIDEQ.
-func OperatorID(v int64) predicate.LoginLog {
-	return predicate.LoginLog(sql.FieldEQ(FieldOperatorID, v))
+// OperatorCode applies equality check predicate on the "operator_code" field. It's identical to OperatorCodeEQ.
+func OperatorCode(v string) predicate.LoginLog {
+	return predicate.LoginLog(sql.FieldEQ(FieldOperatorCode, v))
 }
 
 // UserID applies equality check predicate on the "user_id" field. It's identical to UserIDEQ.
@@ -100,54 +100,79 @@ func LoginAt(v time.Time) predicate.LoginLog {
 	return predicate.LoginLog(sql.FieldEQ(FieldLoginAt, v))
 }
 
-// OperatorIDEQ applies the EQ predicate on the "operator_id" field.
-func OperatorIDEQ(v int64) predicate.LoginLog {
-	return predicate.LoginLog(sql.FieldEQ(FieldOperatorID, v))
+// OperatorCodeEQ applies the EQ predicate on the "operator_code" field.
+func OperatorCodeEQ(v string) predicate.LoginLog {
+	return predicate.LoginLog(sql.FieldEQ(FieldOperatorCode, v))
 }
 
-// OperatorIDNEQ applies the NEQ predicate on the "operator_id" field.
-func OperatorIDNEQ(v int64) predicate.LoginLog {
-	return predicate.LoginLog(sql.FieldNEQ(FieldOperatorID, v))
+// OperatorCodeNEQ applies the NEQ predicate on the "operator_code" field.
+func OperatorCodeNEQ(v string) predicate.LoginLog {
+	return predicate.LoginLog(sql.FieldNEQ(FieldOperatorCode, v))
 }
 
-// OperatorIDIn applies the In predicate on the "operator_id" field.
-func OperatorIDIn(vs ...int64) predicate.LoginLog {
-	return predicate.LoginLog(sql.FieldIn(FieldOperatorID, vs...))
+// OperatorCodeIn applies the In predicate on the "operator_code" field.
+func OperatorCodeIn(vs ...string) predicate.LoginLog {
+	return predicate.LoginLog(sql.FieldIn(FieldOperatorCode, vs...))
 }
 
-// OperatorIDNotIn applies the NotIn predicate on the "operator_id" field.
-func OperatorIDNotIn(vs ...int64) predicate.LoginLog {
-	return predicate.LoginLog(sql.FieldNotIn(FieldOperatorID, vs...))
+// OperatorCodeNotIn applies the NotIn predicate on the "operator_code" field.
+func OperatorCodeNotIn(vs ...string) predicate.LoginLog {
+	return predicate.LoginLog(sql.FieldNotIn(FieldOperatorCode, vs...))
 }
 
-// OperatorIDGT applies the GT predicate on the "operator_id" field.
-func OperatorIDGT(v int64) predicate.LoginLog {
-	return predicate.LoginLog(sql.FieldGT(FieldOperatorID, v))
+// OperatorCodeGT applies the GT predicate on the "operator_code" field.
+func OperatorCodeGT(v string) predicate.LoginLog {
+	return predicate.LoginLog(sql.FieldGT(FieldOperatorCode, v))
 }
 
-// OperatorIDGTE applies the GTE predicate on the "operator_id" field.
-func OperatorIDGTE(v int64) predicate.LoginLog {
-	return predicate.LoginLog(sql.FieldGTE(FieldOperatorID, v))
+// OperatorCodeGTE applies the GTE predicate on the "operator_code" field.
+func OperatorCodeGTE(v string) predicate.LoginLog {
+	return predicate.LoginLog(sql.FieldGTE(FieldOperatorCode, v))
 }
 
-// OperatorIDLT applies the LT predicate on the "operator_id" field.
-func OperatorIDLT(v int64) predicate.LoginLog {
-	return predicate.LoginLog(sql.FieldLT(FieldOperatorID, v))
+// OperatorCodeLT applies the LT predicate on the "operator_code" field.
+func OperatorCodeLT(v string) predicate.LoginLog {
+	return predicate.LoginLog(sql.FieldLT(FieldOperatorCode, v))
 }
 
-// OperatorIDLTE applies the LTE predicate on the "operator_id" field.
-func OperatorIDLTE(v int64) predicate.LoginLog {
-	return predicate.LoginLog(sql.FieldLTE(FieldOperatorID, v))
+// OperatorCodeLTE applies the LTE predicate on the "operator_code" field.
+func OperatorCodeLTE(v string) predicate.LoginLog {
+	return predicate.LoginLog(sql.FieldLTE(FieldOperatorCode, v))
 }
 
-// OperatorIDIsNil applies the IsNil predicate on the "operator_id" field.
-func OperatorIDIsNil() predicate.LoginLog {
-	return predicate.LoginLog(sql.FieldIsNull(FieldOperatorID))
+// OperatorCodeContains applies the Contains predicate on the "operator_code" field.
+func OperatorCodeContains(v string) predicate.LoginLog {
+	return predicate.LoginLog(sql.FieldContains(FieldOperatorCode, v))
 }
 
-// OperatorIDNotNil applies the NotNil predicate on the "operator_id" field.
-func OperatorIDNotNil() predicate.LoginLog {
-	return predicate.LoginLog(sql.FieldNotNull(FieldOperatorID))
+// OperatorCodeHasPrefix applies the HasPrefix predicate on the "operator_code" field.
+func OperatorCodeHasPrefix(v string) predicate.LoginLog {
+	return predicate.LoginLog(sql.FieldHasPrefix(FieldOperatorCode, v))
+}
+
+// OperatorCodeHasSuffix applies the HasSuffix predicate on the "operator_code" field.
+func OperatorCodeHasSuffix(v string) predicate.LoginLog {
+	return predicate.LoginLog(sql.FieldHasSuffix(FieldOperatorCode, v))
+}
+
+// OperatorCodeIsNil applies the IsNil predicate on the "operator_code" field.
+func OperatorCodeIsNil() predicate.LoginLog {
+	return predicate.LoginLog(sql.FieldIsNull(FieldOperatorCode))
+}
+
+// OperatorCodeNotNil applies the NotNil predicate on the "operator_code" field.
+func OperatorCodeNotNil() predicate.LoginLog {
+	return predicate.LoginLog(sql.FieldNotNull(FieldOperatorCode))
+}
+
+// OperatorCodeEqualFold applies the EqualFold predicate on the "operator_code" field.
+func OperatorCodeEqualFold(v string) predicate.LoginLog {
+	return predicate.LoginLog(sql.FieldEqualFold(FieldOperatorCode, v))
+}
+
+// OperatorCodeContainsFold applies the ContainsFold predicate on the "operator_code" field.
+func OperatorCodeContainsFold(v string) predicate.LoginLog {
+	return predicate.LoginLog(sql.FieldContainsFold(FieldOperatorCode, v))
 }
 
 // UserIDEQ applies the EQ predicate on the "user_id" field.

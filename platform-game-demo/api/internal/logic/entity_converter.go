@@ -2,20 +2,25 @@ package logic
 
 import (
 	"encoding/json"
-	"fmt"
 
+	"context"
+
+	corei18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
 	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 )
 
-func CategoryProtoToResponse(category *platformgame.CategoryInfo) *types.GameCategoryResp {
+const Group = "game"
+
+func CategoryProtoToResponse(ctx context.Context, category *platformgame.GameCategoryInfo) *types.GameCategoryResp {
+	// 调用 TG 进行翻译
+	name := corei18n.TG(ctx, corei18n.CodePlatform, "game", category.NameKey)
 	return &types.GameCategoryResp{
 		ID:                 category.Id,
 		SourceID:           category.SourceId,
 		CategoryCode:       category.CategoryCode,
 		SourceCategoryCode: category.SourceCategoryCode,
-		NameI18n:           category.NameI18N,
-		SourceNameI18n:     category.SourceNameI18N,
+		Name:               name,
 		SortNo:             int32(category.SortNo),
 		Status:             int16(category.Status),
 		SourceStatus:       int16(category.SourceStatus),
@@ -25,14 +30,14 @@ func CategoryProtoToResponse(category *platformgame.CategoryInfo) *types.GameCat
 	}
 }
 
-func ChannelProtoToResponse(channel *platformgame.GameChannelResp) *types.GameChannelResp {
+func ChannelProtoToResponse(ctx context.Context, channel *platformgame.GameChannelInfo) *types.GameChannelResp {
+	name := corei18n.TG(ctx, corei18n.CodePlatform, "game", channel.NameKey)
 	return &types.GameChannelResp{
 		ID:                channel.Id,
 		SourceID:          channel.SourceId,
 		ChannelCode:       channel.ChannelCode,
 		SourceChannelCode: channel.SourceChannelCode,
-		NameI18n:          channel.NameI18N,
-		SourceNameI18n:    channel.SourceNameI18N,
+		Name:              name,
 		SortNo:            int32(channel.SortNo),
 		SourceSortNo:      int32(channel.SourceSortNo),
 		Status:            int16(channel.Status),
@@ -64,35 +69,46 @@ func CheckpointProtoToResponse(checkpoint *platformgame.GameSyncCheckpointInfo) 
 	}
 }
 
-func CurrencyProtoToResponse(currency *platformgame.GameCurrencyInfo) *types.GameCurrencyResp {
+func CurrencyProtoToResponse(ctx context.Context, currency *platformgame.GameCurrencyInfo) *types.GameCurrencyResp {
+	currencyName := corei18n.TG(ctx, corei18n.CodePlatform, "game", currency.CurrencyNameKey)
 	return &types.GameCurrencyResp{
-		ID:               currency.Id,
-		GameID:           currency.GameId,
-		GameCode:         currency.GameCode,
-		GameNameI18n:     currency.GameNameI18N,
-		CurrencyID:       currency.CurrencyId,
-		CurrencyCode:     currency.CurrencyCode,
-		CurrencyNameI18n: currency.CurrencyNameI18N,
-		Status:           int16(currency.Status),
-		SourceStatus:     int16(currency.SourceStatus),
-		IsDeleted:        int16(currency.IsDeleted),
-		UpdatedAt:        currency.UpdatedAt,
-		CreatedAt:        currency.CreatedAt,
+		ID:           currency.Id,
+		GameID:       currency.GameId,
+		GameCode:     currency.GameCode,
+		GameName:     currency.GameName,
+		CurrencyID:   currency.CurrencyId,
+		CurrencyCode: currency.CurrencyCode,
+		CurrencyName: currencyName,
+		Status:       int16(currency.Status),
+		SourceStatus: int16(currency.SourceStatus),
+		IsDeleted:    int16(currency.IsDeleted),
+		UpdatedAt:    currency.UpdatedAt,
+		CreatedAt:    currency.CreatedAt,
 	}
 }
 
-func GameProtoToResponse(game *platformgame.GameInfo) *types.GameResp {
+func GameProtoToResponse(ctx context.Context, game *platformgame.GameInfo) *types.GameResp {
+	gameCurrencyArray := []map[string]interface{}{}
 	gameCurrencyInfo := []types.GameCurrencyInfo{}
-	json.Unmarshal([]byte(game.GameCurrencyInfo), &gameCurrencyInfo)
-	fmt.Println("gameId:", game.Id, "game.GameCurrencyInfo", game.GameCurrencyInfo, "gameCurrencyInfo:", gameCurrencyInfo)
-
+	json.Unmarshal([]byte(game.GameCurrencyInfo), &gameCurrencyArray)
+	categoryName := corei18n.TG(ctx, corei18n.CodePlatform, "game", game.CategoryNameKey)
+	providerName := corei18n.TG(ctx, corei18n.CodePlatform, "game", game.ProviderNameKey)
+	channelName := corei18n.TG(ctx, corei18n.CodePlatform, "game", game.ChannelNameKey)
+	for _, currencyMap := range gameCurrencyArray {
+		currency := types.GameCurrencyInfo{
+			CurrencyID:   int64(currencyMap["currency_id"].(float64)),
+			CurrencyName: "",
+		}
+		currencyName := corei18n.TG(ctx, corei18n.CodePlatform, "base", currencyMap["currency_name_key"].(string))
+		currency.CurrencyName = currencyName
+		gameCurrencyInfo = append(gameCurrencyInfo, currency)
+	}
 	return &types.GameResp{
 		ID:               game.Id,
 		SourceID:         game.SourceId,
 		GameCode:         game.GameCode,
 		SourceGameCode:   game.SourceGameCode,
-		NameI18n:         game.NameI18N,
-		SourceNameI18n:   game.SourceNameI18N,
+		Name:             game.Name,
 		SortNo:           int32(game.SortNo),
 		Status:           int16(game.Status),
 		SourceStatus:     int16(game.SourceStatus),
@@ -101,9 +117,9 @@ func GameProtoToResponse(game *platformgame.GameInfo) *types.GameResp {
 		CategoryID:       game.CatId,
 		ProviderID:       game.VenId,
 		ChannelID:        game.ChanId,
-		CategoryNameI18n: game.CategoryNameI18N,
-		ProviderNameI18n: game.ProviderNameI18N,
-		ChannelNameI18n:  game.ChannelNameI18N,
+		CategoryName:     categoryName,
+		ProviderName:     providerName,
+		ChannelName:      channelName,
 		GameCurrencyInfo: gameCurrencyInfo,
 		ProviderKey:      game.ProviderKey,
 		SupportsEmbed:    game.SupportsEmbed,
@@ -114,14 +130,14 @@ func GameProtoToResponse(game *platformgame.GameInfo) *types.GameResp {
 	}
 }
 
-func ProviderProtoToResponse(provider *platformgame.ProviderInfo) *types.GameProviderResp {
+func ProviderProtoToResponse(ctx context.Context, provider *platformgame.ProviderInfo) *types.GameProviderResp {
+	name := corei18n.TG(ctx, corei18n.CodePlatform, "game", provider.NameKey)
 	return &types.GameProviderResp{
 		ID:                 provider.Id,
 		SourceID:           provider.SourceId,
 		ProviderCode:       provider.ProviderCode,
 		SourceProviderCode: provider.SourceProviderCode,
-		NameI18n:           provider.NameI18N,
-		SourceNameI18n:     provider.SourceNameI18N,
+		Name:               name,
 		SortNo:             int32(provider.SortNo),
 		Status:             int16(provider.Status),
 		SourceStatus:       int16(provider.SourceStatus),

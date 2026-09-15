@@ -298,12 +298,12 @@ func (_q *AdminActionLogQuery) WithUser(opts ...func(*UserQuery)) *AdminActionLo
 // Example:
 //
 //	var v []struct {
-//		OperatorID int64 `json:"operator_id,omitempty"`
+//		OperatorCode string `json:"operator_code,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.AdminActionLog.Query().
-//		GroupBy(adminactionlog.FieldOperatorID).
+//		GroupBy(adminactionlog.FieldOperatorCode).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (_q *AdminActionLogQuery) GroupBy(field string, fields ...string) *AdminActionLogGroupBy {
@@ -321,11 +321,11 @@ func (_q *AdminActionLogQuery) GroupBy(field string, fields ...string) *AdminAct
 // Example:
 //
 //	var v []struct {
-//		OperatorID int64 `json:"operator_id,omitempty"`
+//		OperatorCode string `json:"operator_code,omitempty"`
 //	}
 //
 //	client.AdminActionLog.Query().
-//		Select(adminactionlog.FieldOperatorID).
+//		Select(adminactionlog.FieldOperatorCode).
 //		Scan(ctx, &v)
 func (_q *AdminActionLogQuery) Select(fields ...string) *AdminActionLogSelect {
 	_q.ctx.Fields = append(_q.ctx.Fields, fields...)

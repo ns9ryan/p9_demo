@@ -12,26 +12,27 @@ import (
 	"oa.98ent.com/p9/core/rpc/ent/api"
 )
 
-// API is the model entity for the API schema.
+// API Table | 接口表
 type API struct {
 	config `json:"-"`
 	// ID of the ent.
+	// Primary key | 主键
 	ID int64 `json:"id,omitempty"`
 	// Created At | 创建时间
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Updated At | 更新时间
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	// Description holds the value of the "description" field.
+	// Description i18n key | 描述词条
 	Description string `json:"description,omitempty"`
-	// APIGroup holds the value of the "api_group" field.
+	// API group | 接口分组
 	APIGroup string `json:"api_group,omitempty"`
-	// Method holds the value of the "method" field.
+	// HTTP method | 请求方法
 	Method string `json:"method,omitempty"`
-	// Path holds the value of the "path" field.
+	// Request path | 请求路径
 	Path string `json:"path,omitempty"`
-	// IsRequired holds the value of the "is_required" field.
+	// Required 0 no 1 yes | 是否必选 0 否 1 是
 	IsRequired int16 `json:"is_required,omitempty"`
-	// ServiceName holds the value of the "service_name" field.
+	// Service name | 服务名
 	ServiceName  string `json:"service_name,omitempty"`
 	selectValues sql.SelectValues
 }

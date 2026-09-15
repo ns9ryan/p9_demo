@@ -16,7 +16,6 @@ import (
 	"oa.98ent.com/p9/core/rpc/ent/i18nlang"
 	"oa.98ent.com/p9/core/rpc/ent/loginlog"
 	"oa.98ent.com/p9/core/rpc/ent/menu"
-	"oa.98ent.com/p9/core/rpc/ent/operator"
 	"oa.98ent.com/p9/core/rpc/ent/predicate"
 	"oa.98ent.com/p9/core/rpc/ent/role"
 	"oa.98ent.com/p9/core/rpc/ent/user"
@@ -294,33 +293,6 @@ func (f TraverseMenu) Traverse(ctx context.Context, q ent.Query) error {
 	return fmt.Errorf("unexpected query type %T. expect *ent.MenuQuery", q)
 }
 
-// The OperatorFunc type is an adapter to allow the use of ordinary function as a Querier.
-type OperatorFunc func(context.Context, *ent.OperatorQuery) (ent.Value, error)
-
-// Query calls f(ctx, q).
-func (f OperatorFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
-	if q, ok := q.(*ent.OperatorQuery); ok {
-		return f(ctx, q)
-	}
-	return nil, fmt.Errorf("unexpected query type %T. expect *ent.OperatorQuery", q)
-}
-
-// The TraverseOperator type is an adapter to allow the use of ordinary function as Traverser.
-type TraverseOperator func(context.Context, *ent.OperatorQuery) error
-
-// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
-func (f TraverseOperator) Intercept(next ent.Querier) ent.Querier {
-	return next
-}
-
-// Traverse calls f(ctx, q).
-func (f TraverseOperator) Traverse(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.OperatorQuery); ok {
-		return f(ctx, q)
-	}
-	return fmt.Errorf("unexpected query type %T. expect *ent.OperatorQuery", q)
-}
-
 // The RoleFunc type is an adapter to allow the use of ordinary function as a Querier.
 type RoleFunc func(context.Context, *ent.RoleQuery) (ent.Value, error)
 
@@ -394,8 +366,6 @@ func NewQuery(q ent.Query) (Query, error) {
 		return &query[*ent.LoginLogQuery, predicate.LoginLog, loginlog.OrderOption]{typ: ent.TypeLoginLog, tq: q}, nil
 	case *ent.MenuQuery:
 		return &query[*ent.MenuQuery, predicate.Menu, menu.OrderOption]{typ: ent.TypeMenu, tq: q}, nil
-	case *ent.OperatorQuery:
-		return &query[*ent.OperatorQuery, predicate.Operator, operator.OrderOption]{typ: ent.TypeOperator, tq: q}, nil
 	case *ent.RoleQuery:
 		return &query[*ent.RoleQuery, predicate.Role, role.OrderOption]{typ: ent.TypeRole, tq: q}, nil
 	case *ent.UserQuery:

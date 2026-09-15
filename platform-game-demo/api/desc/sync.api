@@ -2,7 +2,7 @@ syntax = "v1"
 
 @server (
 	group: sync
-	middleware: Auth
+	middleware: Jwt,ActionLog,Authority
 	prefix: /admin/sync
 )
 service platform_game {
@@ -26,11 +26,14 @@ service platform_game {
 	// 游戏货币同步
 	@handler RunCurrency
 	post /currencies/run (SyncRunReq) returns (SyncRunResp)
+
+	@handler RunI18n
+	post /i18n/run (SyncRunReq) returns (SyncRunResp)
 }
 
 @server (
 	group: preview
-	middleware: Auth
+	middleware: Jwt,ActionLog,Authority
 	prefix: /admin/sync
 )
 service platform_game {

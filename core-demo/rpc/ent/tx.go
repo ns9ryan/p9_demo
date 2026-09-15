@@ -30,8 +30,6 @@ type Tx struct {
 	LoginLog *LoginLogClient
 	// Menu is the client for interacting with the Menu builders.
 	Menu *MenuClient
-	// Operator is the client for interacting with the Operator builders.
-	Operator *OperatorClient
 	// Role is the client for interacting with the Role builders.
 	Role *RoleClient
 	// User is the client for interacting with the User builders.
@@ -175,7 +173,6 @@ func (tx *Tx) init() {
 	tx.I18nLang = NewI18nLangClient(tx.config)
 	tx.LoginLog = NewLoginLogClient(tx.config)
 	tx.Menu = NewMenuClient(tx.config)
-	tx.Operator = NewOperatorClient(tx.config)
 	tx.Role = NewRoleClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 }

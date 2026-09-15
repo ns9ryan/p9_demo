@@ -15,6 +15,7 @@ import (
 type CreateI18nLangReq struct {
 	Lang     string
 	Name     string
+	I18nKey  string
 	Disabled int16
 	SortNo   int
 }
@@ -23,6 +24,7 @@ type UpdateI18nLangReq struct {
 	ID       int64
 	Lang     *string
 	Name     *string
+	I18nKey  *string
 	Disabled *int16
 	SortNo   *int
 }
@@ -42,14 +44,25 @@ func (d *Deps) UpsertI18nLangs(ctx context.Context, seeds []CreateI18nLangReq) e
 				return err
 			}
 			if _, err := d.Client.I18nLang.Create().
-				SetLang(s.Lang).SetName(s.Name).SetDisabled(s.Disabled).SetSortNo(s.SortNo).
+				SetLang(s.Lang).SetName(s.Name).SetI18nKey(strings.TrimSpace(s.I18nKey)).
+				SetDisabled(s.Disabled).SetSortNo(s.SortNo).
 				Save(ctx); err != nil {
 				return err
 			}
 			continue
 		}
+		up := d.Client.I18nLang.UpdateOneID(row.ID)
+		changed := false
 		if strings.TrimSpace(row.Name) == "" && s.Name != "" {
-			if err := d.Client.I18nLang.UpdateOneID(row.ID).SetName(s.Name).Exec(ctx); err != nil {
+			up.SetName(s.Name)
+			changed = true
+		}
+		if strings.TrimSpace(row.I18nKey) == "" && strings.TrimSpace(s.I18nKey) != "" {
+			up.SetI18nKey(strings.TrimSpace(s.I18nKey))
+			changed = true
+		}
+		if changed {
+			if err := up.Exec(ctx); err != nil {
 				return err
 			}
 		}
@@ -77,7 +90,8 @@ func (d *Deps) CreateI18nLang(ctx context.Context, req CreateI18nLangReq) (*mode
 		return nil, xerr.BadRequest(i18n.I18nLangExists)
 	}
 	row, err := d.Client.I18nLang.Create().
-		SetLang(lang).SetName(name).SetDisabled(req.Disabled).SetSortNo(req.SortNo).
+		SetLang(lang).SetName(name).SetI18nKey(strings.TrimSpace(req.I18nKey)).
+		SetDisabled(req.Disabled).SetSortNo(req.SortNo).
 		Save(ctx)
 	if err != nil {
 		return nil, xerr.BadRequest(i18n.I18nLangCreateFailed)
@@ -115,6 +129,9 @@ func (d *Deps) UpdateI18nLang(ctx context.Context, req UpdateI18nLangReq) error 
 		}
 		next.Name = name
 	}
+	if req.I18nKey != nil {
+		next.I18nKey = strings.TrimSpace(*req.I18nKey)
+	}
 	if req.Disabled != nil {
 		if err := validFlag01(*req.Disabled); err != nil {
 			return err
@@ -132,7 +149,8 @@ func (d *Deps) UpdateI18nLang(ctx context.Context, req UpdateI18nLangReq) error 
 		return xerr.BadRequest(i18n.I18nLangExists)
 	}
 	return d.Client.I18nLang.UpdateOneID(row.ID).
-		SetLang(next.Lang).SetName(next.Name).SetDisabled(next.Disabled).SetSortNo(next.SortNo).
+		SetLang(next.Lang).SetName(next.Name).SetI18nKey(next.I18nKey).
+		SetDisabled(next.Disabled).SetSortNo(next.SortNo).
 		Exec(ctx)
 }
 

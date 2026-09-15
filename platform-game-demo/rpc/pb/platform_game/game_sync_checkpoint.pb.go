@@ -462,6 +462,104 @@ func (x *GetGameSyncCheckpointListResp) GetPageSize() int32 {
 	return 0
 }
 
+// GetI18nNameMapRequest 获取多语言映射文件name_map请求
+type GetI18NNameMapRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetI18NNameMapRequest) Reset() {
+	*x = GetI18NNameMapRequest{}
+	mi := &file_types_game_sync_checkpoint_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetI18NNameMapRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetI18NNameMapRequest) ProtoMessage() {}
+
+func (x *GetI18NNameMapRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_types_game_sync_checkpoint_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetI18NNameMapRequest.ProtoReflect.Descriptor instead.
+func (*GetI18NNameMapRequest) Descriptor() ([]byte, []int) {
+	return file_types_game_sync_checkpoint_proto_rawDescGZIP(), []int{5}
+}
+
+// GetI18nNameMapResp 获取多语言映射文件name_map响应
+type GetI18NNameMapResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Code          int32                  `protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Data          map[string]string      `protobuf:"bytes,3,rep,name=data,proto3" json:"data,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetI18NNameMapResp) Reset() {
+	*x = GetI18NNameMapResp{}
+	mi := &file_types_game_sync_checkpoint_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetI18NNameMapResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetI18NNameMapResp) ProtoMessage() {}
+
+func (x *GetI18NNameMapResp) ProtoReflect() protoreflect.Message {
+	mi := &file_types_game_sync_checkpoint_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetI18NNameMapResp.ProtoReflect.Descriptor instead.
+func (*GetI18NNameMapResp) Descriptor() ([]byte, []int) {
+	return file_types_game_sync_checkpoint_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *GetI18NNameMapResp) GetCode() int32 {
+	if x != nil {
+		return x.Code
+	}
+	return 0
+}
+
+func (x *GetI18NNameMapResp) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *GetI18NNameMapResp) GetData() map[string]string {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
 var File_types_game_sync_checkpoint_proto protoreflect.FileDescriptor
 
 const file_types_game_sync_checkpoint_proto_rawDesc = "" +
@@ -514,7 +612,15 @@ const file_types_game_sync_checkpoint_proto_rawDesc = "" +
 	"\x05items\x18\x03 \x03(\v2%.platform_game.GameSyncCheckpointInfoR\x05items\x12\x14\n" +
 	"\x05total\x18\x04 \x01(\x03R\x05total\x12\x12\n" +
 	"\x04page\x18\x05 \x01(\x05R\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x06 \x01(\x05R\bpageSizeB4Z2oa.98ent.com/p9/platform-game/rpc/pb/platform_gameb\x06proto3"
+	"\tpage_size\x18\x06 \x01(\x05R\bpageSize\"\x17\n" +
+	"\x15GetI18nNameMapRequest\"\xbc\x01\n" +
+	"\x12GetI18nNameMapResp\x12\x12\n" +
+	"\x04code\x18\x01 \x01(\x05R\x04code\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x12?\n" +
+	"\x04data\x18\x03 \x03(\v2+.platform_game.GetI18nNameMapResp.DataEntryR\x04data\x1a7\n" +
+	"\tDataEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B4Z2oa.98ent.com/p9/platform-game/rpc/pb/platform_gameb\x06proto3"
 
 var (
 	file_types_game_sync_checkpoint_proto_rawDescOnce sync.Once
@@ -528,22 +634,26 @@ func file_types_game_sync_checkpoint_proto_rawDescGZIP() []byte {
 	return file_types_game_sync_checkpoint_proto_rawDescData
 }
 
-var file_types_game_sync_checkpoint_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_types_game_sync_checkpoint_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_types_game_sync_checkpoint_proto_goTypes = []any{
 	(*GameSyncCheckpointInfo)(nil),           // 0: platform_game.GameSyncCheckpointInfo
 	(*GetGameSyncCheckpointRequest)(nil),     // 1: platform_game.GetGameSyncCheckpointRequest
 	(*GetGameSyncCheckpointResp)(nil),        // 2: platform_game.GetGameSyncCheckpointResp
 	(*GetGameSyncCheckpointListRequest)(nil), // 3: platform_game.GetGameSyncCheckpointListRequest
 	(*GetGameSyncCheckpointListResp)(nil),    // 4: platform_game.GetGameSyncCheckpointListResp
+	(*GetI18NNameMapRequest)(nil),            // 5: platform_game.GetI18nNameMapRequest
+	(*GetI18NNameMapResp)(nil),               // 6: platform_game.GetI18nNameMapResp
+	nil,                                      // 7: platform_game.GetI18nNameMapResp.DataEntry
 }
 var file_types_game_sync_checkpoint_proto_depIdxs = []int32{
 	0, // 0: platform_game.GetGameSyncCheckpointResp.data:type_name -> platform_game.GameSyncCheckpointInfo
 	0, // 1: platform_game.GetGameSyncCheckpointListResp.items:type_name -> platform_game.GameSyncCheckpointInfo
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	7, // 2: platform_game.GetI18nNameMapResp.data:type_name -> platform_game.GetI18nNameMapResp.DataEntry
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_types_game_sync_checkpoint_proto_init() }
@@ -557,7 +667,7 @@ func file_types_game_sync_checkpoint_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_game_sync_checkpoint_proto_rawDesc), len(file_types_game_sync_checkpoint_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

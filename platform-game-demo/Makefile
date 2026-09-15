@@ -26,6 +26,12 @@ RPC_PROTO ?= rpc/proto/platform_game.proto
 RPC_PROTO_PATH := rpc/proto
 RPC_DIR := rpc
 
+# Ent
+ENT_DIR := rpc/ent
+
+# The list of Ent tables | Ent 表列表
+ENT_TABLES=Game GameCategory GameProvider GameChannel GameCurrency GameSyncCheckpoint Currency
+
 # The arch of the build | 构建的架构
 GOARCH=amd64
 DOCKER_PLATFORM=linux/amd64
@@ -47,13 +53,20 @@ rpc: # Generate RPC files from proto | 生成 RPC 的代码
 rpc-vendor: # Generate RPC files from proto | 生成 RPC 的代码
 	cd $(RPC_PROTO_PATH) && $(GOCTL) rpc protoc vendor.proto --go_out=../.. --go-grpc_out=../.. --zrpc_out=.. --go_opt=module=$(MODULE) --go-grpc_opt=module=$(MODULE) --module=$(MODULE) -I . --multiple --name-from-filename --style=$(STYLE)
 
-
-ent: # 生成 Ent 代码
+model: # 生成 Model 代码
 	goctl model pg datasource \
 	--url="postgres://root:root@127.0.0.1:5432/app?sslmode=disable" \
-	--table="game,game_category,game_provider,game_channel,game_currency,game_sync_checkpoint,sys_currency" \
-	--dir ./rpc/ent \
+	--table="game,game_category,game_provider,game_channel,game_currency,game_sync_checkpoint,currency" \
+	--dir ./rpc/model \
 	--style=$(STYLE)
+
+.PHONY: ent-new
+ent-new: # 创建新的 Ent Schema，需要指定 Ent 表列表
+	cd rpc && GOWORK=off $(GO) run -mod=mod entgo.io/ent/cmd/ent new $(ENT_TABLES)
+
+.PHONY: ent
+ent: # 生成 Ent 代码
+	GOWORK=off $(GO) generate ./$(ENT_DIR)
 
 swagger: # Generate Swagger API documentation | 生成 API Swagger 文档
 	mkdir -p api/swagger

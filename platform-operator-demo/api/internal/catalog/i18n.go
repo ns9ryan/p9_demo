@@ -37,6 +37,10 @@ func menuI18n() []*coreclient.I18NItem {
 
 	// 管理员账号
 	addI18n(&out, i18n.GroupMenu, "menu.route.operatorAdmin", "管理员账号", "管理員帳號", "Administrator accounts")
+	addI18n(&out, i18n.GroupMenu, "menu.route.operatorAdminCreate", "新增管理员", "新增管理員", "Create administrator")
+	addI18n(&out, i18n.GroupMenu, "menu.route.operatorAdminUpdate", "编辑管理员", "編輯管理員", "Edit administrator")
+	addI18n(&out, i18n.GroupMenu, "menu.route.operatorAdminResetPassword", "重置密码", "重設密碼", "Reset password")
+	addI18n(&out, i18n.GroupMenu, "menu.route.operatorAdminUpdateStatus", "启停状态", "啟停狀態", "Update status")
 
 	// 基础资源分配
 	addI18n(&out, i18n.GroupMenu, "menu.route.basicResourceAllocation", "基础资源分配", "基礎資源分配", "Basic resource allocation")
@@ -72,6 +76,13 @@ func apiI18n() []*coreclient.I18NItem {
 	addI18n(&out, i18n.GroupAPI, "api.operatorDomainGet", "分站域名详情", "分站網域詳情", "Operator domain detail")
 	addI18n(&out, i18n.GroupAPI, "api.operatorDomainList", "分站域名列表", "分站網域列表", "Operator domain list")
 	addI18n(&out, i18n.GroupAPI, "api.operatorDomainDelete", "删除分站域名", "刪除分站網域", "Delete operator domain")
+
+	// 分站管理员
+	addI18n(&out, i18n.GroupAPI, "api.operatorAdminList", "分站管理员列表", "分站管理員列表", "Operator administrator list")
+	addI18n(&out, i18n.GroupAPI, "api.operatorAdminCreate", "创建分站管理员", "建立分站管理員", "Create operator administrator")
+	addI18n(&out, i18n.GroupAPI, "api.operatorAdminUpdate", "更新分站管理员", "更新分站管理員", "Update operator administrator")
+	addI18n(&out, i18n.GroupAPI, "api.operatorAdminResetPassword", "重置分站管理员密码", "重設分站管理員密碼", "Reset operator administrator password")
+	addI18n(&out, i18n.GroupAPI, "api.operatorAdminUpdateStatus", "更新分站管理员状态", "更新分站管理員狀態", "Update operator administrator status")
 
 	// 基础资源分配
 	addI18n(&out, i18n.GroupAPI, "api.basicResourceAllocationList", "基础资源分配列表", "基礎資源分配列表", "Basic resource allocation list")

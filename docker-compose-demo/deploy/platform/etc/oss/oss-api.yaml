@@ -3,7 +3,7 @@
 # 未配 oss_rpc.endpoints 时只上传对象（common/oss），不写档案。
 # 无默认服务商时上传和当前生效配置都走本文件（或 etcd）的 oss。
 
-port: "18002"
+port: "18006"
 
 # 浏览器跨域。'*' 允许全部 Origin。
 cros_conf:
@@ -48,5 +48,5 @@ core_rpc:
 # 档案 / 服务商。不配则退化成纯对象存储。
 oss_rpc:
   endpoints:
-    - oss-rpc:19002
+    - oss-rpc:19006
   timeout: 10000

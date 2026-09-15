@@ -6,6 +6,7 @@ import (
 	"oa.98ent.com/p9/core/api/internal/convert"
 	"oa.98ent.com/p9/core/api/internal/svc"
 	"oa.98ent.com/p9/core/api/internal/types"
+	"oa.98ent.com/p9/core/common/i18n"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -29,5 +30,5 @@ func (l *CreateI18nLangLogic) CreateI18nLang(req *types.CreateI18nLangReq) (resp
 	if err != nil {
 		return nil, err
 	}
-	return convert.I18nLangInfo(out), nil
+	return convert.I18nLangInfo(l.ctx, i18n.CodeByPartnerMode(l.svcCtx.Config.PartnerMode), out), nil
 }

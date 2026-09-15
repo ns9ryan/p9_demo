@@ -33,8 +33,7 @@ func (l *BootstrapOperatorLogic) BootstrapOperator(in *core.BootstrapOperatorReq
 		return nil, xerr.RpcErr(xerr.Unauthorized(i18n.AuthInvalidInitToken))
 	}
 	u, err := bootstrap.CreateOperatorAdmin(l.ctx, l.svcCtx.Deps, bootstrap.CreateOperatorAdminReq{
-		OperatorCode: in.OperatorCode, TimezoneCode: in.TimezoneCode,
-		SettlementCurrencyCode: in.SettlementCurrencyCode, Username: in.Username,
+		OperatorCode: in.OperatorCode, Username: in.Username,
 		Password: in.Password, DisplayName: in.DisplayName,
 	})
 	if err != nil {

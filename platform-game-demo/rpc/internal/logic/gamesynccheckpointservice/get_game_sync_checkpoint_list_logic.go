@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"oa.98ent.com/p9/platform-game/rpc/ent"
+	"oa.98ent.com/p9/platform-game/rpc/ent/gamesynccheckpoint"
 	"oa.98ent.com/p9/platform-game/rpc/internal/constant"
 	"oa.98ent.com/p9/platform-game/rpc/internal/logic"
 	"oa.98ent.com/p9/platform-game/rpc/internal/svc"
@@ -43,20 +43,20 @@ func (l *GetGameSyncCheckpointListLogic) GetGameSyncCheckpointList(in *platformg
 
 	page, pageSize := utils.HandlePage(int64(in.Page), int64(in.PageSize))
 
-	query := l.svcCtx.DB.WithContext(l.ctx)
+	query := l.svcCtx.DB.GameSyncCheckpoint.Query()
 
 	if in.GetSyncScope() != "" {
-		query = query.Where("sync_scope = ?", in.GetSyncScope())
+		query = query.Where(gamesynccheckpoint.SyncScopeEQ(in.GetSyncScope()))
 	}
 
 	if in.GetStartTime() > 0 {
 		startTime := time.Unix(in.GetStartTime(), 0)
-		query = query.Where("created_at >= ?", startTime)
+		query = query.Where(gamesynccheckpoint.CreatedAtGTE(startTime))
 	}
 
 	if in.GetEndTime() > 0 {
 		endTime := time.Unix(in.GetEndTime(), 0)
-		query = query.Where("created_at <= ?", endTime)
+		query = query.Where(gamesynccheckpoint.CreatedAtLTE(endTime))
 	}
 
 	sortBy := "created_at"
@@ -72,21 +72,27 @@ func (l *GetGameSyncCheckpointListLogic) GetGameSyncCheckpointList(in *platformg
 		sortOrder = "desc"
 	}
 
-	var total int64
-	if err := query.Model(&ent.GameSyncCheckpoint{}).Count(&total).Error; err != nil {
+	total, err := query.Clone().Count(l.ctx)
+	if err != nil {
 		l.Errorf("[RPC GetGameSyncCheckpointList] count failed: %v", err)
 		return &platformgame.GetGameSyncCheckpointListResp{
 			Code:    constant.CodeInternalError,
 			Message: fmt.Sprintf("count failed: %v", err),
 		}, nil
 	}
+	// 计算分页偏移量
+	offset := (page - 1) * pageSize
 
-	var checkpoints []*ent.GameSyncCheckpoint
-	if err := query.
-		Offset(int((page - 1) * pageSize)).
+	// 获取当前页分类数据
+	checkpoints, err := query.
+		Order(
+			gamesynccheckpoint.ByCreatedAt(), // 按创建时间升序
+			gamesynccheckpoint.ByID(),        // 创建时间相同时按ID升序
+		).
+		Offset(int(offset)).
 		Limit(int(pageSize)).
-		Order(fmt.Sprintf("%s %s", sortBy, sortOrder)).
-		Find(&checkpoints).Error; err != nil {
+		All(l.ctx)
+	if err != nil {
 		l.Errorf("[RPC GetGameSyncCheckpointList] query failed: %v", err)
 		return &platformgame.GetGameSyncCheckpointListResp{
 			Code:    constant.CodeInternalError,
@@ -99,7 +105,7 @@ func (l *GetGameSyncCheckpointListLogic) GetGameSyncCheckpointList(in *platformg
 		Code:     constant.CodeSuccess,
 		Message:  "success",
 		Items:    logic.CheckpointModelToProtoList(checkpoints),
-		Total:    total,
+		Total:    int64(total),
 		Page:     int32(page),
 		PageSize: int32(pageSize),
 	}, nil

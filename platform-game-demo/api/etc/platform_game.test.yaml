@@ -16,3 +16,5 @@ Swagger:
 CoreRpc:
   Target: 192.168.0.15:19000
   Timeout: 10000
+
+IsLocal: false

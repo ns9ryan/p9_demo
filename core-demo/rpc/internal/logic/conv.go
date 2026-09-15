@@ -21,8 +21,8 @@ func ToUserPublic(u service.UserPublic) *core.UserPublic {
 		IpWhitelistEnabled: int32(u.IPWhitelistEnabled),
 		IpWhitelist:        u.IPWhitelist,
 	}
-	if u.OperatorID != nil {
-		out.OperatorId = u.OperatorID
+	if u.OperatorCode != nil {
+		out.OperatorCode = u.OperatorCode
 	}
 	if u.LastLoginAt != nil {
 		out.LastLoginAt = u.LastLoginAt
@@ -68,7 +68,7 @@ func ToRoleInfo(r *model.Role) *core.RoleInfo {
 		CreatedAt: r.CreatedAt.Unix(),
 		UpdatedAt: r.UpdatedAt.Unix(),
 	}
-	out.OperatorId = r.OperatorID
+	out.OperatorCode = r.OperatorCode
 	out.Description = r.Description
 	return out
 }
@@ -125,29 +125,12 @@ func ToI18nLangInfo(row model.I18nLang) *core.I18NLangInfo {
 		Id:        row.ID,
 		Lang:      row.Lang,
 		Name:      row.Name,
+		I18NKey:   row.I18nKey,
 		Disabled:  int32(row.Disabled),
 		SortNo:    int32(row.SortNo),
 		CreatedAt: row.CreatedAt.Unix(),
 		UpdatedAt: row.UpdatedAt.Unix(),
 	}
-}
-
-func ToOperatorInfo(op *model.Operator) *core.OperatorInfo {
-	out := &core.OperatorInfo{
-		Id:                     op.ID,
-		OperatorCode:           op.OperatorCode,
-		TimezoneCode:           op.TimezoneCode,
-		SettlementCurrencyCode: op.SettlementCurrencyCode,
-		Status:                 int32(op.Status),
-		RequiredConfigVersion:  int32(op.RequiredConfigVersion),
-		CompletedConfigVersion: int32(op.CompletedConfigVersion),
-		CreatedAt:              op.CreatedAt.Unix(),
-		UpdatedAt:              op.UpdatedAt.Unix(),
-	}
-	if op.ConfigCompletedAt != nil {
-		out.ConfigCompletedAt = op.ConfigCompletedAt.Unix()
-	}
-	return out
 }
 
 func ToMenuNode(n service.MenuNode) *core.MenuNode {
@@ -252,7 +235,7 @@ func ToErrorLogInfo(row *model.ErrorLog) *core.ErrorLogInfo {
 		Subject:        row.Subject,
 		Detail:         row.Detail,
 		UserAgent:      row.UserAgent,
-		OperatorId:     row.OperatorID,
+		OperatorCode:   row.OperatorCode,
 	}
 	return out
 }

@@ -92,7 +92,7 @@ func (d *Deps) ListAdminActionLogs(ctx context.Context, claims *ctxdata.Claims, 
 	if claims == nil {
 		return nil, 0, xerr.Unauthorized(i18n.Unauthorized)
 	}
-	if d.Mode == ModeOn && claims.OperatorID == 0 {
+	if d.Mode == ModeOn && claims.OperatorCode == "" {
 		return nil, 0, xerr.Unauthorized(i18n.Unauthorized)
 	}
 	ctx = ctxdata.WithClaims(ctx, claims)

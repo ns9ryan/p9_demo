@@ -21,16 +21,16 @@ type AdminActionLogCreate struct {
 	hooks    []Hook
 }
 
-// SetOperatorID sets the "operator_id" field.
-func (_c *AdminActionLogCreate) SetOperatorID(v int64) *AdminActionLogCreate {
-	_c.mutation.SetOperatorID(v)
+// SetOperatorCode sets the "operator_code" field.
+func (_c *AdminActionLogCreate) SetOperatorCode(v string) *AdminActionLogCreate {
+	_c.mutation.SetOperatorCode(v)
 	return _c
 }
 
-// SetNillableOperatorID sets the "operator_id" field if the given value is not nil.
-func (_c *AdminActionLogCreate) SetNillableOperatorID(v *int64) *AdminActionLogCreate {
+// SetNillableOperatorCode sets the "operator_code" field if the given value is not nil.
+func (_c *AdminActionLogCreate) SetNillableOperatorCode(v *string) *AdminActionLogCreate {
 	if v != nil {
-		_c.SetOperatorID(*v)
+		_c.SetOperatorCode(*v)
 	}
 	return _c
 }
@@ -219,6 +219,11 @@ func (_c *AdminActionLogCreate) defaults() error {
 
 // check runs all checks and user-defined validators on the builder.
 func (_c *AdminActionLogCreate) check() error {
+	if v, ok := _c.mutation.OperatorCode(); ok {
+		if err := adminactionlog.OperatorCodeValidator(v); err != nil {
+			return &ValidationError{Name: "operator_code", err: fmt.Errorf(`ent: validator failed for field "AdminActionLog.operator_code": %w`, err)}
+		}
+	}
 	if _, ok := _c.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "AdminActionLog.user_id"`)}
 	}
@@ -293,9 +298,9 @@ func (_c *AdminActionLogCreate) createSpec() (*AdminActionLog, *sqlgraph.CreateS
 		_node.ID = id
 		_spec.ID.Value = id
 	}
-	if value, ok := _c.mutation.OperatorID(); ok {
-		_spec.SetField(adminactionlog.FieldOperatorID, field.TypeInt64, value)
-		_node.OperatorID = &value
+	if value, ok := _c.mutation.OperatorCode(); ok {
+		_spec.SetField(adminactionlog.FieldOperatorCode, field.TypeString, value)
+		_node.OperatorCode = &value
 	}
 	if value, ok := _c.mutation.RequestMethod(); ok {
 		_spec.SetField(adminactionlog.FieldRequestMethod, field.TypeString, value)
