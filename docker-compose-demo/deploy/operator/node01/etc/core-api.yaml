@@ -6,6 +6,11 @@ Log:
   Mode: console
   Level: info
 
+# 开发模式
+Mode: dev
+# 模式 on分站，off总网
+PartnerMode: "on"
+  
 CROSConf:
   Address: '*'
 

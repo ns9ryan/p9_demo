@@ -1,0 +1,79 @@
+# 仓库根目录：go run ./rpc
+# 本目录：go run . -f etc/integration.yaml
+Name: integration.rpc
+ListenOn: 0.0.0.0:19005
+Timeout: 30000 # 毫秒；批量查 IP 可能打三方，需大于单源 timeout_sec
+
+Log:
+  Mode: file
+  Path: logs
+  Stat: false
+
+
+# 数据库配置
+DB:
+  Driver: postgres
+  DSN: "host=postgres user=root password=root dbname=p9_platform port=5432 sslmode=disable TimeZone=UTC"
+  MaxConns: 20
+  MaxIdle: 5
+
+IpGeo:
+  # ip_geo_provider 为空时用下面 Providers 做全局种子（默认启用/优先级/Tag）
+  # 已有数据不覆盖；服务商无管理接口，改连接配置需清空该表后重启
+  # 租户 IsEnabled/Priority 走 /policy/*；Tag: 在线 | 本地 | 离线
+  CacheTTL: 168 # 写入 expires_at 的小时数；命中则续期；0 = 不过期
+  CacheDriver: table # table | memory | redis
+  # CacheRedis: # CacheDriver=redis 时必填；table/memory 可预留
+  #   Host: 127.0.0.1:6379
+  #   Pass: ""
+  #   DB: 0
+  #   KeyPrefix: ipgeo
+
+  # 查询：缓存 miss 后按 Priority 从小到大试已启用源，失败再试下一个
+  # Driver: local | http | mmdb | ip2region
+  # local 查 ip_geo_local，不需要 Endpoint
+  # http 的 Endpoint 支持 {ip} {lang}；AuthType: none | basic | bearer | header
+  # FieldMap: 我们的字段 -> 三方 JSON 路径（gjson）；names 路径若是对象会整份多语言入库
+  Providers:
+    # 本地表：后台 /local/* 维护；表中没有该 IP 时继续下一个源
+    - Name: local
+      Driver: local
+      Tag: 本地
+      IsEnabled: true
+      Priority: 0
+
+    # 主源示例：MaxMind Country Web API（换家时 IsEnabled: false 即可）
+    - Name: maxmind
+      Driver: http
+      Tag: 在线
+      IsEnabled: true
+      Priority: 1
+      Endpoint: https://geoip.maxmind.com/geoip/v2.1/country/{ip}
+      AuthType: basic
+      AccessKey: "" # Account ID
+      SecretKey: "" # License Key
+      TimeoutSec: 5
+      FieldMap:
+        country_code: country.iso_code
+        country_names: country.names
+        continent_code: continent.code
+        continent_names: continent.names
+        isp: traits.isp
+        org: traits.organization
+
+    # 离线兜底：GeoLite2-City，文件放 integration/assets/（工作目录为 integration/）
+    - Name: geoip-city
+      Driver: mmdb
+      Tag: 离线
+      IsEnabled: false
+      Priority: 2
+      Endpoint: assets/GeoLite2-City.mmdb
+
+    # 离线兜底：ip2region，主要中文省市（有 assets/ip2region.xdb 时可改为 true）
+    - Name: ip2region
+      Driver: ip2region
+      Tag: 离线
+      IsEnabled: true
+      Priority: 3
+      Endpoint: assets/ip2region.xdb
+

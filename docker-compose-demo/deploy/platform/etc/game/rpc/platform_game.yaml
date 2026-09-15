@@ -16,4 +16,8 @@ Database:
   MaxIdle: 5
 
 # 游戏供应商 gRPC 服务地址（用于同步）
-GrpcServerAddr: game-vendor-gateway:5000
+#GrpcServerAddr: game-vendor-gateway:5000
+
+Kafka:
+  Brokers:
+    - "192.168.0.15:9092"

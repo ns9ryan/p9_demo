@@ -1,0 +1,18 @@
+# InitTenant 写入 t_oss_provider 的默认驱动。
+# scene / 上传限制在 api 侧 oss.yaml 的 upload，不进本文件。
+# 目前只用公共桶。以后要加私有桶例如：
+#   oss-bucket-private:
+#     mode: private
+#     sign_ttl: 600
+
+oss:
+  driver: s3                   # s3 / minio
+  endpoint: "http://minio:9000"           # 容器内网 S3 API
+  file_url: "http://192.168.0.15:9200"    # 浏览器/外网访问
+  access_key: minioadmin
+  secret_key: minioadmin
+  path_style: true             # MinIO 一般为 true
+  # region: default
+  buckets:
+    oss-bucket:
+      mode: public

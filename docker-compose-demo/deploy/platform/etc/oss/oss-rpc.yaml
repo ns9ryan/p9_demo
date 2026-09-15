@@ -1,0 +1,9 @@
+# gRPC / 档案。镜像入口：./oss_rpc -f etc/oss.yaml
+# 空 -f 读 etcd。本进程只用 database / rpc.listen_on。
+# 可选。配了才写档案、才能管服务商。可被 POSTGRES_DSN 覆盖。
+database:
+  dsn: "host=postgres port=5432 user=root password=root dbname=p9_platform sslmode=disable"
+
+# 对外 gRPC。改完需重启。
+rpc:
+  listen_on: 0.0.0.0:19002

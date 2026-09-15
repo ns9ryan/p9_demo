@@ -113,7 +113,7 @@ var (
 	// OperatorLanguageAllocationColumns holds the columns for the "operator_language_allocation" table.
 	OperatorLanguageAllocationColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "主键ID", SchemaType: map[string]string{"postgres": "bigint"}},
-		{Name: "language_code", Type: field.TypeString, Size: 35, Comment: "系统语言唯一业务编码"},
+		{Name: "language_code", Type: field.TypeString, Size: 16, Comment: "系统语言唯一业务编码"},
 		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间", SchemaType: map[string]string{"postgres": "timestamptz(3)"}},
 		{Name: "operator_id", Type: field.TypeInt64, Comment: "所属 operator 本地主键", SchemaType: map[string]string{"postgres": "bigint"}},
 	}

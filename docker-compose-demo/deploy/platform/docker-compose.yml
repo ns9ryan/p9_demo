@@ -39,6 +39,55 @@ services:
     networks:
       - p9-platform-network
 
+  minio:
+    image: minio/minio:latest
+    container_name: platform-minio
+    restart: always
+    ports:
+      - "9200:9000"   # S3 API（与 oss 配置一致）
+      - "9201:9001"   # Web Console
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_platform_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://127.0.0.1:9000/minio/health/live || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - p9-platform-network
+
+  # 首次启动创建公共桶 oss-bucket
+  minio-init:
+    image: minio/mc:latest
+    container_name: platform-minio-init
+    depends_on:
+      minio:
+        condition: service_started
+    entrypoint: >
+      /bin/sh -c "
+      set -e;
+      for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20; do
+        mc alias set local http://minio:9000 $${MINIO_ROOT_USER:-minioadmin} $${MINIO_ROOT_PASSWORD:-minioadmin} && break;
+        echo waiting for minio...;
+        sleep 2;
+      done;
+      mc mb -p local/oss-bucket || true;
+      mc anonymous set download local/oss-bucket || true;
+      mc ls local;
+      echo minio-init done;
+      "
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+    networks:
+      - p9-platform-network
+    restart: "no"
+
   core-rpc:
     image: ${DOCKER_REPO:-192.168.0.15:5000/p9}/core-rpc:${VERSION:-1.0.0}
     container_name: platform-core-rpc
@@ -118,9 +167,76 @@ services:
     networks:
       - p9-platform-network
 
+  integration-rpc:
+    image: ${DOCKER_REPO:-192.168.0.15:5000/p9}/integration-rpc:${VERSION:-1.0.0}
+    container_name: integration-rpc
+    restart: always
+    ports:
+      - "19005:19005"
+    command: ["./integration_rpc", "-f", "etc/integration.yaml"]
+    volumes:
+      - ./etc/integration/integration-rpc.yaml:/app/etc/integration.yaml:ro
+      - ./etc/integration/assets:/app/assets:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - p9-platform-network
+
+  integration-api:
+    image: ${DOCKER_REPO:-192.168.0.15:5000/p9}/integration-api:${VERSION:-1.0.0}
+    container_name: integration-api
+    restart: always
+    ports:
+      - "18005:18005"
+    volumes:
+      - ./etc/integration/integration-api.yaml:/app/etc/integration.yaml:ro
+    depends_on:
+      - core-rpc
+      - integration-rpc
+    networks:
+      - p9-platform-network
+
+  oss-rpc:
+    image: ${DOCKER_REPO:-192.168.0.15:5000/p9}/oss-rpc:${VERSION:-1.0.0}
+    container_name: oss-rpc
+    restart: always
+    ports:
+      - "19002:19002"
+    volumes:
+      - ./etc/oss/oss-rpc.yaml:/app/etc/oss.yaml:ro
+      - ./etc/oss/init_default_settings.yaml:/app/etc/init_default_settings.yaml:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_started
+      minio-init:
+        condition: service_completed_successfully
+    networks:
+      - p9-platform-network
+
+  oss-api:
+    image: ${DOCKER_REPO:-192.168.0.15:5000/p9}/oss-api:${VERSION:-1.0.0}
+    container_name: oss-api
+    restart: always
+    ports:
+      - "18002:18002"
+    volumes:
+      - ./etc/oss/oss-api.yaml:/app/etc/oss.yaml:ro
+    depends_on:
+      - core-rpc
+      - oss-rpc
+      - minio
+    networks:
+      - p9-platform-network
+
 volumes:
   postgres_platform_data:
   redis_platform_data:
+  minio_platform_data:
 
 networks:
   p9-platform-network:

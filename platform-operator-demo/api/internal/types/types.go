@@ -75,6 +75,13 @@ type DeleteOperatorDomainRequest struct {
 type DeleteOperatorDomainResponse struct {
 }
 
+type DeleteOperatorRequest struct {
+	Id int64 `json:"id" validate:"required,gt=0"`
+}
+
+type DeleteOperatorResponse struct {
+}
+
 type GetOperatorDomainRequest struct {
 	Id int64 `form:"id" validate:"required,gt=0"`
 }

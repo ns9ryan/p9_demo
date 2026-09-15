@@ -111,6 +111,13 @@ type (
 	}
 	// 发布分站响应
 	PublishOperatorResponse  {}
+	// 删除分站请求
+	DeleteOperatorRequest {
+		// 分站ID
+		Id int64 `json:"id" validate:"required,gt=0"`
+	}
+	// 删除分站响应
+	DeleteOperatorResponse  {}
 )
 
 @server (
@@ -142,5 +149,9 @@ service platform_operator {
 	// 发布分站
 	@handler PublishOperator
 	post /publish (PublishOperatorRequest) returns (PublishOperatorResponse)
+
+	// 删除分站
+	@handler DeleteOperator
+	post /delete (DeleteOperatorRequest) returns (DeleteOperatorResponse)
 }
 

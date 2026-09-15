@@ -27,6 +27,7 @@ func menuI18n() []*coreclient.I18NItem {
 	addI18n(&out, i18n.GroupMenu, "menu.route.operatorCreate", "创建分站", "建立分站", "Create operator")
 	addI18n(&out, i18n.GroupMenu, "menu.route.operatorUpdate", "编辑分站", "編輯分站", "Edit operator")
 	addI18n(&out, i18n.GroupMenu, "menu.route.operatorPublish", "发布分站", "發布分站", "Publish operator")
+	addI18n(&out, i18n.GroupMenu, "menu.route.operatorDelete", "删除分站", "刪除分站", "Delete operator")
 
 	// 域名管理
 	addI18n(&out, i18n.GroupMenu, "menu.route.operatorDomain", "域名管理", "網域管理", "Domain management")
@@ -58,6 +59,7 @@ func apiI18n() []*coreclient.I18NItem {
 	addI18n(&out, i18n.GroupAPI, "api.operatorList", "分站列表", "分站列表", "Operator list")
 	addI18n(&out, i18n.GroupAPI, "api.operatorComplete", "完成分站创建", "完成分站建立", "Complete operator creation")
 	addI18n(&out, i18n.GroupAPI, "api.operatorPublish", "发布分站", "發布分站", "Publish operator")
+	addI18n(&out, i18n.GroupAPI, "api.operatorDelete", "删除分站", "刪除分站", "Delete operator")
 
 	// 分站档案
 	addI18n(&out, i18n.GroupAPI, "api.operatorProfileCreate", "创建分站档案", "建立分站檔案", "Create operator profile")

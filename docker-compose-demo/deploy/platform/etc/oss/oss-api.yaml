@@ -1,0 +1,52 @@
+# HTTP。镜像入口：./oss_api -f etc/oss.yaml
+# 空 -f 读 etcd（结构与本文件相同）。改本文件需重启。
+# 未配 oss_rpc.endpoints 时只上传对象（common/oss），不写档案。
+# 无默认服务商时上传和当前生效配置都走本文件（或 etcd）的 oss。
+
+port: "18002"
+
+# 浏览器跨域。'*' 允许全部 Origin。
+cros_conf:
+  address: '*'
+
+# 进程级上传规则，不进 Provider。单位 MB。
+upload:
+  max_size_mb: 32              # POST /file/upload 单文件上限
+  multipart_memory_mb: 32      # multipart 内存阈值，超出落临时文件
+  presign_max_size_mb: 2048    # 预签名直传上限
+  presign_ttl: 600             # 预签名 PUT 有效秒数
+  allowed_extensions:          # 空或不配 = 允许全部后缀
+    - jpg
+    - png
+  # 请求未带 scene 时使用，必须出现在下面 scenes。
+  default_scene: public
+  # 业务场景：scene → { visibility: public|private }。不要写桶名。
+  # 运行时对齐到 oss.buckets 里同 mode 的桶。未列出的 scene 请求失败。
+  scenes:
+    public:
+      visibility: public
+
+# 存储驱动。未配 oss_rpc 时本进程直连；配了则档案/服务商走 RPC。
+oss:
+  driver: s3                   # s3 / minio
+  endpoint: "http://minio:9000"           # 容器内网 S3 API
+  file_url: "http://192.168.0.15:9200"    # 浏览器/外网访问（宿主机映射端口）
+  access_key: minioadmin
+  secret_key: minioadmin
+  path_style: true             # MinIO 一般为 true
+  # region: default            # AWS 需真实 region
+  buckets:
+    oss-bucket:
+      mode: public
+
+# JWT + Casbin：p9 core CheckToken/Enforce；启动 RegisterCatalog。不配 endpoints 则不校验。
+core_rpc:
+  endpoints:
+    - platform-core-rpc:19000
+  timeout: 10000
+
+# 档案 / 服务商。不配则退化成纯对象存储。
+oss_rpc:
+  endpoints:
+    - oss-rpc:19002
+  timeout: 10000

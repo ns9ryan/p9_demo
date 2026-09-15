@@ -1,0 +1,29 @@
+# 仓库根目录：go run ./api
+# 本目录：go run . -f etc/integration.yaml
+Name: integration-api
+Host: 0.0.0.0
+Port: 18005
+Timeout: 30000 # 毫秒，需覆盖 RPC 查 IP 的耗时
+Mode: dev # 本地开放 /swagger；线上用 pro（或不写，默认 pro）
+
+Log:
+  Mode: file
+  Path: logs
+  Stat: false
+
+CROSConf:
+  Address: '*'
+
+# 本地直连 rpc ListenOn（与 core / oss 一致）。生产可改成 Etcd。
+IntegrationRpc:
+  Endpoints:
+    - integration-rpc:19005
+  NonBlock: true
+  Timeout: 30000
+
+# Core RPC配置
+CoreRpc:
+  Endpoints:
+    - platform-core-rpc:19000   # Core RPC地址
+  NonBlock: true                # 非阻塞连接
+  Timeout: 10000                # 请求超时时间, 毫秒

@@ -108,6 +108,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Handler: operator.CreateOperatorHandler(serverCtx),
 				},
 				{
+					Method:  http.MethodPost,
+					Path:    "/delete",
+					Handler: operator.DeleteOperatorHandler(serverCtx),
+				},
+				{
 					Method:  http.MethodGet,
 					Path:    "/get",
 					Handler: operator.GetOperatorHandler(serverCtx),
