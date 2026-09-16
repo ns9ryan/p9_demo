@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package node_dispatch_ping;
+
+option go_package = "oa.98ent.com/p9/node-dispatch/rpc/pb/nodedispatchrpc/pingpb";
+
+// Ping 请求
+message PingRequest {}
+
+// Ping 响应
+message PingResponse {}

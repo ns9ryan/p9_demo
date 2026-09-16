@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package node_dispatch;
+
+option go_package = "oa.98ent.com/p9/node-dispatch/rpc/pb/nodedispatchrpc";
+
+import "types/node_dispatch_ping.proto";
+
+// Ping 服务
+service PingService {
+  // Ping
+  rpc Ping(node_dispatch_ping.PingRequest) returns (node_dispatch_ping.PingResponse);
+}
