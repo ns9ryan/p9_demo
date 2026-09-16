@@ -11,6 +11,9 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	callbackpb "oa.98ent.com/p9/node-dispatch/rpc/pb/nodedispatchrpc/callbackpb"
+	dispatchpb "oa.98ent.com/p9/node-dispatch/rpc/pb/nodedispatchrpc/dispatchpb"
+	nodepb "oa.98ent.com/p9/node-dispatch/rpc/pb/nodedispatchrpc/nodepb"
 	pingpb "oa.98ent.com/p9/node-dispatch/rpc/pb/nodedispatchrpc/pingpb"
 )
 
@@ -121,6 +124,571 @@ var PingService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Ping",
 			Handler:    _PingService_Ping_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "node_dispatch.proto",
+}
+
+const (
+	NodeService_Create_FullMethodName          = "/node_dispatch.NodeService/Create"
+	NodeService_Update_FullMethodName          = "/node_dispatch.NodeService/Update"
+	NodeService_Get_FullMethodName             = "/node_dispatch.NodeService/Get"
+	NodeService_List_FullMethodName            = "/node_dispatch.NodeService/List"
+	NodeService_ResetAuthSecret_FullMethodName = "/node_dispatch.NodeService/ResetAuthSecret"
+)
+
+// NodeServiceClient is the client API for NodeService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 节点服务
+type NodeServiceClient interface {
+	// 创建节点
+	Create(ctx context.Context, in *nodepb.CreateNodeRequest, opts ...grpc.CallOption) (*nodepb.CreateNodeResponse, error)
+	// 修改节点
+	Update(ctx context.Context, in *nodepb.UpdateNodeRequest, opts ...grpc.CallOption) (*nodepb.UpdateNodeResponse, error)
+	// 获取节点
+	Get(ctx context.Context, in *nodepb.GetNodeRequest, opts ...grpc.CallOption) (*nodepb.GetNodeResponse, error)
+	// 获取节点列表
+	List(ctx context.Context, in *nodepb.ListNodesRequest, opts ...grpc.CallOption) (*nodepb.ListNodesResponse, error)
+	// 重置节点认证密钥
+	ResetAuthSecret(ctx context.Context, in *nodepb.ResetNodeAuthSecretRequest, opts ...grpc.CallOption) (*nodepb.ResetNodeAuthSecretResponse, error)
+}
+
+type nodeServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewNodeServiceClient(cc grpc.ClientConnInterface) NodeServiceClient {
+	return &nodeServiceClient{cc}
+}
+
+func (c *nodeServiceClient) Create(ctx context.Context, in *nodepb.CreateNodeRequest, opts ...grpc.CallOption) (*nodepb.CreateNodeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(nodepb.CreateNodeResponse)
+	err := c.cc.Invoke(ctx, NodeService_Create_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *nodeServiceClient) Update(ctx context.Context, in *nodepb.UpdateNodeRequest, opts ...grpc.CallOption) (*nodepb.UpdateNodeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(nodepb.UpdateNodeResponse)
+	err := c.cc.Invoke(ctx, NodeService_Update_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *nodeServiceClient) Get(ctx context.Context, in *nodepb.GetNodeRequest, opts ...grpc.CallOption) (*nodepb.GetNodeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(nodepb.GetNodeResponse)
+	err := c.cc.Invoke(ctx, NodeService_Get_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *nodeServiceClient) List(ctx context.Context, in *nodepb.ListNodesRequest, opts ...grpc.CallOption) (*nodepb.ListNodesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(nodepb.ListNodesResponse)
+	err := c.cc.Invoke(ctx, NodeService_List_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *nodeServiceClient) ResetAuthSecret(ctx context.Context, in *nodepb.ResetNodeAuthSecretRequest, opts ...grpc.CallOption) (*nodepb.ResetNodeAuthSecretResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(nodepb.ResetNodeAuthSecretResponse)
+	err := c.cc.Invoke(ctx, NodeService_ResetAuthSecret_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// NodeServiceServer is the server API for NodeService service.
+// All implementations must embed UnimplementedNodeServiceServer
+// for forward compatibility.
+//
+// 节点服务
+type NodeServiceServer interface {
+	// 创建节点
+	Create(context.Context, *nodepb.CreateNodeRequest) (*nodepb.CreateNodeResponse, error)
+	// 修改节点
+	Update(context.Context, *nodepb.UpdateNodeRequest) (*nodepb.UpdateNodeResponse, error)
+	// 获取节点
+	Get(context.Context, *nodepb.GetNodeRequest) (*nodepb.GetNodeResponse, error)
+	// 获取节点列表
+	List(context.Context, *nodepb.ListNodesRequest) (*nodepb.ListNodesResponse, error)
+	// 重置节点认证密钥
+	ResetAuthSecret(context.Context, *nodepb.ResetNodeAuthSecretRequest) (*nodepb.ResetNodeAuthSecretResponse, error)
+	mustEmbedUnimplementedNodeServiceServer()
+}
+
+// UnimplementedNodeServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedNodeServiceServer struct{}
+
+func (UnimplementedNodeServiceServer) Create(context.Context, *nodepb.CreateNodeRequest) (*nodepb.CreateNodeResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
+}
+func (UnimplementedNodeServiceServer) Update(context.Context, *nodepb.UpdateNodeRequest) (*nodepb.UpdateNodeResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
+}
+func (UnimplementedNodeServiceServer) Get(context.Context, *nodepb.GetNodeRequest) (*nodepb.GetNodeResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedNodeServiceServer) List(context.Context, *nodepb.ListNodesRequest) (*nodepb.ListNodesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedNodeServiceServer) ResetAuthSecret(context.Context, *nodepb.ResetNodeAuthSecretRequest) (*nodepb.ResetNodeAuthSecretResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ResetAuthSecret not implemented")
+}
+func (UnimplementedNodeServiceServer) mustEmbedUnimplementedNodeServiceServer() {}
+func (UnimplementedNodeServiceServer) testEmbeddedByValue()                     {}
+
+// UnsafeNodeServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to NodeServiceServer will
+// result in compilation errors.
+type UnsafeNodeServiceServer interface {
+	mustEmbedUnimplementedNodeServiceServer()
+}
+
+func RegisterNodeServiceServer(s grpc.ServiceRegistrar, srv NodeServiceServer) {
+	// If the following call panics, it indicates UnimplementedNodeServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&NodeService_ServiceDesc, srv)
+}
+
+func _NodeService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(nodepb.CreateNodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NodeServiceServer).Create(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: NodeService_Create_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NodeServiceServer).Create(ctx, req.(*nodepb.CreateNodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _NodeService_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(nodepb.UpdateNodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NodeServiceServer).Update(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: NodeService_Update_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NodeServiceServer).Update(ctx, req.(*nodepb.UpdateNodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _NodeService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(nodepb.GetNodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NodeServiceServer).Get(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: NodeService_Get_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NodeServiceServer).Get(ctx, req.(*nodepb.GetNodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _NodeService_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(nodepb.ListNodesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NodeServiceServer).List(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: NodeService_List_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NodeServiceServer).List(ctx, req.(*nodepb.ListNodesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _NodeService_ResetAuthSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(nodepb.ResetNodeAuthSecretRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NodeServiceServer).ResetAuthSecret(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: NodeService_ResetAuthSecret_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NodeServiceServer).ResetAuthSecret(ctx, req.(*nodepb.ResetNodeAuthSecretRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// NodeService_ServiceDesc is the grpc.ServiceDesc for NodeService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var NodeService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "node_dispatch.NodeService",
+	HandlerType: (*NodeServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Create",
+			Handler:    _NodeService_Create_Handler,
+		},
+		{
+			MethodName: "Update",
+			Handler:    _NodeService_Update_Handler,
+		},
+		{
+			MethodName: "Get",
+			Handler:    _NodeService_Get_Handler,
+		},
+		{
+			MethodName: "List",
+			Handler:    _NodeService_List_Handler,
+		},
+		{
+			MethodName: "ResetAuthSecret",
+			Handler:    _NodeService_ResetAuthSecret_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "node_dispatch.proto",
+}
+
+const (
+	DispatchService_SubmitTask_FullMethodName = "/node_dispatch.DispatchService/SubmitTask"
+	DispatchService_GetTask_FullMethodName    = "/node_dispatch.DispatchService/GetTask"
+	DispatchService_ListTask_FullMethodName   = "/node_dispatch.DispatchService/ListTask"
+)
+
+// DispatchServiceClient is the client API for DispatchService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 调度服务
+type DispatchServiceClient interface {
+	// 提交调度任务
+	SubmitTask(ctx context.Context, in *dispatchpb.SubmitTaskRequest, opts ...grpc.CallOption) (*dispatchpb.SubmitTaskResponse, error)
+	// 获取调度任务
+	GetTask(ctx context.Context, in *dispatchpb.GetTaskRequest, opts ...grpc.CallOption) (*dispatchpb.GetTaskResponse, error)
+	// 获取调度任务列表
+	ListTask(ctx context.Context, in *dispatchpb.ListTasksRequest, opts ...grpc.CallOption) (*dispatchpb.ListTasksResponse, error)
+}
+
+type dispatchServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewDispatchServiceClient(cc grpc.ClientConnInterface) DispatchServiceClient {
+	return &dispatchServiceClient{cc}
+}
+
+func (c *dispatchServiceClient) SubmitTask(ctx context.Context, in *dispatchpb.SubmitTaskRequest, opts ...grpc.CallOption) (*dispatchpb.SubmitTaskResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(dispatchpb.SubmitTaskResponse)
+	err := c.cc.Invoke(ctx, DispatchService_SubmitTask_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dispatchServiceClient) GetTask(ctx context.Context, in *dispatchpb.GetTaskRequest, opts ...grpc.CallOption) (*dispatchpb.GetTaskResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(dispatchpb.GetTaskResponse)
+	err := c.cc.Invoke(ctx, DispatchService_GetTask_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dispatchServiceClient) ListTask(ctx context.Context, in *dispatchpb.ListTasksRequest, opts ...grpc.CallOption) (*dispatchpb.ListTasksResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(dispatchpb.ListTasksResponse)
+	err := c.cc.Invoke(ctx, DispatchService_ListTask_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// DispatchServiceServer is the server API for DispatchService service.
+// All implementations must embed UnimplementedDispatchServiceServer
+// for forward compatibility.
+//
+// 调度服务
+type DispatchServiceServer interface {
+	// 提交调度任务
+	SubmitTask(context.Context, *dispatchpb.SubmitTaskRequest) (*dispatchpb.SubmitTaskResponse, error)
+	// 获取调度任务
+	GetTask(context.Context, *dispatchpb.GetTaskRequest) (*dispatchpb.GetTaskResponse, error)
+	// 获取调度任务列表
+	ListTask(context.Context, *dispatchpb.ListTasksRequest) (*dispatchpb.ListTasksResponse, error)
+	mustEmbedUnimplementedDispatchServiceServer()
+}
+
+// UnimplementedDispatchServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedDispatchServiceServer struct{}
+
+func (UnimplementedDispatchServiceServer) SubmitTask(context.Context, *dispatchpb.SubmitTaskRequest) (*dispatchpb.SubmitTaskResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SubmitTask not implemented")
+}
+func (UnimplementedDispatchServiceServer) GetTask(context.Context, *dispatchpb.GetTaskRequest) (*dispatchpb.GetTaskResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetTask not implemented")
+}
+func (UnimplementedDispatchServiceServer) ListTask(context.Context, *dispatchpb.ListTasksRequest) (*dispatchpb.ListTasksResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListTask not implemented")
+}
+func (UnimplementedDispatchServiceServer) mustEmbedUnimplementedDispatchServiceServer() {}
+func (UnimplementedDispatchServiceServer) testEmbeddedByValue()                         {}
+
+// UnsafeDispatchServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to DispatchServiceServer will
+// result in compilation errors.
+type UnsafeDispatchServiceServer interface {
+	mustEmbedUnimplementedDispatchServiceServer()
+}
+
+func RegisterDispatchServiceServer(s grpc.ServiceRegistrar, srv DispatchServiceServer) {
+	// If the following call panics, it indicates UnimplementedDispatchServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&DispatchService_ServiceDesc, srv)
+}
+
+func _DispatchService_SubmitTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(dispatchpb.SubmitTaskRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DispatchServiceServer).SubmitTask(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DispatchService_SubmitTask_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DispatchServiceServer).SubmitTask(ctx, req.(*dispatchpb.SubmitTaskRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DispatchService_GetTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(dispatchpb.GetTaskRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DispatchServiceServer).GetTask(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DispatchService_GetTask_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DispatchServiceServer).GetTask(ctx, req.(*dispatchpb.GetTaskRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DispatchService_ListTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(dispatchpb.ListTasksRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DispatchServiceServer).ListTask(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DispatchService_ListTask_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DispatchServiceServer).ListTask(ctx, req.(*dispatchpb.ListTasksRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// DispatchService_ServiceDesc is the grpc.ServiceDesc for DispatchService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var DispatchService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "node_dispatch.DispatchService",
+	HandlerType: (*DispatchServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "SubmitTask",
+			Handler:    _DispatchService_SubmitTask_Handler,
+		},
+		{
+			MethodName: "GetTask",
+			Handler:    _DispatchService_GetTask_Handler,
+		},
+		{
+			MethodName: "ListTask",
+			Handler:    _DispatchService_ListTask_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "node_dispatch.proto",
+}
+
+const (
+	DispatchCallbackService_TaskResult_FullMethodName = "/node_dispatch.DispatchCallbackService/TaskResult"
+)
+
+// DispatchCallbackServiceClient is the client API for DispatchCallbackService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 调度回调服务
+type DispatchCallbackServiceClient interface {
+	// 回调任务结果
+	TaskResult(ctx context.Context, in *callbackpb.TaskResultRequest, opts ...grpc.CallOption) (*callbackpb.TaskResultResponse, error)
+}
+
+type dispatchCallbackServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewDispatchCallbackServiceClient(cc grpc.ClientConnInterface) DispatchCallbackServiceClient {
+	return &dispatchCallbackServiceClient{cc}
+}
+
+func (c *dispatchCallbackServiceClient) TaskResult(ctx context.Context, in *callbackpb.TaskResultRequest, opts ...grpc.CallOption) (*callbackpb.TaskResultResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(callbackpb.TaskResultResponse)
+	err := c.cc.Invoke(ctx, DispatchCallbackService_TaskResult_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// DispatchCallbackServiceServer is the server API for DispatchCallbackService service.
+// All implementations must embed UnimplementedDispatchCallbackServiceServer
+// for forward compatibility.
+//
+// 调度回调服务
+type DispatchCallbackServiceServer interface {
+	// 回调任务结果
+	TaskResult(context.Context, *callbackpb.TaskResultRequest) (*callbackpb.TaskResultResponse, error)
+	mustEmbedUnimplementedDispatchCallbackServiceServer()
+}
+
+// UnimplementedDispatchCallbackServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedDispatchCallbackServiceServer struct{}
+
+func (UnimplementedDispatchCallbackServiceServer) TaskResult(context.Context, *callbackpb.TaskResultRequest) (*callbackpb.TaskResultResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method TaskResult not implemented")
+}
+func (UnimplementedDispatchCallbackServiceServer) mustEmbedUnimplementedDispatchCallbackServiceServer() {
+}
+func (UnimplementedDispatchCallbackServiceServer) testEmbeddedByValue() {}
+
+// UnsafeDispatchCallbackServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to DispatchCallbackServiceServer will
+// result in compilation errors.
+type UnsafeDispatchCallbackServiceServer interface {
+	mustEmbedUnimplementedDispatchCallbackServiceServer()
+}
+
+func RegisterDispatchCallbackServiceServer(s grpc.ServiceRegistrar, srv DispatchCallbackServiceServer) {
+	// If the following call panics, it indicates UnimplementedDispatchCallbackServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&DispatchCallbackService_ServiceDesc, srv)
+}
+
+func _DispatchCallbackService_TaskResult_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(callbackpb.TaskResultRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DispatchCallbackServiceServer).TaskResult(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DispatchCallbackService_TaskResult_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DispatchCallbackServiceServer).TaskResult(ctx, req.(*callbackpb.TaskResultRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// DispatchCallbackService_ServiceDesc is the grpc.ServiceDesc for DispatchCallbackService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var DispatchCallbackService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "node_dispatch.DispatchCallbackService",
+	HandlerType: (*DispatchCallbackServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "TaskResult",
+			Handler:    _DispatchCallbackService_TaskResult_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

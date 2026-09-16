@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package node_dispatch_dispatch;
+
+option go_package = "oa.98ent.com/p9/node-dispatch/rpc/pb/nodedispatchrpc/dispatchpb";
+
+// 调度任务信息
+message TaskInfo {
+  // 任务编号
+  string task_no = 1;
+  // 任务类型
+  string task_type = 2;
+  // 任务状态: 1待执行, 2执行中, 3成功, 4失败
+  int64 status = 3;
+  // 执行节点编码
+  string node_code = 4;
+  // 创建时间, Unix毫秒时间戳
+  int64 created_at = 5;
+  // 更新时间, Unix毫秒时间戳
+  int64 updated_at = 6;
+}
+
+// 调度任务执行信息
+message TaskRunInfo {
+  // 执行节点编码
+  string node_code = 1;
+  // 执行状态: 1待执行, 2执行中, 3成功, 4失败
+  int64 status = 2;
+  // 执行结果, JSON数据
+  optional string result = 3;
+  // 执行失败原因
+  optional string error_message = 4;
+  // 开始执行时间, Unix毫秒时间戳
+  optional int64 started_at = 5;
+  // 执行结束时间, Unix毫秒时间戳
+  optional int64 finished_at = 6;
+}
+
+// 提交调度任务请求
+message SubmitTaskRequest {
+  // 全局唯一任务编号
+  string task_no = 1;
+  // 任务类型
+  string task_type = 2;
+  // 执行节点编码
+  string node_code = 3;
+  // 任务参数, JSON数据
+  string params = 4;
+}
+
+// 提交调度任务响应
+message SubmitTaskResponse {}
+
+// 获取调度任务请求
+message GetTaskRequest {
+  // 任务编号
+  string task_no = 1;
+}
+
+// 获取调度任务响应
+message GetTaskResponse {
+  // 调度任务信息
+  TaskInfo task = 1;
+  // 任务参数, JSON数据
+  string params = 2;
+  // 执行记录
+  repeated TaskRunInfo runs = 3;
+}
+
+// 获取调度任务列表请求
+message ListTasksRequest {
+  // 页码, 从1开始
+  int64 page = 1;
+  // 每页数量
+  int64 page_size = 2;
+  // 搜索关键字, 匹配任务编号
+  optional string keyword = 3;
+  // 任务类型
+  optional string task_type = 4;
+  // 任务状态: 1待执行, 2执行中, 3成功, 4失败
+  optional int64 status = 5;
+  // 执行节点编码
+  optional string node_code = 6;
+}
+
+// 获取调度任务列表响应
+message ListTasksResponse {
+  // 数据总数
+  int64 total = 1;
+  // 调度任务列表
+  repeated TaskInfo list = 2;
+}

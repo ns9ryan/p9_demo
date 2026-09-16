@@ -5,9 +5,48 @@ package node_dispatch;
 option go_package = "oa.98ent.com/p9/node-dispatch/rpc/pb/nodedispatchrpc";
 
 import "types/node_dispatch_ping.proto";
+import "types/node_dispatch_node.proto";
+import "types/node_dispatch_dispatch.proto";
+import "types/node_dispatch_callback.proto";
 
 // Ping 服务
 service PingService {
   // Ping
   rpc Ping(node_dispatch_ping.PingRequest) returns (node_dispatch_ping.PingResponse);
+}
+
+// 节点服务
+service NodeService {
+  // 创建节点
+  rpc Create(node_dispatch_node.CreateNodeRequest) returns (node_dispatch_node.CreateNodeResponse);
+
+  // 修改节点
+  rpc Update(node_dispatch_node.UpdateNodeRequest) returns (node_dispatch_node.UpdateNodeResponse);
+
+  // 获取节点
+  rpc Get(node_dispatch_node.GetNodeRequest) returns (node_dispatch_node.GetNodeResponse);
+
+  // 获取节点列表
+  rpc List(node_dispatch_node.ListNodesRequest) returns (node_dispatch_node.ListNodesResponse);
+
+  // 重置节点认证密钥
+  rpc ResetAuthSecret(node_dispatch_node.ResetNodeAuthSecretRequest) returns (node_dispatch_node.ResetNodeAuthSecretResponse);
+}
+
+// 调度服务
+service DispatchService {
+  // 提交调度任务
+  rpc SubmitTask(node_dispatch_dispatch.SubmitTaskRequest) returns (node_dispatch_dispatch.SubmitTaskResponse);
+
+  // 获取调度任务
+  rpc GetTask(node_dispatch_dispatch.GetTaskRequest) returns (node_dispatch_dispatch.GetTaskResponse);
+
+  // 获取调度任务列表
+  rpc ListTask(node_dispatch_dispatch.ListTasksRequest) returns (node_dispatch_dispatch.ListTasksResponse);
+}
+
+// 调度回调服务
+service DispatchCallbackService {
+  // 回调任务结果
+  rpc TaskResult(node_dispatch_callback.TaskResultRequest) returns (node_dispatch_callback.TaskResultResponse);
 }

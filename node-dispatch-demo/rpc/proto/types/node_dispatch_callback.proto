@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package node_dispatch_callback;
+
+option go_package = "oa.98ent.com/p9/node-dispatch/rpc/pb/nodedispatchrpc/callbackpb";
+
+// 任务结果回调请求
+message TaskResultRequest {
+  // 全局唯一任务编号
+  string task_no = 1;
+  // 任务最终状态: 3成功, 4失败
+  int64 status = 2;
+  // 执行结果, JSON数据
+  optional string result = 3;
+  // 执行失败原因
+  optional string error_message = 4;
+  // 执行结束时间, Unix毫秒时间戳
+  int64 finished_at = 5;
+}
+
+// 任务结果回调响应
+message TaskResultResponse {}

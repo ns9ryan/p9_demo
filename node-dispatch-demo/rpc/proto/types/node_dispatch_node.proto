@@ -1,0 +1,108 @@
+syntax = "proto3";
+
+package node_dispatch_node;
+
+option go_package = "oa.98ent.com/p9/node-dispatch/rpc/pb/nodedispatchrpc/nodepb";
+
+// 节点信息
+message NodeInfo {
+  // 节点ID
+  int64 id = 1;
+  // 节点业务编码
+  string code = 2;
+  // 节点名称
+  string name = 3;
+  // 节点状态: 1启用, 2停用
+  int64 status = 4;
+  // 是否在线
+  bool online = 5;
+  // 最近一次活动时间, Unix毫秒时间戳
+  optional int64 last_seen_at = 6;
+  // 运维备注
+  optional string remark = 7;
+  // 创建时间, Unix毫秒时间戳
+  int64 created_at = 8;
+  // 更新时间, Unix毫秒时间戳
+  int64 updated_at = 9;
+}
+
+// 创建节点请求
+message CreateNodeRequest {
+  // 节点名称
+  string name = 1;
+  // 节点状态: 1启用, 2停用
+  optional int64 status = 2;
+  // 运维备注
+  optional string remark = 3;
+}
+
+// 创建节点响应
+message CreateNodeResponse {
+  // 节点ID
+  int64 id = 1;
+  // 节点业务编码
+  string code = 2;
+  // 节点认证密钥, 仅创建时返回
+  string auth_secret = 3;
+}
+
+// 修改节点请求
+message UpdateNodeRequest {
+  // 节点ID
+  int64 id = 1;
+  // 节点名称
+  optional string name = 2;
+  // 节点状态: 1启用, 2停用
+  optional int64 status = 3;
+  // 运维备注
+  optional string remark = 4;
+}
+
+// 修改节点响应
+message UpdateNodeResponse {}
+
+// 获取节点请求
+message GetNodeRequest {
+  // 节点ID
+  int64 id = 1;
+}
+
+// 获取节点响应
+message GetNodeResponse {
+  // 节点信息
+  NodeInfo node = 1;
+}
+
+// 获取节点列表请求
+message ListNodesRequest {
+  // 页码, 从1开始
+  int64 page = 1;
+  // 每页数量
+  int64 page_size = 2;
+  // 搜索关键字, 匹配节点编码或名称
+  optional string keyword = 3;
+  // 节点状态: 1启用, 2停用
+  optional int64 status = 4;
+  // 是否在线
+  optional bool online = 5;
+}
+
+// 获取节点列表响应
+message ListNodesResponse {
+  // 数据总数
+  int64 total = 1;
+  // 节点列表
+  repeated NodeInfo list = 2;
+}
+
+// 重置节点认证密钥请求
+message ResetNodeAuthSecretRequest {
+  // 节点ID
+  int64 id = 1;
+}
+
+// 重置节点认证密钥响应
+message ResetNodeAuthSecretResponse {
+  // 新节点认证密钥, 仅本次返回
+  string auth_secret = 1;
+}
