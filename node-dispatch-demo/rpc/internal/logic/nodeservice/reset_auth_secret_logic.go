@@ -40,16 +40,17 @@ func (l *ResetAuthSecretLogic) ResetAuthSecret(in *nodepb.ResetNodeAuthSecretReq
 	}
 
 	// 更新节点认证密钥哈希
-	err = l.svcCtx.DB.Node.
+	data, err := l.svcCtx.DB.Node.
 		UpdateOneID(in.Id).
 		SetAuthSecretHash(authSecretHash). // 节点认证密钥哈希
-		Exec(l.ctx)
+		Save(l.ctx)
 	if err != nil {
 		l.Logger.Errorw("重置节点认证密钥失败", logx.Field("error", err.Error()))
 		return nil, err
 	}
 
-	// TODO Connection Manager 完成后主动断开当前节点连接, 强制使用新密钥重新认证
+	// 断开当前节点连接, 强制使用新密钥重新认证
+	l.svcCtx.Connections.Disconnect(data.Code)
 
 	// 返回新的节点认证密钥
 	return &nodepb.ResetNodeAuthSecretResponse{

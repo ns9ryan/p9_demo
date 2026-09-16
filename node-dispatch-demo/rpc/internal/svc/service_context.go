@@ -7,11 +7,13 @@ import (
 	"oa.98ent.com/p9/node-dispatch/rpc/ent"
 	_ "oa.98ent.com/p9/node-dispatch/rpc/ent/runtime"
 	"oa.98ent.com/p9/node-dispatch/rpc/internal/config"
+	"oa.98ent.com/p9/node-dispatch/rpc/internal/websocket"
 )
 
 type ServiceContext struct {
-	Config config.Config
-	DB     *ent.Client // Ent数据库客户端
+	Config      config.Config
+	DB          *ent.Client        // Ent数据库客户端
+	Connections *websocket.Manager // 节点WebSocket连接管理器
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -33,8 +35,12 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	// 创建Ent数据库客户端
 	db := ent.NewClient(entOpts...)
 
+	// 创建节点WebSocket连接管理器
+	connections := websocket.NewManager()
+
 	return &ServiceContext{
-		Config: c,
-		DB:     db,
+		Config:      c,
+		DB:          db,
+		Connections: connections,
 	}
 }

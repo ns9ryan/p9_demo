@@ -39,8 +39,8 @@ func (l *GetLogic) Get(in *nodepb.GetNodeRequest) (*nodepb.GetNodeResponse, erro
 		return nil, err
 	}
 
-	// TODO Connection Manager 完成后获取节点真实在线状态
-	online := false
+	// 获取节点在线状态
+	online := l.svcCtx.Connections.IsOnline(data.Code)
 
 	// 返回节点信息
 	return &nodepb.GetNodeResponse{
