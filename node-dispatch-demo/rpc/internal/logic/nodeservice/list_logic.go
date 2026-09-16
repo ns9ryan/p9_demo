@@ -23,9 +23,10 @@ func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {
 	}
 }
 
-// 获取节点列表
+// List 获取节点列表
 func (l *ListLogic) List(in *nodepb.ListNodesRequest) (*nodepb.ListNodesResponse, error) {
-	// todo: add your logic here and delete this line
+	// TODO Connection Manager 完成后实现节点在线状态获取及 online 筛选
+	// online 筛选必须在数据库分页前转换为节点编码条件, 保证 total 和分页结果正确
 
 	return &nodepb.ListNodesResponse{}, nil
 }

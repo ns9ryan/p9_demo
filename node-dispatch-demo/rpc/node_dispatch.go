@@ -5,6 +5,8 @@ import (
 	"fmt"
 
 	"oa.98ent.com/p9/node-dispatch/rpc/internal/config"
+	dispatchserviceServer "oa.98ent.com/p9/node-dispatch/rpc/internal/server/dispatchservice"
+	nodeserviceServer "oa.98ent.com/p9/node-dispatch/rpc/internal/server/nodeservice"
 	pingserviceServer "oa.98ent.com/p9/node-dispatch/rpc/internal/server/pingservice"
 	"oa.98ent.com/p9/node-dispatch/rpc/internal/svc"
 	"oa.98ent.com/p9/node-dispatch/rpc/pb/nodedispatchrpc"
@@ -33,6 +35,12 @@ func main() {
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
 		// Ping 服务
 		nodedispatchrpc.RegisterPingServiceServer(grpcServer, pingserviceServer.NewPingServiceServer(ctx))
+
+		// 节点服务
+		nodedispatchrpc.RegisterNodeServiceServer(grpcServer, nodeserviceServer.NewNodeServiceServer(ctx))
+
+		// 调度服务
+		nodedispatchrpc.RegisterDispatchServiceServer(grpcServer, dispatchserviceServer.NewDispatchServiceServer(ctx))
 
 		// 开发和测试环境额外开启服务反射
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
