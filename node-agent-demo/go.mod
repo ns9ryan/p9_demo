@@ -1,6 +1,6 @@
 module oa.98ent.com/p9/node-agent
 
-go 1.26.7
+go 1.26.0
 
 require (
 	github.com/coder/websocket v1.8.15

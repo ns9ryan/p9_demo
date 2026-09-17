@@ -92,11 +92,7 @@ func (s *Server) handleNode(w http.ResponseWriter, r *http.Request) {
 	// 升级为WebSocket连接
 	conn, err := coderws.Accept(w, r, nil)
 	if err != nil {
-		logger.Errorw(
-			"节点WebSocket握手失败",
-			logx.Field("node_code", data.Code),
-			logx.Field("error", err.Error()),
-		)
+		logger.Errorw("节点WebSocket握手失败", logx.Field("node_code", data.Code), logx.Field("error", err.Error()))
 		return
 	}
 
@@ -110,10 +106,7 @@ func (s *Server) handleNode(w http.ResponseWriter, r *http.Request) {
 	s.svcCtx.Connections.Register(connection)
 	defer s.svcCtx.Connections.Unregister(connection)
 
-	logger.Infow(
-		"节点WebSocket连接已建立",
-		logx.Field("node_code", data.Code),
-	)
+	logger.Infow("节点WebSocket连接已建立", logx.Field("node_code", data.Code))
 
 	// 持续读取节点消息
 	for {
