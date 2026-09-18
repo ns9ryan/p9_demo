@@ -101,5 +101,20 @@ func apis() []*coreclient.CreateApiReq {
 		// 代理子线路分配
 		{Path: "/admin/operator/agent-line-allocation/list", Method: http.MethodGet, Description: "api.agentLineAllocationList", ApiGroup: "agent_line_allocation", ServiceName: "platform-operator-api"},
 		{Path: "/admin/operator/agent-line-allocation/save", Method: http.MethodPost, Description: "api.agentLineAllocationSave", ApiGroup: "agent_line_allocation", ServiceName: "platform-operator-api"},
+
+		// 分站游戏分配
+		{Path: "/admin/operator/game-allocation/list", Method: http.MethodGet, Description: "api.operatorGameAllocationList", ApiGroup: "game_allocation", ServiceName: "platform-operator-api"},
+		{Path: "/admin/operator/game/list", Method: http.MethodGet, Description: "api.operatorGameList", ApiGroup: "game_allocation", ServiceName: "platform-operator-api"},
+		{Path: "/admin/operator/game/batch-create", Method: http.MethodPost, Description: "api.operatorGameBatchCreate", ApiGroup: "game_allocation", ServiceName: "platform-operator-api"},
+		{Path: "/admin/operator/game/batch-update-status", Method: http.MethodPost, Description: "api.operatorGameBatchUpdateStatus", ApiGroup: "game_allocation", ServiceName: "platform-operator-api"},
+		{Path: "/admin/operator/game-category/list", Method: http.MethodGet, Description: "api.operatorGameCategoryList", ApiGroup: "game_allocation", ServiceName: "platform-operator-api"},
+		{Path: "/admin/operator/game-category/batch-create", Method: http.MethodPost, Description: "api.operatorGameCategoryBatchCreate", ApiGroup: "game_allocation", ServiceName: "platform-operator-api"},
+		{Path: "/admin/operator/game-category/batch-update-status", Method: http.MethodPost, Description: "api.operatorGameCategoryBatchUpdateStatus", ApiGroup: "game_allocation", ServiceName: "platform-operator-api"},
+		{Path: "/admin/operator/game-provider/list", Method: http.MethodGet, Description: "api.operatorGameProviderList", ApiGroup: "game_allocation", ServiceName: "platform-operator-api"},
+		{Path: "/admin/operator/game-provider/batch-create", Method: http.MethodPost, Description: "api.operatorGameProviderBatchCreate", ApiGroup: "game_allocation", ServiceName: "platform-operator-api"},
+		{Path: "/admin/operator/game-provider/batch-update-status", Method: http.MethodPost, Description: "api.operatorGameProviderBatchUpdateStatus", ApiGroup: "game_allocation", ServiceName: "platform-operator-api"},
+		{Path: "/admin/operator/game-channel/list", Method: http.MethodGet, Description: "api.operatorGameChannelList", ApiGroup: "game_allocation", ServiceName: "platform-operator-api"},
+		{Path: "/admin/operator/game-channel/batch-create", Method: http.MethodPost, Description: "api.operatorGameChannelBatchCreate", ApiGroup: "game_allocation", ServiceName: "platform-operator-api"},
+		{Path: "/admin/operator/game-channel/batch-update-status", Method: http.MethodPost, Description: "api.operatorGameChannelBatchUpdateStatus", ApiGroup: "game_allocation", ServiceName: "platform-operator-api"},
 	}
 }

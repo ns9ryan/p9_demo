@@ -3,17 +3,17 @@ package game_sync
 import (
 	"context"
 	"fmt"
-	"log"
 	"time"
 
-	"oa.98ent.com/p9/platform-game/common/logger"
+	"github.com/zeromicro/go-zero/core/logx"
 	"oa.98ent.com/p9/platform-game/rpc/ent"
-	"oa.98ent.com/p9/platform-game/rpc/ent/game"
 	"oa.98ent.com/p9/platform-game/rpc/ent/gamecategory"
 	"oa.98ent.com/p9/platform-game/rpc/ent/gamechannel"
 	"oa.98ent.com/p9/platform-game/rpc/ent/gameprovider"
+	"oa.98ent.com/p9/platform-game/rpc/internal/config"
 	"oa.98ent.com/p9/platform-game/rpc/internal/constant"
 	"oa.98ent.com/p9/platform-game/rpc/internal/dao"
+	"oa.98ent.com/p9/platform-game/rpc/internal/locales"
 	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 	"oa.98ent.com/p9/platform-game/rpc/pb/vendors"
 )
@@ -23,30 +23,34 @@ import (
 // GameSyncService 游戏同步服务
 type GameSyncService struct {
 	DAOManager    *dao.Manager
+	config        config.Config
 	progressQueue *ProgressQueue
+	logx.Logger
 }
 
 // NewGameSyncService 创建游戏同步服务
-func NewGameSyncService(daoManager *dao.Manager) *GameSyncService {
+func NewGameSyncService(ctx context.Context, config config.Config, daoManager *dao.Manager) *GameSyncService {
 	return &GameSyncService{
 		DAOManager:    daoManager,
+		config:        config,
 		progressQueue: NewProgressQueue(daoManager),
+		Logger:        logx.WithContext(ctx),
 	}
 }
 
 // Preview 预检查游戏同步
 func (s *GameSyncService) Preview(ctx context.Context, client vendors.VendorGameServiceClient, req *platform_game.SyncPreviewRequest, isGetRemoteClient bool) (*platform_game.SyncPreviewResp, *RemoteGameResponse, error) {
 	// 获取远程游戏数据
-	remoteResp, err := getRemoteGame(ctx, client, isGetRemoteClient)
+	remoteResp, err := s.getRemoteGame(ctx, client, isGetRemoteClient)
 	if err != nil {
-		log.Printf("[游戏预检查] 获取远程数据失败: %v", err)
+		s.Errorf("[游戏预检查] 获取远程数据失败: %v", err)
 		return nil, nil, err
 	}
 
 	// 获取本地游戏数据
 	local, localIndex, err := s.fetchLocal(ctx)
 	if err != nil {
-		log.Printf("[游戏预检查] 获取本地数据失败: %v", err)
+		s.Errorf("[游戏预检查] 获取本地数据失败: %v", err)
 		return nil, nil, err
 	}
 
@@ -102,7 +106,7 @@ func (s *GameSyncService) validateRequiredTables(ctx context.Context) error {
 		return err
 	}
 	if count == 0 {
-		logger.Error("[游戏同步] 本地分类表为空，无法执行游戏同步")
+		s.Errorf("[游戏同步] 本地分类表为空，无法执行游戏同步")
 		return fmt.Errorf("本地分类表为空，无法执行游戏同步")
 	}
 
@@ -111,7 +115,7 @@ func (s *GameSyncService) validateRequiredTables(ctx context.Context) error {
 		return err
 	}
 	if count == 0 {
-		logger.Error("[游戏同步] 本地厂商表为空，无法执行游戏同步")
+		s.Errorf("[游戏同步] 本地厂商表为空，无法执行游戏同步")
 		return fmt.Errorf("本地厂商表为空，无法执行游戏同步")
 	}
 
@@ -120,52 +124,52 @@ func (s *GameSyncService) validateRequiredTables(ctx context.Context) error {
 		return err
 	}
 	if count == 0 {
-		logger.Error("[游戏同步] 本地渠道表为空，无法执行游戏同步")
+		s.Errorf("[游戏同步] 本地渠道表为空，无法执行游戏同步")
 		return fmt.Errorf("本地渠道表为空，无法执行游戏同步")
 	}
 
 	return nil
 }
 
-func (s *GameSyncService) validateForeignKeys(ctx context.Context, tx *ent.Tx, remoteGame *vendors.GameInfo, depIndex *DependencyIndex) (categoryID, providerID, channelID int64, err error) {
+func (s *GameSyncService) validateForeignKeys(ctx context.Context, tx *ent.Client, remoteGame *vendors.GameInfo, depIndex *DependencyIndex) (categoryID, providerID, channelID int64, err error) {
 	// 验证分类是否存在
 	if remoteGame.CatId == 0 {
-		logger.Errorf("[游戏同步-外键验证] 游戏 %s 分类ID为0（无效）", remoteGame.Code)
+		s.Errorf("[游戏同步-外键验证] 游戏 %s 分类ID为0（无效）", remoteGame.Code)
 		return 0, 0, 0, fmt.Errorf("分类ID为0")
 	}
 	category, err := tx.GameCategory.Query().
 		Where(gamecategory.SourceIDEQ(remoteGame.CatId)).
 		Only(ctx)
 	if err != nil {
-		logger.Errorf("[游戏同步-外键验证] 游戏 %s 分类不存在: source_id=%d, 错误: %v", remoteGame.Code, remoteGame.CatId, err)
+		s.Errorf("[游戏同步-外键验证] 游戏 %s 分类不存在: source_id=%d, 错误: %v", remoteGame.Code, remoteGame.CatId, err)
 		return 0, 0, 0, fmt.Errorf("分类不存在: source_id=%d", remoteGame.CatId)
 	}
 	categoryID = category.SourceID
 
 	// 验证厂商是否存在
 	if remoteGame.VenId == 0 {
-		logger.Errorf("[游戏同步-外键验证] 游戏 %s 厂商ID为0（无效）", remoteGame.Code)
+		s.Errorf("[游戏同步-外键验证] 游戏 %s 厂商ID为0（无效）", remoteGame.Code)
 		return 0, 0, 0, fmt.Errorf("厂商ID为0")
 	}
 	provider, err := tx.GameProvider.Query().
 		Where(gameprovider.SourceIDEQ(remoteGame.VenId)).
 		Only(ctx)
 	if err != nil {
-		logger.Errorf("[游戏同步-外键验证] 游戏 %s 厂商不存在: source_id=%d, 错误: %v", remoteGame.Code, remoteGame.VenId, err)
+		s.Errorf("[游戏同步-外键验证] 游戏 %s 厂商不存在: source_id=%d, 错误: %v", remoteGame.Code, remoteGame.VenId, err)
 		return 0, 0, 0, fmt.Errorf("厂商不存在: source_id=%d", remoteGame.VenId)
 	}
 	providerID = provider.SourceID
 
 	// 验证渠道是否存在（渠道可以为0，表示厂商直连）
 	if remoteGame.ChanId == 0 {
-		logger.Debugf("[游戏同步-外键验证] 游戏 %s 渠道ID为0（厂商直连）", remoteGame.Code)
+		s.Debugf("[游戏同步-外键验证] 游戏 %s 渠道ID为0（厂商直连）", remoteGame.Code)
 		channelID = 0
 	} else {
 		channel, err := tx.GameChannel.Query().
 			Where(gamechannel.SourceIDEQ(remoteGame.ChanId)).
 			Only(ctx)
 		if err != nil {
-			logger.Errorf("[游戏同步-外键验证] 游戏 %s 渠道不存在: source_id=%d, 错误: %v", remoteGame.Code, remoteGame.ChanId, err)
+			s.Errorf("[游戏同步-外键验证] 游戏 %s 渠道不存在: source_id=%d, 错误: %v", remoteGame.Code, remoteGame.ChanId, err)
 			return 0, 0, 0, fmt.Errorf("渠道不存在: source_id=%d", remoteGame.ChanId)
 		}
 		channelID = channel.SourceID
@@ -175,12 +179,13 @@ func (s *GameSyncService) validateForeignKeys(ctx context.Context, tx *ent.Tx, r
 }
 
 // 处理游戏数据的创建和更新（从 Run 提取的业务逻辑）
-func (s *GameSyncService) processGameDataWithProgress(ctx context.Context, tx *ent.Tx, remoteData []*vendors.GameInfo, applyResult *Apply, syncCols []string, checkpointID int64) error {
+func (s *GameSyncService) processGameDataWithProgress(ctx context.Context, remoteData []*vendors.GameInfo, applyResult *Apply, syncCols []string, checkpointID int64) error {
 	i := 0
 	counterMap := make(map[int64]int) // 用于记录每个 source_id 的计数，确保唯一性
+	createList := make([]*ent.GameCreate, 0, len(remoteData))
 	for _, remoteGame := range remoteData {
 		if counterMap[remoteGame.Id] > 0 {
-			logger.Errorf("[游戏同步] 检测到重复的远程游戏ID: %d, 计数器: %d, 跳过处理", remoteGame.Id, counterMap[remoteGame.Id])
+			s.Errorf("[游戏同步] 检测到重复的远程游戏ID: %d, 计数器: %d, 跳过处理", remoteGame.Id, counterMap[remoteGame.Id])
 			applyResult.Failed++
 			continue
 		}
@@ -189,25 +194,24 @@ func (s *GameSyncService) processGameDataWithProgress(ctx context.Context, tx *e
 		i++
 
 		// 添加日志记录远程数据
-		logger.Infof("[游戏同步] 处理游戏: Code=%s, Id=%d, CatId=%d, VenId=%d, ChanId=%d",
+		s.Infof("[游戏同步] 处理游戏: Code=%s, Id=%d, CatId=%d, VenId=%d, ChanId=%d",
 			remoteGame.Code, remoteGame.Id, remoteGame.CatId, remoteGame.VenId, remoteGame.ChanId)
 		// 新增游戏前验证外键
-		categoryID, providerID, channelID, err := s.validateForeignKeys(ctx, tx, remoteGame, nil)
+		categoryID, providerID, channelID, err := s.validateForeignKeys(ctx, s.DAOManager.DB, remoteGame, nil)
 		if err != nil {
-			logger.Errorf("[游戏同步] 游戏 %s 外键验证失败: %v", remoteGame.Code, err)
+			s.Errorf("[游戏同步] 游戏 %s 外键验证失败: %v", remoteGame.Code, err)
 			applyResult.Failed++
 			continue
 		}
 		// 检查本地是否存在该游戏（使用上游游戏ID）
-		GameRecord, err := tx.Game.Query().
-			Where(game.SourceIDEQ(remoteGame.Id), game.DeletedAtIsNil()).
-			Only(ctx)
+		GameRecord, err := s.DAOManager.Game.GetGameBySourceId(ctx, remoteGame.Id)
+
 		gameCode := remoteGame.Code + "_" + fmt.Sprintf("%d", i)
 		if err != nil || GameRecord == nil {
-			logger.Infof("[游戏新增] 即将创建: Code=%s, ChannelID=%d, CategoryID=%d, ProviderID=%d",
+			s.Infof("[游戏新增] 即将创建: Code=%s, ChannelID=%d, CategoryID=%d, ProviderID=%d",
 				gameCode, channelID, categoryID, providerID)
 
-			if _, err := tx.Game.Create().
+			createList = append(createList, s.DAOManager.DB.Game.Create().
 				SetSourceID(remoteGame.Id).
 				SetCategoryID(categoryID).
 				SetProviderID(providerID).
@@ -226,16 +230,11 @@ func (s *GameSyncService) processGameDataWithProgress(ctx context.Context, tx *e
 				SetCreatedAt(time.Now()).
 				SetUpdatedAt(time.Now()).
 				SetSupportsEmbed(false).
-				SetSupportsRedirect(false).
-				Save(ctx); err != nil {
-				logger.Errorf("[游戏新增] 失败: %v", err)
-				return err
-			}
-			applyResult.Created++
+				SetSupportsRedirect(false))
 		} else {
-			if s.compare(&platform_game.SyncDiff{}, remoteGame, GameRecord) {
-				logger.Infof("[游戏同步] 游戏 %s 需要更新", remoteGame.Code)
-				update := tx.Game.
+			if s.compare(&platform_game.SyncDiff{}, remoteGame, GameRecord) || len(syncCols) > 0 {
+				s.Infof("[游戏同步] 游戏 %s 需要更新", remoteGame.Code)
+				update := s.DAOManager.DB.Game.
 					UpdateOneID(GameRecord.ID).
 					SetUpdatedAt(time.Now())
 				if len(syncCols) == 0 {
@@ -248,74 +247,84 @@ func (s *GameSyncService) processGameDataWithProgress(ctx context.Context, tx *e
 					syncCols = append(syncCols, "source_sort_no")
 					syncCols = append(syncCols, "source_status")
 				}
-				if len(syncCols) > 0 {
-					for _, col := range syncCols {
-						switch col {
-						case "category_id":
-							update.SetCategoryID(categoryID)
-						case "provider_id":
-							update.SetProviderID(providerID)
-						case "channel_id":
-							update.SetChannelID(channelID)
-						case "game_code":
-							update.SetGameCode(gameCode)
-						case "source_game_code":
-							update.SetSourceGameCode(remoteGame.Code)
-						case "name":
-							update.SetName(remoteGame.Name)
-						case "image_url":
-							update.SetImageURL(remoteGame.Image)
-						case "source_image_url":
-							update.SetSourceImageURL(remoteGame.Image)
-						case "provider_key":
-							update.SetProviderKey(remoteGame.VenKey)
-						case "source_provider_key":
-							update.SetSourceProviderKey(remoteGame.VenKey)
-						case "sort_no":
-							update.SetSortNo(remoteGame.Id)
-						case "source_sort_no":
-							update.SetSourceSortNo(0)
-						case "status":
-							update.SetStatus(1)
-						case "source_status":
-							update.SetSourceStatus(1)
-						case "supports_embed":
-							update.SetSupportsEmbed(false)
-						case "supports_redirect":
-							update.SetSupportsRedirect(false)
-						}
+				for _, col := range syncCols {
+					switch col {
+					case "category_id":
+						update.SetCategoryID(categoryID)
+					case "provider_id":
+						update.SetProviderID(providerID)
+					case "channel_id":
+						update.SetChannelID(channelID)
+					case "game_code":
+						update.SetGameCode(gameCode)
+					case "source_game_code":
+						update.SetSourceGameCode(remoteGame.Code)
+					case "name":
+						update.SetName(remoteGame.Name)
+					case "image_url":
+						update.SetImageURL(remoteGame.Image)
+					case "source_image_url":
+						update.SetSourceImageURL(remoteGame.Image)
+					case "provider_key":
+						update.SetProviderKey(remoteGame.VenKey)
+					case "source_provider_key":
+						update.SetSourceProviderKey(remoteGame.VenKey)
+					case "sort_no":
+						update.SetSortNo(remoteGame.Id)
+					case "source_sort_no":
+						update.SetSourceSortNo(0)
+					case "status":
+						update.SetStatus(1)
+					case "source_status":
+						update.SetSourceStatus(1)
+					case "supports_embed":
+						update.SetSupportsEmbed(false)
+					case "supports_redirect":
+						update.SetSupportsRedirect(false)
 					}
 				}
-
 				if _, err := update.Save(ctx); err != nil {
-					logger.Errorf("[游戏更新] 失败: %v", err)
-					return err
+					s.Errorf("[游戏更新] 失败: %v", err)
+					applyResult.Failed++
+					continue
 				}
 				applyResult.Updated++
 			}
 
 		}
 	}
+	if len(createList) > 0 {
+		s.Infof("[游戏新增] 批量创建 %d 条游戏记录", len(createList))
+		records, err := s.DAOManager.Game.BatchCreateGame(ctx, createList)
+		if err != nil {
+			s.Errorf("[游戏新增] 批量创建失败: %v", err)
+			applyResult.Failed += int32(len(createList))
+			return err
+		}
+		applyResult.Created += int32(len(records))
+		s.Infof("[游戏新增] 批量创建成功, 共 %d 条", len(records))
+	}
 	return nil
 }
 
 // Run 执行游戏同步
 func (s *GameSyncService) Run(ctx context.Context, client vendors.VendorGameServiceClient, syncCols []string, checkpointID int64, isGetRemoteClient bool) error {
-	logger.Infof("[游戏同步] ===== 开始执行同步 =====")
+	s.Infof("[游戏同步] ===== 开始执行同步 =====")
 
 	// 先执行预检查
-	logger.Infof("[游戏同步] 执行预检查")
+	s.Infof("[游戏同步] 执行预检查")
 	previewResp, remoteResp, err := s.Preview(ctx, client, nil, isGetRemoteClient)
 	if err != nil {
-		logger.Errorf("[游戏同步] 预检查失败: %v", err)
+		s.Errorf("[游戏同步] 预检查失败: %v", err)
 		return err
 	}
 	// 创建并启动进度队列
+	s.Infof("[游戏同步] 启动进度队列")
 	s.progressQueue.Start(ctx)
+	defer s.progressQueue.Stop()
 	if previewResp.Stats.UpdateTotal == 0 && previewResp.Stats.CreateTotal == 0 && previewResp.Stats.DeleteTotal == 0 && previewResp.Stats.RemoteTotal == previewResp.Stats.LocalTotal && len(syncCols) == 0 {
-		defer s.progressQueue.Stop()
-		logger.Infof("[游戏同步] 无需更新，直接返回")
-		logger.Infof("[游戏同步] UpdateTotal=%d, CreateTotal=%d, DeleteTotal=%d, RemoteTotal=%d, LocalTotal=%d",
+		s.Infof("[游戏同步] 无需更新，直接返回")
+		s.Infof("[游戏同步] UpdateTotal=%d, CreateTotal=%d, DeleteTotal=%d, RemoteTotal=%d, LocalTotal=%d",
 			previewResp.Stats.UpdateTotal, previewResp.Stats.CreateTotal, previewResp.Stats.DeleteTotal, previewResp.Stats.RemoteTotal, previewResp.Stats.LocalTotal)
 		// 更新checkpointID进度为100
 		s.progressQueue.Send(&ProgressMessage{
@@ -328,92 +337,39 @@ func (s *GameSyncService) Run(ctx context.Context, client vendors.VendorGameServ
 		})
 		return nil
 	}
-	logger.Infof("[游戏同步] 预检查完成: remote_total=%d, local_total=%d",
-		previewResp.Stats.RemoteTotal, previewResp.Stats.LocalTotal)
-
-	// 先校验本地依赖表是否已准备好
-	logger.Infof("[游戏同步] 校验依赖表")
 	if err := s.validateRequiredTables(ctx); err != nil {
-		logger.Errorf("[游戏同步] 依赖表校验失败: %v", err)
+		s.Errorf("[游戏同步] 依赖表校验失败: %v", err)
 		return err
 	}
-	logger.Infof("[游戏同步] ✓ 检查点已创建: checkpointID=%d", checkpointID)
-
-	go func() {
-		defer s.progressQueue.Stop()
-		// 在事务中执行数据库操作
-		logger.Infof("[游戏同步] 开始处理游戏数据")
-		// 把remoteResp.Data拆分为100条一批进行处理（可根据实际情况调整批次大小）
-		batchSize := BatchSize
-		totalCount := len(remoteResp.Data)
-		apply := &Apply{}
-		for i := 0; i < len(remoteResp.Data); i += batchSize {
-			end := i + batchSize
-			if end > len(remoteResp.Data) {
-				end = len(remoteResp.Data)
-			}
-			batch := remoteResp.Data[i:end]
-			logger.Infof("[游戏同步] 处理批次: start=%d, end=%d", i, end)
-			// 模拟等待
-			logger.Debugf("[进度队列] 模拟处理延迟: 表=game, checkpointID=%d", checkpointID)
-			time.Sleep(1000 * time.Millisecond)
-			logger.Debugf("[进度队列] 开始处理消息: 表=game, checkpointID=%d", checkpointID)
-			txn, err := s.DAOManager.DB.Tx(ctx)
-			if err != nil {
-				logger.Errorf("[游戏同步] 开启事务失败: %v", err)
-				return
-			}
-			err = s.processGameDataWithProgress(ctx, txn, batch, apply, syncCols, checkpointID)
-			if err != nil {
-				logger.Errorf("[游戏同步] 处理游戏数据失败: %v", err)
-				if rerr := txn.Rollback(); rerr != nil {
-					logger.Errorf("[游戏同步] 回滚事务失败: %v", rerr)
-				}
-				return
-			}
-			if err := txn.Commit(); err != nil {
-				logger.Errorf("[游戏同步] 提交事务失败: %v", err)
-				return
-			}
-			progress := CalculateProgress(int64(i+1), int64(totalCount))
-			msg := &ProgressMessage{
-				TableName:      "game",
-				ProcessedCount: int32(i + 1),
-				RemoteTotal:    previewResp.Stats.RemoteTotal,
-				LocalTotal:     previewResp.Stats.LocalTotal,
-				Progress:       progress,
-				CheckpointID:   checkpointID,
-				Created:        apply.Created,
-				Updated:        apply.Updated,
-				Deleted:        apply.Deleted,
-				Failed:         apply.Failed,
-				Skipped:        apply.Skipped,
-			}
-			logger.Infof("[游戏同步] 发送进度消息: 表=game, 处理数=%d, 总数=%d, 进度=%d%%", i+1, totalCount, progress)
-			s.progressQueue.Send(msg)
+	// 把remoteResp.Data拆分为多条一批进行处理（可根据实际情况调整批次大小）
+	batchSize := s.config.SyncBatchSize
+	s.Infof("[游戏同步] 预检查完成: remote_total=%d, local_total=%d, 检查点已创建: checkpointID=%d, batch_size=%d",
+		previewResp.Stats.RemoteTotal, previewResp.Stats.LocalTotal, checkpointID, batchSize)
+	totalCount := len(remoteResp.Data)
+	apply := &Apply{}
+	for i := 0; i < len(remoteResp.Data); i += batchSize {
+		end := i + batchSize
+		if end > len(remoteResp.Data) {
+			end = len(remoteResp.Data)
 		}
+		batch := remoteResp.Data[i:end]
+		s.Infof("[游戏同步] 处理批次: start=%d, end=%d", i, end)
+		// 模拟等待
+		s.Debugf("[进度队列] 模拟处理延迟: 表=game, checkpointID=%d", checkpointID)
+		time.Sleep(1000 * time.Millisecond)
+		s.Debugf("[进度队列] 开始处理消息: 表=game, checkpointID=%d", checkpointID)
+		err = s.processGameDataWithProgress(ctx, batch, apply, syncCols, checkpointID)
 		if err != nil {
-			logger.Errorf("[游戏同步] 处理游戏数据失败: %v", err)
-			return
+			s.Errorf("[游戏同步] 处理游戏数据失败: %v", err)
+			return err
 		}
-
-		// 执行逆向同步
-		logger.Infof("[游戏同步] 开始执行逆向同步")
-		err := s.ReverseSync(ctx, client, remoteResp, apply)
-		if err != nil {
-			logger.Errorf("❌ [游戏同步] 逆向同步失败: %v", err)
-			return
-		}
-		logger.Infof("[游戏同步] 逆向同步完成: deleted=%d", apply.Deleted)
-
-		// 最后一次进度更新（100%）
-		logger.Infof("[游戏同步] 发送最终进度消息（100%%）")
-		finalMsg := &ProgressMessage{
+		progress := CalculateProgress(int64(i+1), int64(totalCount))
+		msg := &ProgressMessage{
 			TableName:      "game",
-			ProcessedCount: previewResp.Stats.RemoteTotal,
+			ProcessedCount: int32(i + 1),
 			RemoteTotal:    previewResp.Stats.RemoteTotal,
 			LocalTotal:     previewResp.Stats.LocalTotal,
-			Progress:       100,
+			Progress:       progress,
 			CheckpointID:   checkpointID,
 			Created:        apply.Created,
 			Updated:        apply.Updated,
@@ -421,9 +377,40 @@ func (s *GameSyncService) Run(ctx context.Context, client vendors.VendorGameServ
 			Failed:         apply.Failed,
 			Skipped:        apply.Skipped,
 		}
-		s.progressQueue.Send(finalMsg)
-		logger.Infof("[游戏同步] ===== 同步完成 =====")
-	}()
+		s.Infof("[游戏同步] 发送进度消息: 表=game, 处理数=%d, 总数=%d, 进度=%d%%", i+1, totalCount, progress)
+		s.progressQueue.Send(msg)
+	}
+	if err != nil {
+		s.Errorf("[游戏同步] 处理游戏数据失败: %v", err)
+		return err
+	}
+
+	// 执行逆向同步
+	s.Infof("[游戏同步] 开始执行逆向同步")
+	err = s.ReverseSync(ctx, client, remoteResp, apply)
+	if err != nil {
+		s.Errorf("❌ [游戏同步] 逆向同步失败: %v", err)
+		return err
+	}
+	s.Infof("[游戏同步] 逆向同步完成: deleted=%d", apply.Deleted)
+
+	// 最后一次进度更新（100%）
+	s.Infof("[游戏同步] 发送最终进度消息（100%%）")
+	finalMsg := &ProgressMessage{
+		TableName:      "game",
+		ProcessedCount: previewResp.Stats.RemoteTotal,
+		RemoteTotal:    previewResp.Stats.RemoteTotal,
+		LocalTotal:     previewResp.Stats.LocalTotal,
+		Progress:       100,
+		CheckpointID:   checkpointID,
+		Created:        apply.Created,
+		Updated:        apply.Updated,
+		Deleted:        apply.Deleted,
+		Failed:         apply.Failed,
+		Skipped:        apply.Skipped,
+	}
+	s.progressQueue.Send(finalMsg)
+	s.Infof("[游戏同步] ===== 同步完成 =====")
 	// 构建执行结果
 	return nil
 }
@@ -473,10 +460,6 @@ func (s *GameSyncService) compareAll(remote *vendors.GameInfo, localIndex map[st
 	}
 
 	s.compare(diff, remote, local)
-
-	// 本地和远程一致，无需操作
-	diff.Action = "noop"
-	diff.Reason = "本地和远程数据一致"
 	return diff
 }
 
@@ -502,6 +485,12 @@ func (s *GameSyncService) compare(diff *platform_game.SyncDiff, remote *vendors.
 	if local.ProviderKey != remote.VenKey {
 		diff.Action = constant.SyncActionUpdate
 		diff.Reason = fmt.Sprintf("提供商Key变更: %s -> %s", local.ProviderKey, remote.VenKey)
+		diff.ConflictType = "vendor_key_changed"
+		return true
+	}
+	if local.SourceProviderKey != remote.VenKey {
+		diff.Action = constant.SyncActionUpdate
+		diff.Reason = fmt.Sprintf("提供商Key变更: %s -> %s", local.SourceProviderKey, remote.VenKey)
 		diff.ConflictType = "vendor_key_changed"
 		return true
 	}
@@ -533,10 +522,10 @@ func (s *GameSyncService) ReverseSync(ctx context.Context, client vendors.Vendor
 	// 获取本地游戏数据
 	localGames, err := s.DAOManager.Game.GetAllGames(ctx)
 	if err != nil {
-		logger.Errorf("[游戏逆向同步] ✗ 获取本地数据失败: %v\n", err)
+		s.Errorf("[游戏逆向同步] ✗ 获取本地数据失败: %v\n", err)
 		return err
 	}
-	logger.Infof("[游戏逆向同步] ✓ 获取本地数据成功, 共 %d 条\n", len(localGames))
+	s.Infof("[游戏逆向同步] ✓ 获取本地数据成功, 共 %d 条\n", len(localGames))
 
 	for _, localGame := range localGames {
 		// 如果本地游戏在远程不存在，则软删除
@@ -546,37 +535,37 @@ func (s *GameSyncService) ReverseSync(ctx context.Context, client vendors.Vendor
 			})
 
 			if err != nil {
-				logger.Errorf("[游戏逆向同步] 软删除失败: %v", err)
+				s.Errorf("[游戏逆向同步] 软删除失败: %v", err)
 				apply.Failed++
 				continue
 			}
 			apply.Deleted++
-			logger.Infof("[游戏逆向同步] ✓ 已软删除游戏: %s (ID: %d)", localGame.SourceGameCode, localGame.ID)
+			s.Infof("[游戏逆向同步] ✓ 已软删除游戏: %s (ID: %d)", localGame.SourceGameCode, localGame.ID)
 		}
 	}
 
-	logger.Infof("[游戏逆向同步] ✓ 完成，删除: %d", apply.Deleted)
+	s.Infof("[游戏逆向同步] ✓ 完成，删除: %d", apply.Deleted)
 	return nil
 }
 
-func getRemoteGame(ctx context.Context, client vendors.VendorGameServiceClient, isGetRemoteClient bool) (*RemoteGameResponse, error) {
+func (s *GameSyncService) getRemoteGame(ctx context.Context, client vendors.VendorGameServiceClient, isGetRemoteClient bool) (*RemoteGameResponse, error) {
 	if isGetRemoteClient {
-		logger.Infof("[同步数据源] 使用远程客户端获取游戏信息")
+		s.Infof("[同步数据源] 使用远程客户端获取游戏信息")
 		remoteResp, err := client.GetGame(ctx, &vendors.GetGameRequest{})
 		if err != nil {
-			logger.Errorf("❌ [同步数据源] 获取远程数据失败: %v", err)
+			s.Errorf("❌ [同步数据源] 获取远程数据失败: %v", err)
 			return nil, err
 		}
-		logger.Infof("[同步数据源] 获取到远程数据: count=%d", len(remoteResp.GameList))
+		s.Infof("[同步数据源] 获取到远程数据: count=%d", len(remoteResp.GameList))
 		return &RemoteGameResponse{Data: remoteResp.GameList}, nil
 	} else {
-		logger.Infof("[同步数据源] 使用本地 JSON 数据获取游戏信息")
+		s.Infof("[同步数据源] 使用本地 JSON 数据获取游戏信息")
 		var list []*vendors.GameInfo
-		if err := loadLocalJSON("game.json", &list); err != nil {
-			logger.Errorf("[同步数据源] 读取 game.json 失败: %v", err)
+		if err := locales.LoadLocalVendorRemoteJSON("game.json", &list); err != nil {
+			s.Errorf("[同步数据源] 读取 game.json 失败: %v", err)
 			return nil, err
 		}
-		logger.Infof("[同步数据源] ✓ 读取本地 JSON 数据成功, 共 %d 条", len(list))
+		s.Infof("[同步数据源] ✓ 读取本地 JSON 数据成功, 共 %d 条", len(list))
 		return &RemoteGameResponse{Data: list}, nil
 	}
 }

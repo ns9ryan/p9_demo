@@ -82,7 +82,7 @@ func (d *GameCategoryDAO) GetAllGameCategories(ctx context.Context) ([]*ent.Game
 		All(ctx)
 }
 
-// UpdateGameCategory 更新游戏分类
+// 更新游戏分类
 func (d *GameCategoryDAO) UpdateGameCategory(ctx context.Context, id int64, updates map[string]interface{}) (*ent.GameCategory, error) {
 	update := d.db.GameCategory.UpdateOneID(id)
 
@@ -105,6 +105,25 @@ func (d *GameCategoryDAO) UpdateGameCategory(ctx context.Context, id int64, upda
 	}
 
 	return update.Save(ctx)
+}
+
+func (d *GameCategoryDAO) BatchCreateGameCategory(ctx context.Context, items []*ent.GameCategoryCreate) ([]*ent.GameCategory, error) {
+	if len(items) == 0 {
+		return []*ent.GameCategory{}, nil
+	}
+
+	records, err := d.db.GameCategory.CreateBulk(items...).Save(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("batch create failed: %w", err)
+	}
+	return records, nil
+}
+
+func (d *GameCategoryDAO) GetGameCategoryBySourceCode(ctx context.Context, sourceCategoryCode string) (*ent.GameCategory, error) {
+	return d.db.GameCategory.Query().
+		Where(gamecategory.SourceCategoryCodeEQ(sourceCategoryCode)).
+		Where(gamecategory.DeletedAtIsNil()).
+		Only(ctx)
 }
 
 // GetGamesByCategoryID 获取指定分类下的所有游戏ID
@@ -131,4 +150,15 @@ func (d *GameCategoryDAO) GetGameCategoryCount(ctx context.Context) (int, error)
 		return 0, fmt.Errorf("count failed: %w", err)
 	}
 	return count, nil
+}
+
+func (d *GameCategoryDAO) ExistByCode(ctx context.Context, categoryCode string) (bool, error) {
+	exists, err := d.db.GameCategory.Query().
+		Where(gamecategory.SourceCategoryCodeEQ(categoryCode)).
+		Where(gamecategory.DeletedAtIsNil()).
+		Exist(ctx)
+	if err != nil {
+		return false, fmt.Errorf("exist check failed: %w", err)
+	}
+	return exists, nil
 }

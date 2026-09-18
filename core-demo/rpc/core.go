@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 
+	"oa.98ent.com/p9/core/common/tracing"
 	"oa.98ent.com/p9/core/rpc/internal/config"
 	"oa.98ent.com/p9/core/rpc/internal/server"
 	"oa.98ent.com/p9/core/rpc/internal/svc"
@@ -32,6 +33,7 @@ func main() {
 			reflection.Register(grpcServer)
 		}
 	})
+	s.AddUnaryInterceptors(tracing.UnaryServerInterceptor())
 	defer s.Stop()
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)

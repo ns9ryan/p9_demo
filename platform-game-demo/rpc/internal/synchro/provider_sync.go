@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"time"
 
-	"oa.98ent.com/p9/platform-game/common/logger"
+	"github.com/zeromicro/go-zero/core/logx"
 	"oa.98ent.com/p9/platform-game/rpc/ent"
-	"oa.98ent.com/p9/platform-game/rpc/ent/gameprovider"
+	"oa.98ent.com/p9/platform-game/rpc/internal/config"
 	"oa.98ent.com/p9/platform-game/rpc/internal/constant"
 	"oa.98ent.com/p9/platform-game/rpc/internal/dao"
+	"oa.98ent.com/p9/platform-game/rpc/internal/locales"
 	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 	"oa.98ent.com/p9/platform-game/rpc/pb/vendors"
 )
@@ -19,23 +20,27 @@ import (
 // ProviderSyncService 提供商同步服务
 type ProviderSyncService struct {
 	DAOManager    *dao.Manager
+	config        config.Config
 	progressQueue *ProgressQueue
+	logx.Logger
 }
 
 // NewProviderSyncService 创建提供商同步服务
-func NewProviderSyncService(daoManager *dao.Manager) *ProviderSyncService {
+func NewProviderSyncService(ctx context.Context, config config.Config, daoManager *dao.Manager) *ProviderSyncService {
 	return &ProviderSyncService{
 		DAOManager:    daoManager,
+		config:        config,
 		progressQueue: NewProgressQueue(daoManager),
+		Logger:        logx.WithContext(ctx),
 	}
 }
 
 // Preview 预检查提供商同步
 func (s *ProviderSyncService) Preview(ctx context.Context, client vendors.VendorGameServiceClient, req *platform_game.SyncPreviewRequest, isGetRemoteClient bool) (*platform_game.SyncPreviewResp, *RemoteProviderResponse, error) {
 	// 获取远程提供商数据
-	remoteResp, err := getRemoteGameProviders(ctx, client, isGetRemoteClient)
+	remoteResp, err := s.getRemoteGameProviders(ctx, client, isGetRemoteClient)
 	if err != nil {
-		logger.Errorf("[提供商预检查] 获取测试数据失败: %v", err)
+		s.Errorf("[提供商预检查] 获取测试数据失败: %v", err)
 		return nil, nil, err
 	}
 	remote := remoteResp.Data
@@ -103,13 +108,14 @@ func (s *ProviderSyncService) Preview(ctx context.Context, client vendors.Vendor
 }
 
 // 处理提供商数据的创建和更新（从 Run 提取的业务逻辑）
-func (s *ProviderSyncService) processProviderDataWithProgress(ctx context.Context, tx *ent.Tx, remoteData []*vendors.VendorInfo, applyResult *Apply, syncCols []string, checkpointID int64) error {
+func (s *ProviderSyncService) processProviderDataWithProgress(ctx context.Context, remoteData []*vendors.VendorInfo, applyResult *Apply, syncCols []string, checkpointID int64) error {
 	i := 0
 	counterMap := make(map[string]int) // 用于记录每个 source_provider_code 的计数，确保唯一性
 	nameMap := make(map[string]string)
+	createList := make([]*ent.GameProviderCreate, 0, len(remoteData))
 	for _, remoteProvider := range remoteData {
 		if counterMap[remoteProvider.Code] > 0 {
-			logger.Errorf("[提供商同步] 检测到重复的远程提供商编码: %s, 计数器: %d, 跳过处理", remoteProvider.Code, counterMap[remoteProvider.Code])
+			s.Errorf("[提供商同步] 检测到重复的远程提供商编码: %s, 计数器: %d, 跳过处理", remoteProvider.Code, counterMap[remoteProvider.Code])
 			applyResult.Failed++
 			continue
 		}
@@ -118,13 +124,11 @@ func (s *ProviderSyncService) processProviderDataWithProgress(ctx context.Contex
 		counterMap[remoteProvider.Code]++
 		i++
 		// 检查本地是否存在该提供商（使用上游提供商编码）
-		localProvider, err := tx.GameProvider.Query().
-			Where(gameprovider.SourceProviderCodeEQ(remoteProvider.Code), gameprovider.DeletedAtIsNil()).
-			Only(ctx)
+		localProvider, err := s.DAOManager.GameProvider.GetGameProviderBySourceCode(ctx, remoteProvider.Code)
 		// 生成 P9 内部的提供商编码
 		providerCode := remoteProvider.Code + "_" + fmt.Sprintf("%d", i)
 		if err != nil || localProvider == nil {
-			if _, err := tx.GameProvider.Create().
+			createList = append(createList, s.DAOManager.DB.GameProvider.Create().
 				SetSourceID(remoteProvider.Id).
 				SetProviderCode(providerCode).
 				SetSourceProviderCode(remoteProvider.Code).
@@ -133,18 +137,11 @@ func (s *ProviderSyncService) processProviderDataWithProgress(ctx context.Contex
 				SetSourceStatus(int64(remoteProvider.Status)).
 				SetStatus(int64(remoteProvider.Status)).
 				SetCreatedAt(time.Now()).
-				SetUpdatedAt(time.Now()).
-				Save(ctx); err != nil {
-				logger.Errorf("[提供商新增] 失败: %v", err)
-				applyResult.Failed++
-				continue
-			}
-			applyResult.Created++
-			logger.Infof("[提供商新增] ✓ 已创建新提供商: %s", remoteProvider.Code)
+				SetUpdatedAt(time.Now()))
 		} else {
-			if s.compare(&platform_game.SyncDiff{}, remoteProvider, localProvider) {
-				logger.Infof("[提供商同步] 检测到需要更新的提供商: %s", remoteProvider.Code)
-				update := tx.GameProvider.
+			if s.compare(&platform_game.SyncDiff{}, remoteProvider, localProvider) || len(syncCols) > 0 {
+				s.Infof("[提供商同步] 检测到需要更新的提供商: %s", remoteProvider.Code)
+				update := s.DAOManager.DB.GameProvider.
 					UpdateOneID(localProvider.ID).
 					SetUpdatedAt(time.Now())
 
@@ -155,60 +152,67 @@ func (s *ProviderSyncService) processProviderDataWithProgress(ctx context.Contex
 					syncCols = append(syncCols, "source_sort_no")
 				}
 
-				if len(syncCols) > 0 {
-					for _, col := range syncCols {
-						switch col {
-						case "provider_code":
-							update.SetProviderCode(providerCode)
-						case "source_provider_code":
-							update.SetSourceProviderCode(remoteProvider.Code)
-						case "status":
-							update.SetStatus(int64(remoteProvider.Status))
-						case "source_status":
-							update.SetSourceStatus(int64(remoteProvider.Status))
-						case "sort_no":
-							update.SetSortNo(int64(remoteProvider.Id))
-						case "source_sort_no":
-							update.SetSourceSortNo(0)
-						}
+				for _, col := range syncCols {
+					switch col {
+					case "provider_code":
+						update.SetProviderCode(providerCode)
+					case "source_provider_code":
+						update.SetSourceProviderCode(remoteProvider.Code)
+					case "status":
+						update.SetStatus(int64(remoteProvider.Status))
+					case "source_status":
+						update.SetSourceStatus(int64(remoteProvider.Status))
+					case "sort_no":
+						update.SetSortNo(int64(remoteProvider.Id))
+					case "source_sort_no":
+						update.SetSourceSortNo(0)
 					}
 				}
 
 				if _, err := update.Save(ctx); err != nil {
-					logger.Errorf("[提供商更新] 失败: %v", err)
+					s.Errorf("[提供商更新] 失败: %v", err)
 					applyResult.Failed++
 					continue
 				}
 				applyResult.Updated++
-				logger.Infof("[提供商更新] ✓ 已更新提供商: %s", remoteProvider.Code)
+				s.Infof("[提供商更新] ✓ 已更新提供商: %s", remoteProvider.Code)
 			}
 
 		}
 	}
+	if len(createList) > 0 {
+		_, err := s.DAOManager.GameProvider.BatchCreateGameProvider(ctx, createList)
+		if err != nil {
+			s.Errorf("[提供商新增] 批量创建失败: %v", err)
+			applyResult.Failed += int32(len(createList))
+		} else {
+			applyResult.Created += int32(len(createList))
+		}
+	}
 	// 将 nameMap 写入本地 JSON 文件
-	if err := mergeLocalJSON("game_provider_name_map.json", nameMap, constant.ProviderBiz); err != nil {
-		logger.Errorf("[提供商同步] 保存名称映射失败: %v", err)
+	if err := locales.MergeLocalJSON("game_provider_name_map.json", nameMap, constant.ProviderBiz); err != nil {
+		s.Errorf("[提供商同步] 保存名称映射失败: %v", err)
 		// 不返回错误，继续执行后续逻辑
 	}
 	return nil
 }
 
 func (s *ProviderSyncService) Run(ctx context.Context, client vendors.VendorGameServiceClient, syncCols []string, checkpointID int64, isGetRemoteClient bool) error {
-	logger.Infof("[提供商同步] ===== 开始执行同步 =====")
+	s.Infof("[提供商同步] ===== 开始执行同步 =====")
 
 	// 先执行预检查
-	logger.Infof("[提供商同步] 执行预检查")
+	s.Infof("[提供商同步] 执行预检查")
 	previewResp, remoteResp, err := s.Preview(ctx, client, nil, isGetRemoteClient)
 	if err != nil {
-		logger.Errorf("[提供商同步] 预检查失败: %v", err)
+		s.Errorf("[提供商同步] 预检查失败: %v", err)
 		return err
 	}
 	// 创建并启动进度队列
 	s.progressQueue.Start(ctx)
+	defer s.progressQueue.Stop()
 	if previewResp.Stats.UpdateTotal == 0 && previewResp.Stats.CreateTotal == 0 && previewResp.Stats.DeleteTotal == 0 && previewResp.Stats.RemoteTotal == previewResp.Stats.LocalTotal && len(syncCols) == 0 {
-		defer s.progressQueue.Stop()
-		logger.Infof("[提供商同步] 无需更新，直接返回")
-		logger.Infof("[提供商同步] UpdateTotal=%d, CreateTotal=%d, DeleteTotal=%d, RemoteTotal=%d, LocalTotal=%d",
+		s.Infof("[提供商同步] 无需更新，直接返回")
+		s.Infof("[提供商同步] UpdateTotal=%d, CreateTotal=%d, DeleteTotal=%d, RemoteTotal=%d, LocalTotal=%d",
 			previewResp.Stats.UpdateTotal, previewResp.Stats.CreateTotal, previewResp.Stats.DeleteTotal, previewResp.Stats.RemoteTotal, previewResp.Stats.LocalTotal)
 		// 更新checkpointID进度为100
 		s.progressQueue.Send(&ProgressMessage{
@@ -221,91 +225,35 @@ func (s *ProviderSyncService) Run(ctx context.Context, client vendors.VendorGame
 		})
 		return nil
 	}
-	logger.Infof("[提供商同步] 预检查完成: remote_total=%d, local_total=%d",
-		previewResp.Stats.RemoteTotal, previewResp.Stats.LocalTotal)
-	// 创建初始检查点记录（此时progress=0）
-	logger.Infof("[提供商同步] 创建初始检查点")
-	logger.Infof("[提供商同步] ✓ 检查点已创建: checkpointID=%d", checkpointID)
-
-	go func() {
-		defer s.progressQueue.Stop()
-		// 在事务中执行数据库操作
-		logger.Infof("[提供商同步] 开始处理提供商数据")
-		// 把remoteResp.Data拆分为100条一批进行处理（可根据实际情况调整批次大小）
-		batchSize := BatchSize
-		totalCount := len(remoteResp.Data)
-		apply := &Apply{}
-		for i := 0; i < len(remoteResp.Data); i += batchSize {
-			end := i + batchSize
-			if end > len(remoteResp.Data) {
-				end = len(remoteResp.Data)
-			}
-			batch := remoteResp.Data[i:end]
-			logger.Infof("[提供商同步] 处理批次: start=%d, end=%d", i, end)
-			// 模拟等待
-			logger.Debugf("[进度队列] 模拟处理延迟: 表=provider, checkpointID=%d", checkpointID)
-			time.Sleep(1000 * time.Millisecond)
-			logger.Debugf("[进度队列] 开始处理消息: 表=provider, checkpointID=%d", checkpointID)
-			txn, err := s.DAOManager.DB.Tx(ctx)
-			if err != nil {
-				logger.Errorf("[提供商同步] 开启事务失败: %v", err)
-				return
-			}
-			err = s.processProviderDataWithProgress(ctx, txn, batch, apply, syncCols, checkpointID)
-			if err != nil {
-				logger.Errorf("[提供商同步] 处理数据失败: %v", err)
-				if rerr := txn.Rollback(); rerr != nil {
-					logger.Errorf("[提供商同步] 回滚事务失败: %v", rerr)
-				}
-				return
-			}
-			if err := txn.Commit(); err != nil {
-				logger.Errorf("[提供商同步] 提交事务失败: %v", err)
-				return
-			}
-			if err != nil {
-				logger.Errorf("[提供商同步] 处理提供商数据失败: %v", err)
-				return
-			}
-			progress := CalculateProgress(int64(i+1), int64(totalCount))
-			msg := &ProgressMessage{
-				TableName:      "provider",
-				ProcessedCount: int32(i + 1),
-				RemoteTotal:    previewResp.Stats.RemoteTotal,
-				LocalTotal:     previewResp.Stats.LocalTotal,
-				Progress:       progress,
-				CheckpointID:   checkpointID,
-				Created:        apply.Created,
-				Updated:        apply.Updated,
-				Deleted:        apply.Deleted,
-				Failed:         apply.Failed,
-				Skipped:        apply.Skipped,
-			}
-			logger.Infof("[提供商同步] 发送进度消息: 表=provider, 处理数=%d, 总数=%d, 进度=%d%%", i+1, totalCount, progress)
-			s.progressQueue.Send(msg)
+	// 把remoteResp.Data拆分为多条一批进行处理（可根据实际情况调整批次大小）
+	batchSize := s.config.SyncBatchSize
+	s.Infof("[提供商同步] 预检查完成: remote_total=%d, local_total=%d, 检查点已创建: checkpointID=%d, batch_size=%d",
+		previewResp.Stats.RemoteTotal, previewResp.Stats.LocalTotal, checkpointID, batchSize)
+	totalCount := len(remoteResp.Data)
+	apply := &Apply{}
+	for i := 0; i < len(remoteResp.Data); i += batchSize {
+		end := i + batchSize
+		if end > len(remoteResp.Data) {
+			end = len(remoteResp.Data)
 		}
+		batch := remoteResp.Data[i:end]
+		s.Infof("[提供商同步] 处理批次: start=%d, end=%d", i, end)
+		// 模拟等待
+		s.Debugf("[进度队列] 模拟处理延迟: 表=provider, checkpointID=%d", checkpointID)
+		time.Sleep(1000 * time.Millisecond)
+		s.Debugf("[进度队列] 开始处理消息: 表=provider, checkpointID=%d", checkpointID)
+		err = s.processProviderDataWithProgress(ctx, batch, apply, syncCols, checkpointID)
 		if err != nil {
-			logger.Errorf("[提供商同步] 处理提供商数据失败: %v", err)
-			return
+			s.Errorf("[提供商同步] 处理数据失败: %v", err)
+			return err
 		}
-
-		// 执行逆向同步
-		logger.Infof("[提供商同步] 开始执行逆向同步")
-		err := s.ReverseSync(ctx, client, remoteResp, apply)
-		if err != nil {
-			logger.Errorf("❌ [提供商同步] 逆向同步失败: %v", err)
-			return
-		}
-		logger.Infof("[提供商同步] 逆向同步完成: deleted=%d", apply.Deleted)
-
-		// 最后一次进度更新（100%）
-		logger.Infof("[提供商同步] 发送最终进度消息（100%%）")
-		finalMsg := &ProgressMessage{
+		progress := CalculateProgress(int64(i+1), int64(totalCount))
+		msg := &ProgressMessage{
 			TableName:      "provider",
-			ProcessedCount: previewResp.Stats.RemoteTotal,
+			ProcessedCount: int32(i + 1),
 			RemoteTotal:    previewResp.Stats.RemoteTotal,
 			LocalTotal:     previewResp.Stats.LocalTotal,
-			Progress:       100,
+			Progress:       progress,
 			CheckpointID:   checkpointID,
 			Created:        apply.Created,
 			Updated:        apply.Updated,
@@ -313,10 +261,41 @@ func (s *ProviderSyncService) Run(ctx context.Context, client vendors.VendorGame
 			Failed:         apply.Failed,
 			Skipped:        apply.Skipped,
 		}
-		s.progressQueue.Send(finalMsg)
+		s.Infof("[提供商同步] 发送进度消息: 表=provider, 处理数=%d, 总数=%d, 进度=%d%%", i+1, totalCount, progress)
+		s.progressQueue.Send(msg)
+	}
+	if err != nil {
+		s.Errorf("[提供商同步] 处理提供商数据失败: %v", err)
+		return err
+	}
 
-		logger.Infof("[提供商同步] ===== 同步完成 =====")
-	}()
+	// 执行逆向同步
+	s.Infof("[提供商同步] 开始执行逆向同步")
+	err = s.ReverseSync(ctx, client, remoteResp, apply)
+	if err != nil {
+		s.Errorf("❌ [提供商同步] 逆向同步失败: %v", err)
+		return err
+	}
+	s.Infof("[提供商同步] 逆向同步完成: deleted=%d", apply.Deleted)
+
+	// 最后一次进度更新（100%）
+	s.Infof("[提供商同步] 发送最终进度消息（100%%）")
+	finalMsg := &ProgressMessage{
+		TableName:      "provider",
+		ProcessedCount: previewResp.Stats.RemoteTotal,
+		RemoteTotal:    previewResp.Stats.RemoteTotal,
+		LocalTotal:     previewResp.Stats.LocalTotal,
+		Progress:       100,
+		CheckpointID:   checkpointID,
+		Created:        apply.Created,
+		Updated:        apply.Updated,
+		Deleted:        apply.Deleted,
+		Failed:         apply.Failed,
+		Skipped:        apply.Skipped,
+	}
+	s.progressQueue.Send(finalMsg)
+
+	s.Infof("[提供商同步] ===== 同步完成 =====")
 	// 构建执行结果
 	return nil
 }
@@ -360,10 +339,6 @@ func (s *ProviderSyncService) compareAll(remote *vendors.VendorInfo, localIndex 
 	}
 
 	s.compare(diff, remote, local)
-
-	// 本地和远程一致，无需操作
-	diff.Action = "noop"
-	diff.Reason = "本地和远程数据一致"
 	return diff
 }
 
@@ -372,6 +347,7 @@ func (s *ProviderSyncService) compare(diff *platform_game.SyncDiff, remote *vend
 		diff.Action = constant.SyncActionUpdate
 		diff.Reason = fmt.Sprintf("提供商状态变更: %d -> %d", local.SourceStatus, remote.Status)
 		diff.ConflictType = "status_changed"
+		s.Infof("[提供商同步] 检测到提供商状态变更: %d -> %d", local.SourceStatus, remote.Status)
 		return true
 	}
 	diff.Action = constant.SyncActionNoop
@@ -381,7 +357,7 @@ func (s *ProviderSyncService) compare(diff *platform_game.SyncDiff, remote *vend
 
 // 逆向同步：检查本地数据在远程是否存在，不存在则软删除
 func (s *ProviderSyncService) ReverseSync(ctx context.Context, client vendors.VendorGameServiceClient, remoteResp *RemoteProviderResponse, apply *Apply) error {
-	logger.Info("[提供商逆向同步] 开始执行逆向同步")
+	s.Infof("[提供商逆向同步] 开始执行逆向同步")
 
 	// 构建远程提供商编码索引
 	remoteIndex := make(map[string]bool)
@@ -392,10 +368,10 @@ func (s *ProviderSyncService) ReverseSync(ctx context.Context, client vendors.Ve
 	// 获取本地提供商数据
 	localProviders, err := s.DAOManager.GameProvider.GetAllGameProviders(ctx)
 	if err != nil {
-		logger.Errorf("[提供商逆向同步] ✗ 获取本地数据失败: %v", err)
+		s.Errorf("[提供商逆向同步] ✗ 获取本地数据失败: %v", err)
 		return err
 	}
-	logger.Infof("[提供商逆向同步] ✓ 获取本地数据成功, 共 %d 条", len(localProviders))
+	s.Infof("[提供商逆向同步] ✓ 获取本地数据成功, 共 %d 条", len(localProviders))
 
 	// 在事务中执行软删除
 	tx, err := s.DAOManager.DB.Tx(ctx)
@@ -418,12 +394,12 @@ func (s *ProviderSyncService) ReverseSync(ctx context.Context, client vendors.Ve
 				Exec(ctx)
 
 			if err != nil {
-				logger.Errorf("[提供商逆向同步] 软删除失败: %v", err)
+				s.Errorf("[提供商逆向同步] 软删除失败: %v", err)
 				apply.Failed++
 				continue
 			}
 			apply.Deleted++
-			logger.Infof("[提供商逆向同步] ✓ 已软删除提供商: %s (ID: %d)", localProvider.SourceProviderCode, localProvider.ID)
+			s.Infof("[提供商逆向同步] ✓ 已软删除提供商: %s (ID: %d)", localProvider.SourceProviderCode, localProvider.ID)
 		}
 	}
 
@@ -433,28 +409,28 @@ func (s *ProviderSyncService) ReverseSync(ctx context.Context, client vendors.Ve
 		return err
 	}
 
-	logger.Infof("[提供商逆向同步] ✓ 完成，删除: %d", apply.Deleted)
+	s.Infof("[提供商逆向同步] ✓ 完成，删除: %d", apply.Deleted)
 	return nil
 }
 
-func getRemoteGameProviders(ctx context.Context, client vendors.VendorGameServiceClient, isGetRemoteClient bool) (*RemoteProviderResponse, error) {
+func (s *ProviderSyncService) getRemoteGameProviders(ctx context.Context, client vendors.VendorGameServiceClient, isGetRemoteClient bool) (*RemoteProviderResponse, error) {
 	if isGetRemoteClient {
-		logger.Infof("[同步数据源] 使用远程客户端获取数据")
+		s.Infof("[同步数据源] 使用远程客户端获取数据")
 		remoteResp, err := client.GetVendor(ctx, &vendors.Empty{})
 		if err != nil {
-			logger.Errorf("❌ [同步数据源] 获取远程数据失败: %v", err)
+			s.Errorf("❌ [同步数据源] 获取远程数据失败: %v", err)
 			return nil, err
 		}
-		logger.Infof("[同步数据源] ✓ 获取远程数据成功, 共 %d 条", len(remoteResp.VendorList))
+		s.Infof("[同步数据源] ✓ 获取远程数据成功, 共 %d 条", len(remoteResp.VendorList))
 		return &RemoteProviderResponse{Data: remoteResp.VendorList}, nil
 	} else {
-		logger.Infof("[同步数据源] 使用本地 JSON 数据获取提供商信息")
+		s.Infof("[同步数据源] 使用本地 JSON 数据获取提供商信息")
 		var list []*vendors.VendorInfo
-		if err := loadLocalJSON("provider.json", &list); err != nil {
-			logger.Errorf("[同步数据源] 读取 provider.json 失败: %v", err)
+		if err := locales.LoadLocalVendorRemoteJSON("provider.json", &list); err != nil {
+			s.Errorf("[同步数据源] 读取 provider.json 失败: %v", err)
 			return nil, err
 		}
-		logger.Infof("[同步数据源] ✓ 读取本地 JSON 数据成功, 共 %d 条", len(list))
+		s.Infof("[同步数据源] ✓ 读取本地 JSON 数据成功, 共 %d 条", len(list))
 		return &RemoteProviderResponse{Data: list}, nil
 	}
 }

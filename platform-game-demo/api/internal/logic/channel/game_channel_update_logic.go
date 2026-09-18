@@ -7,9 +7,9 @@ import (
 	"context"
 	"fmt"
 
+	"oa.98ent.com/p9/platform-game/api/internal/constant"
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
-	"oa.98ent.com/p9/platform-game/common/constant"
 
 	"github.com/bytedance/gopkg/util/logger"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -32,7 +32,7 @@ func NewGameChannelUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 }
 
 func (l *GameChannelUpdateLogic) GameChannelUpdate(req *types.GameChannelUpdateReq) (resp *types.GameChannelResp, err error) {
-	if l.svcCtx == nil || l.svcCtx.GrpcClient == nil {
+	if l.svcCtx == nil || l.svcCtx.GameGrpcClient == nil {
 		logger.Error("[API GameChannelUpdate] gRPC client not available")
 		return nil, fmt.Errorf("gRPC client not available")
 	}
@@ -44,7 +44,7 @@ func (l *GameChannelUpdateLogic) GameChannelUpdate(req *types.GameChannelUpdateR
 		ForceLogout: req.ForceLogout,
 	}
 
-	grpcResp, err := l.svcCtx.GrpcClient.GetGameChannelServiceClient().UpdateGameChannel(l.ctx, grpcReq)
+	grpcResp, err := l.svcCtx.GameGrpcClient.GetGameChannelServiceClient().UpdateGameChannel(l.ctx, grpcReq)
 	if err != nil {
 		logger.Errorf("[API GameChannelUpdate] gRPC call failed: %v", err)
 		return nil, fmt.Errorf("gRPC call failed: %s", err.Error())

@@ -18,6 +18,11 @@ import (
 	"oa.98ent.com/p9/platform-game/rpc/ent/gamecurrency"
 	"oa.98ent.com/p9/platform-game/rpc/ent/gameprovider"
 	"oa.98ent.com/p9/platform-game/rpc/ent/gamesynccheckpoint"
+	"oa.98ent.com/p9/platform-game/rpc/ent/operator"
+	"oa.98ent.com/p9/platform-game/rpc/ent/operatorgame"
+	"oa.98ent.com/p9/platform-game/rpc/ent/operatorgamecategory"
+	"oa.98ent.com/p9/platform-game/rpc/ent/operatorgamechannel"
+	"oa.98ent.com/p9/platform-game/rpc/ent/operatorgameprovider"
 	"oa.98ent.com/p9/platform-game/rpc/ent/predicate"
 )
 
@@ -30,13 +35,18 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeCurrency           = "Currency"
-	TypeGame               = "Game"
-	TypeGameCategory       = "GameCategory"
-	TypeGameChannel        = "GameChannel"
-	TypeGameCurrency       = "GameCurrency"
-	TypeGameProvider       = "GameProvider"
-	TypeGameSyncCheckpoint = "GameSyncCheckpoint"
+	TypeCurrency             = "Currency"
+	TypeGame                 = "Game"
+	TypeGameCategory         = "GameCategory"
+	TypeGameChannel          = "GameChannel"
+	TypeGameCurrency         = "GameCurrency"
+	TypeGameProvider         = "GameProvider"
+	TypeGameSyncCheckpoint   = "GameSyncCheckpoint"
+	TypeOperator             = "Operator"
+	TypeOperatorGame         = "OperatorGame"
+	TypeOperatorGameCategory = "OperatorGameCategory"
+	TypeOperatorGameChannel  = "OperatorGameChannel"
+	TypeOperatorGameProvider = "OperatorGameProvider"
 )
 
 // CurrencyMutation represents an operation that mutates the Currency nodes in the graph.
@@ -8312,4 +8322,3482 @@ func (m *GameSyncCheckpointMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *GameSyncCheckpointMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown GameSyncCheckpoint edge %s", name)
+}
+
+// OperatorMutation represents an operation that mutates the Operator nodes in the graph.
+type OperatorMutation struct {
+	config
+	op                       Op
+	typ                      string
+	id                       *int64
+	code                     *string
+	name                     *string
+	timezone_code            *string
+	settlement_currency_code *string
+	creation_status          *int16
+	addcreation_status       *int16
+	publish_status           *int16
+	addpublish_status        *int16
+	publish_task_no          *string
+	published_at             *time.Time
+	status                   *int16
+	addstatus                *int16
+	remark                   *string
+	created_at               *time.Time
+	updated_at               *time.Time
+	clearedFields            map[string]struct{}
+	done                     bool
+	oldValue                 func(context.Context) (*Operator, error)
+	predicates               []predicate.Operator
+}
+
+var _ ent.Mutation = (*OperatorMutation)(nil)
+
+// operatorOption allows management of the mutation configuration using functional options.
+type operatorOption func(*OperatorMutation)
+
+// newOperatorMutation creates new mutation for the Operator entity.
+func newOperatorMutation(c config, op Op, opts ...operatorOption) *OperatorMutation {
+	m := &OperatorMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeOperator,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withOperatorID sets the ID field of the mutation.
+func withOperatorID(id int64) operatorOption {
+	return func(m *OperatorMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Operator
+		)
+		m.oldValue = func(ctx context.Context) (*Operator, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Operator.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withOperator sets the old Operator of the mutation.
+func withOperator(node *Operator) operatorOption {
+	return func(m *OperatorMutation) {
+		m.oldValue = func(context.Context) (*Operator, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m OperatorMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m OperatorMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of Operator entities.
+func (m *OperatorMutation) SetID(id int64) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *OperatorMutation) ID() (id int64, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *OperatorMutation) IDs(ctx context.Context) ([]int64, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int64{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().Operator.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCode sets the "code" field.
+func (m *OperatorMutation) SetCode(s string) {
+	m.code = &s
+}
+
+// Code returns the value of the "code" field in the mutation.
+func (m *OperatorMutation) Code() (r string, exists bool) {
+	v := m.code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCode returns the old "code" field's value of the Operator entity.
+// If the Operator object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorMutation) OldCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCode: %w", err)
+	}
+	return oldValue.Code, nil
+}
+
+// ResetCode resets all changes to the "code" field.
+func (m *OperatorMutation) ResetCode() {
+	m.code = nil
+}
+
+// SetName sets the "name" field.
+func (m *OperatorMutation) SetName(s string) {
+	m.name = &s
+}
+
+// Name returns the value of the "name" field in the mutation.
+func (m *OperatorMutation) Name() (r string, exists bool) {
+	v := m.name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldName returns the old "name" field's value of the Operator entity.
+// If the Operator object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorMutation) OldName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldName: %w", err)
+	}
+	return oldValue.Name, nil
+}
+
+// ResetName resets all changes to the "name" field.
+func (m *OperatorMutation) ResetName() {
+	m.name = nil
+}
+
+// SetTimezoneCode sets the "timezone_code" field.
+func (m *OperatorMutation) SetTimezoneCode(s string) {
+	m.timezone_code = &s
+}
+
+// TimezoneCode returns the value of the "timezone_code" field in the mutation.
+func (m *OperatorMutation) TimezoneCode() (r string, exists bool) {
+	v := m.timezone_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTimezoneCode returns the old "timezone_code" field's value of the Operator entity.
+// If the Operator object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorMutation) OldTimezoneCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTimezoneCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTimezoneCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTimezoneCode: %w", err)
+	}
+	return oldValue.TimezoneCode, nil
+}
+
+// ResetTimezoneCode resets all changes to the "timezone_code" field.
+func (m *OperatorMutation) ResetTimezoneCode() {
+	m.timezone_code = nil
+}
+
+// SetSettlementCurrencyCode sets the "settlement_currency_code" field.
+func (m *OperatorMutation) SetSettlementCurrencyCode(s string) {
+	m.settlement_currency_code = &s
+}
+
+// SettlementCurrencyCode returns the value of the "settlement_currency_code" field in the mutation.
+func (m *OperatorMutation) SettlementCurrencyCode() (r string, exists bool) {
+	v := m.settlement_currency_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSettlementCurrencyCode returns the old "settlement_currency_code" field's value of the Operator entity.
+// If the Operator object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorMutation) OldSettlementCurrencyCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSettlementCurrencyCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSettlementCurrencyCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSettlementCurrencyCode: %w", err)
+	}
+	return oldValue.SettlementCurrencyCode, nil
+}
+
+// ResetSettlementCurrencyCode resets all changes to the "settlement_currency_code" field.
+func (m *OperatorMutation) ResetSettlementCurrencyCode() {
+	m.settlement_currency_code = nil
+}
+
+// SetCreationStatus sets the "creation_status" field.
+func (m *OperatorMutation) SetCreationStatus(i int16) {
+	m.creation_status = &i
+	m.addcreation_status = nil
+}
+
+// CreationStatus returns the value of the "creation_status" field in the mutation.
+func (m *OperatorMutation) CreationStatus() (r int16, exists bool) {
+	v := m.creation_status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreationStatus returns the old "creation_status" field's value of the Operator entity.
+// If the Operator object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorMutation) OldCreationStatus(ctx context.Context) (v int16, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreationStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreationStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreationStatus: %w", err)
+	}
+	return oldValue.CreationStatus, nil
+}
+
+// AddCreationStatus adds i to the "creation_status" field.
+func (m *OperatorMutation) AddCreationStatus(i int16) {
+	if m.addcreation_status != nil {
+		*m.addcreation_status += i
+	} else {
+		m.addcreation_status = &i
+	}
+}
+
+// AddedCreationStatus returns the value that was added to the "creation_status" field in this mutation.
+func (m *OperatorMutation) AddedCreationStatus() (r int16, exists bool) {
+	v := m.addcreation_status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreationStatus resets all changes to the "creation_status" field.
+func (m *OperatorMutation) ResetCreationStatus() {
+	m.creation_status = nil
+	m.addcreation_status = nil
+}
+
+// SetPublishStatus sets the "publish_status" field.
+func (m *OperatorMutation) SetPublishStatus(i int16) {
+	m.publish_status = &i
+	m.addpublish_status = nil
+}
+
+// PublishStatus returns the value of the "publish_status" field in the mutation.
+func (m *OperatorMutation) PublishStatus() (r int16, exists bool) {
+	v := m.publish_status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPublishStatus returns the old "publish_status" field's value of the Operator entity.
+// If the Operator object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorMutation) OldPublishStatus(ctx context.Context) (v int16, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPublishStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPublishStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPublishStatus: %w", err)
+	}
+	return oldValue.PublishStatus, nil
+}
+
+// AddPublishStatus adds i to the "publish_status" field.
+func (m *OperatorMutation) AddPublishStatus(i int16) {
+	if m.addpublish_status != nil {
+		*m.addpublish_status += i
+	} else {
+		m.addpublish_status = &i
+	}
+}
+
+// AddedPublishStatus returns the value that was added to the "publish_status" field in this mutation.
+func (m *OperatorMutation) AddedPublishStatus() (r int16, exists bool) {
+	v := m.addpublish_status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetPublishStatus resets all changes to the "publish_status" field.
+func (m *OperatorMutation) ResetPublishStatus() {
+	m.publish_status = nil
+	m.addpublish_status = nil
+}
+
+// SetPublishTaskNo sets the "publish_task_no" field.
+func (m *OperatorMutation) SetPublishTaskNo(s string) {
+	m.publish_task_no = &s
+}
+
+// PublishTaskNo returns the value of the "publish_task_no" field in the mutation.
+func (m *OperatorMutation) PublishTaskNo() (r string, exists bool) {
+	v := m.publish_task_no
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPublishTaskNo returns the old "publish_task_no" field's value of the Operator entity.
+// If the Operator object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorMutation) OldPublishTaskNo(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPublishTaskNo is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPublishTaskNo requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPublishTaskNo: %w", err)
+	}
+	return oldValue.PublishTaskNo, nil
+}
+
+// ClearPublishTaskNo clears the value of the "publish_task_no" field.
+func (m *OperatorMutation) ClearPublishTaskNo() {
+	m.publish_task_no = nil
+	m.clearedFields[operator.FieldPublishTaskNo] = struct{}{}
+}
+
+// PublishTaskNoCleared returns if the "publish_task_no" field was cleared in this mutation.
+func (m *OperatorMutation) PublishTaskNoCleared() bool {
+	_, ok := m.clearedFields[operator.FieldPublishTaskNo]
+	return ok
+}
+
+// ResetPublishTaskNo resets all changes to the "publish_task_no" field.
+func (m *OperatorMutation) ResetPublishTaskNo() {
+	m.publish_task_no = nil
+	delete(m.clearedFields, operator.FieldPublishTaskNo)
+}
+
+// SetPublishedAt sets the "published_at" field.
+func (m *OperatorMutation) SetPublishedAt(t time.Time) {
+	m.published_at = &t
+}
+
+// PublishedAt returns the value of the "published_at" field in the mutation.
+func (m *OperatorMutation) PublishedAt() (r time.Time, exists bool) {
+	v := m.published_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPublishedAt returns the old "published_at" field's value of the Operator entity.
+// If the Operator object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorMutation) OldPublishedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPublishedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPublishedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPublishedAt: %w", err)
+	}
+	return oldValue.PublishedAt, nil
+}
+
+// ClearPublishedAt clears the value of the "published_at" field.
+func (m *OperatorMutation) ClearPublishedAt() {
+	m.published_at = nil
+	m.clearedFields[operator.FieldPublishedAt] = struct{}{}
+}
+
+// PublishedAtCleared returns if the "published_at" field was cleared in this mutation.
+func (m *OperatorMutation) PublishedAtCleared() bool {
+	_, ok := m.clearedFields[operator.FieldPublishedAt]
+	return ok
+}
+
+// ResetPublishedAt resets all changes to the "published_at" field.
+func (m *OperatorMutation) ResetPublishedAt() {
+	m.published_at = nil
+	delete(m.clearedFields, operator.FieldPublishedAt)
+}
+
+// SetStatus sets the "status" field.
+func (m *OperatorMutation) SetStatus(i int16) {
+	m.status = &i
+	m.addstatus = nil
+}
+
+// Status returns the value of the "status" field in the mutation.
+func (m *OperatorMutation) Status() (r int16, exists bool) {
+	v := m.status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStatus returns the old "status" field's value of the Operator entity.
+// If the Operator object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorMutation) OldStatus(ctx context.Context) (v int16, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
+	}
+	return oldValue.Status, nil
+}
+
+// AddStatus adds i to the "status" field.
+func (m *OperatorMutation) AddStatus(i int16) {
+	if m.addstatus != nil {
+		*m.addstatus += i
+	} else {
+		m.addstatus = &i
+	}
+}
+
+// AddedStatus returns the value that was added to the "status" field in this mutation.
+func (m *OperatorMutation) AddedStatus() (r int16, exists bool) {
+	v := m.addstatus
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetStatus resets all changes to the "status" field.
+func (m *OperatorMutation) ResetStatus() {
+	m.status = nil
+	m.addstatus = nil
+}
+
+// SetRemark sets the "remark" field.
+func (m *OperatorMutation) SetRemark(s string) {
+	m.remark = &s
+}
+
+// Remark returns the value of the "remark" field in the mutation.
+func (m *OperatorMutation) Remark() (r string, exists bool) {
+	v := m.remark
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRemark returns the old "remark" field's value of the Operator entity.
+// If the Operator object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorMutation) OldRemark(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRemark is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRemark requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRemark: %w", err)
+	}
+	return oldValue.Remark, nil
+}
+
+// ClearRemark clears the value of the "remark" field.
+func (m *OperatorMutation) ClearRemark() {
+	m.remark = nil
+	m.clearedFields[operator.FieldRemark] = struct{}{}
+}
+
+// RemarkCleared returns if the "remark" field was cleared in this mutation.
+func (m *OperatorMutation) RemarkCleared() bool {
+	_, ok := m.clearedFields[operator.FieldRemark]
+	return ok
+}
+
+// ResetRemark resets all changes to the "remark" field.
+func (m *OperatorMutation) ResetRemark() {
+	m.remark = nil
+	delete(m.clearedFields, operator.FieldRemark)
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *OperatorMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *OperatorMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the Operator entity.
+// If the Operator object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *OperatorMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *OperatorMutation) SetUpdatedAt(t time.Time) {
+	m.updated_at = &t
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *OperatorMutation) UpdatedAt() (r time.Time, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the Operator entity.
+// If the Operator object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *OperatorMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+}
+
+// Where appends a list predicates to the OperatorMutation builder.
+func (m *OperatorMutation) Where(ps ...predicate.Operator) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the OperatorMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *OperatorMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.Operator, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *OperatorMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *OperatorMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (Operator).
+func (m *OperatorMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *OperatorMutation) Fields() []string {
+	fields := make([]string, 0, 12)
+	if m.code != nil {
+		fields = append(fields, operator.FieldCode)
+	}
+	if m.name != nil {
+		fields = append(fields, operator.FieldName)
+	}
+	if m.timezone_code != nil {
+		fields = append(fields, operator.FieldTimezoneCode)
+	}
+	if m.settlement_currency_code != nil {
+		fields = append(fields, operator.FieldSettlementCurrencyCode)
+	}
+	if m.creation_status != nil {
+		fields = append(fields, operator.FieldCreationStatus)
+	}
+	if m.publish_status != nil {
+		fields = append(fields, operator.FieldPublishStatus)
+	}
+	if m.publish_task_no != nil {
+		fields = append(fields, operator.FieldPublishTaskNo)
+	}
+	if m.published_at != nil {
+		fields = append(fields, operator.FieldPublishedAt)
+	}
+	if m.status != nil {
+		fields = append(fields, operator.FieldStatus)
+	}
+	if m.remark != nil {
+		fields = append(fields, operator.FieldRemark)
+	}
+	if m.created_at != nil {
+		fields = append(fields, operator.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, operator.FieldUpdatedAt)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *OperatorMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case operator.FieldCode:
+		return m.Code()
+	case operator.FieldName:
+		return m.Name()
+	case operator.FieldTimezoneCode:
+		return m.TimezoneCode()
+	case operator.FieldSettlementCurrencyCode:
+		return m.SettlementCurrencyCode()
+	case operator.FieldCreationStatus:
+		return m.CreationStatus()
+	case operator.FieldPublishStatus:
+		return m.PublishStatus()
+	case operator.FieldPublishTaskNo:
+		return m.PublishTaskNo()
+	case operator.FieldPublishedAt:
+		return m.PublishedAt()
+	case operator.FieldStatus:
+		return m.Status()
+	case operator.FieldRemark:
+		return m.Remark()
+	case operator.FieldCreatedAt:
+		return m.CreatedAt()
+	case operator.FieldUpdatedAt:
+		return m.UpdatedAt()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *OperatorMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case operator.FieldCode:
+		return m.OldCode(ctx)
+	case operator.FieldName:
+		return m.OldName(ctx)
+	case operator.FieldTimezoneCode:
+		return m.OldTimezoneCode(ctx)
+	case operator.FieldSettlementCurrencyCode:
+		return m.OldSettlementCurrencyCode(ctx)
+	case operator.FieldCreationStatus:
+		return m.OldCreationStatus(ctx)
+	case operator.FieldPublishStatus:
+		return m.OldPublishStatus(ctx)
+	case operator.FieldPublishTaskNo:
+		return m.OldPublishTaskNo(ctx)
+	case operator.FieldPublishedAt:
+		return m.OldPublishedAt(ctx)
+	case operator.FieldStatus:
+		return m.OldStatus(ctx)
+	case operator.FieldRemark:
+		return m.OldRemark(ctx)
+	case operator.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case operator.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	}
+	return nil, fmt.Errorf("unknown Operator field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *OperatorMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case operator.FieldCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCode(v)
+		return nil
+	case operator.FieldName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetName(v)
+		return nil
+	case operator.FieldTimezoneCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTimezoneCode(v)
+		return nil
+	case operator.FieldSettlementCurrencyCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSettlementCurrencyCode(v)
+		return nil
+	case operator.FieldCreationStatus:
+		v, ok := value.(int16)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreationStatus(v)
+		return nil
+	case operator.FieldPublishStatus:
+		v, ok := value.(int16)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPublishStatus(v)
+		return nil
+	case operator.FieldPublishTaskNo:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPublishTaskNo(v)
+		return nil
+	case operator.FieldPublishedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPublishedAt(v)
+		return nil
+	case operator.FieldStatus:
+		v, ok := value.(int16)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStatus(v)
+		return nil
+	case operator.FieldRemark:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRemark(v)
+		return nil
+	case operator.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case operator.FieldUpdatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Operator field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *OperatorMutation) AddedFields() []string {
+	var fields []string
+	if m.addcreation_status != nil {
+		fields = append(fields, operator.FieldCreationStatus)
+	}
+	if m.addpublish_status != nil {
+		fields = append(fields, operator.FieldPublishStatus)
+	}
+	if m.addstatus != nil {
+		fields = append(fields, operator.FieldStatus)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *OperatorMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case operator.FieldCreationStatus:
+		return m.AddedCreationStatus()
+	case operator.FieldPublishStatus:
+		return m.AddedPublishStatus()
+	case operator.FieldStatus:
+		return m.AddedStatus()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *OperatorMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case operator.FieldCreationStatus:
+		v, ok := value.(int16)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreationStatus(v)
+		return nil
+	case operator.FieldPublishStatus:
+		v, ok := value.(int16)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddPublishStatus(v)
+		return nil
+	case operator.FieldStatus:
+		v, ok := value.(int16)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddStatus(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Operator numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *OperatorMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(operator.FieldPublishTaskNo) {
+		fields = append(fields, operator.FieldPublishTaskNo)
+	}
+	if m.FieldCleared(operator.FieldPublishedAt) {
+		fields = append(fields, operator.FieldPublishedAt)
+	}
+	if m.FieldCleared(operator.FieldRemark) {
+		fields = append(fields, operator.FieldRemark)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *OperatorMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *OperatorMutation) ClearField(name string) error {
+	switch name {
+	case operator.FieldPublishTaskNo:
+		m.ClearPublishTaskNo()
+		return nil
+	case operator.FieldPublishedAt:
+		m.ClearPublishedAt()
+		return nil
+	case operator.FieldRemark:
+		m.ClearRemark()
+		return nil
+	}
+	return fmt.Errorf("unknown Operator nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *OperatorMutation) ResetField(name string) error {
+	switch name {
+	case operator.FieldCode:
+		m.ResetCode()
+		return nil
+	case operator.FieldName:
+		m.ResetName()
+		return nil
+	case operator.FieldTimezoneCode:
+		m.ResetTimezoneCode()
+		return nil
+	case operator.FieldSettlementCurrencyCode:
+		m.ResetSettlementCurrencyCode()
+		return nil
+	case operator.FieldCreationStatus:
+		m.ResetCreationStatus()
+		return nil
+	case operator.FieldPublishStatus:
+		m.ResetPublishStatus()
+		return nil
+	case operator.FieldPublishTaskNo:
+		m.ResetPublishTaskNo()
+		return nil
+	case operator.FieldPublishedAt:
+		m.ResetPublishedAt()
+		return nil
+	case operator.FieldStatus:
+		m.ResetStatus()
+		return nil
+	case operator.FieldRemark:
+		m.ResetRemark()
+		return nil
+	case operator.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case operator.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	}
+	return fmt.Errorf("unknown Operator field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *OperatorMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *OperatorMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *OperatorMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *OperatorMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *OperatorMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *OperatorMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *OperatorMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown Operator unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *OperatorMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown Operator edge %s", name)
+}
+
+// OperatorGameMutation represents an operation that mutates the OperatorGame nodes in the graph.
+type OperatorGameMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int64
+	op_code       *string
+	game_code     *string
+	name          *string
+	status        *int16
+	addstatus     *int16
+	created_at    *time.Time
+	updated_at    *time.Time
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*OperatorGame, error)
+	predicates    []predicate.OperatorGame
+}
+
+var _ ent.Mutation = (*OperatorGameMutation)(nil)
+
+// operatorgameOption allows management of the mutation configuration using functional options.
+type operatorgameOption func(*OperatorGameMutation)
+
+// newOperatorGameMutation creates new mutation for the OperatorGame entity.
+func newOperatorGameMutation(c config, op Op, opts ...operatorgameOption) *OperatorGameMutation {
+	m := &OperatorGameMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeOperatorGame,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withOperatorGameID sets the ID field of the mutation.
+func withOperatorGameID(id int64) operatorgameOption {
+	return func(m *OperatorGameMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *OperatorGame
+		)
+		m.oldValue = func(ctx context.Context) (*OperatorGame, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().OperatorGame.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withOperatorGame sets the old OperatorGame of the mutation.
+func withOperatorGame(node *OperatorGame) operatorgameOption {
+	return func(m *OperatorGameMutation) {
+		m.oldValue = func(context.Context) (*OperatorGame, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m OperatorGameMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m OperatorGameMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of OperatorGame entities.
+func (m *OperatorGameMutation) SetID(id int64) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *OperatorGameMutation) ID() (id int64, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *OperatorGameMutation) IDs(ctx context.Context) ([]int64, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int64{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().OperatorGame.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetOpCode sets the "op_code" field.
+func (m *OperatorGameMutation) SetOpCode(s string) {
+	m.op_code = &s
+}
+
+// OpCode returns the value of the "op_code" field in the mutation.
+func (m *OperatorGameMutation) OpCode() (r string, exists bool) {
+	v := m.op_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOpCode returns the old "op_code" field's value of the OperatorGame entity.
+// If the OperatorGame object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorGameMutation) OldOpCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOpCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOpCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOpCode: %w", err)
+	}
+	return oldValue.OpCode, nil
+}
+
+// ResetOpCode resets all changes to the "op_code" field.
+func (m *OperatorGameMutation) ResetOpCode() {
+	m.op_code = nil
+}
+
+// SetGameCode sets the "game_code" field.
+func (m *OperatorGameMutation) SetGameCode(s string) {
+	m.game_code = &s
+}
+
+// GameCode returns the value of the "game_code" field in the mutation.
+func (m *OperatorGameMutation) GameCode() (r string, exists bool) {
+	v := m.game_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGameCode returns the old "game_code" field's value of the OperatorGame entity.
+// If the OperatorGame object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorGameMutation) OldGameCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGameCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGameCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGameCode: %w", err)
+	}
+	return oldValue.GameCode, nil
+}
+
+// ResetGameCode resets all changes to the "game_code" field.
+func (m *OperatorGameMutation) ResetGameCode() {
+	m.game_code = nil
+}
+
+// SetName sets the "name" field.
+func (m *OperatorGameMutation) SetName(s string) {
+	m.name = &s
+}
+
+// Name returns the value of the "name" field in the mutation.
+func (m *OperatorGameMutation) Name() (r string, exists bool) {
+	v := m.name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldName returns the old "name" field's value of the OperatorGame entity.
+// If the OperatorGame object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorGameMutation) OldName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldName: %w", err)
+	}
+	return oldValue.Name, nil
+}
+
+// ResetName resets all changes to the "name" field.
+func (m *OperatorGameMutation) ResetName() {
+	m.name = nil
+}
+
+// SetStatus sets the "status" field.
+func (m *OperatorGameMutation) SetStatus(i int16) {
+	m.status = &i
+	m.addstatus = nil
+}
+
+// Status returns the value of the "status" field in the mutation.
+func (m *OperatorGameMutation) Status() (r int16, exists bool) {
+	v := m.status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStatus returns the old "status" field's value of the OperatorGame entity.
+// If the OperatorGame object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorGameMutation) OldStatus(ctx context.Context) (v int16, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
+	}
+	return oldValue.Status, nil
+}
+
+// AddStatus adds i to the "status" field.
+func (m *OperatorGameMutation) AddStatus(i int16) {
+	if m.addstatus != nil {
+		*m.addstatus += i
+	} else {
+		m.addstatus = &i
+	}
+}
+
+// AddedStatus returns the value that was added to the "status" field in this mutation.
+func (m *OperatorGameMutation) AddedStatus() (r int16, exists bool) {
+	v := m.addstatus
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetStatus resets all changes to the "status" field.
+func (m *OperatorGameMutation) ResetStatus() {
+	m.status = nil
+	m.addstatus = nil
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *OperatorGameMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *OperatorGameMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the OperatorGame entity.
+// If the OperatorGame object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorGameMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *OperatorGameMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *OperatorGameMutation) SetUpdatedAt(t time.Time) {
+	m.updated_at = &t
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *OperatorGameMutation) UpdatedAt() (r time.Time, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the OperatorGame entity.
+// If the OperatorGame object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorGameMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *OperatorGameMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+}
+
+// Where appends a list predicates to the OperatorGameMutation builder.
+func (m *OperatorGameMutation) Where(ps ...predicate.OperatorGame) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the OperatorGameMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *OperatorGameMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.OperatorGame, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *OperatorGameMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *OperatorGameMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (OperatorGame).
+func (m *OperatorGameMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *OperatorGameMutation) Fields() []string {
+	fields := make([]string, 0, 6)
+	if m.op_code != nil {
+		fields = append(fields, operatorgame.FieldOpCode)
+	}
+	if m.game_code != nil {
+		fields = append(fields, operatorgame.FieldGameCode)
+	}
+	if m.name != nil {
+		fields = append(fields, operatorgame.FieldName)
+	}
+	if m.status != nil {
+		fields = append(fields, operatorgame.FieldStatus)
+	}
+	if m.created_at != nil {
+		fields = append(fields, operatorgame.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, operatorgame.FieldUpdatedAt)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *OperatorGameMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case operatorgame.FieldOpCode:
+		return m.OpCode()
+	case operatorgame.FieldGameCode:
+		return m.GameCode()
+	case operatorgame.FieldName:
+		return m.Name()
+	case operatorgame.FieldStatus:
+		return m.Status()
+	case operatorgame.FieldCreatedAt:
+		return m.CreatedAt()
+	case operatorgame.FieldUpdatedAt:
+		return m.UpdatedAt()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *OperatorGameMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case operatorgame.FieldOpCode:
+		return m.OldOpCode(ctx)
+	case operatorgame.FieldGameCode:
+		return m.OldGameCode(ctx)
+	case operatorgame.FieldName:
+		return m.OldName(ctx)
+	case operatorgame.FieldStatus:
+		return m.OldStatus(ctx)
+	case operatorgame.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case operatorgame.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	}
+	return nil, fmt.Errorf("unknown OperatorGame field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *OperatorGameMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case operatorgame.FieldOpCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOpCode(v)
+		return nil
+	case operatorgame.FieldGameCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGameCode(v)
+		return nil
+	case operatorgame.FieldName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetName(v)
+		return nil
+	case operatorgame.FieldStatus:
+		v, ok := value.(int16)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStatus(v)
+		return nil
+	case operatorgame.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case operatorgame.FieldUpdatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown OperatorGame field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *OperatorGameMutation) AddedFields() []string {
+	var fields []string
+	if m.addstatus != nil {
+		fields = append(fields, operatorgame.FieldStatus)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *OperatorGameMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case operatorgame.FieldStatus:
+		return m.AddedStatus()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *OperatorGameMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case operatorgame.FieldStatus:
+		v, ok := value.(int16)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddStatus(v)
+		return nil
+	}
+	return fmt.Errorf("unknown OperatorGame numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *OperatorGameMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *OperatorGameMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *OperatorGameMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown OperatorGame nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *OperatorGameMutation) ResetField(name string) error {
+	switch name {
+	case operatorgame.FieldOpCode:
+		m.ResetOpCode()
+		return nil
+	case operatorgame.FieldGameCode:
+		m.ResetGameCode()
+		return nil
+	case operatorgame.FieldName:
+		m.ResetName()
+		return nil
+	case operatorgame.FieldStatus:
+		m.ResetStatus()
+		return nil
+	case operatorgame.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case operatorgame.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	}
+	return fmt.Errorf("unknown OperatorGame field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *OperatorGameMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *OperatorGameMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *OperatorGameMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *OperatorGameMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *OperatorGameMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *OperatorGameMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *OperatorGameMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown OperatorGame unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *OperatorGameMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown OperatorGame edge %s", name)
+}
+
+// OperatorGameCategoryMutation represents an operation that mutates the OperatorGameCategory nodes in the graph.
+type OperatorGameCategoryMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int64
+	op_code       *string
+	category_code *string
+	status        *int16
+	addstatus     *int16
+	created_at    *time.Time
+	updated_at    *time.Time
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*OperatorGameCategory, error)
+	predicates    []predicate.OperatorGameCategory
+}
+
+var _ ent.Mutation = (*OperatorGameCategoryMutation)(nil)
+
+// operatorgamecategoryOption allows management of the mutation configuration using functional options.
+type operatorgamecategoryOption func(*OperatorGameCategoryMutation)
+
+// newOperatorGameCategoryMutation creates new mutation for the OperatorGameCategory entity.
+func newOperatorGameCategoryMutation(c config, op Op, opts ...operatorgamecategoryOption) *OperatorGameCategoryMutation {
+	m := &OperatorGameCategoryMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeOperatorGameCategory,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withOperatorGameCategoryID sets the ID field of the mutation.
+func withOperatorGameCategoryID(id int64) operatorgamecategoryOption {
+	return func(m *OperatorGameCategoryMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *OperatorGameCategory
+		)
+		m.oldValue = func(ctx context.Context) (*OperatorGameCategory, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().OperatorGameCategory.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withOperatorGameCategory sets the old OperatorGameCategory of the mutation.
+func withOperatorGameCategory(node *OperatorGameCategory) operatorgamecategoryOption {
+	return func(m *OperatorGameCategoryMutation) {
+		m.oldValue = func(context.Context) (*OperatorGameCategory, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m OperatorGameCategoryMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m OperatorGameCategoryMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of OperatorGameCategory entities.
+func (m *OperatorGameCategoryMutation) SetID(id int64) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *OperatorGameCategoryMutation) ID() (id int64, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *OperatorGameCategoryMutation) IDs(ctx context.Context) ([]int64, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int64{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().OperatorGameCategory.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetOpCode sets the "op_code" field.
+func (m *OperatorGameCategoryMutation) SetOpCode(s string) {
+	m.op_code = &s
+}
+
+// OpCode returns the value of the "op_code" field in the mutation.
+func (m *OperatorGameCategoryMutation) OpCode() (r string, exists bool) {
+	v := m.op_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOpCode returns the old "op_code" field's value of the OperatorGameCategory entity.
+// If the OperatorGameCategory object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorGameCategoryMutation) OldOpCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOpCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOpCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOpCode: %w", err)
+	}
+	return oldValue.OpCode, nil
+}
+
+// ResetOpCode resets all changes to the "op_code" field.
+func (m *OperatorGameCategoryMutation) ResetOpCode() {
+	m.op_code = nil
+}
+
+// SetCategoryCode sets the "category_code" field.
+func (m *OperatorGameCategoryMutation) SetCategoryCode(s string) {
+	m.category_code = &s
+}
+
+// CategoryCode returns the value of the "category_code" field in the mutation.
+func (m *OperatorGameCategoryMutation) CategoryCode() (r string, exists bool) {
+	v := m.category_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCategoryCode returns the old "category_code" field's value of the OperatorGameCategory entity.
+// If the OperatorGameCategory object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorGameCategoryMutation) OldCategoryCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCategoryCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCategoryCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCategoryCode: %w", err)
+	}
+	return oldValue.CategoryCode, nil
+}
+
+// ResetCategoryCode resets all changes to the "category_code" field.
+func (m *OperatorGameCategoryMutation) ResetCategoryCode() {
+	m.category_code = nil
+}
+
+// SetStatus sets the "status" field.
+func (m *OperatorGameCategoryMutation) SetStatus(i int16) {
+	m.status = &i
+	m.addstatus = nil
+}
+
+// Status returns the value of the "status" field in the mutation.
+func (m *OperatorGameCategoryMutation) Status() (r int16, exists bool) {
+	v := m.status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStatus returns the old "status" field's value of the OperatorGameCategory entity.
+// If the OperatorGameCategory object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorGameCategoryMutation) OldStatus(ctx context.Context) (v int16, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
+	}
+	return oldValue.Status, nil
+}
+
+// AddStatus adds i to the "status" field.
+func (m *OperatorGameCategoryMutation) AddStatus(i int16) {
+	if m.addstatus != nil {
+		*m.addstatus += i
+	} else {
+		m.addstatus = &i
+	}
+}
+
+// AddedStatus returns the value that was added to the "status" field in this mutation.
+func (m *OperatorGameCategoryMutation) AddedStatus() (r int16, exists bool) {
+	v := m.addstatus
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetStatus resets all changes to the "status" field.
+func (m *OperatorGameCategoryMutation) ResetStatus() {
+	m.status = nil
+	m.addstatus = nil
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *OperatorGameCategoryMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *OperatorGameCategoryMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the OperatorGameCategory entity.
+// If the OperatorGameCategory object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorGameCategoryMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *OperatorGameCategoryMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *OperatorGameCategoryMutation) SetUpdatedAt(t time.Time) {
+	m.updated_at = &t
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *OperatorGameCategoryMutation) UpdatedAt() (r time.Time, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the OperatorGameCategory entity.
+// If the OperatorGameCategory object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorGameCategoryMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *OperatorGameCategoryMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+}
+
+// Where appends a list predicates to the OperatorGameCategoryMutation builder.
+func (m *OperatorGameCategoryMutation) Where(ps ...predicate.OperatorGameCategory) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the OperatorGameCategoryMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *OperatorGameCategoryMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.OperatorGameCategory, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *OperatorGameCategoryMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *OperatorGameCategoryMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (OperatorGameCategory).
+func (m *OperatorGameCategoryMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *OperatorGameCategoryMutation) Fields() []string {
+	fields := make([]string, 0, 5)
+	if m.op_code != nil {
+		fields = append(fields, operatorgamecategory.FieldOpCode)
+	}
+	if m.category_code != nil {
+		fields = append(fields, operatorgamecategory.FieldCategoryCode)
+	}
+	if m.status != nil {
+		fields = append(fields, operatorgamecategory.FieldStatus)
+	}
+	if m.created_at != nil {
+		fields = append(fields, operatorgamecategory.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, operatorgamecategory.FieldUpdatedAt)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *OperatorGameCategoryMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case operatorgamecategory.FieldOpCode:
+		return m.OpCode()
+	case operatorgamecategory.FieldCategoryCode:
+		return m.CategoryCode()
+	case operatorgamecategory.FieldStatus:
+		return m.Status()
+	case operatorgamecategory.FieldCreatedAt:
+		return m.CreatedAt()
+	case operatorgamecategory.FieldUpdatedAt:
+		return m.UpdatedAt()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *OperatorGameCategoryMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case operatorgamecategory.FieldOpCode:
+		return m.OldOpCode(ctx)
+	case operatorgamecategory.FieldCategoryCode:
+		return m.OldCategoryCode(ctx)
+	case operatorgamecategory.FieldStatus:
+		return m.OldStatus(ctx)
+	case operatorgamecategory.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case operatorgamecategory.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	}
+	return nil, fmt.Errorf("unknown OperatorGameCategory field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *OperatorGameCategoryMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case operatorgamecategory.FieldOpCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOpCode(v)
+		return nil
+	case operatorgamecategory.FieldCategoryCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCategoryCode(v)
+		return nil
+	case operatorgamecategory.FieldStatus:
+		v, ok := value.(int16)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStatus(v)
+		return nil
+	case operatorgamecategory.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case operatorgamecategory.FieldUpdatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown OperatorGameCategory field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *OperatorGameCategoryMutation) AddedFields() []string {
+	var fields []string
+	if m.addstatus != nil {
+		fields = append(fields, operatorgamecategory.FieldStatus)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *OperatorGameCategoryMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case operatorgamecategory.FieldStatus:
+		return m.AddedStatus()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *OperatorGameCategoryMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case operatorgamecategory.FieldStatus:
+		v, ok := value.(int16)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddStatus(v)
+		return nil
+	}
+	return fmt.Errorf("unknown OperatorGameCategory numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *OperatorGameCategoryMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *OperatorGameCategoryMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *OperatorGameCategoryMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown OperatorGameCategory nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *OperatorGameCategoryMutation) ResetField(name string) error {
+	switch name {
+	case operatorgamecategory.FieldOpCode:
+		m.ResetOpCode()
+		return nil
+	case operatorgamecategory.FieldCategoryCode:
+		m.ResetCategoryCode()
+		return nil
+	case operatorgamecategory.FieldStatus:
+		m.ResetStatus()
+		return nil
+	case operatorgamecategory.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case operatorgamecategory.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	}
+	return fmt.Errorf("unknown OperatorGameCategory field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *OperatorGameCategoryMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *OperatorGameCategoryMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *OperatorGameCategoryMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *OperatorGameCategoryMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *OperatorGameCategoryMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *OperatorGameCategoryMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *OperatorGameCategoryMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown OperatorGameCategory unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *OperatorGameCategoryMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown OperatorGameCategory edge %s", name)
+}
+
+// OperatorGameChannelMutation represents an operation that mutates the OperatorGameChannel nodes in the graph.
+type OperatorGameChannelMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int64
+	op_code       *string
+	channel_code  *string
+	status        *int16
+	addstatus     *int16
+	created_at    *time.Time
+	updated_at    *time.Time
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*OperatorGameChannel, error)
+	predicates    []predicate.OperatorGameChannel
+}
+
+var _ ent.Mutation = (*OperatorGameChannelMutation)(nil)
+
+// operatorgamechannelOption allows management of the mutation configuration using functional options.
+type operatorgamechannelOption func(*OperatorGameChannelMutation)
+
+// newOperatorGameChannelMutation creates new mutation for the OperatorGameChannel entity.
+func newOperatorGameChannelMutation(c config, op Op, opts ...operatorgamechannelOption) *OperatorGameChannelMutation {
+	m := &OperatorGameChannelMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeOperatorGameChannel,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withOperatorGameChannelID sets the ID field of the mutation.
+func withOperatorGameChannelID(id int64) operatorgamechannelOption {
+	return func(m *OperatorGameChannelMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *OperatorGameChannel
+		)
+		m.oldValue = func(ctx context.Context) (*OperatorGameChannel, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().OperatorGameChannel.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withOperatorGameChannel sets the old OperatorGameChannel of the mutation.
+func withOperatorGameChannel(node *OperatorGameChannel) operatorgamechannelOption {
+	return func(m *OperatorGameChannelMutation) {
+		m.oldValue = func(context.Context) (*OperatorGameChannel, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m OperatorGameChannelMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m OperatorGameChannelMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of OperatorGameChannel entities.
+func (m *OperatorGameChannelMutation) SetID(id int64) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *OperatorGameChannelMutation) ID() (id int64, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *OperatorGameChannelMutation) IDs(ctx context.Context) ([]int64, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int64{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().OperatorGameChannel.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetOpCode sets the "op_code" field.
+func (m *OperatorGameChannelMutation) SetOpCode(s string) {
+	m.op_code = &s
+}
+
+// OpCode returns the value of the "op_code" field in the mutation.
+func (m *OperatorGameChannelMutation) OpCode() (r string, exists bool) {
+	v := m.op_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOpCode returns the old "op_code" field's value of the OperatorGameChannel entity.
+// If the OperatorGameChannel object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorGameChannelMutation) OldOpCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOpCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOpCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOpCode: %w", err)
+	}
+	return oldValue.OpCode, nil
+}
+
+// ResetOpCode resets all changes to the "op_code" field.
+func (m *OperatorGameChannelMutation) ResetOpCode() {
+	m.op_code = nil
+}
+
+// SetChannelCode sets the "channel_code" field.
+func (m *OperatorGameChannelMutation) SetChannelCode(s string) {
+	m.channel_code = &s
+}
+
+// ChannelCode returns the value of the "channel_code" field in the mutation.
+func (m *OperatorGameChannelMutation) ChannelCode() (r string, exists bool) {
+	v := m.channel_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldChannelCode returns the old "channel_code" field's value of the OperatorGameChannel entity.
+// If the OperatorGameChannel object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorGameChannelMutation) OldChannelCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldChannelCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldChannelCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldChannelCode: %w", err)
+	}
+	return oldValue.ChannelCode, nil
+}
+
+// ResetChannelCode resets all changes to the "channel_code" field.
+func (m *OperatorGameChannelMutation) ResetChannelCode() {
+	m.channel_code = nil
+}
+
+// SetStatus sets the "status" field.
+func (m *OperatorGameChannelMutation) SetStatus(i int16) {
+	m.status = &i
+	m.addstatus = nil
+}
+
+// Status returns the value of the "status" field in the mutation.
+func (m *OperatorGameChannelMutation) Status() (r int16, exists bool) {
+	v := m.status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStatus returns the old "status" field's value of the OperatorGameChannel entity.
+// If the OperatorGameChannel object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorGameChannelMutation) OldStatus(ctx context.Context) (v int16, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
+	}
+	return oldValue.Status, nil
+}
+
+// AddStatus adds i to the "status" field.
+func (m *OperatorGameChannelMutation) AddStatus(i int16) {
+	if m.addstatus != nil {
+		*m.addstatus += i
+	} else {
+		m.addstatus = &i
+	}
+}
+
+// AddedStatus returns the value that was added to the "status" field in this mutation.
+func (m *OperatorGameChannelMutation) AddedStatus() (r int16, exists bool) {
+	v := m.addstatus
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetStatus resets all changes to the "status" field.
+func (m *OperatorGameChannelMutation) ResetStatus() {
+	m.status = nil
+	m.addstatus = nil
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *OperatorGameChannelMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *OperatorGameChannelMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the OperatorGameChannel entity.
+// If the OperatorGameChannel object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorGameChannelMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *OperatorGameChannelMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *OperatorGameChannelMutation) SetUpdatedAt(t time.Time) {
+	m.updated_at = &t
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *OperatorGameChannelMutation) UpdatedAt() (r time.Time, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the OperatorGameChannel entity.
+// If the OperatorGameChannel object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorGameChannelMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *OperatorGameChannelMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+}
+
+// Where appends a list predicates to the OperatorGameChannelMutation builder.
+func (m *OperatorGameChannelMutation) Where(ps ...predicate.OperatorGameChannel) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the OperatorGameChannelMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *OperatorGameChannelMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.OperatorGameChannel, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *OperatorGameChannelMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *OperatorGameChannelMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (OperatorGameChannel).
+func (m *OperatorGameChannelMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *OperatorGameChannelMutation) Fields() []string {
+	fields := make([]string, 0, 5)
+	if m.op_code != nil {
+		fields = append(fields, operatorgamechannel.FieldOpCode)
+	}
+	if m.channel_code != nil {
+		fields = append(fields, operatorgamechannel.FieldChannelCode)
+	}
+	if m.status != nil {
+		fields = append(fields, operatorgamechannel.FieldStatus)
+	}
+	if m.created_at != nil {
+		fields = append(fields, operatorgamechannel.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, operatorgamechannel.FieldUpdatedAt)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *OperatorGameChannelMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case operatorgamechannel.FieldOpCode:
+		return m.OpCode()
+	case operatorgamechannel.FieldChannelCode:
+		return m.ChannelCode()
+	case operatorgamechannel.FieldStatus:
+		return m.Status()
+	case operatorgamechannel.FieldCreatedAt:
+		return m.CreatedAt()
+	case operatorgamechannel.FieldUpdatedAt:
+		return m.UpdatedAt()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *OperatorGameChannelMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case operatorgamechannel.FieldOpCode:
+		return m.OldOpCode(ctx)
+	case operatorgamechannel.FieldChannelCode:
+		return m.OldChannelCode(ctx)
+	case operatorgamechannel.FieldStatus:
+		return m.OldStatus(ctx)
+	case operatorgamechannel.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case operatorgamechannel.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	}
+	return nil, fmt.Errorf("unknown OperatorGameChannel field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *OperatorGameChannelMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case operatorgamechannel.FieldOpCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOpCode(v)
+		return nil
+	case operatorgamechannel.FieldChannelCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetChannelCode(v)
+		return nil
+	case operatorgamechannel.FieldStatus:
+		v, ok := value.(int16)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStatus(v)
+		return nil
+	case operatorgamechannel.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case operatorgamechannel.FieldUpdatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown OperatorGameChannel field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *OperatorGameChannelMutation) AddedFields() []string {
+	var fields []string
+	if m.addstatus != nil {
+		fields = append(fields, operatorgamechannel.FieldStatus)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *OperatorGameChannelMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case operatorgamechannel.FieldStatus:
+		return m.AddedStatus()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *OperatorGameChannelMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case operatorgamechannel.FieldStatus:
+		v, ok := value.(int16)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddStatus(v)
+		return nil
+	}
+	return fmt.Errorf("unknown OperatorGameChannel numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *OperatorGameChannelMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *OperatorGameChannelMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *OperatorGameChannelMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown OperatorGameChannel nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *OperatorGameChannelMutation) ResetField(name string) error {
+	switch name {
+	case operatorgamechannel.FieldOpCode:
+		m.ResetOpCode()
+		return nil
+	case operatorgamechannel.FieldChannelCode:
+		m.ResetChannelCode()
+		return nil
+	case operatorgamechannel.FieldStatus:
+		m.ResetStatus()
+		return nil
+	case operatorgamechannel.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case operatorgamechannel.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	}
+	return fmt.Errorf("unknown OperatorGameChannel field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *OperatorGameChannelMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *OperatorGameChannelMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *OperatorGameChannelMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *OperatorGameChannelMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *OperatorGameChannelMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *OperatorGameChannelMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *OperatorGameChannelMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown OperatorGameChannel unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *OperatorGameChannelMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown OperatorGameChannel edge %s", name)
+}
+
+// OperatorGameProviderMutation represents an operation that mutates the OperatorGameProvider nodes in the graph.
+type OperatorGameProviderMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int64
+	op_code       *string
+	provider_code *string
+	status        *int16
+	addstatus     *int16
+	created_at    *time.Time
+	updated_at    *time.Time
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*OperatorGameProvider, error)
+	predicates    []predicate.OperatorGameProvider
+}
+
+var _ ent.Mutation = (*OperatorGameProviderMutation)(nil)
+
+// operatorgameproviderOption allows management of the mutation configuration using functional options.
+type operatorgameproviderOption func(*OperatorGameProviderMutation)
+
+// newOperatorGameProviderMutation creates new mutation for the OperatorGameProvider entity.
+func newOperatorGameProviderMutation(c config, op Op, opts ...operatorgameproviderOption) *OperatorGameProviderMutation {
+	m := &OperatorGameProviderMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeOperatorGameProvider,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withOperatorGameProviderID sets the ID field of the mutation.
+func withOperatorGameProviderID(id int64) operatorgameproviderOption {
+	return func(m *OperatorGameProviderMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *OperatorGameProvider
+		)
+		m.oldValue = func(ctx context.Context) (*OperatorGameProvider, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().OperatorGameProvider.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withOperatorGameProvider sets the old OperatorGameProvider of the mutation.
+func withOperatorGameProvider(node *OperatorGameProvider) operatorgameproviderOption {
+	return func(m *OperatorGameProviderMutation) {
+		m.oldValue = func(context.Context) (*OperatorGameProvider, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m OperatorGameProviderMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m OperatorGameProviderMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of OperatorGameProvider entities.
+func (m *OperatorGameProviderMutation) SetID(id int64) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *OperatorGameProviderMutation) ID() (id int64, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *OperatorGameProviderMutation) IDs(ctx context.Context) ([]int64, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int64{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().OperatorGameProvider.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetOpCode sets the "op_code" field.
+func (m *OperatorGameProviderMutation) SetOpCode(s string) {
+	m.op_code = &s
+}
+
+// OpCode returns the value of the "op_code" field in the mutation.
+func (m *OperatorGameProviderMutation) OpCode() (r string, exists bool) {
+	v := m.op_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOpCode returns the old "op_code" field's value of the OperatorGameProvider entity.
+// If the OperatorGameProvider object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorGameProviderMutation) OldOpCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOpCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOpCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOpCode: %w", err)
+	}
+	return oldValue.OpCode, nil
+}
+
+// ResetOpCode resets all changes to the "op_code" field.
+func (m *OperatorGameProviderMutation) ResetOpCode() {
+	m.op_code = nil
+}
+
+// SetProviderCode sets the "provider_code" field.
+func (m *OperatorGameProviderMutation) SetProviderCode(s string) {
+	m.provider_code = &s
+}
+
+// ProviderCode returns the value of the "provider_code" field in the mutation.
+func (m *OperatorGameProviderMutation) ProviderCode() (r string, exists bool) {
+	v := m.provider_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldProviderCode returns the old "provider_code" field's value of the OperatorGameProvider entity.
+// If the OperatorGameProvider object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorGameProviderMutation) OldProviderCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldProviderCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldProviderCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldProviderCode: %w", err)
+	}
+	return oldValue.ProviderCode, nil
+}
+
+// ResetProviderCode resets all changes to the "provider_code" field.
+func (m *OperatorGameProviderMutation) ResetProviderCode() {
+	m.provider_code = nil
+}
+
+// SetStatus sets the "status" field.
+func (m *OperatorGameProviderMutation) SetStatus(i int16) {
+	m.status = &i
+	m.addstatus = nil
+}
+
+// Status returns the value of the "status" field in the mutation.
+func (m *OperatorGameProviderMutation) Status() (r int16, exists bool) {
+	v := m.status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStatus returns the old "status" field's value of the OperatorGameProvider entity.
+// If the OperatorGameProvider object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorGameProviderMutation) OldStatus(ctx context.Context) (v int16, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
+	}
+	return oldValue.Status, nil
+}
+
+// AddStatus adds i to the "status" field.
+func (m *OperatorGameProviderMutation) AddStatus(i int16) {
+	if m.addstatus != nil {
+		*m.addstatus += i
+	} else {
+		m.addstatus = &i
+	}
+}
+
+// AddedStatus returns the value that was added to the "status" field in this mutation.
+func (m *OperatorGameProviderMutation) AddedStatus() (r int16, exists bool) {
+	v := m.addstatus
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetStatus resets all changes to the "status" field.
+func (m *OperatorGameProviderMutation) ResetStatus() {
+	m.status = nil
+	m.addstatus = nil
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *OperatorGameProviderMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *OperatorGameProviderMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the OperatorGameProvider entity.
+// If the OperatorGameProvider object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorGameProviderMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *OperatorGameProviderMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *OperatorGameProviderMutation) SetUpdatedAt(t time.Time) {
+	m.updated_at = &t
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *OperatorGameProviderMutation) UpdatedAt() (r time.Time, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the OperatorGameProvider entity.
+// If the OperatorGameProvider object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OperatorGameProviderMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *OperatorGameProviderMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+}
+
+// Where appends a list predicates to the OperatorGameProviderMutation builder.
+func (m *OperatorGameProviderMutation) Where(ps ...predicate.OperatorGameProvider) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the OperatorGameProviderMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *OperatorGameProviderMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.OperatorGameProvider, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *OperatorGameProviderMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *OperatorGameProviderMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (OperatorGameProvider).
+func (m *OperatorGameProviderMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *OperatorGameProviderMutation) Fields() []string {
+	fields := make([]string, 0, 5)
+	if m.op_code != nil {
+		fields = append(fields, operatorgameprovider.FieldOpCode)
+	}
+	if m.provider_code != nil {
+		fields = append(fields, operatorgameprovider.FieldProviderCode)
+	}
+	if m.status != nil {
+		fields = append(fields, operatorgameprovider.FieldStatus)
+	}
+	if m.created_at != nil {
+		fields = append(fields, operatorgameprovider.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, operatorgameprovider.FieldUpdatedAt)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *OperatorGameProviderMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case operatorgameprovider.FieldOpCode:
+		return m.OpCode()
+	case operatorgameprovider.FieldProviderCode:
+		return m.ProviderCode()
+	case operatorgameprovider.FieldStatus:
+		return m.Status()
+	case operatorgameprovider.FieldCreatedAt:
+		return m.CreatedAt()
+	case operatorgameprovider.FieldUpdatedAt:
+		return m.UpdatedAt()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *OperatorGameProviderMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case operatorgameprovider.FieldOpCode:
+		return m.OldOpCode(ctx)
+	case operatorgameprovider.FieldProviderCode:
+		return m.OldProviderCode(ctx)
+	case operatorgameprovider.FieldStatus:
+		return m.OldStatus(ctx)
+	case operatorgameprovider.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case operatorgameprovider.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	}
+	return nil, fmt.Errorf("unknown OperatorGameProvider field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *OperatorGameProviderMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case operatorgameprovider.FieldOpCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOpCode(v)
+		return nil
+	case operatorgameprovider.FieldProviderCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetProviderCode(v)
+		return nil
+	case operatorgameprovider.FieldStatus:
+		v, ok := value.(int16)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStatus(v)
+		return nil
+	case operatorgameprovider.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case operatorgameprovider.FieldUpdatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown OperatorGameProvider field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *OperatorGameProviderMutation) AddedFields() []string {
+	var fields []string
+	if m.addstatus != nil {
+		fields = append(fields, operatorgameprovider.FieldStatus)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *OperatorGameProviderMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case operatorgameprovider.FieldStatus:
+		return m.AddedStatus()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *OperatorGameProviderMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case operatorgameprovider.FieldStatus:
+		v, ok := value.(int16)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddStatus(v)
+		return nil
+	}
+	return fmt.Errorf("unknown OperatorGameProvider numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *OperatorGameProviderMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *OperatorGameProviderMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *OperatorGameProviderMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown OperatorGameProvider nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *OperatorGameProviderMutation) ResetField(name string) error {
+	switch name {
+	case operatorgameprovider.FieldOpCode:
+		m.ResetOpCode()
+		return nil
+	case operatorgameprovider.FieldProviderCode:
+		m.ResetProviderCode()
+		return nil
+	case operatorgameprovider.FieldStatus:
+		m.ResetStatus()
+		return nil
+	case operatorgameprovider.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case operatorgameprovider.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	}
+	return fmt.Errorf("unknown OperatorGameProvider field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *OperatorGameProviderMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *OperatorGameProviderMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *OperatorGameProviderMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *OperatorGameProviderMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *OperatorGameProviderMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *OperatorGameProviderMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *OperatorGameProviderMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown OperatorGameProvider unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *OperatorGameProviderMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown OperatorGameProvider edge %s", name)
 }

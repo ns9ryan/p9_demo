@@ -14,6 +14,13 @@ import (
 )
 
 type (
+	GetGameListRequest = platform_game.GetGameListRequest
+	GetGameListResp    = platform_game.GetGameListResp
+	GetGameRequest     = platform_game.GetGameRequest
+	GetGameResp        = platform_game.GetGameResp
+	UpdateGameRequest  = platform_game.UpdateGameRequest
+	UpdateGameResp     = platform_game.UpdateGameResp
+
 	GameService interface {
 		// 获取游戏列表
 		GetGameList(ctx context.Context, in *GetGameListRequest, opts ...grpc.CallOption) (*GetGameListResp, error)

@@ -7,10 +7,10 @@ import (
 	"context"
 	"fmt"
 
+	"oa.98ent.com/p9/platform-game/api/internal/constant"
 	"oa.98ent.com/p9/platform-game/api/internal/logic"
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
-	"oa.98ent.com/p9/platform-game/common/constant"
 	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"github.com/bytedance/gopkg/util/logger"
@@ -32,7 +32,7 @@ func NewGameCurrencyUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 }
 
 func (l *GameCurrencyUpdateLogic) GameCurrencyUpdate(req *types.GameCurrencyUpdateReq) (resp *types.GameCurrencyResp, err error) {
-	if l.svcCtx == nil || l.svcCtx.GrpcClient == nil {
+	if l.svcCtx == nil || l.svcCtx.GameGrpcClient == nil {
 		logger.Error("[API GameCurrencyUpdate] gRPC client not available")
 		return nil, fmt.Errorf("gRPC client not available")
 	}
@@ -43,7 +43,7 @@ func (l *GameCurrencyUpdateLogic) GameCurrencyUpdate(req *types.GameCurrencyUpda
 		ForceLogout: req.ForceLogout,
 	}
 
-	grpcResp, err := l.svcCtx.GrpcClient.GetGameCurrencyServiceClient().UpdateGameCurrency(l.ctx, grpcReq)
+	grpcResp, err := l.svcCtx.GameGrpcClient.GetGameCurrencyServiceClient().UpdateGameCurrency(l.ctx, grpcReq)
 	if err != nil {
 		logger.Errorf("[API GameCurrencyUpdate] gRPC call failed: %v", err)
 		return nil, fmt.Errorf("gRPC call failed: %s", err.Error())

@@ -7,10 +7,10 @@ import (
 	"context"
 	"fmt"
 
+	"oa.98ent.com/p9/platform-game/api/internal/constant"
 	"oa.98ent.com/p9/platform-game/api/internal/logic"
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
-	"oa.98ent.com/p9/platform-game/common/constant"
 	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -33,12 +33,12 @@ func NewGameSyncCheckpointGetLogic(ctx context.Context, svcCtx *svc.ServiceConte
 func (l *GameSyncCheckpointGetLogic) GameSyncCheckpointGet(req *types.GameSyncCheckpointGetReq) (resp *types.GameSyncCheckpointResp, err error) {
 	l.Infof("[API GameSyncCheckpointGet] query checkpoint: sync_scope=%s", req.SyncScope)
 
-	if l.svcCtx == nil || l.svcCtx.GrpcClient == nil {
+	if l.svcCtx == nil || l.svcCtx.GameGrpcClient == nil {
 		l.Errorf("[API GameSyncCheckpointGet] gRPC client not available")
 		return nil, fmt.Errorf("gRPC client not available")
 	}
 
-	grpcResp, err := l.svcCtx.GrpcClient.GetGameSyncCheckpointServiceClient().GetGameSyncCheckpoint(l.ctx, &platformgame.GetGameSyncCheckpointRequest{
+	grpcResp, err := l.svcCtx.GameGrpcClient.GetGameSyncCheckpointServiceClient().GetGameSyncCheckpoint(l.ctx, &platformgame.GetGameSyncCheckpointRequest{
 		Id:        req.ID,
 		SyncScope: req.SyncScope,
 	})

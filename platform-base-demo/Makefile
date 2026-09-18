@@ -9,6 +9,8 @@ VERSION ?= 1.0.0
 
 # ---- 下面的配置通常不需要修改 ----
 
+PROJECT := $(notdir $(MODULE))
+
 GO ?= go
 GOCTL ?= goctl
 
@@ -64,10 +66,10 @@ build-linux: # 编译 Linux 可执行文件
 
 .PHONY: docker
 docker: build-linux # 编译 Linux 可执行文件并构建 Docker 镜像
-	docker build --platform $(DOCKER_PLATFORM) -f Dockerfile-api -t $(DOCKER_REPO)/platform-base-api:$(VERSION) .
-	docker build --platform $(DOCKER_PLATFORM) -f Dockerfile-rpc -t $(DOCKER_REPO)/platform-base-rpc:$(VERSION) .
+	docker build --platform $(DOCKER_PLATFORM) -f Dockerfile-api -t $(DOCKER_REPO)/$(PROJECT)-api:$(VERSION) .
+	docker build --platform $(DOCKER_PLATFORM) -f Dockerfile-rpc -t $(DOCKER_REPO)/$(PROJECT)-rpc:$(VERSION) .
 
 .PHONY: publish-docker
 publish-docker: # 发布 Docker 镜像
-	docker push $(DOCKER_REPO)/platform-base-api:$(VERSION)
-	docker push $(DOCKER_REPO)/platform-base-rpc:$(VERSION)
+	docker push $(DOCKER_REPO)/$(PROJECT)-api:$(VERSION)
+	docker push $(DOCKER_REPO)/$(PROJECT)-rpc:$(VERSION)

@@ -133,3 +133,21 @@ func (d *GameCurrencyDAO) UpdateGameCurrency(ctx context.Context, id int64, upda
 
 	return update.Save(ctx)
 }
+
+// BatchCreateGameCurrency 批量创建游戏货币
+func (d *GameCurrencyDAO) BatchCreateGameCurrency(ctx context.Context, createList []*ent.GameCurrencyCreate) ([]*ent.GameCurrency, error) {
+	if len(createList) == 0 {
+		return nil, nil
+	}
+	return d.db.GameCurrency.CreateBulk(createList...).Save(ctx)
+}
+
+func (d *GameCurrencyDAO) GetGameCurrencyByCurrcyIdAndGameId(ctx context.Context, gameID, currencyID int64) (*ent.GameCurrency, error) {
+	query := d.db.GameCurrency.Query().
+		Where(gamecurrency.GameIDEQ(gameID), gamecurrency.CurrencyIDEQ(currencyID), gamecurrency.DeletedAtIsNil())
+	currency, err := query.Only(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("query failed: %w", err)
+	}
+	return currency, nil
+}

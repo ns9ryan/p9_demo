@@ -7,10 +7,10 @@ import (
 	"context"
 	"fmt"
 
+	"oa.98ent.com/p9/platform-game/api/internal/constant"
 	"oa.98ent.com/p9/platform-game/api/internal/logic"
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
-	"oa.98ent.com/p9/platform-game/common/constant"
 	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -33,7 +33,7 @@ func NewGameCurrencyGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *G
 func (l *GameCurrencyGetLogic) GameCurrencyGet(req *types.GameCurrencyGetReq) (resp *types.GameCurrencyResp, err error) {
 	l.Infof("[API GameCurrencyGet] received req: id=%d", req.ID)
 
-	if l.svcCtx == nil || l.svcCtx.GrpcClient == nil {
+	if l.svcCtx == nil || l.svcCtx.GameGrpcClient == nil {
 		l.Error("[API GameCurrencyGet] gRPC client not available")
 		return nil, fmt.Errorf("gRPC client not available")
 	}
@@ -42,7 +42,7 @@ func (l *GameCurrencyGetLogic) GameCurrencyGet(req *types.GameCurrencyGetReq) (r
 		Id: req.ID,
 	}
 
-	client := l.svcCtx.GrpcClient.GetGameCurrencyServiceClient()
+	client := l.svcCtx.GameGrpcClient.GetGameCurrencyServiceClient()
 	grpcResp, err := client.GetGameCurrency(l.ctx, grpcReq)
 	if err != nil {
 		l.Errorf("[API GameCurrencyGet] gRPC call failed: %v", err)

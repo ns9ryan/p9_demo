@@ -9,15 +9,15 @@ require (
 	github.com/go-playground/universal-translator v0.18.1
 	github.com/go-playground/validator/v10 v10.30.4
 	github.com/google/uuid v1.6.0
-	github.com/jackc/pgx/v5 v5.8.0
+	github.com/jackc/pgx/v5 v5.10.0
 	github.com/nicksnyder/go-i18n/v2 v2.6.1
 	github.com/zeromicro/go-zero v1.10.3
-	golang.org/x/crypto v0.55.0
 	golang.org/x/text v0.41.0
 	google.golang.org/grpc v1.83.2
 	google.golang.org/protobuf v1.36.12
 	oa.98ent.com/p9/core v1.1.8
-	oa.98ent.com/p9/platform-base v0.0.0-20260913074212-fe596bb04ed7
+	oa.98ent.com/p9/platform-base v0.1.0
+	oa.98ent.com/p9/platform-game v1.0.0
 )
 
 require (
@@ -101,6 +101,7 @@ require (
 	go.uber.org/zap v1.24.0 // indirect
 	go.yaml.in/yaml/v2 v2.4.2 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
+	golang.org/x/crypto v0.55.0 // indirect
 	golang.org/x/mod v0.38.0 // indirect
 	golang.org/x/net v0.58.0 // indirect
 	golang.org/x/oauth2 v0.36.0 // indirect

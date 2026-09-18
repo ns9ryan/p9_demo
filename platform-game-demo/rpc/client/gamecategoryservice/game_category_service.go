@@ -14,6 +14,13 @@ import (
 )
 
 type (
+	GetGameCategoryListRequest = platform_game.GetGameCategoryListRequest
+	GetGameCategoryListResp    = platform_game.GetGameCategoryListResp
+	GetGameCategoryRequest     = platform_game.GetGameCategoryRequest
+	GetGameCategoryResp        = platform_game.GetGameCategoryResp
+	UpdateGameCategoryRequest  = platform_game.UpdateGameCategoryRequest
+	UpdateGameCategoryResp     = platform_game.UpdateGameCategoryResp
+
 	GameCategoryService interface {
 		// 获取游戏分类列表
 		GetGameCategoryList(ctx context.Context, in *GetGameCategoryListRequest, opts ...grpc.CallOption) (*GetGameCategoryListResp, error)

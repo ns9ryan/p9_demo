@@ -2,7 +2,7 @@
 Name: platform-game-api
 Host: 0.0.0.0
 Port: 18003
-Timeout: 10000
+Mode: dev                   # 运行模式
 
 # gRPC 客户端配置（连接到 platform-game-rpc 服务）
 GrpcClient:

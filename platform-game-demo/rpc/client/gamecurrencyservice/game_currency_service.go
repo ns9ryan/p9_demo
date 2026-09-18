@@ -14,6 +14,13 @@ import (
 )
 
 type (
+	GetGameCurrencyListRequest = platform_game.GetGameCurrencyListRequest
+	GetGameCurrencyListResp    = platform_game.GetGameCurrencyListResp
+	GetGameCurrencyRequest     = platform_game.GetGameCurrencyRequest
+	GetGameCurrencyResp        = platform_game.GetGameCurrencyResp
+	UpdateGameCurrencyRequest  = platform_game.UpdateGameCurrencyRequest
+	UpdateGameCurrencyResp     = platform_game.UpdateGameCurrencyResp
+
 	GameCurrencyService interface {
 		// 获取游戏货币列表
 		GetGameCurrencyList(ctx context.Context, in *GetGameCurrencyListRequest, opts ...grpc.CallOption) (*GetGameCurrencyListResp, error)

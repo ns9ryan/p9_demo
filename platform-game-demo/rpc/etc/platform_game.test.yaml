@@ -1,7 +1,14 @@
 # RPC 服务配置
-Name: platform-game.rpc
+Name: platform-game-rpc
 ListenOn: 0.0.0.0:19003
 Timeout: 10000
+Mode: test              # 运行模式
+
+# Etcd服务注册配置
+Etcd:
+  Hosts:
+    - 192.168.0.15:12379       # Etcd地址
+  Key: platform-game-rpc    # 服务注册Key
 
 # 日志配置
 Log:

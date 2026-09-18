@@ -34,6 +34,13 @@ func (d *GameChannelDAO) GetGameChannelBySourceId(ctx context.Context, sourceID 
 		Only(ctx)
 }
 
+func (d *GameChannelDAO) GetGameChannelBySourceCode(ctx context.Context, sourceChannelCode string) (*ent.GameChannel, error) {
+	return d.db.GameChannel.Query().
+		Where(gamechannel.SourceChannelCodeEQ(sourceChannelCode)).
+		Where(gamechannel.DeletedAtIsNil()).
+		Only(ctx)
+}
+
 // GetGameChannelList 获取游戏渠道列表
 func (d *GameChannelDAO) GetGameChannelList(ctx context.Context, isDeleted int32, status int32, channelCode string, offset, limit int64) ([]*ent.GameChannel, int, error) {
 	query := d.db.GameChannel.Query()
@@ -106,10 +113,33 @@ func (d *GameChannelDAO) UpdateGameChannel(ctx context.Context, id int64, update
 	return update.Save(ctx)
 }
 
+func (d *GameChannelDAO) BatchCreateGameChannel(ctx context.Context, items []*ent.GameChannelCreate) ([]*ent.GameChannel, error) {
+	if len(items) == 0 {
+		return []*ent.GameChannel{}, nil
+	}
+
+	records, err := d.db.GameChannel.CreateBulk(items...).Save(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("batch create failed: %w", err)
+	}
+	return records, nil
+}
+
 func (d *GameChannelDAO) GetGameChannelCount(ctx context.Context) (int, error) {
 	count, err := d.db.GameChannel.Query().Count(ctx)
 	if err != nil {
 		return 0, fmt.Errorf("count failed: %w", err)
 	}
 	return count, nil
+}
+
+func (d *GameChannelDAO) ExistByCode(ctx context.Context, channelCode string) (bool, error) {
+	exists, err := d.db.GameChannel.Query().
+		Where(gamechannel.SourceChannelCodeEQ(channelCode)).
+		Where(gamechannel.DeletedAtIsNil()).
+		Exist(ctx)
+	if err != nil {
+		return false, fmt.Errorf("exist check failed: %w", err)
+	}
+	return exists, nil
 }

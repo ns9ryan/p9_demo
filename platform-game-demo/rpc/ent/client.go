@@ -21,6 +21,11 @@ import (
 	"oa.98ent.com/p9/platform-game/rpc/ent/gamecurrency"
 	"oa.98ent.com/p9/platform-game/rpc/ent/gameprovider"
 	"oa.98ent.com/p9/platform-game/rpc/ent/gamesynccheckpoint"
+	"oa.98ent.com/p9/platform-game/rpc/ent/operator"
+	"oa.98ent.com/p9/platform-game/rpc/ent/operatorgame"
+	"oa.98ent.com/p9/platform-game/rpc/ent/operatorgamecategory"
+	"oa.98ent.com/p9/platform-game/rpc/ent/operatorgamechannel"
+	"oa.98ent.com/p9/platform-game/rpc/ent/operatorgameprovider"
 )
 
 // Client is the client that holds all ent builders.
@@ -42,6 +47,16 @@ type Client struct {
 	GameProvider *GameProviderClient
 	// GameSyncCheckpoint is the client for interacting with the GameSyncCheckpoint builders.
 	GameSyncCheckpoint *GameSyncCheckpointClient
+	// Operator is the client for interacting with the Operator builders.
+	Operator *OperatorClient
+	// OperatorGame is the client for interacting with the OperatorGame builders.
+	OperatorGame *OperatorGameClient
+	// OperatorGameCategory is the client for interacting with the OperatorGameCategory builders.
+	OperatorGameCategory *OperatorGameCategoryClient
+	// OperatorGameChannel is the client for interacting with the OperatorGameChannel builders.
+	OperatorGameChannel *OperatorGameChannelClient
+	// OperatorGameProvider is the client for interacting with the OperatorGameProvider builders.
+	OperatorGameProvider *OperatorGameProviderClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -60,6 +75,11 @@ func (c *Client) init() {
 	c.GameCurrency = NewGameCurrencyClient(c.config)
 	c.GameProvider = NewGameProviderClient(c.config)
 	c.GameSyncCheckpoint = NewGameSyncCheckpointClient(c.config)
+	c.Operator = NewOperatorClient(c.config)
+	c.OperatorGame = NewOperatorGameClient(c.config)
+	c.OperatorGameCategory = NewOperatorGameCategoryClient(c.config)
+	c.OperatorGameChannel = NewOperatorGameChannelClient(c.config)
+	c.OperatorGameProvider = NewOperatorGameProviderClient(c.config)
 }
 
 type (
@@ -150,15 +170,20 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:                ctx,
-		config:             cfg,
-		Currency:           NewCurrencyClient(cfg),
-		Game:               NewGameClient(cfg),
-		GameCategory:       NewGameCategoryClient(cfg),
-		GameChannel:        NewGameChannelClient(cfg),
-		GameCurrency:       NewGameCurrencyClient(cfg),
-		GameProvider:       NewGameProviderClient(cfg),
-		GameSyncCheckpoint: NewGameSyncCheckpointClient(cfg),
+		ctx:                  ctx,
+		config:               cfg,
+		Currency:             NewCurrencyClient(cfg),
+		Game:                 NewGameClient(cfg),
+		GameCategory:         NewGameCategoryClient(cfg),
+		GameChannel:          NewGameChannelClient(cfg),
+		GameCurrency:         NewGameCurrencyClient(cfg),
+		GameProvider:         NewGameProviderClient(cfg),
+		GameSyncCheckpoint:   NewGameSyncCheckpointClient(cfg),
+		Operator:             NewOperatorClient(cfg),
+		OperatorGame:         NewOperatorGameClient(cfg),
+		OperatorGameCategory: NewOperatorGameCategoryClient(cfg),
+		OperatorGameChannel:  NewOperatorGameChannelClient(cfg),
+		OperatorGameProvider: NewOperatorGameProviderClient(cfg),
 	}, nil
 }
 
@@ -176,15 +201,20 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:                ctx,
-		config:             cfg,
-		Currency:           NewCurrencyClient(cfg),
-		Game:               NewGameClient(cfg),
-		GameCategory:       NewGameCategoryClient(cfg),
-		GameChannel:        NewGameChannelClient(cfg),
-		GameCurrency:       NewGameCurrencyClient(cfg),
-		GameProvider:       NewGameProviderClient(cfg),
-		GameSyncCheckpoint: NewGameSyncCheckpointClient(cfg),
+		ctx:                  ctx,
+		config:               cfg,
+		Currency:             NewCurrencyClient(cfg),
+		Game:                 NewGameClient(cfg),
+		GameCategory:         NewGameCategoryClient(cfg),
+		GameChannel:          NewGameChannelClient(cfg),
+		GameCurrency:         NewGameCurrencyClient(cfg),
+		GameProvider:         NewGameProviderClient(cfg),
+		GameSyncCheckpoint:   NewGameSyncCheckpointClient(cfg),
+		Operator:             NewOperatorClient(cfg),
+		OperatorGame:         NewOperatorGameClient(cfg),
+		OperatorGameCategory: NewOperatorGameCategoryClient(cfg),
+		OperatorGameChannel:  NewOperatorGameChannelClient(cfg),
+		OperatorGameProvider: NewOperatorGameProviderClient(cfg),
 	}, nil
 }
 
@@ -215,7 +245,8 @@ func (c *Client) Close() error {
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
 		c.Currency, c.Game, c.GameCategory, c.GameChannel, c.GameCurrency,
-		c.GameProvider, c.GameSyncCheckpoint,
+		c.GameProvider, c.GameSyncCheckpoint, c.Operator, c.OperatorGame,
+		c.OperatorGameCategory, c.OperatorGameChannel, c.OperatorGameProvider,
 	} {
 		n.Use(hooks...)
 	}
@@ -226,7 +257,8 @@ func (c *Client) Use(hooks ...Hook) {
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
 		c.Currency, c.Game, c.GameCategory, c.GameChannel, c.GameCurrency,
-		c.GameProvider, c.GameSyncCheckpoint,
+		c.GameProvider, c.GameSyncCheckpoint, c.Operator, c.OperatorGame,
+		c.OperatorGameCategory, c.OperatorGameChannel, c.OperatorGameProvider,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -249,6 +281,16 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.GameProvider.mutate(ctx, m)
 	case *GameSyncCheckpointMutation:
 		return c.GameSyncCheckpoint.mutate(ctx, m)
+	case *OperatorMutation:
+		return c.Operator.mutate(ctx, m)
+	case *OperatorGameMutation:
+		return c.OperatorGame.mutate(ctx, m)
+	case *OperatorGameCategoryMutation:
+		return c.OperatorGameCategory.mutate(ctx, m)
+	case *OperatorGameChannelMutation:
+		return c.OperatorGameChannel.mutate(ctx, m)
+	case *OperatorGameProviderMutation:
+		return c.OperatorGameProvider.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
 	}
@@ -1185,14 +1227,681 @@ func (c *GameSyncCheckpointClient) mutate(ctx context.Context, m *GameSyncCheckp
 	}
 }
 
+// OperatorClient is a client for the Operator schema.
+type OperatorClient struct {
+	config
+}
+
+// NewOperatorClient returns a client for the Operator from the given config.
+func NewOperatorClient(c config) *OperatorClient {
+	return &OperatorClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `operator.Hooks(f(g(h())))`.
+func (c *OperatorClient) Use(hooks ...Hook) {
+	c.hooks.Operator = append(c.hooks.Operator, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `operator.Intercept(f(g(h())))`.
+func (c *OperatorClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Operator = append(c.inters.Operator, interceptors...)
+}
+
+// Create returns a builder for creating a Operator entity.
+func (c *OperatorClient) Create() *OperatorCreate {
+	mutation := newOperatorMutation(c.config, OpCreate)
+	return &OperatorCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Operator entities.
+func (c *OperatorClient) CreateBulk(builders ...*OperatorCreate) *OperatorCreateBulk {
+	return &OperatorCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *OperatorClient) MapCreateBulk(slice any, setFunc func(*OperatorCreate, int)) *OperatorCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &OperatorCreateBulk{err: fmt.Errorf("calling to OperatorClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*OperatorCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &OperatorCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Operator.
+func (c *OperatorClient) Update() *OperatorUpdate {
+	mutation := newOperatorMutation(c.config, OpUpdate)
+	return &OperatorUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *OperatorClient) UpdateOne(_m *Operator) *OperatorUpdateOne {
+	mutation := newOperatorMutation(c.config, OpUpdateOne, withOperator(_m))
+	return &OperatorUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *OperatorClient) UpdateOneID(id int64) *OperatorUpdateOne {
+	mutation := newOperatorMutation(c.config, OpUpdateOne, withOperatorID(id))
+	return &OperatorUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Operator.
+func (c *OperatorClient) Delete() *OperatorDelete {
+	mutation := newOperatorMutation(c.config, OpDelete)
+	return &OperatorDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *OperatorClient) DeleteOne(_m *Operator) *OperatorDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *OperatorClient) DeleteOneID(id int64) *OperatorDeleteOne {
+	builder := c.Delete().Where(operator.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &OperatorDeleteOne{builder}
+}
+
+// Query returns a query builder for Operator.
+func (c *OperatorClient) Query() *OperatorQuery {
+	return &OperatorQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeOperator},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a Operator entity by its id.
+func (c *OperatorClient) Get(ctx context.Context, id int64) (*Operator, error) {
+	return c.Query().Where(operator.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *OperatorClient) GetX(ctx context.Context, id int64) *Operator {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *OperatorClient) Hooks() []Hook {
+	return c.hooks.Operator
+}
+
+// Interceptors returns the client interceptors.
+func (c *OperatorClient) Interceptors() []Interceptor {
+	return c.inters.Operator
+}
+
+func (c *OperatorClient) mutate(ctx context.Context, m *OperatorMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&OperatorCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&OperatorUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&OperatorUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&OperatorDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown Operator mutation op: %q", m.Op())
+	}
+}
+
+// OperatorGameClient is a client for the OperatorGame schema.
+type OperatorGameClient struct {
+	config
+}
+
+// NewOperatorGameClient returns a client for the OperatorGame from the given config.
+func NewOperatorGameClient(c config) *OperatorGameClient {
+	return &OperatorGameClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `operatorgame.Hooks(f(g(h())))`.
+func (c *OperatorGameClient) Use(hooks ...Hook) {
+	c.hooks.OperatorGame = append(c.hooks.OperatorGame, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `operatorgame.Intercept(f(g(h())))`.
+func (c *OperatorGameClient) Intercept(interceptors ...Interceptor) {
+	c.inters.OperatorGame = append(c.inters.OperatorGame, interceptors...)
+}
+
+// Create returns a builder for creating a OperatorGame entity.
+func (c *OperatorGameClient) Create() *OperatorGameCreate {
+	mutation := newOperatorGameMutation(c.config, OpCreate)
+	return &OperatorGameCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of OperatorGame entities.
+func (c *OperatorGameClient) CreateBulk(builders ...*OperatorGameCreate) *OperatorGameCreateBulk {
+	return &OperatorGameCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *OperatorGameClient) MapCreateBulk(slice any, setFunc func(*OperatorGameCreate, int)) *OperatorGameCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &OperatorGameCreateBulk{err: fmt.Errorf("calling to OperatorGameClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*OperatorGameCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &OperatorGameCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for OperatorGame.
+func (c *OperatorGameClient) Update() *OperatorGameUpdate {
+	mutation := newOperatorGameMutation(c.config, OpUpdate)
+	return &OperatorGameUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *OperatorGameClient) UpdateOne(_m *OperatorGame) *OperatorGameUpdateOne {
+	mutation := newOperatorGameMutation(c.config, OpUpdateOne, withOperatorGame(_m))
+	return &OperatorGameUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *OperatorGameClient) UpdateOneID(id int64) *OperatorGameUpdateOne {
+	mutation := newOperatorGameMutation(c.config, OpUpdateOne, withOperatorGameID(id))
+	return &OperatorGameUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for OperatorGame.
+func (c *OperatorGameClient) Delete() *OperatorGameDelete {
+	mutation := newOperatorGameMutation(c.config, OpDelete)
+	return &OperatorGameDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *OperatorGameClient) DeleteOne(_m *OperatorGame) *OperatorGameDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *OperatorGameClient) DeleteOneID(id int64) *OperatorGameDeleteOne {
+	builder := c.Delete().Where(operatorgame.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &OperatorGameDeleteOne{builder}
+}
+
+// Query returns a query builder for OperatorGame.
+func (c *OperatorGameClient) Query() *OperatorGameQuery {
+	return &OperatorGameQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeOperatorGame},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a OperatorGame entity by its id.
+func (c *OperatorGameClient) Get(ctx context.Context, id int64) (*OperatorGame, error) {
+	return c.Query().Where(operatorgame.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *OperatorGameClient) GetX(ctx context.Context, id int64) *OperatorGame {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *OperatorGameClient) Hooks() []Hook {
+	return c.hooks.OperatorGame
+}
+
+// Interceptors returns the client interceptors.
+func (c *OperatorGameClient) Interceptors() []Interceptor {
+	return c.inters.OperatorGame
+}
+
+func (c *OperatorGameClient) mutate(ctx context.Context, m *OperatorGameMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&OperatorGameCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&OperatorGameUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&OperatorGameUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&OperatorGameDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown OperatorGame mutation op: %q", m.Op())
+	}
+}
+
+// OperatorGameCategoryClient is a client for the OperatorGameCategory schema.
+type OperatorGameCategoryClient struct {
+	config
+}
+
+// NewOperatorGameCategoryClient returns a client for the OperatorGameCategory from the given config.
+func NewOperatorGameCategoryClient(c config) *OperatorGameCategoryClient {
+	return &OperatorGameCategoryClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `operatorgamecategory.Hooks(f(g(h())))`.
+func (c *OperatorGameCategoryClient) Use(hooks ...Hook) {
+	c.hooks.OperatorGameCategory = append(c.hooks.OperatorGameCategory, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `operatorgamecategory.Intercept(f(g(h())))`.
+func (c *OperatorGameCategoryClient) Intercept(interceptors ...Interceptor) {
+	c.inters.OperatorGameCategory = append(c.inters.OperatorGameCategory, interceptors...)
+}
+
+// Create returns a builder for creating a OperatorGameCategory entity.
+func (c *OperatorGameCategoryClient) Create() *OperatorGameCategoryCreate {
+	mutation := newOperatorGameCategoryMutation(c.config, OpCreate)
+	return &OperatorGameCategoryCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of OperatorGameCategory entities.
+func (c *OperatorGameCategoryClient) CreateBulk(builders ...*OperatorGameCategoryCreate) *OperatorGameCategoryCreateBulk {
+	return &OperatorGameCategoryCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *OperatorGameCategoryClient) MapCreateBulk(slice any, setFunc func(*OperatorGameCategoryCreate, int)) *OperatorGameCategoryCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &OperatorGameCategoryCreateBulk{err: fmt.Errorf("calling to OperatorGameCategoryClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*OperatorGameCategoryCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &OperatorGameCategoryCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for OperatorGameCategory.
+func (c *OperatorGameCategoryClient) Update() *OperatorGameCategoryUpdate {
+	mutation := newOperatorGameCategoryMutation(c.config, OpUpdate)
+	return &OperatorGameCategoryUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *OperatorGameCategoryClient) UpdateOne(_m *OperatorGameCategory) *OperatorGameCategoryUpdateOne {
+	mutation := newOperatorGameCategoryMutation(c.config, OpUpdateOne, withOperatorGameCategory(_m))
+	return &OperatorGameCategoryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *OperatorGameCategoryClient) UpdateOneID(id int64) *OperatorGameCategoryUpdateOne {
+	mutation := newOperatorGameCategoryMutation(c.config, OpUpdateOne, withOperatorGameCategoryID(id))
+	return &OperatorGameCategoryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for OperatorGameCategory.
+func (c *OperatorGameCategoryClient) Delete() *OperatorGameCategoryDelete {
+	mutation := newOperatorGameCategoryMutation(c.config, OpDelete)
+	return &OperatorGameCategoryDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *OperatorGameCategoryClient) DeleteOne(_m *OperatorGameCategory) *OperatorGameCategoryDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *OperatorGameCategoryClient) DeleteOneID(id int64) *OperatorGameCategoryDeleteOne {
+	builder := c.Delete().Where(operatorgamecategory.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &OperatorGameCategoryDeleteOne{builder}
+}
+
+// Query returns a query builder for OperatorGameCategory.
+func (c *OperatorGameCategoryClient) Query() *OperatorGameCategoryQuery {
+	return &OperatorGameCategoryQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeOperatorGameCategory},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a OperatorGameCategory entity by its id.
+func (c *OperatorGameCategoryClient) Get(ctx context.Context, id int64) (*OperatorGameCategory, error) {
+	return c.Query().Where(operatorgamecategory.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *OperatorGameCategoryClient) GetX(ctx context.Context, id int64) *OperatorGameCategory {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *OperatorGameCategoryClient) Hooks() []Hook {
+	return c.hooks.OperatorGameCategory
+}
+
+// Interceptors returns the client interceptors.
+func (c *OperatorGameCategoryClient) Interceptors() []Interceptor {
+	return c.inters.OperatorGameCategory
+}
+
+func (c *OperatorGameCategoryClient) mutate(ctx context.Context, m *OperatorGameCategoryMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&OperatorGameCategoryCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&OperatorGameCategoryUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&OperatorGameCategoryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&OperatorGameCategoryDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown OperatorGameCategory mutation op: %q", m.Op())
+	}
+}
+
+// OperatorGameChannelClient is a client for the OperatorGameChannel schema.
+type OperatorGameChannelClient struct {
+	config
+}
+
+// NewOperatorGameChannelClient returns a client for the OperatorGameChannel from the given config.
+func NewOperatorGameChannelClient(c config) *OperatorGameChannelClient {
+	return &OperatorGameChannelClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `operatorgamechannel.Hooks(f(g(h())))`.
+func (c *OperatorGameChannelClient) Use(hooks ...Hook) {
+	c.hooks.OperatorGameChannel = append(c.hooks.OperatorGameChannel, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `operatorgamechannel.Intercept(f(g(h())))`.
+func (c *OperatorGameChannelClient) Intercept(interceptors ...Interceptor) {
+	c.inters.OperatorGameChannel = append(c.inters.OperatorGameChannel, interceptors...)
+}
+
+// Create returns a builder for creating a OperatorGameChannel entity.
+func (c *OperatorGameChannelClient) Create() *OperatorGameChannelCreate {
+	mutation := newOperatorGameChannelMutation(c.config, OpCreate)
+	return &OperatorGameChannelCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of OperatorGameChannel entities.
+func (c *OperatorGameChannelClient) CreateBulk(builders ...*OperatorGameChannelCreate) *OperatorGameChannelCreateBulk {
+	return &OperatorGameChannelCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *OperatorGameChannelClient) MapCreateBulk(slice any, setFunc func(*OperatorGameChannelCreate, int)) *OperatorGameChannelCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &OperatorGameChannelCreateBulk{err: fmt.Errorf("calling to OperatorGameChannelClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*OperatorGameChannelCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &OperatorGameChannelCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for OperatorGameChannel.
+func (c *OperatorGameChannelClient) Update() *OperatorGameChannelUpdate {
+	mutation := newOperatorGameChannelMutation(c.config, OpUpdate)
+	return &OperatorGameChannelUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *OperatorGameChannelClient) UpdateOne(_m *OperatorGameChannel) *OperatorGameChannelUpdateOne {
+	mutation := newOperatorGameChannelMutation(c.config, OpUpdateOne, withOperatorGameChannel(_m))
+	return &OperatorGameChannelUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *OperatorGameChannelClient) UpdateOneID(id int64) *OperatorGameChannelUpdateOne {
+	mutation := newOperatorGameChannelMutation(c.config, OpUpdateOne, withOperatorGameChannelID(id))
+	return &OperatorGameChannelUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for OperatorGameChannel.
+func (c *OperatorGameChannelClient) Delete() *OperatorGameChannelDelete {
+	mutation := newOperatorGameChannelMutation(c.config, OpDelete)
+	return &OperatorGameChannelDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *OperatorGameChannelClient) DeleteOne(_m *OperatorGameChannel) *OperatorGameChannelDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *OperatorGameChannelClient) DeleteOneID(id int64) *OperatorGameChannelDeleteOne {
+	builder := c.Delete().Where(operatorgamechannel.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &OperatorGameChannelDeleteOne{builder}
+}
+
+// Query returns a query builder for OperatorGameChannel.
+func (c *OperatorGameChannelClient) Query() *OperatorGameChannelQuery {
+	return &OperatorGameChannelQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeOperatorGameChannel},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a OperatorGameChannel entity by its id.
+func (c *OperatorGameChannelClient) Get(ctx context.Context, id int64) (*OperatorGameChannel, error) {
+	return c.Query().Where(operatorgamechannel.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *OperatorGameChannelClient) GetX(ctx context.Context, id int64) *OperatorGameChannel {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *OperatorGameChannelClient) Hooks() []Hook {
+	return c.hooks.OperatorGameChannel
+}
+
+// Interceptors returns the client interceptors.
+func (c *OperatorGameChannelClient) Interceptors() []Interceptor {
+	return c.inters.OperatorGameChannel
+}
+
+func (c *OperatorGameChannelClient) mutate(ctx context.Context, m *OperatorGameChannelMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&OperatorGameChannelCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&OperatorGameChannelUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&OperatorGameChannelUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&OperatorGameChannelDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown OperatorGameChannel mutation op: %q", m.Op())
+	}
+}
+
+// OperatorGameProviderClient is a client for the OperatorGameProvider schema.
+type OperatorGameProviderClient struct {
+	config
+}
+
+// NewOperatorGameProviderClient returns a client for the OperatorGameProvider from the given config.
+func NewOperatorGameProviderClient(c config) *OperatorGameProviderClient {
+	return &OperatorGameProviderClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `operatorgameprovider.Hooks(f(g(h())))`.
+func (c *OperatorGameProviderClient) Use(hooks ...Hook) {
+	c.hooks.OperatorGameProvider = append(c.hooks.OperatorGameProvider, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `operatorgameprovider.Intercept(f(g(h())))`.
+func (c *OperatorGameProviderClient) Intercept(interceptors ...Interceptor) {
+	c.inters.OperatorGameProvider = append(c.inters.OperatorGameProvider, interceptors...)
+}
+
+// Create returns a builder for creating a OperatorGameProvider entity.
+func (c *OperatorGameProviderClient) Create() *OperatorGameProviderCreate {
+	mutation := newOperatorGameProviderMutation(c.config, OpCreate)
+	return &OperatorGameProviderCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of OperatorGameProvider entities.
+func (c *OperatorGameProviderClient) CreateBulk(builders ...*OperatorGameProviderCreate) *OperatorGameProviderCreateBulk {
+	return &OperatorGameProviderCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *OperatorGameProviderClient) MapCreateBulk(slice any, setFunc func(*OperatorGameProviderCreate, int)) *OperatorGameProviderCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &OperatorGameProviderCreateBulk{err: fmt.Errorf("calling to OperatorGameProviderClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*OperatorGameProviderCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &OperatorGameProviderCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for OperatorGameProvider.
+func (c *OperatorGameProviderClient) Update() *OperatorGameProviderUpdate {
+	mutation := newOperatorGameProviderMutation(c.config, OpUpdate)
+	return &OperatorGameProviderUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *OperatorGameProviderClient) UpdateOne(_m *OperatorGameProvider) *OperatorGameProviderUpdateOne {
+	mutation := newOperatorGameProviderMutation(c.config, OpUpdateOne, withOperatorGameProvider(_m))
+	return &OperatorGameProviderUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *OperatorGameProviderClient) UpdateOneID(id int64) *OperatorGameProviderUpdateOne {
+	mutation := newOperatorGameProviderMutation(c.config, OpUpdateOne, withOperatorGameProviderID(id))
+	return &OperatorGameProviderUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for OperatorGameProvider.
+func (c *OperatorGameProviderClient) Delete() *OperatorGameProviderDelete {
+	mutation := newOperatorGameProviderMutation(c.config, OpDelete)
+	return &OperatorGameProviderDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *OperatorGameProviderClient) DeleteOne(_m *OperatorGameProvider) *OperatorGameProviderDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *OperatorGameProviderClient) DeleteOneID(id int64) *OperatorGameProviderDeleteOne {
+	builder := c.Delete().Where(operatorgameprovider.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &OperatorGameProviderDeleteOne{builder}
+}
+
+// Query returns a query builder for OperatorGameProvider.
+func (c *OperatorGameProviderClient) Query() *OperatorGameProviderQuery {
+	return &OperatorGameProviderQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeOperatorGameProvider},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a OperatorGameProvider entity by its id.
+func (c *OperatorGameProviderClient) Get(ctx context.Context, id int64) (*OperatorGameProvider, error) {
+	return c.Query().Where(operatorgameprovider.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *OperatorGameProviderClient) GetX(ctx context.Context, id int64) *OperatorGameProvider {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *OperatorGameProviderClient) Hooks() []Hook {
+	return c.hooks.OperatorGameProvider
+}
+
+// Interceptors returns the client interceptors.
+func (c *OperatorGameProviderClient) Interceptors() []Interceptor {
+	return c.inters.OperatorGameProvider
+}
+
+func (c *OperatorGameProviderClient) mutate(ctx context.Context, m *OperatorGameProviderMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&OperatorGameProviderCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&OperatorGameProviderUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&OperatorGameProviderUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&OperatorGameProviderDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown OperatorGameProvider mutation op: %q", m.Op())
+	}
+}
+
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
 		Currency, Game, GameCategory, GameChannel, GameCurrency, GameProvider,
-		GameSyncCheckpoint []ent.Hook
+		GameSyncCheckpoint, Operator, OperatorGame, OperatorGameCategory,
+		OperatorGameChannel, OperatorGameProvider []ent.Hook
 	}
 	inters struct {
 		Currency, Game, GameCategory, GameChannel, GameCurrency, GameProvider,
-		GameSyncCheckpoint []ent.Interceptor
+		GameSyncCheckpoint, Operator, OperatorGame, OperatorGameCategory,
+		OperatorGameChannel, OperatorGameProvider []ent.Interceptor
 	}
 )

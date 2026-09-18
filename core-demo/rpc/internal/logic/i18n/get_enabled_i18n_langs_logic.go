@@ -30,6 +30,7 @@ func (l *GetEnabledI18nLangsLogic) GetEnabledI18NLangs(_ *core.Empty) (*core.I18
 	if err != nil {
 		return nil, xerr.RpcErr(err)
 	}
+
 	out := make([]*core.I18NLangInfo, 0, len(list))
 	for _, row := range list {
 		out = append(out, logic.ToI18nLangInfo(row))

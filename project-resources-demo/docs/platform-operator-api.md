@@ -12,9 +12,12 @@
 - 语言分配
 - 经营地区分配
 - 代理子线路分配
+- 游戏管理
+- 游戏分类管理
+- 游戏渠道管理
+- 游戏提供商管理
+- 游戏资源分配汇总
 - 服务健康检查
-
-游戏资源分配目前仍是接口骨架，由其他模块或同事继续实现，本文档暂不作为前端对接依据。
 
 ---
 
@@ -340,6 +343,24 @@ Unix 毫秒时间戳
   - [POST /admin/operator/region-allocation/save](#post-adminoperatorregion-allocationsave)
   - [GET /admin/operator/agent-line-allocation/list](#get-adminoperatoragent-line-allocationlist)
   - [POST /admin/operator/agent-line-allocation/save](#post-adminoperatoragent-line-allocationsave)
+- [游戏管理](#operator-game)
+  - [POST /admin/operator/game/batch-create](#post-adminoperatorgamebatch-create)
+  - [POST /admin/operator/game/batch-update-status](#post-adminoperatorgamebatch-update-status)
+  - [GET /admin/operator/game/list](#get-adminoperatorgamelist)
+- [游戏分类](#operator-game-category)
+  - [POST /admin/operator/game-category/batch-create](#post-adminoperatorgame-categorybatch-create)
+  - [POST /admin/operator/game-category/batch-update-status](#post-adminoperatorgame-categorybatch-update-status)
+  - [GET /admin/operator/game-category/list](#get-adminoperatorgame-categorylist)
+- [游戏渠道](#operator-game-channel)
+  - [POST /admin/operator/game-channel/batch-create](#post-adminoperatorgame-channelbatch-create)
+  - [POST /admin/operator/game-channel/batch-update-status](#post-adminoperatorgame-channelbatch-update-status)
+  - [GET /admin/operator/game-channel/list](#get-adminoperatorgame-channellist)
+- [游戏提供商](#operator-game-provider)
+  - [POST /admin/operator/game-provider/batch-create](#post-adminoperatorgame-providerbatch-create)
+  - [POST /admin/operator/game-provider/batch-update-status](#post-adminoperatorgame-providerbatch-update-status)
+  - [GET /admin/operator/game-provider/list](#get-adminoperatorgame-providerlist)
+- [游戏资源分配](#operator-game-allocation)
+  - [GET /admin/operator/game-allocation/list](#get-adminoperatorgame-allocationlist)
 
 ---
 
@@ -1970,3 +1991,781 @@ Query 示例：
 ```
 
 不需要拆成三个独立左侧菜单页面。
+
+---
+
+
+
+## 十四、游戏管理
+
+
+
+### OperatorGameInfo
+
+
+| 字段        | 类型     | 说明              |
+| --------- | ------ | --------------- |
+| `id`      | int64  | 游戏 ID           |
+| `op_code` | string | 分站业务编码          |
+| `game_code` | string | 游戏业务编码         |
+| `name`    | string | 游戏名称            |
+| `status`  | int32  | 状态：`1` 启用，`2` 停用 |
+| `remark`  | string | 备注              |
+| `deleted_at` | int64 | 删除时间，Unix 毫秒时间戳 |
+| `created_at` | int64 | 创建时间，Unix 毫秒时间戳 |
+| `updated_at` | int64 | 更新时间，Unix 毫秒时间戳 |
+
+
+
+
+### POST /admin/operator/game/batch-create
+
+批量创建分站游戏。
+
+#### 请求参数
+
+
+| 字段      | 位置   | 必填  | 类型                              | 说明    |
+| ------- | ---- | --- | ------------------------------- | ----- |
+| `items` | json | 是   | BatchCreateOperatorGameItem[] | 游戏列表 |
+
+
+#### BatchCreateOperatorGameItem
+
+
+| 字段        | 类型     | 说明                      |
+| --------- | ------ | ----------------------- |
+| `op_code` | string | 分站业务编码，最大 64 个字符      |
+| `game_code` | string | 游戏业务编码，最大 64 个字符      |
+| `name`    | string | 游戏名称，最大 100 个字符       |
+| `status`  | int32  | 状态，`1` 启用，`2` 停用       |
+| `remark`  | string | 备注，最大 500 个字符        |
+
+
+请求示例：
+
+```json
+{
+  "items": [
+    {
+      "op_code": "OP_8D7091378B244D89A51FB102251489F1",
+      "game_code": "GAME_001",
+      "name": "示例游戏1",
+      "status": 1,
+      "remark": "测试游戏"
+    }
+  ]
+}
+```
+
+响应：
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "code": 0,
+    "message": "success",
+    "total": 1,
+    "success": 1,
+    "failed": 0
+  }
+}
+```
+
+
+
+### POST /admin/operator/game/batch-update-status
+
+批量修改分站游戏状态。
+
+#### 请求参数
+
+
+| 字段      | 位置   | 必填  | 类型      | 说明      |
+| ------- | ---- | --- | ------- | ------- |
+| `ids`   | json | 是   | int64[] | 游戏 ID 列表 |
+| `status` | json | 是   | int32   | 新状态，`1` 启用，`2` 停用 |
+
+
+请求示例：
+
+```json
+{
+  "ids": [1, 2, 3],
+  "status": 2
+}
+```
+
+响应：
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "code": 0,
+    "message": "success",
+    "total": 3,
+    "success": 3,
+    "failed": 0
+  }
+}
+```
+
+
+
+### GET /admin/operator/game/list
+
+获取分站游戏列表。
+
+Query 示例：
+
+```text
+/admin/operator/game/list?page=1&page_size=20&op_code=OP_8D7091378B244D89A51FB102251489F1&status=1
+```
+
+
+
+#### 请求参数
+
+
+| 字段        | 位置    | 必填  | 类型    | 说明                        |
+| --------- | ----- | --- | ----- | ------------------------- |
+| `page`    | query | 是   | int32 | 页码，从 `1` 开始              |
+| `page_size` | query | 是   | int32 | 每页数量，范围 `1-100`          |
+| `op_code` | query | 否   | string | 分站业务编码，最大 64 个字符       |
+| `game_code` | query | 否   | string | 游戏业务编码，最大 64 个字符       |
+| `status`  | query | 否   | int32 | 状态，`1` 启用，`2` 停用        |
+
+
+响应：
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "code": 0,
+    "message": "success",
+    "items": [
+      {
+        "id": 1,
+        "op_code": "OP_8D7091378B244D89A51FB102251489F1",
+        "game_code": "GAME_001",
+        "name": "示例游戏1",
+        "status": 1,
+        "remark": "测试游戏",
+        "deleted_at": 0,
+        "created_at": 1757836800000,
+        "updated_at": 1757836800000
+      }
+    ],
+    "total": 1,
+    "page": 1,
+    "page_size": 20
+  }
+}
+```
+
+---
+
+
+
+## 十五、游戏分类
+
+
+
+### OperatorGameCategoryInfo
+
+
+| 字段          | 类型     | 说明              |
+| ----------- | ------ | --------------- |
+| `id`        | int64  | 分类 ID           |
+| `op_code`   | string | 分站业务编码          |
+| `category_code` | string | 分类业务编码         |
+| `name`      | string | 分类名称            |
+| `status`    | int32  | 状态：`1` 启用，`2` 停用 |
+| `remark`    | string | 备注              |
+| `deleted_at` | int64  | 删除时间            |
+| `created_at` | int64  | 创建时间            |
+| `updated_at` | int64  | 更新时间            |
+
+
+
+
+### POST /admin/operator/game-category/batch-create
+
+批量创建分站游戏分类。
+
+#### 请求参数
+
+
+| 字段      | 位置   | 必填  | 类型                                    | 说明      |
+| ------- | ---- | --- | ------------------------------------- | ------- |
+| `items` | json | 是   | BatchCreateOperatorGameCategoryItem[] | 分类列表 |
+
+
+#### BatchCreateOperatorGameCategoryItem
+
+
+| 字段          | 类型     | 说明                      |
+| ----------- | ------ | ----------------------- |
+| `op_code`   | string | 分站业务编码，最大 64 个字符      |
+| `category_code` | string | 分类业务编码，最大 64 个字符      |
+| `status`    | int32  | 状态，`1` 启用，`2` 停用       |
+| `remark`    | string | 备注，最大 500 个字符        |
+
+
+请求示例：
+
+```json
+{
+  "items": [
+    {
+      "op_code": "OP_8D7091378B244D89A51FB102251489F1",
+      "category_code": "CATEGORY_001",
+      "status": 1,
+      "remark": "测试分类"
+    }
+  ]
+}
+```
+
+响应：
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "code": 0,
+    "message": "success",
+    "total": 1,
+    "success": 1,
+    "failed": 0
+  }
+}
+```
+
+
+
+### POST /admin/operator/game-category/batch-update-status
+
+批量修改分站游戏分类状态。
+
+#### 请求参数
+
+
+| 字段      | 位置   | 必填  | 类型      | 说明      |
+| ------- | ---- | --- | ------- | ------- |
+| `ids`   | json | 是   | int64[] | 分类 ID 列表 |
+| `status` | json | 是   | int32   | 新状态，`1` 启用，`2` 停用 |
+
+
+请求示例：
+
+```json
+{
+  "ids": [1, 2],
+  "status": 2
+}
+```
+
+响应：
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "code": 0,
+    "message": "success",
+    "total": 2,
+    "success": 2,
+    "failed": 0
+  }
+}
+```
+
+
+
+### GET /admin/operator/game-category/list
+
+获取分站游戏分类列表。
+
+Query 示例：
+
+```text
+/admin/operator/game-category/list?page=1&page_size=20&op_code=OP_8D7091378B244D89A51FB102251489F1&status=1
+```
+
+
+
+#### 请求参数
+
+
+| 字段          | 位置    | 必填  | 类型    | 说明                        |
+| ----------- | ----- | --- | ----- | ------------------------- |
+| `page`      | query | 是   | int32 | 页码，从 `1` 开始              |
+| `page_size` | query | 是   | int32 | 每页数量，范围 `1-100`          |
+| `op_code`   | query | 否   | string | 分站业务编码，最大 64 个字符       |
+| `category_code` | query | 否   | string | 分类业务编码，最大 64 个字符       |
+| `status`    | query | 否   | int32 | 状态，`1` 启用，`2` 停用        |
+
+
+响应：
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "code": 0,
+    "message": "success",
+    "items": [
+      {
+        "id": 1,
+        "op_code": "OP_8D7091378B244D89A51FB102251489F1",
+        "category_code": "CATEGORY_001",
+        "name": "示例分类",
+        "status": 1,
+        "remark": "测试分类",
+        "deleted_at": 0,
+        "created_at": 1757836800000,
+        "updated_at": 1757836800000
+      }
+    ],
+    "total": 1,
+    "page": 1,
+    "page_size": 20
+  }
+}
+```
+
+---
+
+
+
+## 十六、游戏渠道
+
+
+
+### OperatorGameChannelInfo
+
+
+| 字段          | 类型     | 说明              |
+| ----------- | ------ | --------------- |
+| `id`        | int64  | 渠道 ID           |
+| `op_code`   | string | 分站业务编码          |
+| `channel_code` | string | 渠道业务编码         |
+| `name`      | string | 渠道名称            |
+| `status`    | int32  | 状态：`1` 启用，`2` 停用 |
+| `remark`    | string | 备注              |
+| `deleted_at` | int64  | 删除时间            |
+| `created_at` | int64  | 创建时间            |
+| `updated_at` | int64  | 更新时间            |
+
+
+
+
+### POST /admin/operator/game-channel/batch-create
+
+批量创建分站游戏渠道。
+
+#### 请求参数
+
+
+| 字段      | 位置   | 必填  | 类型                                  | 说明      |
+| ------- | ---- | --- | ----------------------------------- | ------- |
+| `items` | json | 是   | BatchCreateOperatorGameChannelItem[] | 渠道列表 |
+
+
+#### BatchCreateOperatorGameChannelItem
+
+
+| 字段          | 类型     | 说明                      |
+| ----------- | ------ | ----------------------- |
+| `op_code`   | string | 分站业务编码，最大 64 个字符      |
+| `channel_code` | string | 渠道业务编码，最大 64 个字符      |
+| `status`    | int32  | 状态，`1` 启用，`2` 停用       |
+| `remark`    | string | 备注，最大 500 个字符        |
+
+
+请求示例：
+
+```json
+{
+  "items": [
+    {
+      "op_code": "OP_8D7091378B244D89A51FB102251489F1",
+      "channel_code": "CHANNEL_001",
+      "status": 1,
+      "remark": "测试渠道"
+    }
+  ]
+}
+```
+
+响应：
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "code": 0,
+    "message": "success",
+    "total": 1,
+    "success": 1,
+    "failed": 0
+  }
+}
+```
+
+
+
+### POST /admin/operator/game-channel/batch-update-status
+
+批量修改分站游戏渠道状态。
+
+#### 请求参数
+
+
+| 字段      | 位置   | 必填  | 类型      | 说明      |
+| ------- | ---- | --- | ------- | ------- |
+| `ids`   | json | 是   | int64[] | 渠道 ID 列表 |
+| `status` | json | 是   | int32   | 新状态，`1` 启用，`2` 停用 |
+
+
+请求示例：
+
+```json
+{
+  "ids": [1, 2],
+  "status": 2
+}
+```
+
+响应：
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "code": 0,
+    "message": "success",
+    "total": 2,
+    "success": 2,
+    "failed": 0
+  }
+}
+```
+
+
+
+### GET /admin/operator/game-channel/list
+
+获取分站游戏渠道列表。
+
+Query 示例：
+
+```text
+/admin/operator/game-channel/list?page=1&page_size=20&op_code=OP_8D7091378B244D89A51FB102251489F1&status=1
+```
+
+
+
+#### 请求参数
+
+
+| 字段          | 位置    | 必填  | 类型    | 说明                        |
+| ----------- | ----- | --- | ----- | ------------------------- |
+| `page`      | query | 是   | int32 | 页码，从 `1` 开始              |
+| `page_size` | query | 是   | int32 | 每页数量，范围 `1-100`          |
+| `op_code`   | query | 否   | string | 分站业务编码，最大 64 个字符       |
+| `channel_code` | query | 否   | string | 渠道业务编码，最大 64 个字符       |
+| `status`    | query | 否   | int32 | 状态，`1` 启用，`2` 停用        |
+
+
+响应：
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "code": 0,
+    "message": "success",
+    "items": [
+      {
+        "id": 1,
+        "op_code": "OP_8D7091378B244D89A51FB102251489F1",
+        "channel_code": "CHANNEL_001",
+        "name": "示例渠道",
+        "status": 1,
+        "remark": "测试渠道",
+        "deleted_at": 0,
+        "created_at": 1757836800000,
+        "updated_at": 1757836800000
+      }
+    ],
+    "total": 1,
+    "page": 1,
+    "page_size": 20
+  }
+}
+```
+
+---
+
+
+
+## 十七、游戏提供商
+
+
+
+### OperatorGameProviderInfo
+
+
+| 字段          | 类型     | 说明              |
+| ----------- | ------ | --------------- |
+| `id`        | int64  | 提供商 ID         |
+| `op_code`   | string | 分站业务编码          |
+| `provider_code` | string | 提供商业务编码       |
+| `name`      | string | 提供商名称          |
+| `status`    | int32  | 状态：`1` 启用，`2` 停用 |
+| `remark`    | string | 备注              |
+| `deleted_at` | int64  | 删除时间            |
+| `created_at` | int64  | 创建时间            |
+| `updated_at` | int64  | 更新时间            |
+
+
+
+
+### POST /admin/operator/game-provider/batch-create
+
+批量创建分站游戏提供商。
+
+#### 请求参数
+
+
+| 字段      | 位置   | 必填  | 类型                                  | 说明        |
+| ------- | ---- | --- | ----------------------------------- | --------- |
+| `items` | json | 是   | BatchCreateOperatorGameProviderItem[] | 提供商列表 |
+
+
+#### BatchCreateOperatorGameProviderItem
+
+
+| 字段          | 类型     | 说明                      |
+| ----------- | ------ | ----------------------- |
+| `op_code`   | string | 分站业务编码，最大 64 个字符      |
+| `provider_code` | string | 提供商业务编码，最大 64 个字符      |
+| `status`    | int32  | 状态，`1` 启用，`2` 停用       |
+| `remark`    | string | 备注，最大 500 个字符        |
+
+
+请求示例：
+
+```json
+{
+  "items": [
+    {
+      "op_code": "OP_8D7091378B244D89A51FB102251489F1",
+      "provider_code": "PROVIDER_001",
+      "status": 1,
+      "remark": "测试提供商"
+    }
+  ]
+}
+```
+
+响应：
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "code": 0,
+    "message": "success",
+    "total": 1,
+    "success": 1,
+    "failed": 0
+  }
+}
+```
+
+
+
+### POST /admin/operator/game-provider/batch-update-status
+
+批量修改分站游戏提供商状态。
+
+#### 请求参数
+
+
+| 字段      | 位置   | 必填  | 类型      | 说明        |
+| ------- | ---- | --- | ------- | --------- |
+| `ids`   | json | 是   | int64[] | 提供商 ID 列表 |
+| `status` | json | 是   | int32   | 新状态，`1` 启用，`2` 停用 |
+
+
+请求示例：
+
+```json
+{
+  "ids": [1, 2],
+  "status": 2
+}
+```
+
+响应：
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "code": 0,
+    "message": "success",
+    "total": 2,
+    "success": 2,
+    "failed": 0
+  }
+}
+```
+
+
+
+### GET /admin/operator/game-provider/list
+
+获取分站游戏提供商列表。
+
+Query 示例：
+
+```text
+/admin/operator/game-provider/list?page=1&page_size=20&op_code=OP_8D7091378B244D89A51FB102251489F1&status=1
+```
+
+
+
+#### 请求参数
+
+
+| 字段          | 位置    | 必填  | 类型    | 说明                        |
+| ----------- | ----- | --- | ----- | ------------------------- |
+| `page`      | query | 是   | int32 | 页码，从 `1` 开始              |
+| `page_size` | query | 是   | int32 | 每页数量，范围 `1-100`          |
+| `op_code`   | query | 否   | string | 分站业务编码，最大 64 个字符       |
+| `provider_code` | query | 否   | string | 提供商业务编码，最大 64 个字符       |
+| `status`    | query | 否   | int32 | 状态，`1` 启用，`2` 停用        |
+
+
+响应：
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "code": 0,
+    "message": "success",
+    "items": [
+      {
+        "id": 1,
+        "op_code": "OP_8D7091378B244D89A51FB102251489F1",
+        "provider_code": "PROVIDER_001",
+        "name": "示例提供商",
+        "status": 1,
+        "remark": "测试提供商",
+        "deleted_at": 0,
+        "created_at": 1757836800000,
+        "updated_at": 1757836800000
+      }
+    ],
+    "total": 1,
+    "page": 1,
+    "page_size": 20
+  }
+}
+```
+
+---
+
+
+
+## 十八、游戏资源分配
+
+
+
+### OperatorGameAllocationInfo
+
+
+| 字段                  | 类型     | 说明              |
+| ------------------- | ------ | --------------- |
+| `id`                | int64  | 分配记录 ID        |
+| `op_code`           | string | 分站业务编码          |
+| `op_name`           | string | 分站名称            |
+| `game_count`        | int32  | 分配的游戏数量         |
+| `game_category_count` | int32  | 分配的游戏分类数量     |
+| `game_provider_count` | int32  | 分配的游戏提供商数量   |
+| `game_channel_count` | int32  | 分配的游戏渠道数量     |
+| `updated_at`        | int64  | 更新时间            |
+
+
+
+
+### GET /admin/operator/game-allocation/list
+
+获取游戏资源分配汇总列表。
+
+Query 示例：
+
+```text
+/admin/operator/game-allocation/list?page=1&page_size=20&op_code=OP_8D7091378B244D89A51FB102251489F1&status=1
+```
+
+
+
+#### 请求参数
+
+
+| 字段        | 位置    | 必填  | 类型    | 说明                        |
+| --------- | ----- | --- | ----- | ------------------------- |
+| `page`    | query | 是   | int32 | 页码，从 `1` 开始              |
+| `page_size` | query | 是   | int32 | 每页数量，范围 `1-100`          |
+| `op_code` | query | 否   | string | 分站业务编码，最大 64 个字符       |
+| `status`  | query | 否   | int32 | 状态过滤                    |
+
+
+响应：
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "code": 0,
+    "message": "success",
+    "items": [
+      {
+        "id": 1,
+        "op_code": "OP_8D7091378B244D89A51FB102251489F1",
+        "op_name": "示例分站",
+        "game_count": 10,
+        "game_category_count": 5,
+        "game_provider_count": 3,
+        "game_channel_count": 4,
+        "updated_at": 1757836800000
+      }
+    ],
+    "total": 1,
+    "page": 1,
+    "page_size": 20
+  }
+}
+```

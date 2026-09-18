@@ -7,9 +7,9 @@ import (
 	"context"
 	"fmt"
 
+	"oa.98ent.com/p9/platform-game/api/internal/constant"
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
-	"oa.98ent.com/p9/platform-game/common/constant"
 	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"github.com/bytedance/gopkg/util/logger"
@@ -32,7 +32,7 @@ func NewGameCategoryUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 
 func (l *GameCategoryUpdateLogic) GameCategoryUpdate(req *types.GameCategoryUpdateReq) (resp *types.GameCategoryResp, err error) {
 	// API 通过 gRPC 调用 RPC 服务进行数据库操作
-	if l.svcCtx == nil || l.svcCtx.GrpcClient == nil {
+	if l.svcCtx == nil || l.svcCtx.GameGrpcClient == nil {
 		logger.Error("[API GameCategoryUpdate] gRPC client not available")
 		return nil, fmt.Errorf("gRPC client not available")
 	}
@@ -46,7 +46,7 @@ func (l *GameCategoryUpdateLogic) GameCategoryUpdate(req *types.GameCategoryUpda
 	}
 
 	// 调用 RPC 服务
-	grpcResp, err := l.svcCtx.GrpcClient.GetGameCategoryServiceClient().UpdateGameCategory(l.ctx, grpcReq)
+	grpcResp, err := l.svcCtx.GameGrpcClient.GetGameCategoryServiceClient().UpdateGameCategory(l.ctx, grpcReq)
 	if err != nil {
 		logger.Errorf("[API GameCategoryUpdate] gRPC call failed: %v", err)
 		return nil, fmt.Errorf("gRPC call failed: %s", err.Error())

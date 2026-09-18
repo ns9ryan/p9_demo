@@ -19,6 +19,11 @@ import (
 	"oa.98ent.com/p9/platform-game/rpc/ent/gamecurrency"
 	"oa.98ent.com/p9/platform-game/rpc/ent/gameprovider"
 	"oa.98ent.com/p9/platform-game/rpc/ent/gamesynccheckpoint"
+	"oa.98ent.com/p9/platform-game/rpc/ent/operator"
+	"oa.98ent.com/p9/platform-game/rpc/ent/operatorgame"
+	"oa.98ent.com/p9/platform-game/rpc/ent/operatorgamecategory"
+	"oa.98ent.com/p9/platform-game/rpc/ent/operatorgamechannel"
+	"oa.98ent.com/p9/platform-game/rpc/ent/operatorgameprovider"
 )
 
 // ent aliases to avoid import conflicts in user's code.
@@ -79,13 +84,18 @@ var (
 func checkColumn(t, c string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			currency.Table:           currency.ValidColumn,
-			game.Table:               game.ValidColumn,
-			gamecategory.Table:       gamecategory.ValidColumn,
-			gamechannel.Table:        gamechannel.ValidColumn,
-			gamecurrency.Table:       gamecurrency.ValidColumn,
-			gameprovider.Table:       gameprovider.ValidColumn,
-			gamesynccheckpoint.Table: gamesynccheckpoint.ValidColumn,
+			currency.Table:             currency.ValidColumn,
+			game.Table:                 game.ValidColumn,
+			gamecategory.Table:         gamecategory.ValidColumn,
+			gamechannel.Table:          gamechannel.ValidColumn,
+			gamecurrency.Table:         gamecurrency.ValidColumn,
+			gameprovider.Table:         gameprovider.ValidColumn,
+			gamesynccheckpoint.Table:   gamesynccheckpoint.ValidColumn,
+			operator.Table:             operator.ValidColumn,
+			operatorgame.Table:         operatorgame.ValidColumn,
+			operatorgamecategory.Table: operatorgamecategory.ValidColumn,
+			operatorgamechannel.Table:  operatorgamechannel.ValidColumn,
+			operatorgameprovider.Table: operatorgameprovider.ValidColumn,
 		})
 	})
 	return columnCheck(t, c)

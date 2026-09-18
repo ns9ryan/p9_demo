@@ -6,6 +6,7 @@ package sync
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
@@ -31,7 +32,7 @@ func NewRunChannelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RunCha
 func (l *RunChannelLogic) RunChannel(req *types.SyncRunReq) (resp *types.SyncRunResp, err error) {
 	l.Infof("[API RunChannel] received sync run request")
 
-	if l.svcCtx == nil || l.svcCtx.GrpcClient == nil {
+	if l.svcCtx == nil || l.svcCtx.GameGrpcClient == nil {
 		l.Error("[API RunChannel] gRPC client not available")
 		return nil, fmt.Errorf("gRPC client not available")
 	}
@@ -43,7 +44,7 @@ func (l *RunChannelLogic) RunChannel(req *types.SyncRunReq) (resp *types.SyncRun
 	}
 
 	// 调用 RPC 的 SyncRun，由 RPC 侧负责创建 checkpoint 和异步处理
-	client := l.svcCtx.GrpcClient.GetSyncServiceClient()
+	client := l.svcCtx.GameGrpcClient.GetSyncServiceClient()
 	runReq := &platformgame.SyncRunRequest{
 		ObjectType: "channel",
 		SyncCols:   req.SyncCols,
@@ -61,7 +62,11 @@ func (l *RunChannelLogic) RunChannel(req *types.SyncRunReq) (resp *types.SyncRun
 	}
 
 	l.Infof("[API RunChannel] sync run success: checkpoint_id=%d", runResp.CheckpointId)
-
+	go func() {
+		// 10秒后触发 I18n 同步
+		time.Sleep(10 * time.Second)
+		_, _ = NewRunI18nLogic(l.ctx, l.svcCtx).RunI18n(&types.SyncRunReq{})
+	}()
 	// 返回 checkpoint ID 给前端
 	resp = &types.SyncRunResp{
 		CheckpointID: runResp.CheckpointId,

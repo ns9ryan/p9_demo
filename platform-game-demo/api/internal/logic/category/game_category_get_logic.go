@@ -7,10 +7,10 @@ import (
 	"context"
 	"fmt"
 
+	"oa.98ent.com/p9/platform-game/api/internal/constant"
 	"oa.98ent.com/p9/platform-game/api/internal/logic"
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
-	"oa.98ent.com/p9/platform-game/common/constant"
 	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -33,7 +33,7 @@ func NewGameCategoryGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *G
 func (l *GameCategoryGetLogic) GameCategoryGet(req *types.GameCategoryGetReq) (resp *types.GameCategoryResp, err error) {
 	l.Infof("[API GameCategoryGet] received req: id=%d", req.ID)
 
-	if l.svcCtx == nil || l.svcCtx.GrpcClient == nil {
+	if l.svcCtx == nil || l.svcCtx.GameGrpcClient == nil {
 		l.Error("[API GameCategoryGet] gRPC client not available")
 		return nil, fmt.Errorf("gRPC client not available")
 	}
@@ -42,7 +42,7 @@ func (l *GameCategoryGetLogic) GameCategoryGet(req *types.GameCategoryGetReq) (r
 		Id: req.ID,
 	}
 
-	client := l.svcCtx.GrpcClient.GetGameCategoryServiceClient()
+	client := l.svcCtx.GameGrpcClient.GetGameCategoryServiceClient()
 	l.Infof("[API GameCategoryGet] calling gRPC service: GetGameCategory with id=%d", grpcReq.Id)
 
 	grpcResp, err := client.GetGameCategory(l.ctx, grpcReq)

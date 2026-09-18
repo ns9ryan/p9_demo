@@ -31,7 +31,7 @@ func NewRunCurrencyLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RunCu
 func (l *RunCurrencyLogic) RunCurrency(req *types.SyncRunReq) (resp *types.SyncRunResp, err error) {
 	l.Infof("[API RunCurrency] received sync run request")
 
-	if l.svcCtx == nil || l.svcCtx.GrpcClient == nil {
+	if l.svcCtx == nil || l.svcCtx.GameGrpcClient == nil {
 		l.Error("[API RunCurrency] gRPC client not available")
 		return nil, fmt.Errorf("gRPC client not available")
 	}
@@ -43,7 +43,7 @@ func (l *RunCurrencyLogic) RunCurrency(req *types.SyncRunReq) (resp *types.SyncR
 	}
 
 	// 调用 RPC 的 SyncRun，由 RPC 侧负责创建 checkpoint 和异步处理
-	client := l.svcCtx.GrpcClient.GetSyncServiceClient()
+	client := l.svcCtx.GameGrpcClient.GetSyncServiceClient()
 	runReq := &platformgame.SyncRunRequest{
 		ObjectType: "currency",
 		SyncCols:   req.SyncCols,

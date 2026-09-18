@@ -171,6 +171,94 @@ var (
 		Columns:    GameSyncCheckpointColumns,
 		PrimaryKey: []*schema.Column{GameSyncCheckpointColumns[0]},
 	}
+	// OperatorColumns holds the columns for the "operator" table.
+	OperatorColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Increment: true},
+		{Name: "code", Type: field.TypeString},
+		{Name: "name", Type: field.TypeString},
+		{Name: "timezone_code", Type: field.TypeString},
+		{Name: "settlement_currency_code", Type: field.TypeString},
+		{Name: "creation_status", Type: field.TypeInt16},
+		{Name: "publish_status", Type: field.TypeInt16},
+		{Name: "publish_task_no", Type: field.TypeString, Nullable: true},
+		{Name: "published_at", Type: field.TypeTime, Nullable: true},
+		{Name: "status", Type: field.TypeInt16},
+		{Name: "remark", Type: field.TypeString, Nullable: true},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+	}
+	// OperatorTable holds the schema information for the "operator" table.
+	OperatorTable = &schema.Table{
+		Name:       "operator",
+		Comment:    "分站表",
+		Columns:    OperatorColumns,
+		PrimaryKey: []*schema.Column{OperatorColumns[0]},
+	}
+	// OperatorGameColumns holds the columns for the "operator_game" table.
+	OperatorGameColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Increment: true},
+		{Name: "op_code", Type: field.TypeString},
+		{Name: "game_code", Type: field.TypeString},
+		{Name: "name", Type: field.TypeString},
+		{Name: "status", Type: field.TypeInt16},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+	}
+	// OperatorGameTable holds the schema information for the "operator_game" table.
+	OperatorGameTable = &schema.Table{
+		Name:       "operator_game",
+		Comment:    "分站游戏关联表",
+		Columns:    OperatorGameColumns,
+		PrimaryKey: []*schema.Column{OperatorGameColumns[0]},
+	}
+	// OperatorGameCategoryColumns holds the columns for the "operator_game_category" table.
+	OperatorGameCategoryColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Increment: true},
+		{Name: "op_code", Type: field.TypeString},
+		{Name: "category_code", Type: field.TypeString},
+		{Name: "status", Type: field.TypeInt16},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+	}
+	// OperatorGameCategoryTable holds the schema information for the "operator_game_category" table.
+	OperatorGameCategoryTable = &schema.Table{
+		Name:       "operator_game_category",
+		Comment:    "分站游戏分类关联表",
+		Columns:    OperatorGameCategoryColumns,
+		PrimaryKey: []*schema.Column{OperatorGameCategoryColumns[0]},
+	}
+	// OperatorGameChannelColumns holds the columns for the "operator_game_channel" table.
+	OperatorGameChannelColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Increment: true},
+		{Name: "op_code", Type: field.TypeString},
+		{Name: "channel_code", Type: field.TypeString},
+		{Name: "status", Type: field.TypeInt16},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+	}
+	// OperatorGameChannelTable holds the schema information for the "operator_game_channel" table.
+	OperatorGameChannelTable = &schema.Table{
+		Name:       "operator_game_channel",
+		Comment:    "分站游戏渠道关联表",
+		Columns:    OperatorGameChannelColumns,
+		PrimaryKey: []*schema.Column{OperatorGameChannelColumns[0]},
+	}
+	// OperatorGameProviderColumns holds the columns for the "operator_game_provider" table.
+	OperatorGameProviderColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Increment: true},
+		{Name: "op_code", Type: field.TypeString},
+		{Name: "provider_code", Type: field.TypeString},
+		{Name: "status", Type: field.TypeInt16},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+	}
+	// OperatorGameProviderTable holds the schema information for the "operator_game_provider" table.
+	OperatorGameProviderTable = &schema.Table{
+		Name:       "operator_game_provider",
+		Comment:    "分站游戏提供商关联表",
+		Columns:    OperatorGameProviderColumns,
+		PrimaryKey: []*schema.Column{OperatorGameProviderColumns[0]},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		CurrencyTable,
@@ -180,6 +268,11 @@ var (
 		GameCurrencyTable,
 		GameProviderTable,
 		GameSyncCheckpointTable,
+		OperatorTable,
+		OperatorGameTable,
+		OperatorGameCategoryTable,
+		OperatorGameChannelTable,
+		OperatorGameProviderTable,
 	}
 )
 
@@ -204,5 +297,20 @@ func init() {
 	}
 	GameSyncCheckpointTable.Annotation = &entsql.Annotation{
 		Table: "game_sync_checkpoint",
+	}
+	OperatorTable.Annotation = &entsql.Annotation{
+		Table: "operator",
+	}
+	OperatorGameTable.Annotation = &entsql.Annotation{
+		Table: "operator_game",
+	}
+	OperatorGameCategoryTable.Annotation = &entsql.Annotation{
+		Table: "operator_game_category",
+	}
+	OperatorGameChannelTable.Annotation = &entsql.Annotation{
+		Table: "operator_game_channel",
+	}
+	OperatorGameProviderTable.Annotation = &entsql.Annotation{
+		Table: "operator_game_provider",
 	}
 }

@@ -8,11 +8,15 @@ import (
 
 	agent_line_allocation "oa.98ent.com/p9/platform-operator/api/internal/handler/agent_line_allocation"
 	basic_resource_allocation "oa.98ent.com/p9/platform-operator/api/internal/handler/basic_resource_allocation"
-	game_allocation "oa.98ent.com/p9/platform-operator/api/internal/handler/game_allocation"
 	language_allocation "oa.98ent.com/p9/platform-operator/api/internal/handler/language_allocation"
 	operator "oa.98ent.com/p9/platform-operator/api/internal/handler/operator"
 	operator_admin "oa.98ent.com/p9/platform-operator/api/internal/handler/operator_admin"
 	operator_domain "oa.98ent.com/p9/platform-operator/api/internal/handler/operator_domain"
+	operator_game "oa.98ent.com/p9/platform-operator/api/internal/handler/operator_game"
+	operator_game_allocation "oa.98ent.com/p9/platform-operator/api/internal/handler/operator_game_allocation"
+	operator_game_category "oa.98ent.com/p9/platform-operator/api/internal/handler/operator_game_category"
+	operator_game_channel "oa.98ent.com/p9/platform-operator/api/internal/handler/operator_game_channel"
+	operator_game_provider "oa.98ent.com/p9/platform-operator/api/internal/handler/operator_game_provider"
 	operator_profile "oa.98ent.com/p9/platform-operator/api/internal/handler/operator_profile"
 	ping "oa.98ent.com/p9/platform-operator/api/internal/handler/ping"
 	region_allocation "oa.98ent.com/p9/platform-operator/api/internal/handler/region_allocation"
@@ -53,25 +57,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			}...,
 		),
 		rest.WithPrefix("/admin/operator"),
-	)
-
-	server.AddRoutes(
-		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
-			[]rest.Route{
-				{
-					Method:  http.MethodGet,
-					Path:    "/list",
-					Handler: game_allocation.ListGameAllocationsHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/save",
-					Handler: game_allocation.SaveGameAllocationsHandler(serverCtx),
-				},
-			}...,
-		),
-		rest.WithPrefix("/admin/operator/game-allocation"),
 	)
 
 	server.AddRoutes(
@@ -203,6 +188,153 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			}...,
 		),
 		rest.WithPrefix("/admin/operator/domain"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
+			[]rest.Route{
+				{
+					// 批量创建分站游戏
+					Method:  http.MethodPost,
+					Path:    "/batch-create",
+					Handler: operator_game.BatchCreateOperatorGameHandler(serverCtx),
+				},
+				{
+					// 批量删除分站游戏
+					Method:  http.MethodPost,
+					Path:    "/batch-delete",
+					Handler: operator_game.BatchDeleteOperatorGameHandler(serverCtx),
+				},
+				{
+					// 批量修改分站游戏状态
+					Method:  http.MethodPost,
+					Path:    "/batch-update-status",
+					Handler: operator_game.BatchUpdateOperatorGameStatusHandler(serverCtx),
+				},
+				{
+					// 获取分站游戏列表
+					Method:  http.MethodGet,
+					Path:    "/list",
+					Handler: operator_game.GetOperatorGameListHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/admin/operator/game"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
+			[]rest.Route{
+				{
+					// 获取游戏资源分配列表
+					Method:  http.MethodGet,
+					Path:    "/list",
+					Handler: operator_game_allocation.ListGameAllocationsHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/admin/operator/game-allocation"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
+			[]rest.Route{
+				{
+					// 批量创建分站游戏分类
+					Method:  http.MethodPost,
+					Path:    "/batch-create",
+					Handler: operator_game_category.BatchCreateOperatorGameCategoryHandler(serverCtx),
+				},
+				{
+					// 批量删除分站游戏分类
+					Method:  http.MethodPost,
+					Path:    "/batch-delete",
+					Handler: operator_game_category.BatchDeleteOperatorGameCategoryHandler(serverCtx),
+				},
+				{
+					// 批量修改分站游戏分类状态
+					Method:  http.MethodPost,
+					Path:    "/batch-update-status",
+					Handler: operator_game_category.BatchUpdateOperatorGameCategoryStatusHandler(serverCtx),
+				},
+				{
+					// 获取分站游戏分类列表
+					Method:  http.MethodGet,
+					Path:    "/list",
+					Handler: operator_game_category.GetOperatorGameCategoryListHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/admin/operator/game-category"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
+			[]rest.Route{
+				{
+					// 批量创建分站游戏渠道
+					Method:  http.MethodPost,
+					Path:    "/batch-create",
+					Handler: operator_game_channel.BatchCreateOperatorGameChannelHandler(serverCtx),
+				},
+				{
+					// 批量删除分站游戏渠道
+					Method:  http.MethodPost,
+					Path:    "/batch-delete",
+					Handler: operator_game_channel.BatchDeleteOperatorGameChannelHandler(serverCtx),
+				},
+				{
+					// 批量修改分站游戏渠道状态
+					Method:  http.MethodPost,
+					Path:    "/batch-update-status",
+					Handler: operator_game_channel.BatchUpdateOperatorGameChannelStatusHandler(serverCtx),
+				},
+				{
+					// 获取分站游戏渠道列表
+					Method:  http.MethodGet,
+					Path:    "/list",
+					Handler: operator_game_channel.GetOperatorGameChannelListHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/admin/operator/game-channel"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
+			[]rest.Route{
+				{
+					// 批量创建分站游戏提供商
+					Method:  http.MethodPost,
+					Path:    "/batch-create",
+					Handler: operator_game_provider.BatchCreateOperatorGameProviderHandler(serverCtx),
+				},
+				{
+					// 批量删除分站游戏提供商
+					Method:  http.MethodPost,
+					Path:    "/batch-delete",
+					Handler: operator_game_provider.BatchDeleteOperatorGameProviderHandler(serverCtx),
+				},
+				{
+					// 批量修改分站游戏提供商状态
+					Method:  http.MethodPost,
+					Path:    "/batch-update-status",
+					Handler: operator_game_provider.BatchUpdateOperatorGameProviderStatusHandler(serverCtx),
+				},
+				{
+					// 获取分站游戏提供商列表
+					Method:  http.MethodGet,
+					Path:    "/list",
+					Handler: operator_game_provider.GetOperatorGameProviderListHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/admin/operator/game-provider"),
 	)
 
 	server.AddRoutes(

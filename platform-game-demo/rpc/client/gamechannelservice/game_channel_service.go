@@ -14,6 +14,13 @@ import (
 )
 
 type (
+	GetGameChannelListRequest = platform_game.GetGameChannelListRequest
+	GetGameChannelListResp    = platform_game.GetGameChannelListResp
+	GetGameChannelRequest     = platform_game.GetGameChannelRequest
+	GetGameChannelResp        = platform_game.GetGameChannelResp
+	UpdateGameChannelRequest  = platform_game.UpdateGameChannelRequest
+	UpdateGameChannelResp     = platform_game.UpdateGameChannelResp
+
 	GameChannelService interface {
 		// 获取单个游戏渠道
 		GetGameChannel(ctx context.Context, in *GetGameChannelRequest, opts ...grpc.CallOption) (*GetGameChannelResp, error)

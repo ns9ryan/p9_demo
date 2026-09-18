@@ -26,6 +26,16 @@ type Tx struct {
 	GameProvider *GameProviderClient
 	// GameSyncCheckpoint is the client for interacting with the GameSyncCheckpoint builders.
 	GameSyncCheckpoint *GameSyncCheckpointClient
+	// Operator is the client for interacting with the Operator builders.
+	Operator *OperatorClient
+	// OperatorGame is the client for interacting with the OperatorGame builders.
+	OperatorGame *OperatorGameClient
+	// OperatorGameCategory is the client for interacting with the OperatorGameCategory builders.
+	OperatorGameCategory *OperatorGameCategoryClient
+	// OperatorGameChannel is the client for interacting with the OperatorGameChannel builders.
+	OperatorGameChannel *OperatorGameChannelClient
+	// OperatorGameProvider is the client for interacting with the OperatorGameProvider builders.
+	OperatorGameProvider *OperatorGameProviderClient
 
 	// lazily loaded.
 	client     *Client
@@ -164,6 +174,11 @@ func (tx *Tx) init() {
 	tx.GameCurrency = NewGameCurrencyClient(tx.config)
 	tx.GameProvider = NewGameProviderClient(tx.config)
 	tx.GameSyncCheckpoint = NewGameSyncCheckpointClient(tx.config)
+	tx.Operator = NewOperatorClient(tx.config)
+	tx.OperatorGame = NewOperatorGameClient(tx.config)
+	tx.OperatorGameCategory = NewOperatorGameCategoryClient(tx.config)
+	tx.OperatorGameChannel = NewOperatorGameChannelClient(tx.config)
+	tx.OperatorGameProvider = NewOperatorGameProviderClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

@@ -8,10 +8,10 @@ import (
 	"fmt"
 
 	"github.com/zeromicro/go-zero/core/logx"
+	"oa.98ent.com/p9/platform-game/api/internal/constant"
 	"oa.98ent.com/p9/platform-game/api/internal/logic"
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
-	"oa.98ent.com/p9/platform-game/common/constant"
 	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 )
 
@@ -33,7 +33,7 @@ func (l *GameChannelGetLogic) GameChannelGet(req *types.GameChannelGetReq) (resp
 	l.Infof("[API GameChannelGet] received req: id=%d", req.ID)
 
 	// 检查 gRPC 客户端是否可用
-	if l.svcCtx == nil || l.svcCtx.GrpcClient == nil {
+	if l.svcCtx == nil || l.svcCtx.GameGrpcClient == nil {
 		l.Error("[API GameChannelGet] gRPC client not available")
 		return nil, fmt.Errorf("gRPC client not available")
 	}
@@ -44,7 +44,7 @@ func (l *GameChannelGetLogic) GameChannelGet(req *types.GameChannelGetReq) (resp
 	}
 
 	// 调用 RPC 服务
-	client := l.svcCtx.GrpcClient.GetGameChannelServiceClient()
+	client := l.svcCtx.GameGrpcClient.GetGameChannelServiceClient()
 	grpcResp, err := client.GetGameChannel(l.ctx, grpcReq)
 	if err != nil {
 		l.Errorf("[API GameChannelGet] gRPC call failed: %v", err)

@@ -5,13 +5,14 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/zeromicro/go-zero/core/logx"
 	"oa.98ent.com/p9/platform-game/rpc/ent"
+	"oa.98ent.com/p9/platform-game/rpc/internal/config"
 	"oa.98ent.com/p9/platform-game/rpc/internal/constant"
 	"oa.98ent.com/p9/platform-game/rpc/internal/svc"
 	gs "oa.98ent.com/p9/platform-game/rpc/internal/synchro"
+	"oa.98ent.com/p9/platform-game/rpc/internal/utils"
 	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
-
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type SyncRunLogic struct {
@@ -49,18 +50,8 @@ func (l *SyncRunLogic) SyncRun(in *platform_game.SyncRunRequest) (*platform_game
 	l.Infof("📍 同步范围: %s", syncScope)
 
 	// 从配置读取 grpcServerAddr
-	grpcServerAddr := l.svcCtx.Config.GrpcServerAddr
+	grpcServerAddr := l.svcCtx.Config.VendorGrpcServerAddr
 	l.Infof("📍 gRPC 服务器地址配置: %s", grpcServerAddr)
-
-	// if grpcServerAddr == "" {
-	// 	l.Errorf("❌ GrpcServerAddr 未配置")
-	// 	l.Infof("💡 请在配置文件中设置 GrpcServerAddr，例子如下")
-	// 	l.Infof("   GrpcServerAddr: game-vendor-sync:19009")
-	// 	return &sync.SyncRunResp{
-	// 		Code:    constant.CodeInternalError,
-	// 		Message: "GrpcServerAddr not configured",
-	// 	}, nil
-	// }
 
 	// 第一步：创建同步检查点记录（RPC 侧创建）
 	checkpoint := &ent.GameSyncCheckpoint{
@@ -95,9 +86,9 @@ func (l *SyncRunLogic) SyncRun(in *platform_game.SyncRunRequest) (*platform_game
 		Message:      "async sync started",
 		CheckpointId: createdCheckpoint.ID,
 	}
-
+	newCtx := utils.CloneCtxWithTraceID(l.ctx)
 	// 第三步：启动协程异步处理同步逻辑
-	go l.doAsyncSync(createdCheckpoint.ID, in.ObjectType, in.SyncCols, grpcServerAddr, syncScope, createdCheckpoint.ID)
+	go l.doAsyncSync(newCtx, l.svcCtx.Config, createdCheckpoint.ID, in.ObjectType, in.SyncCols, syncScope, createdCheckpoint.ID)
 
 	l.Infof("[RPC SyncRun] async sync started for checkpoint: id=%d", checkpoint.ID)
 	l.Infof("🎉 SyncRun 请求完成")
@@ -105,9 +96,7 @@ func (l *SyncRunLogic) SyncRun(in *platform_game.SyncRunRequest) (*platform_game
 }
 
 // doAsyncSync 异步执行同步逻辑（在 RPC 侧）
-func (l *SyncRunLogic) doAsyncSync(checkpointID int64, objectType string, syncCols []string, grpcServerAddr string, syncScope string, localCheckpointID int64) {
-	// 创建新的上下文用于异步操作，不依赖请求上下文
-	ctx := context.Background()
+func (l *SyncRunLogic) doAsyncSync(ctx context.Context, config config.Config, checkpointID int64, objectType string, syncCols []string, syncScope string, localCheckpointID int64) {
 	logger := logx.WithContext(ctx)
 
 	logger.Infof("[RPC AsyncSync] starting async sync for checkpoint: id=%d, type=%s", checkpointID, objectType)
@@ -121,7 +110,7 @@ func (l *SyncRunLogic) doAsyncSync(checkpointID int64, objectType string, syncCo
 	}()
 
 	// 创建同步服务实例
-	syncService := gs.NewSyncServiceImpl(l.svcCtx.DAOManager, grpcServerAddr)
+	syncService := gs.NewSyncServiceImpl(ctx, config, l.svcCtx.DAOManager)
 
 	// 执行同步
 	result, err := syncService.Run(ctx, objectType, syncCols, localCheckpointID)

@@ -1,0 +1,23 @@
+{
+	"common": {
+		"invalid_request": "请求参数格式错误",
+		"data_not_found": "数据不存在",
+		"constraint_error": "数据约束冲突",
+		"validation_error": "数据校验失败",
+		"database_error": "数据库操作失败",
+		"internal_error": "系统内部错误",
+		"too_many_requests": "请求过于频繁",
+		"service_unavailable": "服务暂不可用",
+		"request_timeout": "请求超时"
+	},
+	"game": {
+		"not_found": "游戏不存在",
+		"category_not_found": "游戏分类不存在",
+		"provider_not_found": "游戏厂商不存在",
+		"channel_not_found": "游戏渠道不存在",
+		"currency_not_found": "游戏币种不存在",
+		"sync_failed": "游戏同步失败",
+		"sync_conflict": "游戏同步冲突",
+		"sync_rate_limit": "游戏同步操作过于频繁，请稍后再试"
+	}
+}

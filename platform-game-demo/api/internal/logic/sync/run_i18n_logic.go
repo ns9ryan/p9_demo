@@ -29,7 +29,7 @@ func NewRunI18nLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RunI18nLo
 }
 
 func (l *RunI18nLogic) RunI18n(req *types.SyncRunReq) (resp *types.SyncRunResp, err error) {
-	r, err := l.svcCtx.GrpcClient.GetGameSyncCheckpointServiceClient().
+	r, err := l.svcCtx.GameGrpcClient.GetGameSyncCheckpointServiceClient().
 		GetI18NNameMap(context.Background(), &platform_game.GetI18NNameMapRequest{})
 	if err == nil {
 		l.svcCtx.Core.RegisterCatalog(context.Background(), catalog.AppendGameI18nItems(r.Data))

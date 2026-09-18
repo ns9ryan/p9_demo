@@ -11,8 +11,10 @@ type Config struct {
 
 	DatabaseConf database.DatabaseConf
 
-	// gRPC 服务器地址（游戏供应商服务）
-	GrpcServerAddr string `json:"grpcServerAddr,optional" yaml:"GrpcServerAddr"`
+	// 游戏供应商 gRPC 服务器地址（游戏供应商服务）
+	VendorGrpcServerAddr string `json:"vendorGrpcServerAddr,optional" yaml:"VendorGrpcServerAddr"`
+
+	SyncBatchSize int `json:"syncBatchSize,optional,default=100" yaml:"SyncBatchSize"`
 
 	Kafka struct {
 		// Kafka brokers 列表

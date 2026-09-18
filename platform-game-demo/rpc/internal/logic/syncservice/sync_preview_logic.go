@@ -40,7 +40,7 @@ func (l *SyncPreviewLogic) SyncPreview(in *platform_game.SyncPreviewRequest) (*p
 	l.Infof("✅ 数据库连接已确认")
 
 	// 从配置读取 grpcServerAddr
-	grpcServerAddr := l.svcCtx.Config.GrpcServerAddr
+	grpcServerAddr := l.svcCtx.Config.VendorGrpcServerAddr
 	l.Infof("📍 gRPC 服务器地址配置: %s", grpcServerAddr)
 
 	// if grpcServerAddr == "" {
@@ -53,7 +53,7 @@ func (l *SyncPreviewLogic) SyncPreview(in *platform_game.SyncPreviewRequest) (*p
 
 	l.Infof("🔄 创建同步服务实例...")
 	// 创建同步服务实例
-	syncService := gs.NewSyncServiceImpl(l.svcCtx.DAOManager, grpcServerAddr)
+	syncService := gs.NewSyncServiceImpl(l.ctx, l.svcCtx.Config, l.svcCtx.DAOManager)
 
 	l.Infof("🔗 正在连接 game-vendor-sync 服务...")
 	l.Infof("   目标地址: %s", grpcServerAddr)

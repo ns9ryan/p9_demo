@@ -93,6 +93,66 @@ func (f GameSyncCheckpointFunc) Mutate(ctx context.Context, m ent.Mutation) (ent
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GameSyncCheckpointMutation", m)
 }
 
+// The OperatorFunc type is an adapter to allow the use of ordinary
+// function as Operator mutator.
+type OperatorFunc func(context.Context, *ent.OperatorMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f OperatorFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.OperatorMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.OperatorMutation", m)
+}
+
+// The OperatorGameFunc type is an adapter to allow the use of ordinary
+// function as OperatorGame mutator.
+type OperatorGameFunc func(context.Context, *ent.OperatorGameMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f OperatorGameFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.OperatorGameMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.OperatorGameMutation", m)
+}
+
+// The OperatorGameCategoryFunc type is an adapter to allow the use of ordinary
+// function as OperatorGameCategory mutator.
+type OperatorGameCategoryFunc func(context.Context, *ent.OperatorGameCategoryMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f OperatorGameCategoryFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.OperatorGameCategoryMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.OperatorGameCategoryMutation", m)
+}
+
+// The OperatorGameChannelFunc type is an adapter to allow the use of ordinary
+// function as OperatorGameChannel mutator.
+type OperatorGameChannelFunc func(context.Context, *ent.OperatorGameChannelMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f OperatorGameChannelFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.OperatorGameChannelMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.OperatorGameChannelMutation", m)
+}
+
+// The OperatorGameProviderFunc type is an adapter to allow the use of ordinary
+// function as OperatorGameProvider mutator.
+type OperatorGameProviderFunc func(context.Context, *ent.OperatorGameProviderMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f OperatorGameProviderFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.OperatorGameProviderMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.OperatorGameProviderMutation", m)
+}
+
 // Condition is a hook condition function.
 type Condition func(context.Context, ent.Mutation) bool
 

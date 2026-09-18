@@ -3,12 +3,6 @@
 
 package types
 
-type ExecuteV2SqlResp struct {
-	Success bool        `json:"success" comment:"执行是否成功"`
-	Message string      `json:"message,omitempty" comment:"执行消息"`
-	Data    interface{} `json:"data,omitempty" comment:"执行结果数据"`
-}
-
 type GameCategoryGetReq struct {
 	ID int64 `form:"id" binding:"required" comment:"分类ID"`
 }

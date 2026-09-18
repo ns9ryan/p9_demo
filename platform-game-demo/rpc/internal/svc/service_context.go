@@ -1,18 +1,22 @@
 package svc
 
 import (
+	"context"
+
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/service"
 	"oa.98ent.com/p9/platform-game/rpc/ent"
+	"oa.98ent.com/p9/platform-game/rpc/ent/migrate"
+	"oa.98ent.com/p9/platform-game/rpc/internal/cache"
 	"oa.98ent.com/p9/platform-game/rpc/internal/config"
 	"oa.98ent.com/p9/platform-game/rpc/internal/dao"
 )
 
 type ServiceContext struct {
-	Config config.Config
-	// GameService game.GameService
-	DB         *ent.Client  // Ent数据库客户端
-	DAOManager *dao.Manager // DAO管理器
+	Config       config.Config
+	DB           *ent.Client    // Ent数据库客户端
+	DAOManager   *dao.Manager   // DAO管理器
+	CacheManager *cache.Manager // 缓存管理器
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -35,8 +39,23 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	db := ent.NewClient(entOpts...)
 
 	return &ServiceContext{
-		Config:     c,
-		DB:         db,
-		DAOManager: dao.NewManager(db),
+		Config:       c,
+		DB:           db,
+		DAOManager:   dao.NewManager(db),
+		CacheManager: cache.NewManager(),
 	}
+}
+
+func (s *ServiceContext) MustMigrate() {
+	ctx := context.Background()
+
+	// 根据 Ent Schema 自动创建或更新数据库结构
+	logx.Must(
+		s.DB.Schema.Create(
+			ctx,
+			migrate.WithForeignKeys(false), // 不创建数据库外键
+			migrate.WithDropIndex(true),    // 允许删除废弃索引
+		),
+	)
+
 }

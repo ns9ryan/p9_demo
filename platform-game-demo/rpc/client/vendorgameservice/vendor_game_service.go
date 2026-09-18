@@ -14,7 +14,13 @@ import (
 )
 
 type (
-	Empty = vendors.Empty
+	Empty                   = vendors.Empty
+	GetChannelResponse      = vendors.GetChannelResponse
+	GetGameCategoryResponse = vendors.GetGameCategoryResponse
+	GetGameCurrencyResponse = vendors.GetGameCurrencyResponse
+	GetGameRequest          = vendors.GetGameRequest
+	GetGameResponse         = vendors.GetGameResponse
+	GetVendorResponse       = vendors.GetVendorResponse
 
 	VendorGameService interface {
 		// 获取游戏分类

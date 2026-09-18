@@ -10,20 +10,19 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"oa.98ent.com/p9/platform-game/rpc/internal/config"
 	"oa.98ent.com/p9/platform-game/rpc/internal/dao"
 	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 	"oa.98ent.com/p9/platform-game/rpc/pb/vendors"
 )
-
-const BatchSize = 10
 
 // ===== 同步服务实现 =====
 
 // SyncServiceImpl 同步服务实现
 type SyncServiceImpl struct {
 	mu                  sync.Mutex
+	config              config.Config
 	DAOManager          *dao.Manager
-	grpcServerAddr      string
 	categorySyncService *CategorySyncService
 	providerSyncService *ProviderSyncService
 	channelSyncService  *ChannelSyncService
@@ -32,70 +31,68 @@ type SyncServiceImpl struct {
 }
 
 // NewSyncServiceImpl 创建同步服务实现
-func NewSyncServiceImpl(daoManager *dao.Manager, grpcServerAddr string) *SyncServiceImpl {
+func NewSyncServiceImpl(ctx context.Context, config config.Config, daoManager *dao.Manager) *SyncServiceImpl {
 	return &SyncServiceImpl{
-		DAOManager:          daoManager,
-		grpcServerAddr:      grpcServerAddr,
-		categorySyncService: NewCategorySyncService(daoManager),
-		providerSyncService: NewProviderSyncService(daoManager),
-		channelSyncService:  NewChannelSyncService(daoManager),
-		gameSyncService:     NewGameSyncService(daoManager),
-		currencySyncService: NewCurrencySyncService(daoManager),
+		categorySyncService: NewCategorySyncService(ctx, config, daoManager),
+		providerSyncService: NewProviderSyncService(ctx, config, daoManager),
+		channelSyncService:  NewChannelSyncService(ctx, config, daoManager),
+		gameSyncService:     NewGameSyncService(ctx, config, daoManager),
+		currencySyncService: NewCurrencySyncService(ctx, config, daoManager),
 	}
 }
 
-// GetGRPCClient 获取 gRPC 客户端连接
-func (s *SyncServiceImpl) GetGRPCClient(ctx context.Context) (vendors.VendorGameServiceClient, *grpc.ClientConn, error) {
-	log.Printf("[GetGRPCClient] 🔍 开始连接 gRPC 服务\n")
-	log.Printf("[GetGRPCClient] 📍 目标地址: %s\n", s.grpcServerAddr)
+// GetVendorGRPCClient 获取 gRPC 客户端连接
+func (s *SyncServiceImpl) GetVendorGRPCClient(ctx context.Context) (vendors.VendorGameServiceClient, *grpc.ClientConn, error) {
+	log.Printf("[GetVendorGRPCClient] 🔍 开始连接 gRPC 服务\n")
+	log.Printf("[GetVendorGRPCClient] 📍 目标地址: %s\n", s.config.VendorGrpcServerAddr)
 
-	if s.grpcServerAddr == "" {
-		log.Println("[GetGRPCClient] ❌ gRPC 服务器地址为空!")
+	if s.config.VendorGrpcServerAddr == "" {
+		log.Println("[GetVendorGRPCClient] ❌ gRPC 服务器地址为空!")
 		return nil, nil, fmt.Errorf("gRPC 服务器地址未配置")
 	}
 
 	// 网络诊断：检查能否 DNS 解析
-	log.Println("[GetGRPCClient] 🔧 执行网络诊断...")
-	host, port, err := net.SplitHostPort(s.grpcServerAddr)
+	log.Println("[GetVendorGRPCClient] 🔧 执行网络诊断...")
+	host, port, err := net.SplitHostPort(s.config.VendorGrpcServerAddr)
 	if err != nil {
-		log.Printf("[GetGRPCClient] ⚠️  地址格式解析失败: %v (将直接使用原地址)\n", err)
-		host = s.grpcServerAddr
+		log.Printf("[GetVendorGRPCClient] ⚠️  地址格式解析失败: %v (将直接使用原地址)\n", err)
+		host = s.config.VendorGrpcServerAddr
 		port = "unknown"
 	}
 
-	log.Printf("[GetGRPCClient]    - 主机: %s\n", host)
-	log.Printf("[GetGRPCClient]    - 端口: %s\n", port)
+	log.Printf("[GetVendorGRPCClient]    - 主机: %s\n", host)
+	log.Printf("[GetVendorGRPCClient]    - 端口: %s\n", port)
 
 	// 尝试 DNS 解析
-	log.Printf("[GetGRPCClient] 🔧 尝试 DNS 解析 '%s'...\n", host)
+	log.Printf("[GetVendorGRPCClient] 🔧 尝试 DNS 解析 '%s'...\n", host)
 	ips, dnsErr := net.LookupIP(host)
 	if dnsErr != nil {
-		log.Printf("[GetGRPCClient] ⚠️  DNS 解析失败: %v (可能是本地地址或 127.0.0.1)\n", dnsErr)
+		log.Printf("[GetVendorGRPCClient] ⚠️  DNS 解析失败: %v (可能是本地地址或 127.0.0.1)\n", dnsErr)
 	} else {
-		log.Printf("[GetGRPCClient] ✓ DNS 解析成功，得到 IP 地址: %v\n", ips)
+		log.Printf("[GetVendorGRPCClient] ✓ DNS 解析成功，得到 IP 地址: %v\n", ips)
 	}
 
 	// 尝试 TCP 连接测试
 	if port != "unknown" {
-		log.Printf("[GetGRPCClient] 🔧 测试 TCP 连接到 %s:%s...\n", host, port)
-		testConn, tcpErr := net.DialTimeout("tcp", s.grpcServerAddr, 3*time.Second)
+		log.Printf("[GetVendorGRPCClient] 🔧 测试 TCP 连接到 %s:%s...\n", host, port)
+		testConn, tcpErr := net.DialTimeout("tcp", s.config.VendorGrpcServerAddr, 3*time.Second)
 		if tcpErr != nil {
-			log.Printf("[GetGRPCClient] ⚠️  TCP 连接失败: %v\n", tcpErr)
-			log.Printf("[GetGRPCClient]    💡 可能原因：\n")
-			log.Printf("[GetGRPCClient]       1. game-vendor-sync 服务未启动\n")
-			log.Printf("[GetGRPCClient]       2. 地址或端口配置错误\n")
-			log.Printf("[GetGRPCClient]       3. 防火墙阻止连接\n")
+			log.Printf("[GetVendorGRPCClient] ⚠️  TCP 连接失败: %v\n", tcpErr)
+			log.Printf("[GetVendorGRPCClient]    💡 可能原因：\n")
+			log.Printf("[GetVendorGRPCClient]       1. game-vendor-sync 服务未启动\n")
+			log.Printf("[GetVendorGRPCClient]       2. 地址或端口配置错误\n")
+			log.Printf("[GetVendorGRPCClient]       3. 防火墙阻止连接\n")
 		} else {
-			log.Printf("[GetGRPCClient] ✓ TCP 连接测试成功\n")
+			log.Printf("[GetVendorGRPCClient] ✓ TCP 连接测试成功\n")
 			testConn.Close()
 		}
 	}
 
 	// 创建 gRPC 连接到游戏供应商服务
-	log.Println("[GetGRPCClient] 🔧 执行 grpc.DialContext...")
-	log.Println("[GetGRPCClient]    - 超时: 30 秒")
-	log.Println("[GetGRPCClient]    - TLS: 禁用（InsecureCredentials）")
-	log.Println("[GetGRPCClient]    - 最大接收消息: 50MB")
+	log.Println("[GetVendorGRPCClient] 🔧 执行 grpc.DialContext...")
+	log.Println("[GetVendorGRPCClient]    - 超时: 30 秒")
+	log.Println("[GetVendorGRPCClient]    - TLS: 禁用（InsecureCredentials）")
+	log.Println("[GetVendorGRPCClient]    - 最大接收消息: 50MB")
 
 	// 设置连接超时
 	dialCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
@@ -103,30 +100,30 @@ func (s *SyncServiceImpl) GetGRPCClient(ctx context.Context) (vendors.VendorGame
 
 	conn, err := grpc.DialContext(
 		dialCtx,
-		s.grpcServerAddr,
+		s.config.VendorGrpcServerAddr,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(50*1024*1024)),
 		grpc.WithBlock(), // 阻塞模式，直到连接建立才返回
 	)
 	if err != nil {
-		log.Printf("[GetGRPCClient] ❌ gRPC 连接失败!\n")
-		log.Printf("[GetGRPCClient]    错误: %v\n", err)
-		log.Printf("[GetGRPCClient]    错误类型: %T\n", err)
-		log.Printf("[GetGRPCClient]    💡 调试建议：\n")
-		log.Printf("[GetGRPCClient]       1. 检查 game-vendor-sync 是否正在运行\n")
-		log.Printf("[GetGRPCClient]       2. 检查配置中 GrpcServerAddr 的值: %s\n", s.grpcServerAddr)
-		log.Printf("[GetGRPCClient]       3. 尝试手动连接测试: telnet %s\n", s.grpcServerAddr)
-		log.Printf("[GetGRPCClient]       4. 查看 game-vendor-sync 的启动日志\n")
+		log.Printf("[GetVendorGRPCClient] ❌ gRPC 连接失败!\n")
+		log.Printf("[GetVendorGRPCClient]    错误: %v\n", err)
+		log.Printf("[GetVendorGRPCClient]    错误类型: %T\n", err)
+		log.Printf("[GetVendorGRPCClient]    💡 调试建议：\n")
+		log.Printf("[GetVendorGRPCClient]       1. 检查 game-vendor-sync 是否正在运行\n")
+		log.Printf("[GetVendorGRPCClient]       2. 检查配置中 GrpcServerAddr 的值: %s\n", s.config.VendorGrpcServerAddr)
+		log.Printf("[GetVendorGRPCClient]       3. 尝试手动连接测试: telnet %s\n", s.config.VendorGrpcServerAddr)
+		log.Printf("[GetVendorGRPCClient]       4. 查看 game-vendor-sync 的启动日志\n")
 		return nil, nil, fmt.Errorf("连接gRPC服务失败: %w", err)
 	}
 
-	log.Println("[GetGRPCClient] ✓ gRPC 连接建立成功")
-	log.Printf("[GetGRPCClient]    连接状态: %v\n", conn.GetState())
+	log.Println("[GetVendorGRPCClient] ✓ gRPC 连接建立成功")
+	log.Printf("[GetVendorGRPCClient]    连接状态: %v\n", conn.GetState())
 
 	// 创建客户端
 	client := vendors.NewVendorGameServiceClient(conn)
-	log.Println("[GetGRPCClient] ✓ gRPC 客户端创建完成")
-	log.Printf("[GetGRPCClient] 📍 连接已准备，可开始调用 RPC 方法\n")
+	log.Println("[GetVendorGRPCClient] ✓ gRPC 客户端创建完成")
+	log.Printf("[GetVendorGRPCClient] 📍 连接已准备，可开始调用 RPC 方法\n")
 
 	return client, conn, nil
 }
@@ -139,10 +136,10 @@ func (s *SyncServiceImpl) Preview(ctx context.Context, req *platform_game.SyncPr
 	var client vendors.VendorGameServiceClient = nil
 	isGetRemoteClient := false
 	// grpcServerAddr为空时同步本地数据
-	if s.grpcServerAddr != "" {
+	if s.config.VendorGrpcServerAddr != "" {
 		// 获取 gRPC 客户端
 		log.Println("[Preview] 正在获取 gRPC 客户端...")
-		cli, conn, err := s.GetGRPCClient(ctx)
+		cli, conn, err := s.GetVendorGRPCClient(ctx)
 		if err != nil {
 			log.Printf("[Preview] ✗ 获取 gRPC 客户端失败: %v\n", err)
 			return nil, err
@@ -189,10 +186,10 @@ func (s *SyncServiceImpl) Run(ctx context.Context, objectType string, syncCols [
 	var client vendors.VendorGameServiceClient = nil
 	isGetRemoteClient := false
 	// grpcServerAddr为空时同步本地数据
-	if s.grpcServerAddr != "" {
+	if s.config.VendorGrpcServerAddr != "" {
 		// 获取 gRPC 客户端
 		log.Println("[Run] 正在获取 gRPC 客户端...")
-		cli, conn, err := s.GetGRPCClient(ctx)
+		cli, conn, err := s.GetVendorGRPCClient(ctx)
 		if err != nil {
 			log.Printf("[Run] ✗ 获取 gRPC 客户端失败: %v\n", err)
 			return nil, err

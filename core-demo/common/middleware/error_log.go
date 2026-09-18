@@ -10,6 +10,7 @@ import (
 	"oa.98ent.com/p9/core/common/errorlog"
 	"oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/common/response"
+	"oa.98ent.com/p9/core/common/tracing"
 	"oa.98ent.com/p9/core/common/utils"
 	"oa.98ent.com/p9/core/common/xerr"
 
@@ -39,6 +40,7 @@ func ErrorLog(serviceName string, rec errorlog.Recorder) rest.Middleware {
 				if !errorlog.ShouldCollect(cw.status) {
 					return
 				}
+				tracing.HTTPError(r.Context(), cw.status, bag.Subject, bag.Detail)
 				claims := ctxdata.ClaimsFromCtx(r.Context())
 				record := errorlog.Record{
 					RequestMethod:  r.Method,

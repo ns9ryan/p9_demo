@@ -1,0 +1,23 @@
+{
+	"common": {
+		"invalid_request": "Invalid request",
+		"data_not_found": "Data not found",
+		"constraint_error": "Data constraint conflict",
+		"validation_error": "Validation failed",
+		"database_error": "Database operation failed",
+		"internal_error": "Internal server error",
+		"too_many_requests": "Too many requests",
+		"service_unavailable": "Service unavailable",
+		"request_timeout": "Request timeout"
+	},
+	"game": {
+		"not_found": "Game not found",
+		"category_not_found": "Game category not found",
+		"provider_not_found": "Game provider not found",
+		"channel_not_found": "Game channel not found",
+		"currency_not_found": "Game currency not found",
+		"sync_failed": "Game sync failed",
+		"sync_conflict": "Game sync conflict",
+		"sync_rate_limit": "Game sync operation is too frequent, please try again later"
+	}
+}

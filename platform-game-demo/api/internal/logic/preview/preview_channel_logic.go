@@ -6,9 +6,9 @@ package preview
 import (
 	"context"
 
+	"oa.98ent.com/p9/platform-game/api/internal/constant"
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
-	"oa.98ent.com/p9/platform-game/common/constant"
 	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"fmt"
@@ -33,7 +33,7 @@ func NewPreviewChannelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Pr
 func (l *PreviewChannelLogic) PreviewChannel(req *types.SyncPreviewReq) (resp *types.SyncPreviewResp, err error) {
 	l.Infof("[API PreviewChannel] received sync preview request")
 
-	if l.svcCtx == nil || l.svcCtx.GrpcClient == nil {
+	if l.svcCtx == nil || l.svcCtx.GameGrpcClient == nil {
 		l.Error("[API PreviewChannel] gRPC client not available")
 		return nil, fmt.Errorf("gRPC client not available")
 	}
@@ -45,7 +45,7 @@ func (l *PreviewChannelLogic) PreviewChannel(req *types.SyncPreviewReq) (resp *t
 		IsSkip:     req.IsSkip,
 	}
 
-	client := l.svcCtx.GrpcClient.GetSyncServiceClient()
+	client := l.svcCtx.GameGrpcClient.GetSyncServiceClient()
 	grpcResp, err := client.SyncPreview(l.ctx, grpcReq)
 	if err != nil {
 		l.Errorf("[API PreviewChannel] gRPC call failed: %v", err)

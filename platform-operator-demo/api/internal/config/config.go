@@ -19,6 +19,9 @@ type Config struct {
 	// Platform Base RPC配置
 	PlatformBaseRpc zrpc.RpcClientConf
 
+	// Platform Game RPC配置
+	PlatformGameRpc zrpc.RpcClientConf
+
 	// Core RPC配置
 	CoreRpc zrpc.RpcClientConf
 

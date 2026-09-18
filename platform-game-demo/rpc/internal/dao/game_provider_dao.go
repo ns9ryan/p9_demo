@@ -33,6 +33,13 @@ func (d *GameProviderDAO) GetGameProviderBySourceId(ctx context.Context, sourceI
 		Only(ctx)
 }
 
+func (d *GameProviderDAO) GetGameProviderBySourceCode(ctx context.Context, sourceProviderCode string) (*ent.GameProvider, error) {
+	return d.db.GameProvider.Query().
+		Where(gameprovider.SourceProviderCodeEQ(sourceProviderCode)).
+		Where(gameprovider.DeletedAtIsNil()).
+		Only(ctx)
+}
+
 // GetGameProviderList 获取游戏提供商列表
 func (d *GameProviderDAO) GetGameProviderList(ctx context.Context, isDeleted int32, status int32, providerCode string, offset, limit int64) ([]*ent.GameProvider, int, error) {
 	query := d.db.GameProvider.Query()
@@ -99,6 +106,17 @@ func (d *GameProviderDAO) UpdateGameProvider(ctx context.Context, id int64, upda
 	return update.Save(ctx)
 }
 
+func (d *GameProviderDAO) BatchCreateGameProvider(ctx context.Context, items []*ent.GameProviderCreate) ([]*ent.GameProvider, error) {
+	if len(items) == 0 {
+		return []*ent.GameProvider{}, nil
+	}
+
+	records, err := d.db.GameProvider.CreateBulk(items...).Save(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("batch create failed: %w", err)
+	}
+	return records, nil
+}
 func (d *GameProviderDAO) GetGameProviderCount(ctx context.Context) (int, error) {
 	count, err := d.db.GameProvider.Query().Count(ctx)
 	if err != nil {
@@ -113,4 +131,15 @@ func (d *GameProviderDAO) GetAllGameProviders(ctx context.Context) ([]*ent.GameP
 		return nil, fmt.Errorf("query failed: %w", err)
 	}
 	return providers, nil
+}
+
+func (d *GameProviderDAO) ExistByCode(ctx context.Context, sourceProviderCode string) (bool, error) {
+	exists, err := d.db.GameProvider.Query().
+		Where(gameprovider.SourceProviderCodeEQ(sourceProviderCode)).
+		Where(gameprovider.DeletedAtIsNil()).
+		Exist(ctx)
+	if err != nil {
+		return false, fmt.Errorf("exist check failed: %w", err)
+	}
+	return exists, nil
 }

@@ -1,12 +1,18 @@
 Name: operator-core-api
 Host: 0.0.0.0
 Port: 18100
+Mode: dev # 开发模式
 
 Log:
   Mode: console
   Level: info
-# 开发模式
-Mode: dev
+
+# 链路追踪, 生产建议 Sampler 0.01~0.1
+Telemetry:
+  Name: operator-core-api
+  Endpoint: 127.0.0.1:4317
+  Sampler: 1.0
+  Batcher: otlpgrpc
 
 # 模式 on分站，off总网
 PartnerMode: "on"

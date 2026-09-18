@@ -14,6 +14,13 @@ import (
 )
 
 type (
+	GetGameSyncCheckpointListRequest = platform_game.GetGameSyncCheckpointListRequest
+	GetGameSyncCheckpointListResp    = platform_game.GetGameSyncCheckpointListResp
+	GetGameSyncCheckpointRequest     = platform_game.GetGameSyncCheckpointRequest
+	GetGameSyncCheckpointResp        = platform_game.GetGameSyncCheckpointResp
+	GetI18NNameMapRequest            = platform_game.GetI18NNameMapRequest
+	GetI18NNameMapResp               = platform_game.GetI18NNameMapResp
+
 	GameSyncCheckpointService interface {
 		// 获取单个同步检查点
 		GetGameSyncCheckpoint(ctx context.Context, in *GetGameSyncCheckpointRequest, opts ...grpc.CallOption) (*GetGameSyncCheckpointResp, error)

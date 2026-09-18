@@ -159,6 +159,18 @@ func (d *GameDAO) UpdateGame(ctx context.Context, id int64, updates map[string]i
 	return update.Save(ctx)
 }
 
+func (d *GameDAO) BatchCreateGame(ctx context.Context, items []*ent.GameCreate) ([]*ent.Game, error) {
+	if len(items) == 0 {
+		return []*ent.Game{}, nil
+	}
+
+	records, err := d.db.Game.CreateBulk(items...).Save(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("batch create failed: %w", err)
+	}
+	return records, nil
+}
+
 // GameExtInfo 游戏扩展信息
 type GameExtInfo struct {
 	CategoryCode string  `json:"category_code"`
@@ -245,4 +257,22 @@ func (d *GameDAO) CreateGameCurrency(ctx context.Context, gameID int64, currency
 		SetCreatedAt(time.Now()).
 		SetUpdatedAt(time.Now()).
 		Save(ctx)
+}
+
+func (d *GameDAO) ExistByCode(ctx context.Context, code string) (bool, error) {
+	count, err := d.db.Game.Query().
+		Where(game.SourceGameCodeEQ(code)).
+		Where(game.DeletedAtIsNil()).
+		Count(ctx)
+	if err != nil {
+		return false, fmt.Errorf("check game existence by code failed: %w", err)
+	}
+	return count > 0, nil
+}
+
+func (d *GameDAO) GetGameBySourceId(ctx context.Context, SourceId int64) (*ent.Game, error) {
+	return d.db.Game.Query().
+		Where(game.SourceIDEQ(SourceId)).
+		Where(game.DeletedAtIsNil()).
+		Only(ctx)
 }

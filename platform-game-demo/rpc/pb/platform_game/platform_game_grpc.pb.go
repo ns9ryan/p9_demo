@@ -19,114 +19,6 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	PingService_Ping_FullMethodName = "/platform_game.PingService/Ping"
-)
-
-// PingServiceClient is the client API for PingService service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// PingService - Ping健康检查服务
-type PingServiceClient interface {
-	// 健康检查
-	Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error)
-}
-
-type pingServiceClient struct {
-	cc grpc.ClientConnInterface
-}
-
-func NewPingServiceClient(cc grpc.ClientConnInterface) PingServiceClient {
-	return &pingServiceClient{cc}
-}
-
-func (c *pingServiceClient) Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(PingResponse)
-	err := c.cc.Invoke(ctx, PingService_Ping_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// PingServiceServer is the server API for PingService service.
-// All implementations must embed UnimplementedPingServiceServer
-// for forward compatibility.
-//
-// PingService - Ping健康检查服务
-type PingServiceServer interface {
-	// 健康检查
-	Ping(context.Context, *PingRequest) (*PingResponse, error)
-	mustEmbedUnimplementedPingServiceServer()
-}
-
-// UnimplementedPingServiceServer must be embedded to have
-// forward compatible implementations.
-//
-// NOTE: this should be embedded by value instead of pointer to avoid a nil
-// pointer dereference when methods are called.
-type UnimplementedPingServiceServer struct{}
-
-func (UnimplementedPingServiceServer) Ping(context.Context, *PingRequest) (*PingResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method Ping not implemented")
-}
-func (UnimplementedPingServiceServer) mustEmbedUnimplementedPingServiceServer() {}
-func (UnimplementedPingServiceServer) testEmbeddedByValue()                     {}
-
-// UnsafePingServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to PingServiceServer will
-// result in compilation errors.
-type UnsafePingServiceServer interface {
-	mustEmbedUnimplementedPingServiceServer()
-}
-
-func RegisterPingServiceServer(s grpc.ServiceRegistrar, srv PingServiceServer) {
-	// If the following call panics, it indicates UnimplementedPingServiceServer was
-	// embedded by pointer and is nil.  This will cause panics if an
-	// unimplemented method is ever invoked, so we test this at initialization
-	// time to prevent it from happening at runtime later due to I/O.
-	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
-		t.testEmbeddedByValue()
-	}
-	s.RegisterService(&PingService_ServiceDesc, srv)
-}
-
-func _PingService_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PingRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PingServiceServer).Ping(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PingService_Ping_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PingServiceServer).Ping(ctx, req.(*PingRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// PingService_ServiceDesc is the grpc.ServiceDesc for PingService service.
-// It's only intended for direct use with grpc.RegisterService,
-// and not to be introspected or modified (even as a copy)
-var PingService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "platform_game.PingService",
-	HandlerType: (*PingServiceServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "Ping",
-			Handler:    _PingService_Ping_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "platform_game.proto",
-}
-
-const (
 	GameService_GetGameList_FullMethodName = "/platform_game.GameService/GetGameList"
 	GameService_GetGame_FullMethodName     = "/platform_game.GameService/GetGame"
 	GameService_UpdateGame_FullMethodName  = "/platform_game.GameService/UpdateGame"
@@ -1437,6 +1329,1010 @@ var SyncService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ExecuteV2Sql",
 			Handler:    _SyncService_ExecuteV2Sql_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "platform_game.proto",
+}
+
+const (
+	OperatorGameCategoryService_GetOperatorGameCategoryList_FullMethodName           = "/platform_game.OperatorGameCategoryService/GetOperatorGameCategoryList"
+	OperatorGameCategoryService_BatchCreateOperatorGameCategory_FullMethodName       = "/platform_game.OperatorGameCategoryService/BatchCreateOperatorGameCategory"
+	OperatorGameCategoryService_BatchUpdateOperatorGameCategoryStatus_FullMethodName = "/platform_game.OperatorGameCategoryService/BatchUpdateOperatorGameCategoryStatus"
+	OperatorGameCategoryService_BatchDeleteOperatorGameCategory_FullMethodName       = "/platform_game.OperatorGameCategoryService/BatchDeleteOperatorGameCategory"
+)
+
+// OperatorGameCategoryServiceClient is the client API for OperatorGameCategoryService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type OperatorGameCategoryServiceClient interface {
+	// 获取分站游戏分类列表
+	GetOperatorGameCategoryList(ctx context.Context, in *GetOperatorGameCategoryListRequest, opts ...grpc.CallOption) (*GetOperatorGameCategoryListResp, error)
+	// 批量创建分站游戏分类
+	BatchCreateOperatorGameCategory(ctx context.Context, in *BatchCreateOperatorGameCategoryRequest, opts ...grpc.CallOption) (*BatchCreateOperatorGameCategoryResp, error)
+	// 批量修改分站游戏分类状态
+	BatchUpdateOperatorGameCategoryStatus(ctx context.Context, in *BatchUpdateOperatorGameCategoryStatusRequest, opts ...grpc.CallOption) (*BatchUpdateOperatorGameCategoryStatusResp, error)
+	// 批量删除分站游戏分类
+	BatchDeleteOperatorGameCategory(ctx context.Context, in *BatchDeleteOperatorGameCategoryRequest, opts ...grpc.CallOption) (*BatchDeleteOperatorGameCategoryResp, error)
+}
+
+type operatorGameCategoryServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewOperatorGameCategoryServiceClient(cc grpc.ClientConnInterface) OperatorGameCategoryServiceClient {
+	return &operatorGameCategoryServiceClient{cc}
+}
+
+func (c *operatorGameCategoryServiceClient) GetOperatorGameCategoryList(ctx context.Context, in *GetOperatorGameCategoryListRequest, opts ...grpc.CallOption) (*GetOperatorGameCategoryListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetOperatorGameCategoryListResp)
+	err := c.cc.Invoke(ctx, OperatorGameCategoryService_GetOperatorGameCategoryList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *operatorGameCategoryServiceClient) BatchCreateOperatorGameCategory(ctx context.Context, in *BatchCreateOperatorGameCategoryRequest, opts ...grpc.CallOption) (*BatchCreateOperatorGameCategoryResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchCreateOperatorGameCategoryResp)
+	err := c.cc.Invoke(ctx, OperatorGameCategoryService_BatchCreateOperatorGameCategory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *operatorGameCategoryServiceClient) BatchUpdateOperatorGameCategoryStatus(ctx context.Context, in *BatchUpdateOperatorGameCategoryStatusRequest, opts ...grpc.CallOption) (*BatchUpdateOperatorGameCategoryStatusResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchUpdateOperatorGameCategoryStatusResp)
+	err := c.cc.Invoke(ctx, OperatorGameCategoryService_BatchUpdateOperatorGameCategoryStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *operatorGameCategoryServiceClient) BatchDeleteOperatorGameCategory(ctx context.Context, in *BatchDeleteOperatorGameCategoryRequest, opts ...grpc.CallOption) (*BatchDeleteOperatorGameCategoryResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchDeleteOperatorGameCategoryResp)
+	err := c.cc.Invoke(ctx, OperatorGameCategoryService_BatchDeleteOperatorGameCategory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// OperatorGameCategoryServiceServer is the server API for OperatorGameCategoryService service.
+// All implementations must embed UnimplementedOperatorGameCategoryServiceServer
+// for forward compatibility.
+type OperatorGameCategoryServiceServer interface {
+	// 获取分站游戏分类列表
+	GetOperatorGameCategoryList(context.Context, *GetOperatorGameCategoryListRequest) (*GetOperatorGameCategoryListResp, error)
+	// 批量创建分站游戏分类
+	BatchCreateOperatorGameCategory(context.Context, *BatchCreateOperatorGameCategoryRequest) (*BatchCreateOperatorGameCategoryResp, error)
+	// 批量修改分站游戏分类状态
+	BatchUpdateOperatorGameCategoryStatus(context.Context, *BatchUpdateOperatorGameCategoryStatusRequest) (*BatchUpdateOperatorGameCategoryStatusResp, error)
+	// 批量删除分站游戏分类
+	BatchDeleteOperatorGameCategory(context.Context, *BatchDeleteOperatorGameCategoryRequest) (*BatchDeleteOperatorGameCategoryResp, error)
+	mustEmbedUnimplementedOperatorGameCategoryServiceServer()
+}
+
+// UnimplementedOperatorGameCategoryServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedOperatorGameCategoryServiceServer struct{}
+
+func (UnimplementedOperatorGameCategoryServiceServer) GetOperatorGameCategoryList(context.Context, *GetOperatorGameCategoryListRequest) (*GetOperatorGameCategoryListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetOperatorGameCategoryList not implemented")
+}
+func (UnimplementedOperatorGameCategoryServiceServer) BatchCreateOperatorGameCategory(context.Context, *BatchCreateOperatorGameCategoryRequest) (*BatchCreateOperatorGameCategoryResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method BatchCreateOperatorGameCategory not implemented")
+}
+func (UnimplementedOperatorGameCategoryServiceServer) BatchUpdateOperatorGameCategoryStatus(context.Context, *BatchUpdateOperatorGameCategoryStatusRequest) (*BatchUpdateOperatorGameCategoryStatusResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method BatchUpdateOperatorGameCategoryStatus not implemented")
+}
+func (UnimplementedOperatorGameCategoryServiceServer) BatchDeleteOperatorGameCategory(context.Context, *BatchDeleteOperatorGameCategoryRequest) (*BatchDeleteOperatorGameCategoryResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method BatchDeleteOperatorGameCategory not implemented")
+}
+func (UnimplementedOperatorGameCategoryServiceServer) mustEmbedUnimplementedOperatorGameCategoryServiceServer() {
+}
+func (UnimplementedOperatorGameCategoryServiceServer) testEmbeddedByValue() {}
+
+// UnsafeOperatorGameCategoryServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to OperatorGameCategoryServiceServer will
+// result in compilation errors.
+type UnsafeOperatorGameCategoryServiceServer interface {
+	mustEmbedUnimplementedOperatorGameCategoryServiceServer()
+}
+
+func RegisterOperatorGameCategoryServiceServer(s grpc.ServiceRegistrar, srv OperatorGameCategoryServiceServer) {
+	// If the following call panics, it indicates UnimplementedOperatorGameCategoryServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&OperatorGameCategoryService_ServiceDesc, srv)
+}
+
+func _OperatorGameCategoryService_GetOperatorGameCategoryList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOperatorGameCategoryListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperatorGameCategoryServiceServer).GetOperatorGameCategoryList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperatorGameCategoryService_GetOperatorGameCategoryList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperatorGameCategoryServiceServer).GetOperatorGameCategoryList(ctx, req.(*GetOperatorGameCategoryListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OperatorGameCategoryService_BatchCreateOperatorGameCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchCreateOperatorGameCategoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperatorGameCategoryServiceServer).BatchCreateOperatorGameCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperatorGameCategoryService_BatchCreateOperatorGameCategory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperatorGameCategoryServiceServer).BatchCreateOperatorGameCategory(ctx, req.(*BatchCreateOperatorGameCategoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OperatorGameCategoryService_BatchUpdateOperatorGameCategoryStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchUpdateOperatorGameCategoryStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperatorGameCategoryServiceServer).BatchUpdateOperatorGameCategoryStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperatorGameCategoryService_BatchUpdateOperatorGameCategoryStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperatorGameCategoryServiceServer).BatchUpdateOperatorGameCategoryStatus(ctx, req.(*BatchUpdateOperatorGameCategoryStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OperatorGameCategoryService_BatchDeleteOperatorGameCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchDeleteOperatorGameCategoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperatorGameCategoryServiceServer).BatchDeleteOperatorGameCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperatorGameCategoryService_BatchDeleteOperatorGameCategory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperatorGameCategoryServiceServer).BatchDeleteOperatorGameCategory(ctx, req.(*BatchDeleteOperatorGameCategoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// OperatorGameCategoryService_ServiceDesc is the grpc.ServiceDesc for OperatorGameCategoryService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var OperatorGameCategoryService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "platform_game.OperatorGameCategoryService",
+	HandlerType: (*OperatorGameCategoryServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetOperatorGameCategoryList",
+			Handler:    _OperatorGameCategoryService_GetOperatorGameCategoryList_Handler,
+		},
+		{
+			MethodName: "BatchCreateOperatorGameCategory",
+			Handler:    _OperatorGameCategoryService_BatchCreateOperatorGameCategory_Handler,
+		},
+		{
+			MethodName: "BatchUpdateOperatorGameCategoryStatus",
+			Handler:    _OperatorGameCategoryService_BatchUpdateOperatorGameCategoryStatus_Handler,
+		},
+		{
+			MethodName: "BatchDeleteOperatorGameCategory",
+			Handler:    _OperatorGameCategoryService_BatchDeleteOperatorGameCategory_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "platform_game.proto",
+}
+
+const (
+	OperatorGameChannelService_GetOperatorGameChannelList_FullMethodName           = "/platform_game.OperatorGameChannelService/GetOperatorGameChannelList"
+	OperatorGameChannelService_BatchCreateOperatorGameChannel_FullMethodName       = "/platform_game.OperatorGameChannelService/BatchCreateOperatorGameChannel"
+	OperatorGameChannelService_BatchUpdateOperatorGameChannelStatus_FullMethodName = "/platform_game.OperatorGameChannelService/BatchUpdateOperatorGameChannelStatus"
+	OperatorGameChannelService_BatchDeleteOperatorGameChannel_FullMethodName       = "/platform_game.OperatorGameChannelService/BatchDeleteOperatorGameChannel"
+)
+
+// OperatorGameChannelServiceClient is the client API for OperatorGameChannelService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type OperatorGameChannelServiceClient interface {
+	// 获取分站游戏渠道列表
+	GetOperatorGameChannelList(ctx context.Context, in *GetOperatorGameChannelListRequest, opts ...grpc.CallOption) (*GetOperatorGameChannelListResp, error)
+	// 批量创建分站游戏渠道
+	BatchCreateOperatorGameChannel(ctx context.Context, in *BatchCreateOperatorGameChannelRequest, opts ...grpc.CallOption) (*BatchCreateOperatorGameChannelResp, error)
+	// 批量修改分站游戏渠道状态
+	BatchUpdateOperatorGameChannelStatus(ctx context.Context, in *BatchUpdateOperatorGameChannelStatusRequest, opts ...grpc.CallOption) (*BatchUpdateOperatorGameChannelStatusResp, error)
+	// 批量删除分站游戏渠道
+	BatchDeleteOperatorGameChannel(ctx context.Context, in *BatchDeleteOperatorGameChannelRequest, opts ...grpc.CallOption) (*BatchDeleteOperatorGameChannelResp, error)
+}
+
+type operatorGameChannelServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewOperatorGameChannelServiceClient(cc grpc.ClientConnInterface) OperatorGameChannelServiceClient {
+	return &operatorGameChannelServiceClient{cc}
+}
+
+func (c *operatorGameChannelServiceClient) GetOperatorGameChannelList(ctx context.Context, in *GetOperatorGameChannelListRequest, opts ...grpc.CallOption) (*GetOperatorGameChannelListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetOperatorGameChannelListResp)
+	err := c.cc.Invoke(ctx, OperatorGameChannelService_GetOperatorGameChannelList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *operatorGameChannelServiceClient) BatchCreateOperatorGameChannel(ctx context.Context, in *BatchCreateOperatorGameChannelRequest, opts ...grpc.CallOption) (*BatchCreateOperatorGameChannelResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchCreateOperatorGameChannelResp)
+	err := c.cc.Invoke(ctx, OperatorGameChannelService_BatchCreateOperatorGameChannel_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *operatorGameChannelServiceClient) BatchUpdateOperatorGameChannelStatus(ctx context.Context, in *BatchUpdateOperatorGameChannelStatusRequest, opts ...grpc.CallOption) (*BatchUpdateOperatorGameChannelStatusResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchUpdateOperatorGameChannelStatusResp)
+	err := c.cc.Invoke(ctx, OperatorGameChannelService_BatchUpdateOperatorGameChannelStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *operatorGameChannelServiceClient) BatchDeleteOperatorGameChannel(ctx context.Context, in *BatchDeleteOperatorGameChannelRequest, opts ...grpc.CallOption) (*BatchDeleteOperatorGameChannelResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchDeleteOperatorGameChannelResp)
+	err := c.cc.Invoke(ctx, OperatorGameChannelService_BatchDeleteOperatorGameChannel_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// OperatorGameChannelServiceServer is the server API for OperatorGameChannelService service.
+// All implementations must embed UnimplementedOperatorGameChannelServiceServer
+// for forward compatibility.
+type OperatorGameChannelServiceServer interface {
+	// 获取分站游戏渠道列表
+	GetOperatorGameChannelList(context.Context, *GetOperatorGameChannelListRequest) (*GetOperatorGameChannelListResp, error)
+	// 批量创建分站游戏渠道
+	BatchCreateOperatorGameChannel(context.Context, *BatchCreateOperatorGameChannelRequest) (*BatchCreateOperatorGameChannelResp, error)
+	// 批量修改分站游戏渠道状态
+	BatchUpdateOperatorGameChannelStatus(context.Context, *BatchUpdateOperatorGameChannelStatusRequest) (*BatchUpdateOperatorGameChannelStatusResp, error)
+	// 批量删除分站游戏渠道
+	BatchDeleteOperatorGameChannel(context.Context, *BatchDeleteOperatorGameChannelRequest) (*BatchDeleteOperatorGameChannelResp, error)
+	mustEmbedUnimplementedOperatorGameChannelServiceServer()
+}
+
+// UnimplementedOperatorGameChannelServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedOperatorGameChannelServiceServer struct{}
+
+func (UnimplementedOperatorGameChannelServiceServer) GetOperatorGameChannelList(context.Context, *GetOperatorGameChannelListRequest) (*GetOperatorGameChannelListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetOperatorGameChannelList not implemented")
+}
+func (UnimplementedOperatorGameChannelServiceServer) BatchCreateOperatorGameChannel(context.Context, *BatchCreateOperatorGameChannelRequest) (*BatchCreateOperatorGameChannelResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method BatchCreateOperatorGameChannel not implemented")
+}
+func (UnimplementedOperatorGameChannelServiceServer) BatchUpdateOperatorGameChannelStatus(context.Context, *BatchUpdateOperatorGameChannelStatusRequest) (*BatchUpdateOperatorGameChannelStatusResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method BatchUpdateOperatorGameChannelStatus not implemented")
+}
+func (UnimplementedOperatorGameChannelServiceServer) BatchDeleteOperatorGameChannel(context.Context, *BatchDeleteOperatorGameChannelRequest) (*BatchDeleteOperatorGameChannelResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method BatchDeleteOperatorGameChannel not implemented")
+}
+func (UnimplementedOperatorGameChannelServiceServer) mustEmbedUnimplementedOperatorGameChannelServiceServer() {
+}
+func (UnimplementedOperatorGameChannelServiceServer) testEmbeddedByValue() {}
+
+// UnsafeOperatorGameChannelServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to OperatorGameChannelServiceServer will
+// result in compilation errors.
+type UnsafeOperatorGameChannelServiceServer interface {
+	mustEmbedUnimplementedOperatorGameChannelServiceServer()
+}
+
+func RegisterOperatorGameChannelServiceServer(s grpc.ServiceRegistrar, srv OperatorGameChannelServiceServer) {
+	// If the following call panics, it indicates UnimplementedOperatorGameChannelServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&OperatorGameChannelService_ServiceDesc, srv)
+}
+
+func _OperatorGameChannelService_GetOperatorGameChannelList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOperatorGameChannelListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperatorGameChannelServiceServer).GetOperatorGameChannelList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperatorGameChannelService_GetOperatorGameChannelList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperatorGameChannelServiceServer).GetOperatorGameChannelList(ctx, req.(*GetOperatorGameChannelListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OperatorGameChannelService_BatchCreateOperatorGameChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchCreateOperatorGameChannelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperatorGameChannelServiceServer).BatchCreateOperatorGameChannel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperatorGameChannelService_BatchCreateOperatorGameChannel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperatorGameChannelServiceServer).BatchCreateOperatorGameChannel(ctx, req.(*BatchCreateOperatorGameChannelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OperatorGameChannelService_BatchUpdateOperatorGameChannelStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchUpdateOperatorGameChannelStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperatorGameChannelServiceServer).BatchUpdateOperatorGameChannelStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperatorGameChannelService_BatchUpdateOperatorGameChannelStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperatorGameChannelServiceServer).BatchUpdateOperatorGameChannelStatus(ctx, req.(*BatchUpdateOperatorGameChannelStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OperatorGameChannelService_BatchDeleteOperatorGameChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchDeleteOperatorGameChannelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperatorGameChannelServiceServer).BatchDeleteOperatorGameChannel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperatorGameChannelService_BatchDeleteOperatorGameChannel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperatorGameChannelServiceServer).BatchDeleteOperatorGameChannel(ctx, req.(*BatchDeleteOperatorGameChannelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// OperatorGameChannelService_ServiceDesc is the grpc.ServiceDesc for OperatorGameChannelService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var OperatorGameChannelService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "platform_game.OperatorGameChannelService",
+	HandlerType: (*OperatorGameChannelServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetOperatorGameChannelList",
+			Handler:    _OperatorGameChannelService_GetOperatorGameChannelList_Handler,
+		},
+		{
+			MethodName: "BatchCreateOperatorGameChannel",
+			Handler:    _OperatorGameChannelService_BatchCreateOperatorGameChannel_Handler,
+		},
+		{
+			MethodName: "BatchUpdateOperatorGameChannelStatus",
+			Handler:    _OperatorGameChannelService_BatchUpdateOperatorGameChannelStatus_Handler,
+		},
+		{
+			MethodName: "BatchDeleteOperatorGameChannel",
+			Handler:    _OperatorGameChannelService_BatchDeleteOperatorGameChannel_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "platform_game.proto",
+}
+
+const (
+	OperatorGameProviderService_GetOperatorGameProviderList_FullMethodName           = "/platform_game.OperatorGameProviderService/GetOperatorGameProviderList"
+	OperatorGameProviderService_BatchCreateOperatorGameProvider_FullMethodName       = "/platform_game.OperatorGameProviderService/BatchCreateOperatorGameProvider"
+	OperatorGameProviderService_BatchUpdateOperatorGameProviderStatus_FullMethodName = "/platform_game.OperatorGameProviderService/BatchUpdateOperatorGameProviderStatus"
+	OperatorGameProviderService_BatchDeleteOperatorGameProvider_FullMethodName       = "/platform_game.OperatorGameProviderService/BatchDeleteOperatorGameProvider"
+)
+
+// OperatorGameProviderServiceClient is the client API for OperatorGameProviderService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type OperatorGameProviderServiceClient interface {
+	// 获取分站游戏提供商列表
+	GetOperatorGameProviderList(ctx context.Context, in *GetOperatorGameProviderListRequest, opts ...grpc.CallOption) (*GetOperatorGameProviderListResp, error)
+	// 批量创建分站游戏提供商
+	BatchCreateOperatorGameProvider(ctx context.Context, in *BatchCreateOperatorGameProviderRequest, opts ...grpc.CallOption) (*BatchCreateOperatorGameProviderResp, error)
+	// 批量修改分站游戏提供商状态
+	BatchUpdateOperatorGameProviderStatus(ctx context.Context, in *BatchUpdateOperatorGameProviderStatusRequest, opts ...grpc.CallOption) (*BatchUpdateOperatorGameProviderStatusResp, error)
+	// 批量删除分站游戏提供商
+	BatchDeleteOperatorGameProvider(ctx context.Context, in *BatchDeleteOperatorGameProviderRequest, opts ...grpc.CallOption) (*BatchDeleteOperatorGameProviderResp, error)
+}
+
+type operatorGameProviderServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewOperatorGameProviderServiceClient(cc grpc.ClientConnInterface) OperatorGameProviderServiceClient {
+	return &operatorGameProviderServiceClient{cc}
+}
+
+func (c *operatorGameProviderServiceClient) GetOperatorGameProviderList(ctx context.Context, in *GetOperatorGameProviderListRequest, opts ...grpc.CallOption) (*GetOperatorGameProviderListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetOperatorGameProviderListResp)
+	err := c.cc.Invoke(ctx, OperatorGameProviderService_GetOperatorGameProviderList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *operatorGameProviderServiceClient) BatchCreateOperatorGameProvider(ctx context.Context, in *BatchCreateOperatorGameProviderRequest, opts ...grpc.CallOption) (*BatchCreateOperatorGameProviderResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchCreateOperatorGameProviderResp)
+	err := c.cc.Invoke(ctx, OperatorGameProviderService_BatchCreateOperatorGameProvider_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *operatorGameProviderServiceClient) BatchUpdateOperatorGameProviderStatus(ctx context.Context, in *BatchUpdateOperatorGameProviderStatusRequest, opts ...grpc.CallOption) (*BatchUpdateOperatorGameProviderStatusResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchUpdateOperatorGameProviderStatusResp)
+	err := c.cc.Invoke(ctx, OperatorGameProviderService_BatchUpdateOperatorGameProviderStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *operatorGameProviderServiceClient) BatchDeleteOperatorGameProvider(ctx context.Context, in *BatchDeleteOperatorGameProviderRequest, opts ...grpc.CallOption) (*BatchDeleteOperatorGameProviderResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchDeleteOperatorGameProviderResp)
+	err := c.cc.Invoke(ctx, OperatorGameProviderService_BatchDeleteOperatorGameProvider_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// OperatorGameProviderServiceServer is the server API for OperatorGameProviderService service.
+// All implementations must embed UnimplementedOperatorGameProviderServiceServer
+// for forward compatibility.
+type OperatorGameProviderServiceServer interface {
+	// 获取分站游戏提供商列表
+	GetOperatorGameProviderList(context.Context, *GetOperatorGameProviderListRequest) (*GetOperatorGameProviderListResp, error)
+	// 批量创建分站游戏提供商
+	BatchCreateOperatorGameProvider(context.Context, *BatchCreateOperatorGameProviderRequest) (*BatchCreateOperatorGameProviderResp, error)
+	// 批量修改分站游戏提供商状态
+	BatchUpdateOperatorGameProviderStatus(context.Context, *BatchUpdateOperatorGameProviderStatusRequest) (*BatchUpdateOperatorGameProviderStatusResp, error)
+	// 批量删除分站游戏提供商
+	BatchDeleteOperatorGameProvider(context.Context, *BatchDeleteOperatorGameProviderRequest) (*BatchDeleteOperatorGameProviderResp, error)
+	mustEmbedUnimplementedOperatorGameProviderServiceServer()
+}
+
+// UnimplementedOperatorGameProviderServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedOperatorGameProviderServiceServer struct{}
+
+func (UnimplementedOperatorGameProviderServiceServer) GetOperatorGameProviderList(context.Context, *GetOperatorGameProviderListRequest) (*GetOperatorGameProviderListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetOperatorGameProviderList not implemented")
+}
+func (UnimplementedOperatorGameProviderServiceServer) BatchCreateOperatorGameProvider(context.Context, *BatchCreateOperatorGameProviderRequest) (*BatchCreateOperatorGameProviderResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method BatchCreateOperatorGameProvider not implemented")
+}
+func (UnimplementedOperatorGameProviderServiceServer) BatchUpdateOperatorGameProviderStatus(context.Context, *BatchUpdateOperatorGameProviderStatusRequest) (*BatchUpdateOperatorGameProviderStatusResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method BatchUpdateOperatorGameProviderStatus not implemented")
+}
+func (UnimplementedOperatorGameProviderServiceServer) BatchDeleteOperatorGameProvider(context.Context, *BatchDeleteOperatorGameProviderRequest) (*BatchDeleteOperatorGameProviderResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method BatchDeleteOperatorGameProvider not implemented")
+}
+func (UnimplementedOperatorGameProviderServiceServer) mustEmbedUnimplementedOperatorGameProviderServiceServer() {
+}
+func (UnimplementedOperatorGameProviderServiceServer) testEmbeddedByValue() {}
+
+// UnsafeOperatorGameProviderServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to OperatorGameProviderServiceServer will
+// result in compilation errors.
+type UnsafeOperatorGameProviderServiceServer interface {
+	mustEmbedUnimplementedOperatorGameProviderServiceServer()
+}
+
+func RegisterOperatorGameProviderServiceServer(s grpc.ServiceRegistrar, srv OperatorGameProviderServiceServer) {
+	// If the following call panics, it indicates UnimplementedOperatorGameProviderServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&OperatorGameProviderService_ServiceDesc, srv)
+}
+
+func _OperatorGameProviderService_GetOperatorGameProviderList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOperatorGameProviderListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperatorGameProviderServiceServer).GetOperatorGameProviderList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperatorGameProviderService_GetOperatorGameProviderList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperatorGameProviderServiceServer).GetOperatorGameProviderList(ctx, req.(*GetOperatorGameProviderListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OperatorGameProviderService_BatchCreateOperatorGameProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchCreateOperatorGameProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperatorGameProviderServiceServer).BatchCreateOperatorGameProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperatorGameProviderService_BatchCreateOperatorGameProvider_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperatorGameProviderServiceServer).BatchCreateOperatorGameProvider(ctx, req.(*BatchCreateOperatorGameProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OperatorGameProviderService_BatchUpdateOperatorGameProviderStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchUpdateOperatorGameProviderStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperatorGameProviderServiceServer).BatchUpdateOperatorGameProviderStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperatorGameProviderService_BatchUpdateOperatorGameProviderStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperatorGameProviderServiceServer).BatchUpdateOperatorGameProviderStatus(ctx, req.(*BatchUpdateOperatorGameProviderStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OperatorGameProviderService_BatchDeleteOperatorGameProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchDeleteOperatorGameProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperatorGameProviderServiceServer).BatchDeleteOperatorGameProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperatorGameProviderService_BatchDeleteOperatorGameProvider_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperatorGameProviderServiceServer).BatchDeleteOperatorGameProvider(ctx, req.(*BatchDeleteOperatorGameProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// OperatorGameProviderService_ServiceDesc is the grpc.ServiceDesc for OperatorGameProviderService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var OperatorGameProviderService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "platform_game.OperatorGameProviderService",
+	HandlerType: (*OperatorGameProviderServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetOperatorGameProviderList",
+			Handler:    _OperatorGameProviderService_GetOperatorGameProviderList_Handler,
+		},
+		{
+			MethodName: "BatchCreateOperatorGameProvider",
+			Handler:    _OperatorGameProviderService_BatchCreateOperatorGameProvider_Handler,
+		},
+		{
+			MethodName: "BatchUpdateOperatorGameProviderStatus",
+			Handler:    _OperatorGameProviderService_BatchUpdateOperatorGameProviderStatus_Handler,
+		},
+		{
+			MethodName: "BatchDeleteOperatorGameProvider",
+			Handler:    _OperatorGameProviderService_BatchDeleteOperatorGameProvider_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "platform_game.proto",
+}
+
+const (
+	OperatorGameService_GetOperatorGameList_FullMethodName           = "/platform_game.OperatorGameService/GetOperatorGameList"
+	OperatorGameService_BatchCreateOperatorGame_FullMethodName       = "/platform_game.OperatorGameService/BatchCreateOperatorGame"
+	OperatorGameService_BatchUpdateOperatorGameStatus_FullMethodName = "/platform_game.OperatorGameService/BatchUpdateOperatorGameStatus"
+	OperatorGameService_BatchDeleteOperatorGame_FullMethodName       = "/platform_game.OperatorGameService/BatchDeleteOperatorGame"
+)
+
+// OperatorGameServiceClient is the client API for OperatorGameService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type OperatorGameServiceClient interface {
+	// 获取分站游戏列表
+	GetOperatorGameList(ctx context.Context, in *GetOperatorGameListRequest, opts ...grpc.CallOption) (*GetOperatorGameListResp, error)
+	// 批量创建分站游戏
+	BatchCreateOperatorGame(ctx context.Context, in *BatchCreateOperatorGameRequest, opts ...grpc.CallOption) (*BatchCreateOperatorGameResp, error)
+	// 批量修改分站游戏状态
+	BatchUpdateOperatorGameStatus(ctx context.Context, in *BatchUpdateOperatorGameStatusRequest, opts ...grpc.CallOption) (*BatchUpdateOperatorGameStatusResp, error)
+	// 批量删除分站游戏
+	BatchDeleteOperatorGame(ctx context.Context, in *BatchDeleteOperatorGameRequest, opts ...grpc.CallOption) (*BatchDeleteOperatorGameResp, error)
+}
+
+type operatorGameServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewOperatorGameServiceClient(cc grpc.ClientConnInterface) OperatorGameServiceClient {
+	return &operatorGameServiceClient{cc}
+}
+
+func (c *operatorGameServiceClient) GetOperatorGameList(ctx context.Context, in *GetOperatorGameListRequest, opts ...grpc.CallOption) (*GetOperatorGameListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetOperatorGameListResp)
+	err := c.cc.Invoke(ctx, OperatorGameService_GetOperatorGameList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *operatorGameServiceClient) BatchCreateOperatorGame(ctx context.Context, in *BatchCreateOperatorGameRequest, opts ...grpc.CallOption) (*BatchCreateOperatorGameResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchCreateOperatorGameResp)
+	err := c.cc.Invoke(ctx, OperatorGameService_BatchCreateOperatorGame_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *operatorGameServiceClient) BatchUpdateOperatorGameStatus(ctx context.Context, in *BatchUpdateOperatorGameStatusRequest, opts ...grpc.CallOption) (*BatchUpdateOperatorGameStatusResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchUpdateOperatorGameStatusResp)
+	err := c.cc.Invoke(ctx, OperatorGameService_BatchUpdateOperatorGameStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *operatorGameServiceClient) BatchDeleteOperatorGame(ctx context.Context, in *BatchDeleteOperatorGameRequest, opts ...grpc.CallOption) (*BatchDeleteOperatorGameResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchDeleteOperatorGameResp)
+	err := c.cc.Invoke(ctx, OperatorGameService_BatchDeleteOperatorGame_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// OperatorGameServiceServer is the server API for OperatorGameService service.
+// All implementations must embed UnimplementedOperatorGameServiceServer
+// for forward compatibility.
+type OperatorGameServiceServer interface {
+	// 获取分站游戏列表
+	GetOperatorGameList(context.Context, *GetOperatorGameListRequest) (*GetOperatorGameListResp, error)
+	// 批量创建分站游戏
+	BatchCreateOperatorGame(context.Context, *BatchCreateOperatorGameRequest) (*BatchCreateOperatorGameResp, error)
+	// 批量修改分站游戏状态
+	BatchUpdateOperatorGameStatus(context.Context, *BatchUpdateOperatorGameStatusRequest) (*BatchUpdateOperatorGameStatusResp, error)
+	// 批量删除分站游戏
+	BatchDeleteOperatorGame(context.Context, *BatchDeleteOperatorGameRequest) (*BatchDeleteOperatorGameResp, error)
+	mustEmbedUnimplementedOperatorGameServiceServer()
+}
+
+// UnimplementedOperatorGameServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedOperatorGameServiceServer struct{}
+
+func (UnimplementedOperatorGameServiceServer) GetOperatorGameList(context.Context, *GetOperatorGameListRequest) (*GetOperatorGameListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetOperatorGameList not implemented")
+}
+func (UnimplementedOperatorGameServiceServer) BatchCreateOperatorGame(context.Context, *BatchCreateOperatorGameRequest) (*BatchCreateOperatorGameResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method BatchCreateOperatorGame not implemented")
+}
+func (UnimplementedOperatorGameServiceServer) BatchUpdateOperatorGameStatus(context.Context, *BatchUpdateOperatorGameStatusRequest) (*BatchUpdateOperatorGameStatusResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method BatchUpdateOperatorGameStatus not implemented")
+}
+func (UnimplementedOperatorGameServiceServer) BatchDeleteOperatorGame(context.Context, *BatchDeleteOperatorGameRequest) (*BatchDeleteOperatorGameResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method BatchDeleteOperatorGame not implemented")
+}
+func (UnimplementedOperatorGameServiceServer) mustEmbedUnimplementedOperatorGameServiceServer() {}
+func (UnimplementedOperatorGameServiceServer) testEmbeddedByValue()                             {}
+
+// UnsafeOperatorGameServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to OperatorGameServiceServer will
+// result in compilation errors.
+type UnsafeOperatorGameServiceServer interface {
+	mustEmbedUnimplementedOperatorGameServiceServer()
+}
+
+func RegisterOperatorGameServiceServer(s grpc.ServiceRegistrar, srv OperatorGameServiceServer) {
+	// If the following call panics, it indicates UnimplementedOperatorGameServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&OperatorGameService_ServiceDesc, srv)
+}
+
+func _OperatorGameService_GetOperatorGameList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOperatorGameListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperatorGameServiceServer).GetOperatorGameList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperatorGameService_GetOperatorGameList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperatorGameServiceServer).GetOperatorGameList(ctx, req.(*GetOperatorGameListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OperatorGameService_BatchCreateOperatorGame_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchCreateOperatorGameRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperatorGameServiceServer).BatchCreateOperatorGame(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperatorGameService_BatchCreateOperatorGame_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperatorGameServiceServer).BatchCreateOperatorGame(ctx, req.(*BatchCreateOperatorGameRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OperatorGameService_BatchUpdateOperatorGameStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchUpdateOperatorGameStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperatorGameServiceServer).BatchUpdateOperatorGameStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperatorGameService_BatchUpdateOperatorGameStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperatorGameServiceServer).BatchUpdateOperatorGameStatus(ctx, req.(*BatchUpdateOperatorGameStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OperatorGameService_BatchDeleteOperatorGame_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchDeleteOperatorGameRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperatorGameServiceServer).BatchDeleteOperatorGame(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperatorGameService_BatchDeleteOperatorGame_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperatorGameServiceServer).BatchDeleteOperatorGame(ctx, req.(*BatchDeleteOperatorGameRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// OperatorGameService_ServiceDesc is the grpc.ServiceDesc for OperatorGameService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var OperatorGameService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "platform_game.OperatorGameService",
+	HandlerType: (*OperatorGameServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetOperatorGameList",
+			Handler:    _OperatorGameService_GetOperatorGameList_Handler,
+		},
+		{
+			MethodName: "BatchCreateOperatorGame",
+			Handler:    _OperatorGameService_BatchCreateOperatorGame_Handler,
+		},
+		{
+			MethodName: "BatchUpdateOperatorGameStatus",
+			Handler:    _OperatorGameService_BatchUpdateOperatorGameStatus_Handler,
+		},
+		{
+			MethodName: "BatchDeleteOperatorGame",
+			Handler:    _OperatorGameService_BatchDeleteOperatorGame_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "platform_game.proto",
+}
+
+const (
+	OperatorGameAllocationService_GetOperatorGameAllocationList_FullMethodName = "/platform_game.OperatorGameAllocationService/GetOperatorGameAllocationList"
+)
+
+// OperatorGameAllocationServiceClient is the client API for OperatorGameAllocationService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type OperatorGameAllocationServiceClient interface {
+	// 获取分站游戏分配列表
+	GetOperatorGameAllocationList(ctx context.Context, in *GetOperatorGameAllocationListRequest, opts ...grpc.CallOption) (*GetOperatorGameAllocationListResp, error)
+}
+
+type operatorGameAllocationServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewOperatorGameAllocationServiceClient(cc grpc.ClientConnInterface) OperatorGameAllocationServiceClient {
+	return &operatorGameAllocationServiceClient{cc}
+}
+
+func (c *operatorGameAllocationServiceClient) GetOperatorGameAllocationList(ctx context.Context, in *GetOperatorGameAllocationListRequest, opts ...grpc.CallOption) (*GetOperatorGameAllocationListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetOperatorGameAllocationListResp)
+	err := c.cc.Invoke(ctx, OperatorGameAllocationService_GetOperatorGameAllocationList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// OperatorGameAllocationServiceServer is the server API for OperatorGameAllocationService service.
+// All implementations must embed UnimplementedOperatorGameAllocationServiceServer
+// for forward compatibility.
+type OperatorGameAllocationServiceServer interface {
+	// 获取分站游戏分配列表
+	GetOperatorGameAllocationList(context.Context, *GetOperatorGameAllocationListRequest) (*GetOperatorGameAllocationListResp, error)
+	mustEmbedUnimplementedOperatorGameAllocationServiceServer()
+}
+
+// UnimplementedOperatorGameAllocationServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedOperatorGameAllocationServiceServer struct{}
+
+func (UnimplementedOperatorGameAllocationServiceServer) GetOperatorGameAllocationList(context.Context, *GetOperatorGameAllocationListRequest) (*GetOperatorGameAllocationListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetOperatorGameAllocationList not implemented")
+}
+func (UnimplementedOperatorGameAllocationServiceServer) mustEmbedUnimplementedOperatorGameAllocationServiceServer() {
+}
+func (UnimplementedOperatorGameAllocationServiceServer) testEmbeddedByValue() {}
+
+// UnsafeOperatorGameAllocationServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to OperatorGameAllocationServiceServer will
+// result in compilation errors.
+type UnsafeOperatorGameAllocationServiceServer interface {
+	mustEmbedUnimplementedOperatorGameAllocationServiceServer()
+}
+
+func RegisterOperatorGameAllocationServiceServer(s grpc.ServiceRegistrar, srv OperatorGameAllocationServiceServer) {
+	// If the following call panics, it indicates UnimplementedOperatorGameAllocationServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&OperatorGameAllocationService_ServiceDesc, srv)
+}
+
+func _OperatorGameAllocationService_GetOperatorGameAllocationList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOperatorGameAllocationListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperatorGameAllocationServiceServer).GetOperatorGameAllocationList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperatorGameAllocationService_GetOperatorGameAllocationList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperatorGameAllocationServiceServer).GetOperatorGameAllocationList(ctx, req.(*GetOperatorGameAllocationListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// OperatorGameAllocationService_ServiceDesc is the grpc.ServiceDesc for OperatorGameAllocationService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var OperatorGameAllocationService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "platform_game.OperatorGameAllocationService",
+	HandlerType: (*OperatorGameAllocationServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetOperatorGameAllocationList",
+			Handler:    _OperatorGameAllocationService_GetOperatorGameAllocationList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

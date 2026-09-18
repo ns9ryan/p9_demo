@@ -5,16 +5,15 @@ package config
 
 import (
 	"github.com/zeromicro/go-zero/rest"
-	"oa.98ent.com/p9/platform-game/common/kafka"
+	"github.com/zeromicro/go-zero/zrpc"
+	"oa.98ent.com/p9/platform-base/pkg/i18n"
 )
 
 type Config struct {
 	rest.RestConf
 
-	Swagger    SwaggerConfig    `yaml:"Swagger" json:"Swagger"`
-	GrpcClient GrpcClientConfig `yaml:"GrpcClient" json:"GrpcClient"`
-	Kafka      kafka.Config     `yaml:"Kafka" json:"Kafka"`
-	// Core 服务 RPC 配置，用于鉴权
-	CoreRpc GrpcClientConfig `yaml:"CoreRpc" json:"CoreRpc"`
-	IsLocal bool             `yaml:"IsLocal" json:"IsLocal"`
+	Swagger         SwaggerConfig `yaml:"Swagger" json:"Swagger"`
+	PlatformGameRpc zrpc.RpcClientConf
+	CoreRpc         zrpc.RpcClientConf
+	I18n            i18n.Config `yaml:"I18n" json:"I18n"` // 国际化配置
 }

@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"oa.98ent.com/p9/platform-game/common/logger"
+	"github.com/zeromicro/go-zero/core/logx"
 	"oa.98ent.com/p9/platform-game/rpc/internal/dao"
 )
 
@@ -64,13 +64,13 @@ func (q *ProgressQueue) Start(ctx context.Context) {
 	q.mu.Lock()
 	if q.running {
 		q.mu.Unlock()
-		logger.Warn("[进度队列] 队列已启动，跳过重复启动")
+		logx.Infof("[进度队列] 队列已启动，跳过重复启动")
 		return
 	}
 	q.running = true
 	q.mu.Unlock()
 
-	logger.Info("[进度队列] 启动进度消息消费者")
+	logx.Info("[进度队列] 启动进度消息消费者")
 	q.wg.Add(1)
 	go q.consume(ctx)
 }
@@ -81,36 +81,36 @@ func (q *ProgressQueue) Stop() {
 	defer q.mu.Unlock()
 
 	if !q.running {
-		logger.Warn("[进度队列] 队列未启动")
+		logx.Infof("[进度队列] 队列未启动")
 		return
 	}
 
-	logger.Info("[进度队列] 停止进度消息消费者")
+	logx.Info("[进度队列] 停止进度消息消费者")
 	close(q.stopChan)
 	q.wg.Wait()
 	q.running = false
-	logger.Info("[进度队列] 进度消息消费者已停止")
+	logx.Info("[进度队列] 进度消息消费者已停止")
 }
 
 // Send 发送进度消息到队列
 func (q *ProgressQueue) Send(msg *ProgressMessage) error {
 	if msg == nil {
-		logger.Warn("[进度队列] 消息为空")
+		logx.Infof("[进度队列] 消息为空")
 		return nil
 	}
 
 	// 非阻塞发送，防止队列满
 	select {
 	case q.messageChan <- msg:
-		logger.Debugf("[进度队列] 发送进度消息: 表=%s, 处理数=%d, 总数=%d, 进度=%d%%",
+		logx.Debugf("[进度队列] 发送进度消息: 表=%s, 处理数=%d, 总数=%d, 进度=%d%%",
 			msg.TableName, msg.ProcessedCount, msg.RemoteTotal, msg.Progress)
 		return nil
 	case <-q.stopChan:
-		logger.Warn("[进度队列] 队列已停止，消息发送失败")
+		logx.Infof("[进度队列] 队列已停止，消息发送失败")
 		return nil
 	default:
 		// 队列满时，记录警告并继续（不阻塞发送方）
-		logger.Warnf("[进度队列] 消息队列已满，跳过消息: 表=%s, 处理数=%d", msg.TableName, msg.ProcessedCount)
+		logx.Infof("[进度队列] 消息队列已满，跳过消息: 表=%s, 处理数=%d", msg.TableName, msg.ProcessedCount)
 		return nil
 	}
 }
@@ -118,7 +118,7 @@ func (q *ProgressQueue) Send(msg *ProgressMessage) error {
 // consume 消费队列中的消息
 func (q *ProgressQueue) consume(ctx context.Context) {
 	defer q.wg.Done()
-	logger.Info("[进度队列] 消费者开始监听消息")
+	logx.Info("[进度队列] 消费者开始监听消息")
 
 	for {
 		select {
@@ -137,13 +137,13 @@ func (q *ProgressQueue) consume(ctx context.Context) {
 						q.handleProgressMessage(ctx, msg)
 					}
 				default:
-					logger.Info("[进度队列] 消费者已处理完所有消息，正在退出")
+					logx.Info("[进度队列] 消费者已处理完所有消息，正在退出")
 					return
 				}
 			}
 
 		case <-ctx.Done():
-			logger.Info("[进度队列] 上下文已取消，消费者退出")
+			logx.Info("[进度队列] 上下文已取消，消费者退出")
 			return
 		}
 	}
@@ -152,7 +152,7 @@ func (q *ProgressQueue) consume(ctx context.Context) {
 // handleProgressMessage 处理进度消息
 func (q *ProgressQueue) handleProgressMessage(ctx context.Context, msg *ProgressMessage) {
 	if msg.CheckpointID <= 0 {
-		logger.Debugf("[进度队列] 跳过处理消息（checkpointID 无效）: 表=%s, checkpointID=%d",
+		logx.Debugf("[进度队列] 跳过处理消息（checkpointID 无效）: 表=%s, checkpointID=%d",
 			msg.TableName, msg.CheckpointID)
 		return
 	}
@@ -173,11 +173,11 @@ func (q *ProgressQueue) handleProgressMessage(ctx context.Context, msg *Progress
 	}
 	_, err := q.DAOManager.GameSyncCheckpoint.UpdateGameSyncCheckpoint(ctx, updateData)
 	if err != nil {
-		logger.Errorf("[进度队列] 更新检查点进度失败: %v", err)
+		logx.Errorf("[进度队列] 更新检查点进度失败: %v", err)
 		return
 	}
 
-	logger.Infof("[进度队列] ✓ 进度更新: 表=%s, 处理数=%d, 总数=%d, 进度=%d%%",
+	logx.Infof("[进度队列] ✓ 进度更新: 表=%s, 处理数=%d, 总数=%d, 进度=%d%%",
 		msg.TableName, msg.ProcessedCount, msg.RemoteTotal, msg.Progress)
 }
 

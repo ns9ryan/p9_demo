@@ -191,3 +191,100 @@ func IsDel(deletedAt time.Time) int32 {
 	}
 	return 0
 }
+
+// OperatorGameModelToProto 将 OperatorGame 模型转换为 proto
+func OperatorGameModelToProto(record *ent.OperatorGame) *platformgame.OperatorGameInfo {
+	return &platformgame.OperatorGameInfo{
+		Id:        record.ID,
+		OpCode:    record.OpCode,
+		GameCode:  record.GameCode,
+		Name:      record.Name,
+		Status:    int32(record.Status),
+		CreatedAt: record.CreatedAt.Unix(),
+		UpdatedAt: record.UpdatedAt.Unix(),
+	}
+}
+
+// OperatorGameModelToProtoList 将 OperatorGame 模型列表转换为 proto 列表
+func OperatorGameModelToProtoList(records []*ent.OperatorGame) []*platformgame.OperatorGameInfo {
+	result := make([]*platformgame.OperatorGameInfo, 0, len(records))
+	for _, record := range records {
+		if record == nil {
+			continue
+		}
+		result = append(result, OperatorGameModelToProto(record))
+	}
+	return result
+}
+
+// OperatorGameCategoryModelToProto 将 OperatorGameCategory 模型转换为 proto
+func OperatorGameCategoryModelToProto(record *ent.OperatorGameCategory) *platformgame.OperatorGameCategoryInfo {
+	return &platformgame.OperatorGameCategoryInfo{
+		Id:           record.ID,
+		OpCode:       record.OpCode,
+		CategoryCode: record.CategoryCode,
+		Status:       int32(record.Status),
+		CreatedAt:    record.CreatedAt.Unix(),
+		UpdatedAt:    record.UpdatedAt.Unix(),
+	}
+}
+
+// OperatorGameCategoryModelToProtoList 将 OperatorGameCategory 模型列表转换为 proto 列表
+func OperatorGameCategoryModelToProtoList(records []*ent.OperatorGameCategory) []*platformgame.OperatorGameCategoryInfo {
+	result := make([]*platformgame.OperatorGameCategoryInfo, 0, len(records))
+	for _, record := range records {
+		if record == nil {
+			continue
+		}
+		result = append(result, OperatorGameCategoryModelToProto(record))
+	}
+	return result
+}
+
+// OperatorGameChannelModelToProto 将 OperatorGameChannel 模型转换为 proto
+func OperatorGameChannelModelToProto(record *ent.OperatorGameChannel) *platformgame.OperatorGameChannelInfo {
+	return &platformgame.OperatorGameChannelInfo{
+		Id:          record.ID,
+		OpCode:      record.OpCode,
+		ChannelCode: record.ChannelCode,
+		Status:      int32(record.Status),
+		CreatedAt:   record.CreatedAt.Unix(),
+		UpdatedAt:   record.UpdatedAt.Unix(),
+	}
+}
+
+// OperatorGameChannelModelToProtoList 将 OperatorGameChannel 模型列表转换为 proto 列表
+func OperatorGameChannelModelToProtoList(records []*ent.OperatorGameChannel) []*platformgame.OperatorGameChannelInfo {
+	result := make([]*platformgame.OperatorGameChannelInfo, 0, len(records))
+	for _, record := range records {
+		if record == nil {
+			continue
+		}
+		result = append(result, OperatorGameChannelModelToProto(record))
+	}
+	return result
+}
+
+// OperatorGameProviderModelToProto 将 OperatorGameProvider 模型转换为 proto
+func OperatorGameProviderModelToProto(record *ent.OperatorGameProvider) *platformgame.OperatorGameProviderInfo {
+	return &platformgame.OperatorGameProviderInfo{
+		Id:           record.ID,
+		OpCode:       record.OpCode,
+		ProviderCode: record.ProviderCode,
+		Status:       int32(record.Status),
+		CreatedAt:    record.CreatedAt.Unix(),
+		UpdatedAt:    record.UpdatedAt.Unix(),
+	}
+}
+
+// OperatorGameProviderModelToProtoList 将 OperatorGameProvider 模型列表转换为 proto 列表
+func OperatorGameProviderModelToProtoList(records []*ent.OperatorGameProvider) []*platformgame.OperatorGameProviderInfo {
+	result := make([]*platformgame.OperatorGameProviderInfo, 0, len(records))
+	for _, record := range records {
+		if record == nil {
+			continue
+		}
+		result = append(result, OperatorGameProviderModelToProto(record))
+	}
+	return result
+}

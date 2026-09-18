@@ -13,19 +13,19 @@ import "vendor/game_currency.proto";
 // VendorGameService - 游戏供应商服务（对接 game-vendor-gateway）
 service VendorGameService {
     // 获取游戏分类
-    rpc GetGameCategory(Empty) returns (GetGameCategoryResponse);
+    rpc GetGameCategory(vendors.Empty) returns (vendors.GetGameCategoryResponse);
     
     // 获取游戏提供商
-    rpc GetVendor(Empty) returns (GetVendorResponse);
+    rpc GetVendor(vendors.Empty) returns (vendors.GetVendorResponse);
     
     // 获取游戏渠道
-    rpc GetChannel(Empty) returns (GetChannelResponse);
+    rpc GetChannel(vendors.Empty) returns (vendors.GetChannelResponse);
     
     // 获取游戏
-    rpc GetGame(GetGameRequest) returns (GetGameResponse);
+    rpc GetGame(vendors.GetGameRequest) returns (vendors.GetGameResponse);
     
     // 获取游戏货币
-    rpc GetGameCurrency(Empty) returns (GetGameCurrencyResponse);
+    rpc GetGameCurrency(vendors.Empty) returns (vendors.GetGameCurrencyResponse);
 }
 
 message Empty {}

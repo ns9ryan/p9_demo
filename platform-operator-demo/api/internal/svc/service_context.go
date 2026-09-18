@@ -4,12 +4,16 @@
 package svc
 
 import (
+	"net/http"
+
 	"oa.98ent.com/p9/core/common/coreadapt"
 	coremiddleware "oa.98ent.com/p9/core/common/middleware"
 	"oa.98ent.com/p9/core/rpc/coreclient"
 	"oa.98ent.com/p9/platform-base/rpc/client/currencyservice"
 	"oa.98ent.com/p9/platform-base/rpc/client/regionservice"
 	"oa.98ent.com/p9/platform-base/rpc/client/timezoneservice"
+
+	game_grpc_client "oa.98ent.com/p9/platform-game/pkg/grpc_client"
 	"oa.98ent.com/p9/platform-operator/api/internal/config"
 	"oa.98ent.com/p9/platform-operator/api/internal/locales"
 	apimiddleware "oa.98ent.com/p9/platform-operator/pkg/api/middleware"
@@ -26,6 +30,7 @@ import (
 	"oa.98ent.com/p9/platform-operator/rpc/client/regionallocationservice"
 
 	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
 )
@@ -53,6 +58,9 @@ type ServiceContext struct {
 	TimezoneRpc timezoneservice.TimezoneService // 时区RPC
 	CurrencyRpc currencyservice.CurrencyService // 货币RPC
 	RegionRpc   regionservice.RegionService     // 国家地区RPC
+
+	// Platform Game RPC
+	GameGrpcClient *game_grpc_client.GameClientManager // 分站游戏GRPC客户端
 
 	// 多语言
 	Trans    *i18n.Translator // API翻译器
@@ -90,6 +98,15 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		zrpc.WithUnaryClientInterceptor(rpcerror.UnaryClientInterceptor),
 	)
 
+	// ============================== Platform Game RPC ==============================
+
+	// 创建Platform Game RPC连接
+	gameGrpcClient, err := game_grpc_client.NewGameClientManager(c.PlatformGameRpc)
+	if err != nil {
+		logx.Errorf("创建游戏GRPC客户端失败: %v", err)
+		gameGrpcClient = nil
+	}
+
 	// ============================== Core RPC ==============================
 
 	// 创建Core RPC客户端
@@ -101,6 +118,22 @@ func NewServiceContext(c config.Config) *ServiceContext {
 
 	// 创建Core认证适配器
 	auth := coreadapt.Auth(coreCli)
+
+	jwt := coremiddleware.JWT(auth)
+	authority := coremiddleware.Authority(auth)
+	if c.Mode == service.DevMode {
+		// 如果是开发环境，跳过权限校验
+		jwt = func(next http.HandlerFunc) http.HandlerFunc {
+			return func(w http.ResponseWriter, r *http.Request) {
+				next(w, r)
+			}
+		}
+		authority = func(next http.HandlerFunc) http.HandlerFunc {
+			return func(w http.ResponseWriter, r *http.Request) {
+				next(w, r)
+			}
+		}
+	}
 
 	// ============================== Service Context ==============================
 
@@ -127,14 +160,17 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		CurrencyRpc: currencyservice.NewCurrencyService(platformBaseClient), // 货币RPC
 		RegionRpc:   regionservice.NewRegionService(platformBaseClient),     // 国家地区RPC
 
+		// Platform Game RPC
+		GameGrpcClient: gameGrpcClient, // 分站游戏GRPC客户端
+
 		// 多语言
 		Trans:    trans,                                        // API翻译器
 		Language: apimiddleware.NewLanguageMiddleware().Handle, // API语言中间件
 		CoreI18n: coremiddleware.I18n,                          // Core多语言中间件
 
 		// 认证权限
-		Jwt:       coremiddleware.JWT(auth),       // JWT认证中间件
-		Authority: coremiddleware.Authority(auth), // 权限校验中间件
+		Jwt:       jwt,       // JWT认证中间件
+		Authority: authority, // 权限校验中间件
 
 		// 日志
 		ActionLog: coremiddleware.ActionLog(coreadapt.ActionRecorder(coreCli)),       // 操作日志中间件

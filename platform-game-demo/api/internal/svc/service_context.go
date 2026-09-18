@@ -5,32 +5,32 @@ package svc
 
 import (
 	"context"
-	"encoding/json"
-	"net"
 	"net/http"
-	"strings"
 	"sync"
 	"time"
 
+	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
 	"oa.98ent.com/p9/core/common/coreadapt"
-	"oa.98ent.com/p9/core/common/middleware"
 	coremiddleware "oa.98ent.com/p9/core/common/middleware"
 	"oa.98ent.com/p9/core/rpc/coreclient"
+	basemiddleware "oa.98ent.com/p9/platform-base/pkg/api/middleware"
+	"oa.98ent.com/p9/platform-base/pkg/i18n"
 	"oa.98ent.com/p9/platform-game/api/internal/config"
-	"oa.98ent.com/p9/platform-game/api/internal/grpc_client"
-	"oa.98ent.com/p9/platform-game/common/auth"
-	"oa.98ent.com/p9/platform-game/common/logger"
+	"oa.98ent.com/p9/platform-game/api/internal/locales"
+	"oa.98ent.com/p9/platform-game/pkg/grpc_client"
 )
 
 type ServiceContext struct {
-	Config     config.Config
-	GrpcClient *grpc_client.ClientManager
-	Core       coreclient.Core // Core RPC客户端
-	CoreAuth   *auth.CoreAuth  // Core 服务鉴权客户端
-	// Auth            rest.Middleware  // 认证中间件
+	Config          config.Config
+	GameGrpcClient  *grpc_client.GameClientManager
+	Core            coreclient.Core  // Core RPC客户端
 	SyncRateLimiter *SyncRateLimiter // 同步操作频率限制器
+
+	// 多语言
+	Trans    *i18n.Translator // API翻译器
+	Language rest.Middleware  // API语言中间件
 
 	Jwt       rest.Middleware // JWT认证中间件
 	Authority rest.Middleware // 权限校验中间件
@@ -41,31 +41,23 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
+	// 创建翻译器
+	trans, err := i18n.New(c.I18n, locales.FS)
+	logx.Must(err)
+
 	// 初始化 gRPC 客户端
-	logger.Info("[ServiceContext] 开始初始化 gRPC 客户端...")
-	var grpcClient *grpc_client.ClientManager
-	var err error
+	logx.Info("[ServiceContext] 开始初始化 gRPC 客户端...")
+	gameGrpcClient, err := grpc_client.NewGameClientManager(c.PlatformGameRpc)
 
-	if c.GrpcClient.Target == "" {
-		logger.Error("[ServiceContext] ✗ GrpcClient.Target 未配置，无法初始化 gRPC 客户端")
-		panic("GrpcClient.Target is required for API service")
-	}
-
-	grpcClient, err = grpc_client.NewClientManager(c.GrpcClient)
 	if err != nil {
-		logger.Errorf("[ServiceContext] ✗ gRPC 客户端初始化失败: %v", err)
-		panic("failed to initialize gRPC client: " + err.Error())
+		logx.Errorf("[ServiceContext] ✗ 游戏 gRPC 客户端初始化失败: %v", err)
+		panic("failed to initialize 游戏 gRPC 客户端: " + err.Error())
 	}
-	logger.Info("[ServiceContext] ✓ gRPC 客户端初始化成功")
-
-	// 初始化 Core 服务鉴权客户端
-	logger.Info("[ServiceContext] 开始初始化 Core 鉴权客户端...")
-	logger.Infof("[ServiceContext] CoreRpc.Target = '%s'", c.CoreRpc.Target)
-	var coreAuth middleware.Client
+	var coreAuth coremiddleware.Client
 	var coreCli coreclient.Core
 
 	if c.CoreRpc.Target == "" {
-		logger.Warn("[ServiceContext] ⚠ CoreRpc.Target 未配置，鉴权功能不可用")
+		logx.Error("[ServiceContext] ⚠ CoreRpc.Target 未配置，鉴权功能不可用")
 	} else {
 		ctx := context.Background()
 		if c.CoreRpc.Timeout > 0 {
@@ -88,17 +80,16 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		// 创建Core认证适配器
 		coreAuth = coreadapt.Auth(coreCli)
 
-		logger.Info("[ServiceContext] ✓ Core 鉴权客户端初始化成功")
+		logx.Info("[ServiceContext] ✓ Core 鉴权客户端初始化成功")
 	}
 
-	logger.Info("[ServiceContext] ✓ ServiceContext 初始化完成")
+	logx.Info("[ServiceContext] ✓ ServiceContext 初始化完成")
 
 	// 创建认证中间件
-	// authMiddleware := createAuthMiddleware(coreAuth)
 	jwt := coremiddleware.JWT(coreAuth)
 	authority := coremiddleware.Authority(coreAuth)
-	logger.Infof("[ServiceContext] isLocal = %v", c.IsLocal)
-	if isLocal := c.IsLocal; isLocal {
+	logx.Infof("[ServiceContext] mode = %s", c.Mode)
+	if isLocal := c.Mode == "dev"; isLocal {
 		// 如果是本地环境，跳过权限校验
 		jwt = func(next http.HandlerFunc) http.HandlerFunc {
 			return func(w http.ResponseWriter, r *http.Request) {
@@ -113,11 +104,12 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	}
 
 	return &ServiceContext{
-		Config:     c,
-		GrpcClient: grpcClient,
-		Core:       coreCli,
-		// Auth:            authMiddleware,
+		Config:          c,
+		GameGrpcClient:  gameGrpcClient,
+		Core:            coreCli,
 		SyncRateLimiter: NewSyncRateLimiter(),
+		Trans:           trans,
+		Language:        basemiddleware.NewLanguageMiddleware().Handle,
 		Jwt:             jwt,       // JWT认证中间件
 		Authority:       authority, // 权限校验中间件
 
@@ -125,54 +117,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		ActionLog: coremiddleware.ActionLog(coreadapt.ActionRecorder(coreCli)),       // 操作日志中间件
 		ErrorLog:  coremiddleware.ErrorLog(c.Name, coreadapt.ErrorRecorder(coreCli)), // 错误日志中间件
 	}
-}
-
-// getClientIP 获取客户端 IP，支持代理情况下的 X-Forwarded-For 头
-func getClientIP(r *http.Request) string {
-	if r == nil {
-		return ""
-	}
-	// 优先从 X-Forwarded-For 获取（由代理设置）
-	if x := r.Header.Get("X-Forwarded-For"); x != "" {
-		return normalizeIP(strings.TrimSpace(strings.Split(x, ",")[0]))
-	}
-	// 其次尝试从 X-Real-IP 获取
-	if x := r.Header.Get("X-Real-IP"); x != "" {
-		return normalizeIP(strings.TrimSpace(x))
-	}
-	// 最后从 RemoteAddr 获取
-	host, _, err := net.SplitHostPort(r.RemoteAddr)
-	if err != nil {
-		return normalizeIP(r.RemoteAddr)
-	}
-	return normalizeIP(host)
-}
-
-// normalizeIP 规范化 IP：去空白、去方括号，并把 IPv4-mapped IPv6 转成 IPv4
-func normalizeIP(raw string) string {
-	raw = strings.TrimSpace(raw)
-	raw = strings.TrimPrefix(raw, "[")
-	raw = strings.TrimSuffix(raw, "]")
-	ip := net.ParseIP(raw)
-	if ip == nil {
-		return raw
-	}
-	// 如果是 IPv4-mapped IPv6，转成 IPv4
-	if v4 := ip.To4(); v4 != nil {
-		return v4.String()
-	}
-	return ip.String()
-}
-
-// respondJSON 返回 JSON 格式的响应
-func respondJSON(w http.ResponseWriter, statusCode int, code int, msg string) {
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.WriteHeader(statusCode)
-	response := map[string]interface{}{
-		"code": code,
-		"msg":  msg,
-	}
-	json.NewEncoder(w).Encode(response)
 }
 
 // ===== 同步操作频率限制 =====

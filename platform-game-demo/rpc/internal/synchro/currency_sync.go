@@ -3,14 +3,14 @@ package game_sync
 import (
 	"context"
 	"fmt"
-	"log"
 	"time"
 
-	"oa.98ent.com/p9/platform-game/common/logger"
+	"github.com/zeromicro/go-zero/core/logx"
 	"oa.98ent.com/p9/platform-game/rpc/ent"
-	"oa.98ent.com/p9/platform-game/rpc/ent/gamecurrency"
+	"oa.98ent.com/p9/platform-game/rpc/internal/config"
 	"oa.98ent.com/p9/platform-game/rpc/internal/constant"
 	"oa.98ent.com/p9/platform-game/rpc/internal/dao"
+	"oa.98ent.com/p9/platform-game/rpc/internal/locales"
 	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 	"oa.98ent.com/p9/platform-game/rpc/pb/vendors"
 )
@@ -20,23 +20,27 @@ import (
 // CurrencySyncService 游戏货币同步服务
 type CurrencySyncService struct {
 	DAOManager    *dao.Manager
+	config        config.Config
 	progressQueue *ProgressQueue
+	logx.Logger
 }
 
 // NewCurrencySyncService 创建游戏货币同步服务
-func NewCurrencySyncService(daoManager *dao.Manager) *CurrencySyncService {
+func NewCurrencySyncService(ctx context.Context, config config.Config, daoManager *dao.Manager) *CurrencySyncService {
 	return &CurrencySyncService{
 		DAOManager:    daoManager,
+		config:        config,
 		progressQueue: NewProgressQueue(daoManager),
+		Logger:        logx.WithContext(ctx),
 	}
 }
 
 // Preview 预检查游戏货币同步
 func (s *CurrencySyncService) Preview(ctx context.Context, client vendors.VendorGameServiceClient, req *platform_game.SyncPreviewRequest, isGetRemoteClient bool) (*platform_game.SyncPreviewResp, *RemoteGameCurrencyResponse, error) {
 	// 获取远程游戏货币数据
-	remoteResp, err := getRemoteGameCurrency(ctx, client, s.DAOManager, isGetRemoteClient)
+	remoteResp, err := s.getRemoteGameCurrency(ctx, client, s.DAOManager, isGetRemoteClient)
 	if err != nil {
-		logger.Errorf("[货币预检查] 获取远程数据失败: %v", err)
+		s.Errorf("[货币预检查] 获取远程数据失败: %v", err)
 		return nil, nil, err
 	}
 	remote := remoteResp.Data
@@ -89,13 +93,14 @@ func (s *CurrencySyncService) Preview(ctx context.Context, client vendors.Vendor
 }
 
 // 处理游戏货币数据的创建和更新（从 Run 提取的业务逻辑）
-func (s *CurrencySyncService) processCurrencyDataWithProgress(ctx context.Context, tx *ent.Tx, remoteData []*vendors.GameCurrencyInfo, applyResult *Apply, syncCols []string, checkpointID int64) error {
+func (s *CurrencySyncService) processCurrencyDataWithProgress(ctx context.Context, remoteData []*vendors.GameCurrencyInfo, applyResult *Apply, syncCols []string, checkpointID int64) error {
 	i := 0
 	counterMap := make(map[string]int) // 用于记录每个 currency key 的计数，确保唯一性
+	createList := make([]*ent.GameCurrencyCreate, 0)
 	for _, remoteCurrency := range remoteData {
 		currencyKey := fmt.Sprintf("%d_%d", remoteCurrency.GameId, remoteCurrency.CurrencyId)
 		if counterMap[currencyKey] > 0 {
-			logger.Errorf("[货币同步] 检测到重复的远程货币编码: GameID=%d, CurrencyID=%d, 计数器: %d, 跳过处理", remoteCurrency.GameId, remoteCurrency.CurrencyId, counterMap[currencyKey])
+			s.Errorf("[货币同步] 检测到重复的远程货币编码: GameID=%d, CurrencyID=%d, 计数器: %d, 跳过处理", remoteCurrency.GameId, remoteCurrency.CurrencyId, counterMap[currencyKey])
 			applyResult.Failed++
 			continue
 		}
@@ -103,35 +108,28 @@ func (s *CurrencySyncService) processCurrencyDataWithProgress(ctx context.Contex
 		counterMap[currencyKey]++
 		i++
 		// 检查本地是否存在该游戏货币
-		gameCurrencyRecord, err := tx.GameCurrency.Query().
-			Where(gamecurrency.GameIDEQ(remoteCurrency.GameId), gamecurrency.CurrencyIDEQ(remoteCurrency.CurrencyId), gamecurrency.DeletedAtIsNil()).
-			Only(ctx)
+		gameCurrencyRecord, err := s.DAOManager.GameCurrency.GetGameCurrencyByCurrcyIdAndGameId(ctx, remoteCurrency.GameId, remoteCurrency.CurrencyId)
+
 		if err != nil || gameCurrencyRecord == nil {
-			// 新增游戏货币
-			if _, err := tx.GameCurrency.Create().
+			createList = append(createList, s.DAOManager.DB.GameCurrency.Create().
 				SetGameID(remoteCurrency.GameId).
 				SetCurrencyID(remoteCurrency.CurrencyId).
 				SetSourceStatus(1).
 				SetStatus(1).
 				SetCreatedAt(time.Now()).
-				SetUpdatedAt(time.Now()).
-				Save(ctx); err != nil {
-				logger.Errorf("[货币新增] 失败: %v", err)
-				applyResult.Failed++
-				return err
-			}
-			applyResult.Created++
-			logger.Infof("[货币新增] ✓ 已创建新游戏货币: GameID=%d, CurrencyID=%d", remoteCurrency.GameId, remoteCurrency.CurrencyId)
-
+				SetUpdatedAt(time.Now()))
 		} else {
-			if s.compare(&platform_game.SyncDiff{}, remoteCurrency, gameCurrencyRecord) {
-				logger.Infof("[货币同步] 检测到需要更新的货币: GameID=%d, CurrencyID=%d", remoteCurrency.GameId, remoteCurrency.CurrencyId)
-				update := tx.GameCurrency.
+			if s.compare(&platform_game.SyncDiff{}, remoteCurrency, gameCurrencyRecord) || len(syncCols) > 0 {
+				s.Infof("[货币同步] 检测到需要更新的货币: GameID=%d, CurrencyID=%d", remoteCurrency.GameId, remoteCurrency.CurrencyId)
+				update := s.DAOManager.DB.GameCurrency.
 					UpdateOneID(gameCurrencyRecord.ID).
 					SetUpdatedAt(time.Now())
 
 				if len(syncCols) == 0 {
 					syncCols = append(syncCols, "source_status")
+				}
+				if remoteCurrency.Status == 0 {
+					remoteCurrency.Status = 1
 				}
 
 				for _, col := range syncCols {
@@ -147,12 +145,22 @@ func (s *CurrencySyncService) processCurrencyDataWithProgress(ctx context.Contex
 					}
 				}
 				if _, err := update.Save(ctx); err != nil {
-					logger.Errorf("[货币同步] 更新失败: %v", err)
+					s.Errorf("[货币同步] 更新失败: %v", err)
 					applyResult.Failed++
 					return err
 				}
 				applyResult.Updated++
 			}
+		}
+	}
+	s.Infof("[货币同步] 批量处理完成: Created=%d, Updated=%d, Failed=%d, created_list_len=%d", applyResult.Created, applyResult.Updated, applyResult.Failed, len(createList))
+	if len(createList) > 0 {
+		_, err := s.DAOManager.GameCurrency.BatchCreateGameCurrency(ctx, createList)
+		if err != nil {
+			s.Errorf("[货币新增] 批量创建失败: %v", err)
+			applyResult.Failed += int32(len(createList))
+		} else {
+			applyResult.Created += int32(len(createList))
 		}
 	}
 
@@ -161,21 +169,21 @@ func (s *CurrencySyncService) processCurrencyDataWithProgress(ctx context.Contex
 
 // Run 执行游戏货币同步
 func (s *CurrencySyncService) Run(ctx context.Context, client vendors.VendorGameServiceClient, syncCols []string, checkpointID int64, isGetRemoteClient bool) error {
-	logger.Infof("[货币同步] ===== 开始执行同步 =====")
+	s.Infof("[货币同步] ===== 开始执行同步 =====")
 
 	// 先执行预检查
-	logger.Infof("[货币同步] 执行预检查")
+	s.Infof("[货币同步] 执行预检查")
 	previewResp, remoteResp, err := s.Preview(ctx, client, nil, isGetRemoteClient)
 	if err != nil {
-		logger.Errorf("[货币同步] 预检查失败: %v", err)
+		s.Errorf("[货币同步] 预检查失败: %v", err)
 		return err
 	}
 	// 创建并启动进度队列
 	s.progressQueue.Start(ctx)
+	defer s.progressQueue.Stop()
 	if previewResp.Stats.UpdateTotal == 0 && previewResp.Stats.CreateTotal == 0 && previewResp.Stats.DeleteTotal == 0 && previewResp.Stats.RemoteTotal == previewResp.Stats.LocalTotal && len(syncCols) == 0 {
-		defer s.progressQueue.Stop()
-		logger.Infof("[货币同步] 无需更新，直接返回")
-		logger.Infof("[货币同步] UpdateTotal=%d, CreateTotal=%d, DeleteTotal=%d, RemoteTotal=%d, LocalTotal=%d",
+		s.Infof("[货币同步] 无需更新，直接返回")
+		s.Infof("[货币同步] UpdateTotal=%d, CreateTotal=%d, DeleteTotal=%d, RemoteTotal=%d, LocalTotal=%d",
 			previewResp.Stats.UpdateTotal, previewResp.Stats.CreateTotal, previewResp.Stats.DeleteTotal, previewResp.Stats.RemoteTotal, previewResp.Stats.LocalTotal)
 		// 更新checkpointID进度为100
 		s.progressQueue.Send(&ProgressMessage{
@@ -188,87 +196,35 @@ func (s *CurrencySyncService) Run(ctx context.Context, client vendors.VendorGame
 		})
 		return nil
 	}
-	logger.Infof("[货币同步] 预检查完成: remote_total=%d, local_total=%d",
-		previewResp.Stats.RemoteTotal, previewResp.Stats.LocalTotal)
-	// 创建初始检查点记录（此时progress=0）
-	logger.Infof("[货币同步] 创建初始检查点")
-	logger.Infof("[货币同步] ✓ 检查点已创建: checkpointID=%d", checkpointID)
-
-	go func() {
-		defer s.progressQueue.Stop()
-		// 在事务中执行数据库操作
-		logger.Infof("[货币同步] 开始处理货币数据")
-		// 把remoteResp.Data拆分为100条一批进行处理（可根据实际情况调整批次大小）
-		batchSize := BatchSize
-		totalCount := len(remoteResp.Data)
-		apply := &Apply{}
-		for i := 0; i < len(remoteResp.Data); i += batchSize {
-			end := i + batchSize
-			if end > len(remoteResp.Data) {
-				end = len(remoteResp.Data)
-			}
-			batch := remoteResp.Data[i:end]
-			logger.Infof("[货币同步] 处理批次: start=%d, end=%d", i, end)
-			// 模拟等待
-			logger.Debugf("[进度队列] 模拟处理延迟: 表=currency, checkpointID=%d", checkpointID)
-			time.Sleep(1000 * time.Millisecond)
-			logger.Debugf("[进度队列] 开始处理消息: 表=currency, checkpointID=%d", checkpointID)
-			txn, err := s.DAOManager.DB.Tx(ctx)
-			if err != nil {
-				logger.Errorf("[货币同步] 创建事务失败: %v", err)
-				return
-			}
-			err = s.processCurrencyDataWithProgress(ctx, txn, batch, apply, syncCols, checkpointID)
-			if err != nil {
-				logger.Errorf("[货币同步] 处理货币数据失败: %v", err)
-				if rerr := txn.Rollback(); rerr != nil {
-					logger.Errorf("[货币同步] 回滚事务失败: %v", rerr)
-				}
-				return
-			}
-			if err := txn.Commit(); err != nil {
-				logger.Errorf("[货币同步] 提交事务失败: %v", err)
-				return
-			}
-			progress := CalculateProgress(int64(i+1), int64(totalCount))
-			msg := &ProgressMessage{
-				TableName:      "currency",
-				ProcessedCount: int32(i + 1),
-				RemoteTotal:    previewResp.Stats.RemoteTotal,
-				LocalTotal:     previewResp.Stats.LocalTotal,
-				Progress:       progress,
-				CheckpointID:   checkpointID,
-				Created:        apply.Created,
-				Updated:        apply.Updated,
-				Deleted:        apply.Deleted,
-				Failed:         apply.Failed,
-				Skipped:        apply.Skipped,
-			}
-			logger.Infof("[货币同步] 发送进度消息: 表=currency, 处理数=%d, 总数=%d, 进度=%d%%", i+1, totalCount, progress)
-			s.progressQueue.Send(msg)
+	// 把remoteResp.Data拆分为多条一批进行处理（可根据实际情况调整批次大小）
+	batchSize := s.config.SyncBatchSize
+	s.Infof("[货币同步] 预检查完成: remote_total=%d, local_total=%d, 检查点已创建: checkpointID=%d, batch_size=%d",
+		previewResp.Stats.RemoteTotal, previewResp.Stats.LocalTotal, checkpointID, batchSize)
+	totalCount := len(remoteResp.Data)
+	apply := &Apply{}
+	for i := 0; i < len(remoteResp.Data); i += batchSize {
+		end := i + batchSize
+		if end > len(remoteResp.Data) {
+			end = len(remoteResp.Data)
 		}
+		batch := remoteResp.Data[i:end]
+		s.Infof("[货币同步] 处理批次: start=%d, end=%d", i, end)
+		// 模拟等待
+		s.Debugf("[进度队列] 模拟处理延迟: 表=currency, checkpointID=%d", checkpointID)
+		time.Sleep(1000 * time.Millisecond)
+		s.Debugf("[进度队列] 开始处理消息: 表=currency, checkpointID=%d", checkpointID)
+		err = s.processCurrencyDataWithProgress(ctx, batch, apply, syncCols, checkpointID)
 		if err != nil {
-			logger.Errorf("[货币同步] 处理货币数据失败: %v", err)
-			return
+			s.Errorf("[货币同步] 处理货币数据失败: %v", err)
+			return err
 		}
-
-		// 执行逆向同步
-		logger.Infof("[货币同步] 开始执行逆向同步")
-		err = s.ReverseSync(ctx, client, remoteResp, apply)
-		if err != nil {
-			logger.Errorf("❌ [货币同步] 逆向同步失败: %v", err)
-			return
-		}
-		logger.Infof("[货币同步] 逆向同步完成: deleted=%d", apply.Deleted)
-
-		// 最后一次进度更新（100%）
-		logger.Infof("[货币同步] 发送最终进度消息（100%%）")
-		finalMsg := &ProgressMessage{
+		progress := CalculateProgress(int64(i+1), int64(totalCount))
+		msg := &ProgressMessage{
 			TableName:      "currency",
-			ProcessedCount: previewResp.Stats.RemoteTotal,
+			ProcessedCount: int32(i + 1),
 			RemoteTotal:    previewResp.Stats.RemoteTotal,
 			LocalTotal:     previewResp.Stats.LocalTotal,
-			Progress:       100,
+			Progress:       progress,
 			CheckpointID:   checkpointID,
 			Created:        apply.Created,
 			Updated:        apply.Updated,
@@ -276,10 +232,41 @@ func (s *CurrencySyncService) Run(ctx context.Context, client vendors.VendorGame
 			Failed:         apply.Failed,
 			Skipped:        apply.Skipped,
 		}
-		s.progressQueue.Send(finalMsg)
+		s.Infof("[货币同步] 发送进度消息: 表=currency, 处理数=%d, 总数=%d, 进度=%d%%", i+1, totalCount, progress)
+		s.progressQueue.Send(msg)
+	}
+	if err != nil {
+		s.Errorf("[货币同步] 处理货币数据失败: %v", err)
+		return err
+	}
 
-		logger.Infof("[货币同步] ===== 同步完成 =====")
-	}()
+	// 执行逆向同步
+	s.Infof("[货币同步] 开始执行逆向同步")
+	err = s.ReverseSync(ctx, client, remoteResp, apply)
+	if err != nil {
+		s.Errorf("❌ [货币同步] 逆向同步失败: %v", err)
+		return err
+	}
+	s.Infof("[货币同步] 逆向同步完成: deleted=%d", apply.Deleted)
+
+	// 最后一次进度更新（100%）
+	s.Infof("[货币同步] 发送最终进度消息（100%%）")
+	finalMsg := &ProgressMessage{
+		TableName:      "currency",
+		ProcessedCount: previewResp.Stats.RemoteTotal,
+		RemoteTotal:    previewResp.Stats.RemoteTotal,
+		LocalTotal:     previewResp.Stats.LocalTotal,
+		Progress:       100,
+		CheckpointID:   checkpointID,
+		Created:        apply.Created,
+		Updated:        apply.Updated,
+		Deleted:        apply.Deleted,
+		Failed:         apply.Failed,
+		Skipped:        apply.Skipped,
+	}
+	s.progressQueue.Send(finalMsg)
+
+	s.Infof("[货币同步] ===== 同步完成 =====")
 	// 构建执行结果
 	return nil
 }
@@ -320,10 +307,6 @@ func (s *CurrencySyncService) compareAll(remote *vendors.GameCurrencyInfo, local
 		diff.Reason = "本地不存在该游戏货币配置"
 		return diff
 	}
-
-	// 本地和远程一致，无需操作
-	diff.Action = "noop"
-	diff.Reason = "本地和远程数据一致"
 	return diff
 }
 
@@ -342,7 +325,7 @@ func (s *CurrencySyncService) compare(diff *platform_game.SyncDiff, remote *vend
 
 // ReverseSync 逆向同步：检查本地数据在远程是否存在，不存在则软删除
 func (s *CurrencySyncService) ReverseSync(ctx context.Context, client vendors.VendorGameServiceClient, remoteResp *RemoteGameCurrencyResponse, apply *Apply) error {
-	log.Println("[币种逆向同步] 开始执行逆向同步...")
+	s.Infof("[币种逆向同步] 开始执行逆向同步...")
 	// 构建远程币种唯一性索引（game_id + currency_id）
 	remoteIndex := make(map[string]bool)
 	for _, remoteCurr := range remoteResp.Data {
@@ -353,10 +336,10 @@ func (s *CurrencySyncService) ReverseSync(ctx context.Context, client vendors.Ve
 	// 获取本地币种关联数据
 	localCurrencies, err := s.DAOManager.GameCurrency.GetAllGameCurrency(ctx, 0, 0)
 	if err != nil {
-		log.Printf("[币种逆向同步] ✗ 获取本地数据失败: %v\n", err)
+		s.Errorf("[币种逆向同步] ✗ 获取本地数据失败: %v", err)
 		return err
 	}
-	log.Printf("[币种逆向同步] ✓ 获取本地数据成功, 共 %d 条\n", len(localCurrencies))
+	s.Infof("[币种逆向同步] ✓ 获取本地数据成功, 共 %d 条", len(localCurrencies))
 
 	for _, localCurr := range localCurrencies {
 		// 如果本地币种在远程不存在，则软删除
@@ -364,24 +347,24 @@ func (s *CurrencySyncService) ReverseSync(ctx context.Context, client vendors.Ve
 		if !remoteIndex[key] {
 			_, err := s.DAOManager.GameCurrency.UpdateGameCurrency(ctx, localCurr.ID, map[string]interface{}{"deleted_at": time.Now()})
 			if err != nil {
-				log.Printf("[币种逆向同步] 软删除失败: %v\n", err)
+				s.Errorf("[币种逆向同步] 软删除失败: %v", err)
 				apply.Failed++
 				continue
 			}
 			apply.Deleted++
-			log.Printf("[币种逆向同步] ✓ 已软删除币种关联: GameID=%d, CurrencyID=%d\n", localCurr.GameID, localCurr.CurrencyID)
+			s.Infof("[币种逆向同步] ✓ 已软删除币种关联: GameID=%d, CurrencyID=%d", localCurr.GameID, localCurr.CurrencyID)
 		}
 	}
 	if err != nil {
 		return err
 	}
 
-	log.Printf("[币种逆向同步] ✓ 完成，删除: %d\n", apply.Deleted)
+	s.Infof("[币种逆向同步] ✓ 完成，删除: %d", apply.Deleted)
 	return nil
 }
 
 // 获取远程游戏货币数据
-func getRemoteGameCurrency(ctx context.Context, client vendors.VendorGameServiceClient, daoManager *dao.Manager, isGetRemoteClient bool) (*RemoteGameCurrencyResponse, error) {
+func (s *CurrencySyncService) getRemoteGameCurrency(ctx context.Context, client vendors.VendorGameServiceClient, daoManager *dao.Manager, isGetRemoteClient bool) (*RemoteGameCurrencyResponse, error) {
 	// if isGetRemoteClient {
 	// 	remoteResp, err := client.GetGameCurrency(ctx, &vendors.Empty{})
 	// 	if err != nil {
@@ -411,13 +394,13 @@ func getRemoteGameCurrency(ctx context.Context, client vendors.VendorGameService
 	// 	},
 	// }, nil
 
-	logger.Infof("[同步数据源] 使用本地 JSON 数据获取币种关联信息")
+	s.Infof("[同步数据源] 使用本地 JSON 数据获取币种关联信息")
 	var list []*vendors.GameCurrencyInfo
-	if err := loadLocalJSON("currency.json", &list); err != nil {
-		logger.Errorf("[同步数据源] 读取 currency.json 失败: %v", err)
+	if err := locales.LoadLocalVendorRemoteJSON("currency.json", &list); err != nil {
+		s.Errorf("[同步数据源] 读取 currency.json 失败: %v", err)
 		return nil, err
 	}
-	logger.Infof("[同步数据源] ✓ 读取本地 JSON 数据成功, 共 %d 条", len(list))
+	s.Infof("[同步数据源] ✓ 读取本地 JSON 数据成功, 共 %d 条", len(list))
 	return &RemoteGameCurrencyResponse{Data: list}, nil
 }
 

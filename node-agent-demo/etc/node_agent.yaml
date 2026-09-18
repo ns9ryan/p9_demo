@@ -1,7 +1,7 @@
 # 节点配置
-NodeCode: NODE_xxx                             # 节点业务编码
-AuthSecret: xxxxxxxxxx                         # 节点认证密钥
+NodeCode: NODE_FDD76E3F7C654F5D87BA1965BDC3C664                               # 节点业务编码
+AuthSecret: 418268f6bfa96202833629591968daf883f79bbcd474edf0f39e94f0b6c7d0e9  # 节点认证密钥
 
 # 调度中心连接配置
 Dispatch:
-  WebSocketURL: ws://127.0.0.1:28002/ws/node  # WebSocket连接地址
+  WebSocketURL: ws://127.0.0.1:28002/ws/node                                  # WebSocket连接地址

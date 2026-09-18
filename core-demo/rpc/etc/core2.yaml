@@ -1,19 +1,25 @@
 Name: operator-core-rpc
 ListenOn: 0.0.0.0:19100
 Timeout: 10000
+Mode: dev  # 开发模式
 
 Log:
   Mode: console
   Level: info
-# 开发模式
-Mode: dev
+
+# 链路追踪, 生产建议 Sampler 0.01~0.1
+Telemetry:
+  Name: operator-core-rpc
+  Endpoint: 127.0.0.1:4317
+  Sampler: 1.0
+  Batcher: otlpgrpc
 
 DB:
   Driver: postgres
-  DSN: "host=127.0.0.1 user=postgres password=app123 dbname=demo port=5432 sslmode=disable TimeZone=UTC"
+  DSN: "host=127.0.0.1 user=root password=root dbname=p9_operator01 port=15432 sslmode=disable TimeZone=UTC"
 
 DataRedis:
-  Host: 127.0.0.1:6379
+  Host: 127.0.0.1:16379
   Pass: ""
   DB: 0
 

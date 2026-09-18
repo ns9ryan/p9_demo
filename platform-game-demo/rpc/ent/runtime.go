@@ -9,6 +9,11 @@ import (
 	"oa.98ent.com/p9/platform-game/rpc/ent/gamechannel"
 	"oa.98ent.com/p9/platform-game/rpc/ent/gamecurrency"
 	"oa.98ent.com/p9/platform-game/rpc/ent/gameprovider"
+	"oa.98ent.com/p9/platform-game/rpc/ent/operator"
+	"oa.98ent.com/p9/platform-game/rpc/ent/operatorgame"
+	"oa.98ent.com/p9/platform-game/rpc/ent/operatorgamecategory"
+	"oa.98ent.com/p9/platform-game/rpc/ent/operatorgamechannel"
+	"oa.98ent.com/p9/platform-game/rpc/ent/operatorgameprovider"
 	"oa.98ent.com/p9/platform-game/rpc/ent/schema"
 )
 
@@ -52,4 +57,42 @@ func init() {
 	gameproviderDescStatus := gameproviderFields[9].Descriptor()
 	// gameprovider.StatusValidator is a validator for the "status" field. It is called by the builders before save.
 	gameprovider.StatusValidator = gameproviderDescStatus.Validators[0].(func(int64) error)
+	operatorFields := schema.Operator{}.Fields()
+	_ = operatorFields
+	// operatorDescCreationStatus is the schema descriptor for creation_status field.
+	operatorDescCreationStatus := operatorFields[5].Descriptor()
+	// operator.CreationStatusValidator is a validator for the "creation_status" field. It is called by the builders before save.
+	operator.CreationStatusValidator = operatorDescCreationStatus.Validators[0].(func(int16) error)
+	// operatorDescPublishStatus is the schema descriptor for publish_status field.
+	operatorDescPublishStatus := operatorFields[6].Descriptor()
+	// operator.PublishStatusValidator is a validator for the "publish_status" field. It is called by the builders before save.
+	operator.PublishStatusValidator = operatorDescPublishStatus.Validators[0].(func(int16) error)
+	// operatorDescStatus is the schema descriptor for status field.
+	operatorDescStatus := operatorFields[9].Descriptor()
+	// operator.StatusValidator is a validator for the "status" field. It is called by the builders before save.
+	operator.StatusValidator = operatorDescStatus.Validators[0].(func(int16) error)
+	operatorgameFields := schema.OperatorGame{}.Fields()
+	_ = operatorgameFields
+	// operatorgameDescStatus is the schema descriptor for status field.
+	operatorgameDescStatus := operatorgameFields[4].Descriptor()
+	// operatorgame.StatusValidator is a validator for the "status" field. It is called by the builders before save.
+	operatorgame.StatusValidator = operatorgameDescStatus.Validators[0].(func(int16) error)
+	operatorgamecategoryFields := schema.OperatorGameCategory{}.Fields()
+	_ = operatorgamecategoryFields
+	// operatorgamecategoryDescStatus is the schema descriptor for status field.
+	operatorgamecategoryDescStatus := operatorgamecategoryFields[3].Descriptor()
+	// operatorgamecategory.StatusValidator is a validator for the "status" field. It is called by the builders before save.
+	operatorgamecategory.StatusValidator = operatorgamecategoryDescStatus.Validators[0].(func(int16) error)
+	operatorgamechannelFields := schema.OperatorGameChannel{}.Fields()
+	_ = operatorgamechannelFields
+	// operatorgamechannelDescStatus is the schema descriptor for status field.
+	operatorgamechannelDescStatus := operatorgamechannelFields[3].Descriptor()
+	// operatorgamechannel.StatusValidator is a validator for the "status" field. It is called by the builders before save.
+	operatorgamechannel.StatusValidator = operatorgamechannelDescStatus.Validators[0].(func(int16) error)
+	operatorgameproviderFields := schema.OperatorGameProvider{}.Fields()
+	_ = operatorgameproviderFields
+	// operatorgameproviderDescStatus is the schema descriptor for status field.
+	operatorgameproviderDescStatus := operatorgameproviderFields[3].Descriptor()
+	// operatorgameprovider.StatusValidator is a validator for the "status" field. It is called by the builders before save.
+	operatorgameprovider.StatusValidator = operatorgameproviderDescStatus.Validators[0].(func(int16) error)
 }

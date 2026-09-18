@@ -8,10 +8,10 @@ import (
 
 	"fmt"
 
+	"oa.98ent.com/p9/platform-game/api/internal/constant"
 	"oa.98ent.com/p9/platform-game/api/internal/logic"
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
-	"oa.98ent.com/p9/platform-game/common/constant"
 	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -34,7 +34,7 @@ func NewGameProviderListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 func (l *GameProviderListLogic) GameProviderList(req *types.GameProviderListReq) (resp *types.GameProviderListResp, err error) {
 	l.Infof("[API GameProviderList] received req: page=%d, page_size=%d", req.Page, req.PageSize)
 
-	if l.svcCtx == nil || l.svcCtx.GrpcClient == nil {
+	if l.svcCtx == nil || l.svcCtx.GameGrpcClient == nil {
 		l.Error("[API GameProviderList] gRPC client not available")
 		return nil, fmt.Errorf("gRPC client not available")
 	}
@@ -47,7 +47,7 @@ func (l *GameProviderListLogic) GameProviderList(req *types.GameProviderListReq)
 		IsDeleted:    int32(req.IsDeleted),
 	}
 
-	client := l.svcCtx.GrpcClient.GetGameProviderServiceClient()
+	client := l.svcCtx.GameGrpcClient.GetGameProviderServiceClient()
 	grpcResp, err := client.GetGameProviderList(l.ctx, grpcReq)
 	if err != nil {
 		l.Errorf("[API GameProviderList] gRPC call failed: %v", err)

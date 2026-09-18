@@ -14,6 +14,13 @@ import (
 )
 
 type (
+	ExecuteV2SqlRequest = platform_game.ExecuteV2SqlRequest
+	ExecuteV2SqlResp    = platform_game.ExecuteV2SqlResp
+	SyncPreviewRequest  = platform_game.SyncPreviewRequest
+	SyncPreviewResp     = platform_game.SyncPreviewResp
+	SyncRunRequest      = platform_game.SyncRunRequest
+	SyncRunResp         = platform_game.SyncRunResp
+
 	SyncService interface {
 		// 同步预检查（查看差异，不修改数据）
 		SyncPreview(ctx context.Context, in *SyncPreviewRequest, opts ...grpc.CallOption) (*SyncPreviewResp, error)

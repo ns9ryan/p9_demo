@@ -26,3 +26,18 @@ type GameProvider func(*sql.Selector)
 
 // GameSyncCheckpoint is the predicate function for gamesynccheckpoint builders.
 type GameSyncCheckpoint func(*sql.Selector)
+
+// Operator is the predicate function for operator builders.
+type Operator func(*sql.Selector)
+
+// OperatorGame is the predicate function for operatorgame builders.
+type OperatorGame func(*sql.Selector)
+
+// OperatorGameCategory is the predicate function for operatorgamecategory builders.
+type OperatorGameCategory func(*sql.Selector)
+
+// OperatorGameChannel is the predicate function for operatorgamechannel builders.
+type OperatorGameChannel func(*sql.Selector)
+
+// OperatorGameProvider is the predicate function for operatorgameprovider builders.
+type OperatorGameProvider func(*sql.Selector)

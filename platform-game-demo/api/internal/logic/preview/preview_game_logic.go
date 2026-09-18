@@ -7,9 +7,9 @@ import (
 	"context"
 	"fmt"
 
+	"oa.98ent.com/p9/platform-game/api/internal/constant"
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
-	"oa.98ent.com/p9/platform-game/common/constant"
 	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -32,7 +32,7 @@ func NewPreviewGameLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Previ
 func (l *PreviewGameLogic) PreviewGame(req *types.SyncPreviewReq) (resp *types.SyncPreviewResp, err error) {
 	l.Infof("[API PreviewGame] received sync preview request")
 
-	if l.svcCtx == nil || l.svcCtx.GrpcClient == nil {
+	if l.svcCtx == nil || l.svcCtx.GameGrpcClient == nil {
 		l.Error("[API PreviewGame] gRPC client not available")
 		return nil, fmt.Errorf("gRPC client not available")
 	}
@@ -44,7 +44,7 @@ func (l *PreviewGameLogic) PreviewGame(req *types.SyncPreviewReq) (resp *types.S
 		IsSkip:     req.IsSkip,
 	}
 
-	client := l.svcCtx.GrpcClient.GetSyncServiceClient()
+	client := l.svcCtx.GameGrpcClient.GetSyncServiceClient()
 	grpcResp, err := client.SyncPreview(l.ctx, grpcReq)
 	if err != nil {
 		l.Errorf("[API PreviewGame] gRPC call failed: %v", err)

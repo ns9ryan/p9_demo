@@ -14,6 +14,13 @@ import (
 )
 
 type (
+	GetGameProviderListRequest = platform_game.GetGameProviderListRequest
+	GetGameProviderListResp    = platform_game.GetGameProviderListResp
+	GetGameProviderRequest     = platform_game.GetGameProviderRequest
+	GetGameProviderResp        = platform_game.GetGameProviderResp
+	UpdateGameProviderRequest  = platform_game.UpdateGameProviderRequest
+	UpdateGameProviderResp     = platform_game.UpdateGameProviderResp
+
 	GameProviderService interface {
 		// 获取游戏供应商列表
 		GetGameProviderList(ctx context.Context, in *GetGameProviderListRequest, opts ...grpc.CallOption) (*GetGameProviderListResp, error)

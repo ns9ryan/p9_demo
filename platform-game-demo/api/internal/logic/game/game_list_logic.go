@@ -7,10 +7,10 @@ import (
 	"context"
 	"fmt"
 
+	"oa.98ent.com/p9/platform-game/api/internal/constant"
 	"oa.98ent.com/p9/platform-game/api/internal/logic"
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
-	"oa.98ent.com/p9/platform-game/common/constant"
 	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -34,7 +34,7 @@ func (l *GameListLogic) GameList(req *types.GameListReq) (resp *types.GameListRe
 	l.Infof("[API GameList] received req: page=%d, page_size=%d, game_code=%s, name=%s, category_id=%d, provider_id=%d, channel_id=%d, status=%d, is_deleted=%d, sort_by='%s', sort_order='%s'",
 		req.Page, req.PageSize, req.GameCode, req.Name, req.CategoryID, req.ProviderID, req.ChannelID, req.Status, req.IsDeleted, req.SortBy, req.SortOrder)
 
-	if l.svcCtx == nil || l.svcCtx.GrpcClient == nil {
+	if l.svcCtx == nil || l.svcCtx.GameGrpcClient == nil {
 		l.Errorf("[API GameList] gRPC client not available")
 		return nil, fmt.Errorf("gRPC client not available")
 	}
@@ -51,7 +51,7 @@ func (l *GameListLogic) GameList(req *types.GameListReq) (resp *types.GameListRe
 		IsDeleted:  int32(req.IsDeleted),
 	}
 
-	grpcResp, err := l.svcCtx.GrpcClient.GetGameServiceClient().GetGameList(l.ctx, grpcReq)
+	grpcResp, err := l.svcCtx.GameGrpcClient.GetGameServiceClient().GetGameList(l.ctx, grpcReq)
 	if err != nil {
 		l.Errorf("[API GameList] gRPC call failed: %v", err)
 		return nil, fmt.Errorf("gRPC call failed: %s", err.Error())

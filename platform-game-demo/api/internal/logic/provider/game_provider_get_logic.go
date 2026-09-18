@@ -6,10 +6,10 @@ package provider
 import (
 	"context"
 
+	"oa.98ent.com/p9/platform-game/api/internal/constant"
 	"oa.98ent.com/p9/platform-game/api/internal/logic"
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
-	"oa.98ent.com/p9/platform-game/common/constant"
 	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"fmt"
@@ -34,7 +34,7 @@ func NewGameProviderGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *G
 func (l *GameProviderGetLogic) GameProviderGet(req *types.GameProviderGetReq) (resp *types.GameProviderResp, err error) {
 	l.Infof("[API GameProviderGet] received req: id=%d", req.ID)
 
-	if l.svcCtx == nil || l.svcCtx.GrpcClient == nil {
+	if l.svcCtx == nil || l.svcCtx.GameGrpcClient == nil {
 		l.Error("[API GameProviderGet] gRPC client not available")
 		return nil, fmt.Errorf("gRPC client not available")
 	}
@@ -43,7 +43,7 @@ func (l *GameProviderGetLogic) GameProviderGet(req *types.GameProviderGetReq) (r
 		Id: req.ID,
 	}
 
-	client := l.svcCtx.GrpcClient.GetGameProviderServiceClient()
+	client := l.svcCtx.GameGrpcClient.GetGameProviderServiceClient()
 	grpcResp, err := client.GetGameProvider(l.ctx, grpcReq)
 	if err != nil {
 		l.Errorf("[API GameProviderGet] gRPC call failed: %v", err)

@@ -10,7 +10,6 @@ import (
 	channel "oa.98ent.com/p9/platform-game/api/internal/handler/channel"
 	checkpoint "oa.98ent.com/p9/platform-game/api/internal/handler/checkpoint"
 	currency "oa.98ent.com/p9/platform-game/api/internal/handler/currency"
-	execute "oa.98ent.com/p9/platform-game/api/internal/handler/execute"
 	game "oa.98ent.com/p9/platform-game/api/internal/handler/game"
 	ping "oa.98ent.com/p9/platform-game/api/internal/handler/ping"
 	preview "oa.98ent.com/p9/platform-game/api/internal/handler/preview"
@@ -111,20 +110,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			}...,
 		),
 		rest.WithPrefix("/admin/game-currency"),
-	)
-
-	server.AddRoutes(
-		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
-			[]rest.Route{
-				{
-					Method:  http.MethodGet,
-					Path:    "/v2sql",
-					Handler: execute.ExecuteV2sqlGetHandler(serverCtx),
-				},
-			}...,
-		),
-		rest.WithPrefix("/admin/execute"),
 	)
 
 	server.AddRoutes(

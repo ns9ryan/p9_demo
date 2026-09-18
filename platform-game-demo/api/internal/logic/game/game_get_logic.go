@@ -7,10 +7,10 @@ import (
 	"context"
 	"fmt"
 
+	"oa.98ent.com/p9/platform-game/api/internal/constant"
 	"oa.98ent.com/p9/platform-game/api/internal/logic"
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
-	"oa.98ent.com/p9/platform-game/common/constant"
 	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -33,12 +33,12 @@ func NewGameGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GameGetLo
 func (l *GameGetLogic) GameGet(req *types.GameGetReq) (resp *types.GameResp, err error) {
 	l.Infof("[API GameGet] query game: id=%d", req.ID)
 
-	if l.svcCtx == nil || l.svcCtx.GrpcClient == nil {
+	if l.svcCtx == nil || l.svcCtx.GameGrpcClient == nil {
 		l.Errorf("[API GameGet] gRPC client not available")
 		return nil, fmt.Errorf("gRPC client not available")
 	}
 
-	grpcResp, err := l.svcCtx.GrpcClient.GetGameServiceClient().GetGame(l.ctx, &platform_game.GetGameRequest{
+	grpcResp, err := l.svcCtx.GameGrpcClient.GetGameServiceClient().GetGame(l.ctx, &platform_game.GetGameRequest{
 		Id: req.ID,
 	})
 	if err != nil {

@@ -7,10 +7,10 @@ import (
 	"context"
 	"fmt"
 
+	"oa.98ent.com/p9/platform-game/api/internal/constant"
 	"oa.98ent.com/p9/platform-game/api/internal/logic"
 	"oa.98ent.com/p9/platform-game/api/internal/svc"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
-	"oa.98ent.com/p9/platform-game/common/constant"
 	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 
 	"github.com/bytedance/gopkg/util/logger"
@@ -32,7 +32,7 @@ func NewGameUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GameUp
 }
 
 func (l *GameUpdateLogic) GameUpdate(req *types.GameUpdateReq) (resp *types.GameResp, err error) {
-	if l.svcCtx == nil || l.svcCtx.GrpcClient == nil {
+	if l.svcCtx == nil || l.svcCtx.GameGrpcClient == nil {
 		logger.Error("[API GameUpdate] gRPC client not available")
 		return nil, fmt.Errorf("gRPC client not available")
 	}
@@ -67,7 +67,7 @@ func (l *GameUpdateLogic) GameUpdate(req *types.GameUpdateReq) (resp *types.Game
 		ForceLogout:      req.ForceLogout,
 	}
 
-	grpcResp, err := l.svcCtx.GrpcClient.GetGameServiceClient().UpdateGame(l.ctx, grpcReq)
+	grpcResp, err := l.svcCtx.GameGrpcClient.GetGameServiceClient().UpdateGame(l.ctx, grpcReq)
 	if err != nil {
 		logger.Errorf("[API GameUpdate] gRPC call failed: %v", err)
 		return nil, fmt.Errorf("gRPC call failed: %s", err.Error())

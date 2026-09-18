@@ -15,7 +15,6 @@ import "channel.api"
 import "game.api"
 import "currency.api"
 import "provider.api"
-import "execute.api"
 import "checkpoint.api"
 import "sync.api"
 

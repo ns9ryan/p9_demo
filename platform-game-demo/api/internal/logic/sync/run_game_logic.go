@@ -31,7 +31,7 @@ func NewRunGameLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RunGameLo
 func (l *RunGameLogic) RunGame(req *types.SyncRunReq) (resp *types.SyncRunResp, err error) {
 	l.Infof("[API RunGame] received sync run request")
 
-	if l.svcCtx == nil || l.svcCtx.GrpcClient == nil {
+	if l.svcCtx == nil || l.svcCtx.GameGrpcClient == nil {
 		l.Error("[API RunGame] gRPC client not available")
 		return nil, fmt.Errorf("gRPC client not available")
 	}
@@ -43,7 +43,7 @@ func (l *RunGameLogic) RunGame(req *types.SyncRunReq) (resp *types.SyncRunResp, 
 	}
 
 	// 调用 RPC 的 SyncRun，由 RPC 侧负责创建 checkpoint 和异步处理
-	client := l.svcCtx.GrpcClient.GetSyncServiceClient()
+	client := l.svcCtx.GameGrpcClient.GetSyncServiceClient()
 	runReq := &platformgame.SyncRunRequest{
 		ObjectType: "game",
 		SyncCols:   req.SyncCols,

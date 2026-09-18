@@ -1,12 +1,24 @@
 Name: platform-core-rpc
 ListenOn: 0.0.0.0:19000
 Timeout: 10000
+Mode: dev # 开发模式
 
 Log:
   Mode: console
   Level: info
-# 开发模式
-Mode: dev
+
+# Etcd服务注册配置
+Etcd:
+  Hosts:
+    - 127.0.0.1:12379
+  Key: platform-core-rpc
+
+# 链路追踪, 生产建议 Sampler 0.01~0.1
+Telemetry:
+  Name: platform-core-rpc
+  Endpoint: 127.0.0.1:4317
+  Sampler: 1.0
+  Batcher: otlpgrpc
 
 DB:
   Driver: postgres

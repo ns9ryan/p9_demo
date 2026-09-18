@@ -18,6 +18,13 @@ PlatformBaseRpc:
       - 127.0.0.1:12379         # Etcd地址
     Key: platform-base-rpc      # RPC服务注册Key
 
+# Platform Game RPC配置
+PlatformGameRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379         # Etcd地址
+    Key: platform-game-rpc      # RPC服务注册Key
+
 # Core RPC配置
 CoreRpc:
   Endpoints:

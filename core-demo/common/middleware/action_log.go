@@ -73,7 +73,7 @@ func ActionLog(rec ActionRecorder) rest.Middleware {
 				UserAgent:      utils.UserAgent(r),
 			}
 			go func() {
-				ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+				ctx, cancel := context.WithTimeout(context.WithoutCancel(r.Context()), 3*time.Second)
 				defer cancel()
 				if claims != nil {
 					ctx = ctxdata.WithClaims(ctx, claims)

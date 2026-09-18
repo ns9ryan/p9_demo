@@ -10,8 +10,6 @@ import (
 	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 )
 
-const Group = "game"
-
 func CategoryProtoToResponse(ctx context.Context, category *platformgame.GameCategoryInfo) *types.GameCategoryResp {
 	// 调用 TG 进行翻译
 	name := corei18n.TG(ctx, corei18n.CodePlatform, "game", category.NameKey)
