@@ -2,6 +2,7 @@ package websocket
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
@@ -14,7 +15,7 @@ import (
 
 const (
 	nodeCodeHeader    = "X-Node-Code"   // 节点编码请求头
-	reconnectInterval = 5 * time.Second // WebSocket重连间隔
+	reconnectInterval = 5 * time.Second // 重连间隔
 )
 
 // Client 节点WebSocket客户端
@@ -33,29 +34,29 @@ func NewClient(c config.Config) *Client {
 	}
 }
 
-// Run 连接调度中心并保持WebSocket连接
+// Run 连接调度中心并自动重连
 func (c *Client) Run(ctx context.Context) error {
-	logger := logx.WithContext(ctx)
-
 	for {
-		// 建立并保持一次WebSocket连接
+		// 建立连接并持续读取消息
 		err := c.runConnection(ctx)
 		if ctx.Err() != nil {
 			return nil
 		}
 
-		logger.Errorw("节点WebSocket连接已断开, 等待重新连接", logx.Field("error", err.Error()), logx.Field("retry_after", reconnectInterval.String()))
+		// 记录连接断开
+		logx.WithContext(ctx).Errorw("节点WebSocket连接已断开, 等待重新连接", logx.Field("error", err.Error()), logx.Field("retry_after", reconnectInterval.String()))
 
 		// 等待重新连接
 		select {
 		case <-ctx.Done():
 			return nil
+
 		case <-time.After(reconnectInterval):
 		}
 	}
 }
 
-// runConnection 建立一次WebSocket连接并持续读取消息
+// runConnection 建立WebSocket连接并持续读取消息
 func (c *Client) runConnection(ctx context.Context) error {
 	// 构造节点认证请求头
 	header := make(http.Header)
@@ -75,15 +76,65 @@ func (c *Client) runConnection(ctx context.Context) error {
 	}
 	defer conn.CloseNow()
 
-	logx.WithContext(ctx).Infow("节点WebSocket连接已建立", logx.Field("node_code", c.nodeCode))
+	logger := logx.WithContext(ctx)
+	logger.Infow("节点WebSocket连接已建立", logx.Field("node_code", c.nodeCode))
 
 	// 持续读取调度中心消息
 	for {
-		_, _, err = conn.Read(ctx)
+		messageType, data, err := conn.Read(ctx)
 		if err != nil {
 			return fmt.Errorf("读取调度中心WebSocket消息失败: %w", err)
 		}
 
-		// TODO Node Agent消息协议完成后处理调度中心下发消息
+		// 处理调度中心消息
+		if err = c.handleMessage(ctx, messageType, data); err != nil {
+			logger.Errorw("处理调度中心WebSocket消息失败", logx.Field("error", err.Error()))
+		}
 	}
+}
+
+// handleMessage 处理调度中心WebSocket消息
+func (c *Client) handleMessage(ctx context.Context, messageType coderws.MessageType, data []byte) error {
+	// 只处理文本消息
+	if messageType != coderws.MessageText {
+		return fmt.Errorf("不支持的WebSocket消息类型: %d", messageType)
+	}
+
+	// 解析业务消息
+	var message Message
+	if err := json.Unmarshal(data, &message); err != nil {
+		return fmt.Errorf("解析WebSocket消息失败: %w", err)
+	}
+
+	// 根据消息类型处理
+	switch message.Type {
+	case MessageTypeTaskDispatch:
+		return c.handleTaskDispatch(ctx, message.Data)
+
+	default:
+		return fmt.Errorf("不支持的WebSocket业务消息类型: %s", message.Type)
+	}
+}
+
+// handleTaskDispatch 处理任务下发消息
+func (c *Client) handleTaskDispatch(ctx context.Context, data json.RawMessage) error {
+	// 解析任务下发数据
+	var task TaskDispatchData
+	if err := json.Unmarshal(data, &task); err != nil {
+		return fmt.Errorf("解析任务下发数据失败: %w", err)
+	}
+
+	// 校验任务基本信息
+	if task.TaskNo == "" {
+		return fmt.Errorf("任务编号不能为空")
+	}
+	if task.TaskType == "" {
+		return fmt.Errorf("任务类型不能为空")
+	}
+
+	logx.WithContext(ctx).Infow("收到调度任务", logx.Field("task_no", task.TaskNo), logx.Field("task_type", task.TaskType))
+
+	// TODO 根据任务类型执行具体任务并返回接收确认
+
+	return nil
 }

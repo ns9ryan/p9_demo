@@ -1,10 +1,17 @@
 package websocket
 
 import (
+	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
 	"sync"
 
 	coderws "github.com/coder/websocket"
 )
+
+// ErrNodeOffline 节点当前不在线
+var ErrNodeOffline = errors.New("node offline")
 
 // Connection 表示一个已认证的节点WebSocket连接
 type Connection struct {
@@ -59,6 +66,28 @@ func (m *Manager) Get(nodeCode string) (*Connection, bool) {
 
 	connection, ok := m.connections[nodeCode]
 	return connection, ok
+}
+
+// Send 向指定节点发送WebSocket消息
+func (m *Manager) Send(ctx context.Context, nodeCode string, message Message) error {
+	// 获取节点连接
+	connection, ok := m.Get(nodeCode)
+	if !ok {
+		return ErrNodeOffline
+	}
+
+	// 编码WebSocket消息
+	data, err := json.Marshal(message)
+	if err != nil {
+		return fmt.Errorf("编码WebSocket消息失败: %w", err)
+	}
+
+	// 发送WebSocket文本消息
+	if err = connection.Conn.Write(ctx, coderws.MessageText, data); err != nil {
+		return fmt.Errorf("发送WebSocket消息失败: %w", err)
+	}
+
+	return nil
 }
 
 // IsOnline 判断节点是否在线
