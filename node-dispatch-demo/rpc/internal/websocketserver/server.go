@@ -1,6 +1,7 @@
 package websocketserver
 
 import (
+	"context"
 	"crypto/sha256"
 	"crypto/subtle"
 	"encoding/hex"
@@ -21,6 +22,9 @@ import (
 const (
 	nodeWebSocketPath = "/ws/node"    // 节点WebSocket访问路径
 	nodeCodeHeader    = "X-Node-Code" // 节点编码请求头
+
+	heartbeatInterval = 30 * time.Second // 心跳间隔
+	heartbeatTimeout  = 10 * time.Second // 心跳超时时间
 )
 
 // errUnauthorized 节点认证失败
@@ -61,8 +65,13 @@ func (s *Server) Start() error {
 
 // Stop 停止节点WebSocket服务
 func (s *Server) Stop() error {
-	// TODO 完善WebSocket优雅停止流程, 主动断开现有节点连接后再关闭HTTP服务
-	return s.httpServer.Close()
+	// 停止HTTP服务, 不再接收新的节点连接
+	err := s.httpServer.Close()
+
+	// 主动断开当前全部节点连接
+	s.svcCtx.Connections.DisconnectAll()
+
+	return err
 }
 
 // handleNode 处理节点WebSocket连接
@@ -96,6 +105,10 @@ func (s *Server) handleNode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// 创建连接生命周期上下文
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	// 创建节点连接
 	connection := &websocket.Connection{
 		NodeCode: data.Code, // 节点业务编码
@@ -108,19 +121,71 @@ func (s *Server) handleNode(w http.ResponseWriter, r *http.Request) {
 
 	logger.Infow("节点WebSocket连接已建立", logx.Field("node_code", data.Code))
 
+	// 更新节点最近活动时间
+	s.updateLastSeenAt(ctx, data.ID, data.Code)
+
+	// 启动节点心跳检测
+	go s.runHeartbeat(ctx, conn, data.ID, data.Code)
+
 	// 持续读取节点消息
 	for {
-		_, _, err = conn.Read(r.Context())
+		_, _, err = conn.Read(ctx)
 		if err != nil {
-			logger.Infow(
-				"节点WebSocket连接已断开",
-				logx.Field("node_code", data.Code),
-				logx.Field("error", err.Error()),
-			)
+			logger.Infow("节点WebSocket连接已断开", logx.Field("node_code", data.Code), logx.Field("error", err.Error()))
 			return
 		}
 
 		// TODO Node Agent消息协议完成后处理节点上报消息
+	}
+}
+
+// runHeartbeat 持续检测节点WebSocket连接
+func (s *Server) runHeartbeat(ctx context.Context, conn *coderws.Conn, nodeID int64, nodeCode string) {
+	logger := logx.WithContext(ctx)
+
+	// 创建心跳定时器
+	ticker := time.NewTicker(heartbeatInterval)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ctx.Done():
+			return
+
+		case <-ticker.C:
+			// 设置本次心跳超时时间
+			pingCtx, pingCancel := context.WithTimeout(ctx, heartbeatTimeout)
+			err := conn.Ping(pingCtx)
+			pingCancel()
+
+			if err != nil {
+				if ctx.Err() == nil {
+					logger.Errorw("节点WebSocket心跳失败", logx.Field("node_code", nodeCode), logx.Field("error", err.Error()))
+				}
+
+				conn.CloseNow()
+				return
+			}
+
+			// 更新节点最近活动时间
+			s.updateLastSeenAt(ctx, nodeID, nodeCode)
+
+			// 临时测试心跳是否正常
+			logger.Infow("节点WebSocket心跳正常", logx.Field("node_code", nodeCode))
+		}
+	}
+}
+
+// updateLastSeenAt 更新节点最近活动时间
+func (s *Server) updateLastSeenAt(ctx context.Context, nodeID int64, nodeCode string) {
+	// 更新节点最近活动时间
+	_, err := s.svcCtx.DB.Node.
+		Update().
+		Where(node.IDEQ(nodeID)).
+		SetLastSeenAt(time.Now()).
+		Save(ctx)
+	if err != nil {
+		logx.WithContext(ctx).Errorw("更新节点最近活动时间失败", logx.Field("node_code", nodeCode), logx.Field("error", err.Error()))
 	}
 }
 

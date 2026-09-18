@@ -1,6 +1,6 @@
 # 节点配置
 NodeCode: NODE_FDD76E3F7C654F5D87BA1965BDC3C664                               # 节点业务编码
-AuthSecret: 418268f6bfa96202833629591968daf883f79bbcd474edf0f39e94f0b6c7d0e9  # 节点认证密钥
+AuthSecret: 6ba1434d45011c4eefed669a5eb234334b7f32d72bcf126b0cde434c16d5280c  # 节点认证密钥
 
 # 调度中心连接配置
 Dispatch:

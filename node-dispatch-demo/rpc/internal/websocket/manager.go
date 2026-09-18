@@ -101,3 +101,22 @@ func (m *Manager) Disconnect(nodeCode string) bool {
 	_ = connection.Conn.Close(coderws.StatusNormalClosure, "connection closed by server")
 	return true
 }
+
+// DisconnectAll 主动断开全部节点连接
+func (m *Manager) DisconnectAll() {
+	m.mu.Lock()
+
+	// 获取并移除当前全部连接
+	connections := make([]*Connection, 0, len(m.connections))
+	for _, connection := range m.connections {
+		connections = append(connections, connection)
+	}
+	clear(m.connections)
+
+	m.mu.Unlock()
+
+	// 主动关闭节点连接
+	for _, connection := range connections {
+		_ = connection.Conn.Close(coderws.StatusGoingAway, "server shutting down")
+	}
+}
