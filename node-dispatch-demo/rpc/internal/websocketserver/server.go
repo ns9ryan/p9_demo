@@ -129,13 +129,16 @@ func (s *Server) handleNode(w http.ResponseWriter, r *http.Request) {
 
 	// 持续读取节点消息
 	for {
-		_, _, err = conn.Read(ctx)
+		messageType, messageData, err := conn.Read(ctx)
 		if err != nil {
 			logger.Infow("节点WebSocket连接已断开", logx.Field("node_code", data.Code), logx.Field("error", err.Error()))
 			return
 		}
 
-		// TODO Node Agent消息协议完成后处理节点上报消息
+		// 处理节点上报消息
+		if err = s.handleMessage(ctx, data.ID, data.Code, messageType, messageData); err != nil {
+			logger.Errorw("处理节点WebSocket消息失败", logx.Field("node_code", data.Code), logx.Field("error", err.Error()))
+		}
 	}
 }
 
@@ -171,7 +174,7 @@ func (s *Server) runHeartbeat(ctx context.Context, conn *coderws.Conn, nodeID in
 			s.updateLastSeenAt(ctx, nodeID, nodeCode)
 
 			// 临时测试心跳是否正常
-			logger.Infow("节点WebSocket心跳正常", logx.Field("node_code", nodeCode))
+			// logger.Infow("节点WebSocket心跳正常", logx.Field("node_code", nodeCode))
 		}
 	}
 }

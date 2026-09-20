@@ -23,7 +23,7 @@ func NewListTaskLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListTask
 	}
 }
 
-// 获取调度任务列表
+// ListTask 获取调度任务列表
 func (l *ListTaskLogic) ListTask(in *dispatchpb.ListTasksRequest) (*dispatchpb.ListTasksResponse, error) {
 	// todo: add your logic here and delete this line
 

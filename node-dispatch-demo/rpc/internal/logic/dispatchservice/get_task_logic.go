@@ -23,7 +23,7 @@ func NewGetTaskLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetTaskLo
 	}
 }
 
-// 获取调度任务
+// GetTask 获取调度任务
 func (l *GetTaskLogic) GetTask(in *dispatchpb.GetTaskRequest) (*dispatchpb.GetTaskResponse, error) {
 	// todo: add your logic here and delete this line
 
