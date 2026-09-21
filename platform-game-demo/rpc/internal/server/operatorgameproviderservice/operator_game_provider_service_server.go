@@ -29,20 +29,14 @@ func (s *OperatorGameProviderServiceServer) GetOperatorGameProviderList(ctx cont
 	return l.GetOperatorGameProviderList(in)
 }
 
-// 批量创建分站游戏提供商
-func (s *OperatorGameProviderServiceServer) BatchCreateOperatorGameProvider(ctx context.Context, in *platform_game.BatchCreateOperatorGameProviderRequest) (*platform_game.BatchCreateOperatorGameProviderResp, error) {
-	l := operatorgameproviderservicelogic.NewBatchCreateOperatorGameProviderLogic(ctx, s.svcCtx)
-	return l.BatchCreateOperatorGameProvider(in)
-}
-
 // 批量修改分站游戏提供商状态
 func (s *OperatorGameProviderServiceServer) BatchUpdateOperatorGameProviderStatus(ctx context.Context, in *platform_game.BatchUpdateOperatorGameProviderStatusRequest) (*platform_game.BatchUpdateOperatorGameProviderStatusResp, error) {
 	l := operatorgameproviderservicelogic.NewBatchUpdateOperatorGameProviderStatusLogic(ctx, s.svcCtx)
 	return l.BatchUpdateOperatorGameProviderStatus(in)
 }
 
-// 批量删除分站游戏提供商
-func (s *OperatorGameProviderServiceServer) BatchDeleteOperatorGameProvider(ctx context.Context, in *platform_game.BatchDeleteOperatorGameProviderRequest) (*platform_game.BatchDeleteOperatorGameProviderResp, error) {
-	l := operatorgameproviderservicelogic.NewBatchDeleteOperatorGameProviderLogic(ctx, s.svcCtx)
-	return l.BatchDeleteOperatorGameProvider(in)
+// 保存分站游戏提供商分配
+func (s *OperatorGameProviderServiceServer) SaveOperatorGameProviderAllocation(ctx context.Context, in *platform_game.SaveOperatorGameProviderAllocationRequest) (*platform_game.SaveOperatorGameProviderAllocationResp, error) {
+	l := operatorgameproviderservicelogic.NewSaveOperatorGameProviderAllocationLogic(ctx, s.svcCtx)
+	return l.SaveOperatorGameProviderAllocation(in)
 }

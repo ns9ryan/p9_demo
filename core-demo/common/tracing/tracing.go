@@ -22,8 +22,13 @@ func Error(ctx context.Context, err error) {
 	}
 	span.RecordError(err, trace.WithStackTrace(true))
 	span.SetStatus(codes.Error, err.Error())
-	if stack := xerr.StackOf(err); stack != "" {
+	stack := xerr.StackOf(err)
+	if stack == "" {
+		_, stack = xerr.FromGRPC(err)
+	}
+	if stack != "" {
 		span.SetAttributes(attribute.String("exception.stacktrace", stack))
+		// Debug(ctx, "exception", String("stacktrace", stack))
 	}
 }
 

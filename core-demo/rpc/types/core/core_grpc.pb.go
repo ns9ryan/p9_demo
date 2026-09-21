@@ -42,8 +42,11 @@ const (
 	Core_UpdateI18N_FullMethodName            = "/core.Core/updateI18n"
 	Core_UpdateI18NByKey_FullMethodName       = "/core.Core/updateI18nByKey"
 	Core_DeleteI18N_FullMethodName            = "/core.Core/deleteI18n"
+	Core_DeleteI18NByKey_FullMethodName       = "/core.Core/deleteI18nByKey"
 	Core_GetI18NList_FullMethodName           = "/core.Core/getI18nList"
 	Core_GetI18NDict_FullMethodName           = "/core.Core/getI18nDict"
+	Core_ExportI18N_FullMethodName            = "/core.Core/exportI18n"
+	Core_ImportI18N_FullMethodName            = "/core.Core/importI18n"
 	Core_CreateI18NLang_FullMethodName        = "/core.Core/createI18nLang"
 	Core_UpdateI18NLang_FullMethodName        = "/core.Core/updateI18nLang"
 	Core_DeleteI18NLang_FullMethodName        = "/core.Core/deleteI18nLang"
@@ -133,9 +136,15 @@ type CoreClient interface {
 	// group: i18n
 	DeleteI18N(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*Empty, error)
 	// group: i18n
+	DeleteI18NByKey(ctx context.Context, in *DeleteI18NByKeyReq, opts ...grpc.CallOption) (*Empty, error)
+	// group: i18n
 	GetI18NList(ctx context.Context, in *I18NListReq, opts ...grpc.CallOption) (*I18NListResp, error)
 	// group: i18n
 	GetI18NDict(ctx context.Context, in *GetI18NDictReq, opts ...grpc.CallOption) (*I18NDictResp, error)
+	// group: i18n
+	ExportI18N(ctx context.Context, in *ExportI18NReq, opts ...grpc.CallOption) (*ExportI18NResp, error)
+	// group: i18n
+	ImportI18N(ctx context.Context, in *ImportI18NReq, opts ...grpc.CallOption) (*ImportI18NResp, error)
 	// group: i18n
 	CreateI18NLang(ctx context.Context, in *CreateI18NLangReq, opts ...grpc.CallOption) (*I18NLangInfo, error)
 	// group: i18n
@@ -445,6 +454,16 @@ func (c *coreClient) DeleteI18N(ctx context.Context, in *IDsReq, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *coreClient) DeleteI18NByKey(ctx context.Context, in *DeleteI18NByKeyReq, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, Core_DeleteI18NByKey_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *coreClient) GetI18NList(ctx context.Context, in *I18NListReq, opts ...grpc.CallOption) (*I18NListResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(I18NListResp)
@@ -459,6 +478,26 @@ func (c *coreClient) GetI18NDict(ctx context.Context, in *GetI18NDictReq, opts .
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(I18NDictResp)
 	err := c.cc.Invoke(ctx, Core_GetI18NDict_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *coreClient) ExportI18N(ctx context.Context, in *ExportI18NReq, opts ...grpc.CallOption) (*ExportI18NResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ExportI18NResp)
+	err := c.cc.Invoke(ctx, Core_ExportI18N_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *coreClient) ImportI18N(ctx context.Context, in *ImportI18NReq, opts ...grpc.CallOption) (*ImportI18NResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ImportI18NResp)
+	err := c.cc.Invoke(ctx, Core_ImportI18N_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -849,9 +888,15 @@ type CoreServer interface {
 	// group: i18n
 	DeleteI18N(context.Context, *IDsReq) (*Empty, error)
 	// group: i18n
+	DeleteI18NByKey(context.Context, *DeleteI18NByKeyReq) (*Empty, error)
+	// group: i18n
 	GetI18NList(context.Context, *I18NListReq) (*I18NListResp, error)
 	// group: i18n
 	GetI18NDict(context.Context, *GetI18NDictReq) (*I18NDictResp, error)
+	// group: i18n
+	ExportI18N(context.Context, *ExportI18NReq) (*ExportI18NResp, error)
+	// group: i18n
+	ImportI18N(context.Context, *ImportI18NReq) (*ImportI18NResp, error)
 	// group: i18n
 	CreateI18NLang(context.Context, *CreateI18NLangReq) (*I18NLangInfo, error)
 	// group: i18n
@@ -1000,11 +1045,20 @@ func (UnimplementedCoreServer) UpdateI18NByKey(context.Context, *UpdateI18NByKey
 func (UnimplementedCoreServer) DeleteI18N(context.Context, *IDsReq) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteI18N not implemented")
 }
+func (UnimplementedCoreServer) DeleteI18NByKey(context.Context, *DeleteI18NByKeyReq) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteI18NByKey not implemented")
+}
 func (UnimplementedCoreServer) GetI18NList(context.Context, *I18NListReq) (*I18NListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetI18NList not implemented")
 }
 func (UnimplementedCoreServer) GetI18NDict(context.Context, *GetI18NDictReq) (*I18NDictResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetI18NDict not implemented")
+}
+func (UnimplementedCoreServer) ExportI18N(context.Context, *ExportI18NReq) (*ExportI18NResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ExportI18N not implemented")
+}
+func (UnimplementedCoreServer) ImportI18N(context.Context, *ImportI18NReq) (*ImportI18NResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ImportI18N not implemented")
 }
 func (UnimplementedCoreServer) CreateI18NLang(context.Context, *CreateI18NLangReq) (*I18NLangInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateI18NLang not implemented")
@@ -1540,6 +1594,24 @@ func _Core_DeleteI18N_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Core_DeleteI18NByKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteI18NByKeyReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoreServer).DeleteI18NByKey(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Core_DeleteI18NByKey_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoreServer).DeleteI18NByKey(ctx, req.(*DeleteI18NByKeyReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Core_GetI18NList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(I18NListReq)
 	if err := dec(in); err != nil {
@@ -1572,6 +1644,42 @@ func _Core_GetI18NDict_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CoreServer).GetI18NDict(ctx, req.(*GetI18NDictReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Core_ExportI18N_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ExportI18NReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoreServer).ExportI18N(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Core_ExportI18N_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoreServer).ExportI18N(ctx, req.(*ExportI18NReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Core_ImportI18N_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ImportI18NReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoreServer).ImportI18N(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Core_ImportI18N_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoreServer).ImportI18N(ctx, req.(*ImportI18NReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2270,12 +2378,24 @@ var Core_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Core_DeleteI18N_Handler,
 		},
 		{
+			MethodName: "deleteI18nByKey",
+			Handler:    _Core_DeleteI18NByKey_Handler,
+		},
+		{
 			MethodName: "getI18nList",
 			Handler:    _Core_GetI18NList_Handler,
 		},
 		{
 			MethodName: "getI18nDict",
 			Handler:    _Core_GetI18NDict_Handler,
+		},
+		{
+			MethodName: "exportI18n",
+			Handler:    _Core_ExportI18N_Handler,
+		},
+		{
+			MethodName: "importI18n",
+			Handler:    _Core_ImportI18N_Handler,
 		},
 		{
 			MethodName: "createI18nLang",

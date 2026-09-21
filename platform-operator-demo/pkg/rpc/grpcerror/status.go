@@ -22,3 +22,9 @@ func NotFound(message string) error {
 	// NotFound = 5 请求的资源不存在
 	return status.Error(codes.NotFound, message)
 }
+
+// AlreadyExists 创建资源已存在错误
+func AlreadyExists(message string) error {
+	// AlreadyExists = 6 请求创建的资源已经存在
+	return status.Error(codes.AlreadyExists, message)
+}

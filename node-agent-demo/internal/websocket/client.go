@@ -87,14 +87,14 @@ func (c *Client) runConnection(ctx context.Context) error {
 		}
 
 		// 处理调度中心消息
-		if err = c.handleMessage(ctx, messageType, data); err != nil {
+		if err = c.handleMessage(ctx, conn, messageType, data); err != nil {
 			logger.Errorw("处理调度中心WebSocket消息失败", logx.Field("error", err.Error()))
 		}
 	}
 }
 
 // handleMessage 处理调度中心WebSocket消息
-func (c *Client) handleMessage(ctx context.Context, messageType coderws.MessageType, data []byte) error {
+func (c *Client) handleMessage(ctx context.Context, conn *coderws.Conn, messageType coderws.MessageType, data []byte) error {
 	// 只处理文本消息
 	if messageType != coderws.MessageText {
 		return fmt.Errorf("不支持的WebSocket消息类型: %d", messageType)
@@ -109,7 +109,7 @@ func (c *Client) handleMessage(ctx context.Context, messageType coderws.MessageT
 	// 根据消息类型处理
 	switch message.Type {
 	case MessageTypeTaskDispatch:
-		return c.handleTaskDispatch(ctx, message.Data)
+		return c.handleTaskDispatch(ctx, conn, message.Data)
 
 	default:
 		return fmt.Errorf("不支持的WebSocket业务消息类型: %s", message.Type)
@@ -117,7 +117,7 @@ func (c *Client) handleMessage(ctx context.Context, messageType coderws.MessageT
 }
 
 // handleTaskDispatch 处理任务下发消息
-func (c *Client) handleTaskDispatch(ctx context.Context, data json.RawMessage) error {
+func (c *Client) handleTaskDispatch(ctx context.Context, conn *coderws.Conn, data json.RawMessage) error {
 	// 解析任务下发数据
 	var task TaskDispatchData
 	if err := json.Unmarshal(data, &task); err != nil {
@@ -134,7 +134,42 @@ func (c *Client) handleTaskDispatch(ctx context.Context, data json.RawMessage) e
 
 	logx.WithContext(ctx).Infow("收到调度任务", logx.Field("task_no", task.TaskNo), logx.Field("task_type", task.TaskType))
 
-	// TODO 根据任务类型执行具体任务并返回接收确认
+	// TODO 根据任务类型执行具体任务
+
+	// 编码任务接收确认数据
+	ackData, err := json.Marshal(TaskAckData{
+		TaskNo: task.TaskNo, // 任务编号
+	})
+	if err != nil {
+		return fmt.Errorf("编码任务接收确认数据失败: %w", err)
+	}
+
+	// 发送任务接收确认
+	err = c.sendMessage(ctx, conn, Message{
+		Type: MessageTypeTaskAck, // 消息类型
+		Data: ackData,            // 确认数据
+	})
+	if err != nil {
+		return fmt.Errorf("发送任务接收确认失败: %w", err)
+	}
+
+	logx.WithContext(ctx).Infow("调度任务已确认接收", logx.Field("task_no", task.TaskNo))
+
+	return nil
+}
+
+// sendMessage 发送WebSocket业务消息
+func (c *Client) sendMessage(ctx context.Context, conn *coderws.Conn, message Message) error {
+	// 编码业务消息
+	data, err := json.Marshal(message)
+	if err != nil {
+		return fmt.Errorf("编码WebSocket消息失败: %w", err)
+	}
+
+	// 发送文本消息
+	if err = conn.Write(ctx, coderws.MessageText, data); err != nil {
+		return fmt.Errorf("发送WebSocket消息失败: %w", err)
+	}
 
 	return nil
 }

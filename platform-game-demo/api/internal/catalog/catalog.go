@@ -34,6 +34,10 @@ func AdminReq(code string) *coreclient.RegisterCatalogReq {
 			{Path: "/admin/game-sync-checkpoint/list", Method: http.MethodGet, Description: "api.gameSyncCheckpointList", ApiGroup: "game", ServiceName: "platform-game-api"},
 
 			{Path: "/admin/game-sync-checkpoint/get", Method: http.MethodGet, Description: "api.gameSyncCheckpointGet", ApiGroup: "game", ServiceName: "platform-game-api"},
+			{Path: "/admin/game/get", Method: http.MethodGet, Description: "api.gameGet", ApiGroup: "game", ServiceName: "platform-game-api"},
+			{Path: "/admin/game-category/get", Method: http.MethodGet, Description: "api.gameCategoryGet", ApiGroup: "game", ServiceName: "platform-game-api"},
+			{Path: "/admin/game-channel/get", Method: http.MethodGet, Description: "api.gameChannelGet", ApiGroup: "game", ServiceName: "platform-game-api"},
+			{Path: "/admin/game-provider/get", Method: http.MethodGet, Description: "api.gameProviderGet", ApiGroup: "game", ServiceName: "platform-game-api"},
 
 			{Path: "/admin/game-category/update", Method: http.MethodPost, Description: "api.gameCategoryUpdate", ApiGroup: "game", ServiceName: "platform-game-api"},
 			{Path: "/admin/game-channel/update", Method: http.MethodPost, Description: "api.gameChannelUpdate", ApiGroup: "game", ServiceName: "platform-game-api"},

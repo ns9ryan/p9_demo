@@ -203,6 +203,12 @@ message CreateUserReq {
   repeated int64 role_ids = 7;
 }
 
+message DeleteI18nByKeyReq {
+  string i18n_code = 1;
+  string i18n_group = 2;
+  string trans_key = 3;
+}
+
 message Empty {}
 
 message EnforceReq {
@@ -252,6 +258,17 @@ message ErrorLogListResp {
   int64 total = 2;
 }
 
+message ExportI18nReq {
+  string lang = 1;
+  string i18n_code = 2;
+  string i18n_group = 3;
+}
+
+message ExportI18nResp {
+  string lang = 1;
+  repeated I18nFileItem i18n_items = 2;
+}
+
 message GetI18nDictReq {
   string i18n_group = 1;
   string lang = 2;
@@ -260,6 +277,13 @@ message GetI18nDictReq {
 
 message I18nDictResp {
   map<string,string> items = 1;
+}
+
+message I18nFileItem {
+  string i18n_code = 1;
+  string i18n_group = 2;
+  string i18n_key = 3;
+  string i18n_value = 4;
 }
 
 message I18nInfo {
@@ -325,6 +349,17 @@ message IDReq {
 message IDsReq {
   int64 id = 1;
   repeated int64 ids = 2;
+}
+
+message ImportI18nReq {
+  string lang = 1;
+  repeated I18nFileItem i18n_items = 2;
+}
+
+message ImportI18nResp {
+  int32 created = 1;
+  int32 updated = 2;
+  int32 skipped = 3;
 }
 
 message IssuePreviewTokenReq {
@@ -677,9 +712,15 @@ service Core {
   //  group: i18n
   rpc deleteI18n(IDsReq) returns (Empty);
   //  group: i18n
+  rpc deleteI18nByKey(DeleteI18nByKeyReq) returns (Empty);
+  //  group: i18n
   rpc getI18nList(I18nListReq) returns (I18nListResp);
   //  group: i18n
   rpc getI18nDict(GetI18nDictReq) returns (I18nDictResp);
+  //  group: i18n
+  rpc exportI18n(ExportI18nReq) returns (ExportI18nResp);
+  //  group: i18n
+  rpc importI18n(ImportI18nReq) returns (ImportI18nResp);
   //  group: i18n
   rpc createI18nLang(CreateI18nLangReq) returns (I18nLangInfo);
   //  group: i18n

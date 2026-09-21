@@ -172,9 +172,9 @@ func (d *Deps) Enforce(ctx context.Context, claims *ctxdata.Claims, path, method
 		return false, nil
 	}
 	dom := d.DomainFromClaims(claims)
-	reqs := make([][]interface{}, 0, len(claims.RoleCodes))
+	reqs := make([][]any, 0, len(claims.RoleCodes))
 	for _, code := range claims.RoleCodes {
-		reqs = append(reqs, []interface{}{code, dom, path, method})
+		reqs = append(reqs, []any{code, dom, path, method})
 	}
 	okList, err := d.Enforcer.BatchEnforce(reqs)
 	if err != nil {

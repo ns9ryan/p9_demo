@@ -119,56 +119,44 @@ service OperatorGameCategoryService {
     // 获取分站游戏分类列表
     rpc GetOperatorGameCategoryList(platform_game.GetOperatorGameCategoryListRequest) returns (platform_game.GetOperatorGameCategoryListResp);
 
-    // 批量创建分站游戏分类
-    rpc BatchCreateOperatorGameCategory(platform_game.BatchCreateOperatorGameCategoryRequest) returns (platform_game.BatchCreateOperatorGameCategoryResp);
-
     // 批量修改分站游戏分类状态
     rpc BatchUpdateOperatorGameCategoryStatus(platform_game.BatchUpdateOperatorGameCategoryStatusRequest) returns (platform_game.BatchUpdateOperatorGameCategoryStatusResp);
 
-    // 批量删除分站游戏分类
-    rpc BatchDeleteOperatorGameCategory(platform_game.BatchDeleteOperatorGameCategoryRequest) returns (platform_game.BatchDeleteOperatorGameCategoryResp);
+    // 保存分站游戏分类分配
+    rpc SaveOperatorGameCategoryAllocation(platform_game.SaveOperatorGameCategoryAllocationRequest) returns (platform_game.SaveOperatorGameCategoryAllocationResp);
 }
 
 service OperatorGameChannelService {
     // 获取分站游戏渠道列表
     rpc GetOperatorGameChannelList(platform_game.GetOperatorGameChannelListRequest) returns (platform_game.GetOperatorGameChannelListResp);
 
-    // 批量创建分站游戏渠道
-    rpc BatchCreateOperatorGameChannel(platform_game.BatchCreateOperatorGameChannelRequest) returns (platform_game.BatchCreateOperatorGameChannelResp);
-
     // 批量修改分站游戏渠道状态
     rpc BatchUpdateOperatorGameChannelStatus(platform_game.BatchUpdateOperatorGameChannelStatusRequest) returns (platform_game.BatchUpdateOperatorGameChannelStatusResp);
-    
-    // 批量删除分站游戏渠道
-    rpc BatchDeleteOperatorGameChannel(platform_game.BatchDeleteOperatorGameChannelRequest) returns (platform_game.BatchDeleteOperatorGameChannelResp);
+
+    // 保存分站游戏渠道分配
+    rpc SaveOperatorGameChannelAllocation(platform_game.SaveOperatorGameChannelAllocationRequest) returns (platform_game.SaveOperatorGameChannelAllocationResp);
 }
 
 service OperatorGameProviderService {
     // 获取分站游戏提供商列表
     rpc GetOperatorGameProviderList(platform_game.GetOperatorGameProviderListRequest) returns (platform_game.GetOperatorGameProviderListResp);
 
-    // 批量创建分站游戏提供商
-    rpc BatchCreateOperatorGameProvider(platform_game.BatchCreateOperatorGameProviderRequest) returns (platform_game.BatchCreateOperatorGameProviderResp);
-
     // 批量修改分站游戏提供商状态
     rpc BatchUpdateOperatorGameProviderStatus(platform_game.BatchUpdateOperatorGameProviderStatusRequest) returns (platform_game.BatchUpdateOperatorGameProviderStatusResp);
 
-    // 批量删除分站游戏提供商
-    rpc BatchDeleteOperatorGameProvider(platform_game.BatchDeleteOperatorGameProviderRequest) returns (platform_game.BatchDeleteOperatorGameProviderResp);
+    // 保存分站游戏提供商分配
+    rpc SaveOperatorGameProviderAllocation(platform_game.SaveOperatorGameProviderAllocationRequest) returns (platform_game.SaveOperatorGameProviderAllocationResp);
 }
 
 service OperatorGameService {
     // 获取分站游戏列表
     rpc GetOperatorGameList(platform_game.GetOperatorGameListRequest) returns (platform_game.GetOperatorGameListResp);
 
-    // 批量创建分站游戏
-    rpc BatchCreateOperatorGame(platform_game.BatchCreateOperatorGameRequest) returns (platform_game.BatchCreateOperatorGameResp);
-
     // 批量修改分站游戏状态
     rpc BatchUpdateOperatorGameStatus(platform_game.BatchUpdateOperatorGameStatusRequest) returns (platform_game.BatchUpdateOperatorGameStatusResp);
-    
-    // 批量删除分站游戏
-    rpc BatchDeleteOperatorGame(platform_game.BatchDeleteOperatorGameRequest) returns (platform_game.BatchDeleteOperatorGameResp);
+
+    // 保存分站游戏分配
+    rpc SaveOperatorGameAllocation(platform_game.SaveOperatorGameAllocationRequest) returns (platform_game.SaveOperatorGameAllocationResp);
 }
 
 service OperatorGameAllocationService {

@@ -947,6 +947,8 @@ const (
 	OperatorAdminService_Update_FullMethodName             = "/platform_operator.OperatorAdminService/Update"
 	OperatorAdminService_UpdateStatus_FullMethodName       = "/platform_operator.OperatorAdminService/UpdateStatus"
 	OperatorAdminService_DeleteByOperatorId_FullMethodName = "/platform_operator.OperatorAdminService/DeleteByOperatorId"
+	OperatorAdminService_ExistsByOperatorId_FullMethodName = "/platform_operator.OperatorAdminService/ExistsByOperatorId"
+	OperatorAdminService_Get_FullMethodName                = "/platform_operator.OperatorAdminService/Get"
 )
 
 // OperatorAdminServiceClient is the client API for OperatorAdminService service.
@@ -967,6 +969,10 @@ type OperatorAdminServiceClient interface {
 	UpdateStatus(ctx context.Context, in *adminpb.UpdateAdminStatusRequest, opts ...grpc.CallOption) (*adminpb.UpdateAdminStatusResponse, error)
 	// 按分站删除管理员
 	DeleteByOperatorId(ctx context.Context, in *adminpb.DeleteAdminsByOperatorIdRequest, opts ...grpc.CallOption) (*adminpb.DeleteAdminsByOperatorIdResponse, error)
+	// 检测分站管理员是否已存在
+	ExistsByOperatorId(ctx context.Context, in *adminpb.ExistsAdminByOperatorIdRequest, opts ...grpc.CallOption) (*adminpb.ExistsAdminByOperatorIdResponse, error)
+	// 获取分站管理员
+	Get(ctx context.Context, in *adminpb.GetAdminRequest, opts ...grpc.CallOption) (*adminpb.GetAdminResponse, error)
 }
 
 type operatorAdminServiceClient struct {
@@ -1037,6 +1043,26 @@ func (c *operatorAdminServiceClient) DeleteByOperatorId(ctx context.Context, in 
 	return out, nil
 }
 
+func (c *operatorAdminServiceClient) ExistsByOperatorId(ctx context.Context, in *adminpb.ExistsAdminByOperatorIdRequest, opts ...grpc.CallOption) (*adminpb.ExistsAdminByOperatorIdResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(adminpb.ExistsAdminByOperatorIdResponse)
+	err := c.cc.Invoke(ctx, OperatorAdminService_ExistsByOperatorId_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *operatorAdminServiceClient) Get(ctx context.Context, in *adminpb.GetAdminRequest, opts ...grpc.CallOption) (*adminpb.GetAdminResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(adminpb.GetAdminResponse)
+	err := c.cc.Invoke(ctx, OperatorAdminService_Get_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OperatorAdminServiceServer is the server API for OperatorAdminService service.
 // All implementations must embed UnimplementedOperatorAdminServiceServer
 // for forward compatibility.
@@ -1055,6 +1081,10 @@ type OperatorAdminServiceServer interface {
 	UpdateStatus(context.Context, *adminpb.UpdateAdminStatusRequest) (*adminpb.UpdateAdminStatusResponse, error)
 	// 按分站删除管理员
 	DeleteByOperatorId(context.Context, *adminpb.DeleteAdminsByOperatorIdRequest) (*adminpb.DeleteAdminsByOperatorIdResponse, error)
+	// 检测分站管理员是否已存在
+	ExistsByOperatorId(context.Context, *adminpb.ExistsAdminByOperatorIdRequest) (*adminpb.ExistsAdminByOperatorIdResponse, error)
+	// 获取分站管理员
+	Get(context.Context, *adminpb.GetAdminRequest) (*adminpb.GetAdminResponse, error)
 	mustEmbedUnimplementedOperatorAdminServiceServer()
 }
 
@@ -1082,6 +1112,12 @@ func (UnimplementedOperatorAdminServiceServer) UpdateStatus(context.Context, *ad
 }
 func (UnimplementedOperatorAdminServiceServer) DeleteByOperatorId(context.Context, *adminpb.DeleteAdminsByOperatorIdRequest) (*adminpb.DeleteAdminsByOperatorIdResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteByOperatorId not implemented")
+}
+func (UnimplementedOperatorAdminServiceServer) ExistsByOperatorId(context.Context, *adminpb.ExistsAdminByOperatorIdRequest) (*adminpb.ExistsAdminByOperatorIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ExistsByOperatorId not implemented")
+}
+func (UnimplementedOperatorAdminServiceServer) Get(context.Context, *adminpb.GetAdminRequest) (*adminpb.GetAdminResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedOperatorAdminServiceServer) mustEmbedUnimplementedOperatorAdminServiceServer() {}
 func (UnimplementedOperatorAdminServiceServer) testEmbeddedByValue()                              {}
@@ -1212,6 +1248,42 @@ func _OperatorAdminService_DeleteByOperatorId_Handler(srv interface{}, ctx conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OperatorAdminService_ExistsByOperatorId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(adminpb.ExistsAdminByOperatorIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperatorAdminServiceServer).ExistsByOperatorId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperatorAdminService_ExistsByOperatorId_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperatorAdminServiceServer).ExistsByOperatorId(ctx, req.(*adminpb.ExistsAdminByOperatorIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OperatorAdminService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(adminpb.GetAdminRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperatorAdminServiceServer).Get(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperatorAdminService_Get_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperatorAdminServiceServer).Get(ctx, req.(*adminpb.GetAdminRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // OperatorAdminService_ServiceDesc is the grpc.ServiceDesc for OperatorAdminService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1242,6 +1314,14 @@ var OperatorAdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteByOperatorId",
 			Handler:    _OperatorAdminService_DeleteByOperatorId_Handler,
+		},
+		{
+			MethodName: "ExistsByOperatorId",
+			Handler:    _OperatorAdminService_ExistsByOperatorId_Handler,
+		},
+		{
+			MethodName: "Get",
+			Handler:    _OperatorAdminService_Get_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

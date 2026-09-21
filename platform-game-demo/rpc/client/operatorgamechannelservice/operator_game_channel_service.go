@@ -14,24 +14,20 @@ import (
 )
 
 type (
-	BatchCreateOperatorGameChannelRequest       = platform_game.BatchCreateOperatorGameChannelRequest
-	BatchCreateOperatorGameChannelResp          = platform_game.BatchCreateOperatorGameChannelResp
-	BatchDeleteOperatorGameChannelRequest       = platform_game.BatchDeleteOperatorGameChannelRequest
-	BatchDeleteOperatorGameChannelResp          = platform_game.BatchDeleteOperatorGameChannelResp
 	BatchUpdateOperatorGameChannelStatusRequest = platform_game.BatchUpdateOperatorGameChannelStatusRequest
 	BatchUpdateOperatorGameChannelStatusResp    = platform_game.BatchUpdateOperatorGameChannelStatusResp
 	GetOperatorGameChannelListRequest           = platform_game.GetOperatorGameChannelListRequest
 	GetOperatorGameChannelListResp              = platform_game.GetOperatorGameChannelListResp
+	SaveOperatorGameChannelAllocationRequest    = platform_game.SaveOperatorGameChannelAllocationRequest
+	SaveOperatorGameChannelAllocationResp       = platform_game.SaveOperatorGameChannelAllocationResp
 
 	OperatorGameChannelService interface {
 		// 获取分站游戏渠道列表
 		GetOperatorGameChannelList(ctx context.Context, in *GetOperatorGameChannelListRequest, opts ...grpc.CallOption) (*GetOperatorGameChannelListResp, error)
-		// 批量创建分站游戏渠道
-		BatchCreateOperatorGameChannel(ctx context.Context, in *BatchCreateOperatorGameChannelRequest, opts ...grpc.CallOption) (*BatchCreateOperatorGameChannelResp, error)
 		// 批量修改分站游戏渠道状态
 		BatchUpdateOperatorGameChannelStatus(ctx context.Context, in *BatchUpdateOperatorGameChannelStatusRequest, opts ...grpc.CallOption) (*BatchUpdateOperatorGameChannelStatusResp, error)
-		// 批量删除分站游戏渠道
-		BatchDeleteOperatorGameChannel(ctx context.Context, in *BatchDeleteOperatorGameChannelRequest, opts ...grpc.CallOption) (*BatchDeleteOperatorGameChannelResp, error)
+		// 保存分站游戏渠道分配
+		SaveOperatorGameChannelAllocation(ctx context.Context, in *SaveOperatorGameChannelAllocationRequest, opts ...grpc.CallOption) (*SaveOperatorGameChannelAllocationResp, error)
 	}
 
 	defaultOperatorGameChannelService struct {
@@ -51,20 +47,14 @@ func (m *defaultOperatorGameChannelService) GetOperatorGameChannelList(ctx conte
 	return client.GetOperatorGameChannelList(ctx, in, opts...)
 }
 
-// 批量创建分站游戏渠道
-func (m *defaultOperatorGameChannelService) BatchCreateOperatorGameChannel(ctx context.Context, in *BatchCreateOperatorGameChannelRequest, opts ...grpc.CallOption) (*BatchCreateOperatorGameChannelResp, error) {
-	client := platform_game.NewOperatorGameChannelServiceClient(m.cli.Conn())
-	return client.BatchCreateOperatorGameChannel(ctx, in, opts...)
-}
-
 // 批量修改分站游戏渠道状态
 func (m *defaultOperatorGameChannelService) BatchUpdateOperatorGameChannelStatus(ctx context.Context, in *BatchUpdateOperatorGameChannelStatusRequest, opts ...grpc.CallOption) (*BatchUpdateOperatorGameChannelStatusResp, error) {
 	client := platform_game.NewOperatorGameChannelServiceClient(m.cli.Conn())
 	return client.BatchUpdateOperatorGameChannelStatus(ctx, in, opts...)
 }
 
-// 批量删除分站游戏渠道
-func (m *defaultOperatorGameChannelService) BatchDeleteOperatorGameChannel(ctx context.Context, in *BatchDeleteOperatorGameChannelRequest, opts ...grpc.CallOption) (*BatchDeleteOperatorGameChannelResp, error) {
+// 保存分站游戏渠道分配
+func (m *defaultOperatorGameChannelService) SaveOperatorGameChannelAllocation(ctx context.Context, in *SaveOperatorGameChannelAllocationRequest, opts ...grpc.CallOption) (*SaveOperatorGameChannelAllocationResp, error) {
 	client := platform_game.NewOperatorGameChannelServiceClient(m.cli.Conn())
-	return client.BatchDeleteOperatorGameChannel(ctx, in, opts...)
+	return client.SaveOperatorGameChannelAllocation(ctx, in, opts...)
 }

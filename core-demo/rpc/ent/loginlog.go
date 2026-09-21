@@ -17,7 +17,7 @@ import (
 type LoginLog struct {
 	config `json:"-"`
 	// ID of the ent.
-	// Primary key | 主键
+	// Primary key | 主键ID
 	ID int64 `json:"id,omitempty"`
 	// Operator Code | 分站编码
 	OperatorCode *string `json:"operator_code,omitempty"`

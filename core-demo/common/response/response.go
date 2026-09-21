@@ -95,14 +95,28 @@ func grpcToHTTP(code codes.Code) int {
 }
 
 // SetupHTTPX 设置HTTPX的OK和Error处理函数
-func SetupHTTPX() {
+func SetupHTTPX(isDebug bool) {
+	// 成功处理函数
 	httpx.SetOkHandler(func(ctx context.Context, data any) any {
 		return map[string]any{"code": 0, "msg": i18n.T(ctx, i18n.Success), "data": data}
 	})
+	// 错误处理函数
 	httpx.SetErrorHandlerCtx(func(ctx context.Context, err error) (int, any) {
+		// 转换为xerr.Error
 		e := FromError(err)
+		// 记录内部错误
 		noteInternal(ctx, e)
-		return e.Status, map[string]any{"code": e.Status, "msg": localize(ctx, e)}
+		// 基础响应结构
+		result := map[string]any{"code": e.Status, "msg": localize(ctx, e)}
+		// 是否返回debug信息
+		if isDebug {
+			result["debug"] = map[string]any{
+				"error": err.Error(),     // 内部错误信息
+				"stack": xerr.StackOf(e), // 错误堆栈
+				"cause": xerr.Subject(e), // 错误原因
+			}
+		}
+		return e.Status, result
 	})
 }
 

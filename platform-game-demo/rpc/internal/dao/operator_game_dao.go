@@ -3,6 +3,7 @@ package dao
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"oa.98ent.com/p9/platform-game/rpc/ent"
 	"oa.98ent.com/p9/platform-game/rpc/ent/operatorgame"
@@ -104,4 +105,74 @@ func (d *OperatorGameDAO) BatchDeleteOperatorGame(ctx context.Context, ids []int
 		return 0, fmt.Errorf("batch delete failed: %w", err)
 	}
 	return affected, nil
+}
+
+// GetByOpCodeAndGameCode 获取分配记录
+func (d *OperatorGameDAO) GetByOpCodeAndGameCode(ctx context.Context, opCode, gameCode string) (*ent.OperatorGame, error) {
+	record, err := d.db.OperatorGame.Query().
+		Where(
+			operatorgame.OpCodeEQ(opCode),
+			operatorgame.GameCodeEQ(gameCode),
+		).
+		Only(ctx)
+	if err != nil && !ent.IsNotFound(err) {
+		return nil, fmt.Errorf("query failed: %w", err)
+	}
+	return record, nil
+}
+
+// CreateAllocation 创建分配记录
+func (d *OperatorGameDAO) CreateAllocation(ctx context.Context, name, opCode, gameCode string) (*ent.OperatorGame, error) {
+	record, err := d.db.OperatorGame.Create().
+		SetName(name).
+		SetOpCode(opCode).
+		SetGameCode(gameCode).
+		SetStatus(1).
+		SetCreatedAt(time.Now()).
+		SetUpdatedAt(time.Now()).
+		Save(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("create allocation failed: %w", err)
+	}
+	return record, nil
+}
+
+// DeleteAllocationByID 删除分配记录
+func (d *OperatorGameDAO) DeleteAllocationByID(ctx context.Context, id int64) error {
+	err := d.db.OperatorGame.DeleteOneID(id).Exec(ctx)
+	if err != nil {
+		return fmt.Errorf("delete allocation failed: %w", err)
+	}
+	return nil
+}
+
+// FindAllByOpCodeAndGameCodes 根据opCode和Game表的game_code列表查询对应OperatorGame表中的记录
+func (d *OperatorGameDAO) FindAllByOpCodeAndGameCodes(ctx context.Context, opCode string, gameCodes []string) ([]*ent.OperatorGame, error) {
+	if len(gameCodes) == 0 {
+		return []*ent.OperatorGame{}, nil
+	}
+
+	records, err := d.db.OperatorGame.Query().
+		Where(operatorgame.OpCodeEQ(opCode)).
+		Where(operatorgame.GameCodeIn(gameCodes...)).
+		All(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("query failed: %w", err)
+	}
+	return records, nil
+}
+
+func (d *OperatorGameDAO) FindAll(ctx context.Context, opCode, gameCode string, offset, limit int64) ([]*ent.OperatorGame, error) {
+	query := d.db.OperatorGame.Query().
+		Where(operatorgame.OpCodeEQ(opCode)).
+		Offset(int(offset)).
+		Limit(int(limit))
+	if gameCode != "" {
+		query = query.Where(operatorgame.GameCodeEQ(gameCode))
+	}
+	records, err := query.All(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("query failed: %w", err)
+	}
+	return records, nil
 }

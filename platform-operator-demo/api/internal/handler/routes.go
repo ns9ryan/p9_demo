@@ -195,18 +195,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
 			[]rest.Route{
 				{
-					// 批量创建分站游戏
-					Method:  http.MethodPost,
-					Path:    "/batch-create",
-					Handler: operator_game.BatchCreateOperatorGameHandler(serverCtx),
-				},
-				{
-					// 批量删除分站游戏
-					Method:  http.MethodPost,
-					Path:    "/batch-delete",
-					Handler: operator_game.BatchDeleteOperatorGameHandler(serverCtx),
-				},
-				{
 					// 批量修改分站游戏状态
 					Method:  http.MethodPost,
 					Path:    "/batch-update-status",
@@ -217,6 +205,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Method:  http.MethodGet,
 					Path:    "/list",
 					Handler: operator_game.GetOperatorGameListHandler(serverCtx),
+				},
+				{
+					// 保存分站游戏分配
+					Method:  http.MethodPost,
+					Path:    "/save-allocation",
+					Handler: operator_game.SaveOperatorGameAllocationHandler(serverCtx),
 				},
 			}...,
 		),
@@ -243,18 +237,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
 			[]rest.Route{
 				{
-					// 批量创建分站游戏分类
-					Method:  http.MethodPost,
-					Path:    "/batch-create",
-					Handler: operator_game_category.BatchCreateOperatorGameCategoryHandler(serverCtx),
-				},
-				{
-					// 批量删除分站游戏分类
-					Method:  http.MethodPost,
-					Path:    "/batch-delete",
-					Handler: operator_game_category.BatchDeleteOperatorGameCategoryHandler(serverCtx),
-				},
-				{
 					// 批量修改分站游戏分类状态
 					Method:  http.MethodPost,
 					Path:    "/batch-update-status",
@@ -266,6 +248,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Path:    "/list",
 					Handler: operator_game_category.GetOperatorGameCategoryListHandler(serverCtx),
 				},
+				{
+					// 保存分站游戏分类分配
+					Method:  http.MethodPost,
+					Path:    "/save-allocation",
+					Handler: operator_game_category.SaveOperatorGameCategoryAllocationHandler(serverCtx),
+				},
 			}...,
 		),
 		rest.WithPrefix("/admin/operator/game-category"),
@@ -275,18 +263,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		rest.WithMiddlewares(
 			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
 			[]rest.Route{
-				{
-					// 批量创建分站游戏渠道
-					Method:  http.MethodPost,
-					Path:    "/batch-create",
-					Handler: operator_game_channel.BatchCreateOperatorGameChannelHandler(serverCtx),
-				},
-				{
-					// 批量删除分站游戏渠道
-					Method:  http.MethodPost,
-					Path:    "/batch-delete",
-					Handler: operator_game_channel.BatchDeleteOperatorGameChannelHandler(serverCtx),
-				},
 				{
 					// 批量修改分站游戏渠道状态
 					Method:  http.MethodPost,
@@ -299,6 +275,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Path:    "/list",
 					Handler: operator_game_channel.GetOperatorGameChannelListHandler(serverCtx),
 				},
+				{
+					// 保存分站游戏渠道分配
+					Method:  http.MethodPost,
+					Path:    "/save-allocation",
+					Handler: operator_game_channel.SaveOperatorGameChannelAllocationHandler(serverCtx),
+				},
 			}...,
 		),
 		rest.WithPrefix("/admin/operator/game-channel"),
@@ -308,18 +290,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		rest.WithMiddlewares(
 			[]rest.Middleware{serverCtx.Jwt, serverCtx.ActionLog, serverCtx.Authority},
 			[]rest.Route{
-				{
-					// 批量创建分站游戏提供商
-					Method:  http.MethodPost,
-					Path:    "/batch-create",
-					Handler: operator_game_provider.BatchCreateOperatorGameProviderHandler(serverCtx),
-				},
-				{
-					// 批量删除分站游戏提供商
-					Method:  http.MethodPost,
-					Path:    "/batch-delete",
-					Handler: operator_game_provider.BatchDeleteOperatorGameProviderHandler(serverCtx),
-				},
 				{
 					// 批量修改分站游戏提供商状态
 					Method:  http.MethodPost,
@@ -331,6 +301,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Method:  http.MethodGet,
 					Path:    "/list",
 					Handler: operator_game_provider.GetOperatorGameProviderListHandler(serverCtx),
+				},
+				{
+					// 保存分站游戏提供商分配
+					Method:  http.MethodPost,
+					Path:    "/save-allocation",
+					Handler: operator_game_provider.SaveOperatorGameProviderAllocationHandler(serverCtx),
 				},
 			}...,
 		),

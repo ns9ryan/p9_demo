@@ -68,7 +68,7 @@ func CheckpointProtoToResponse(checkpoint *platformgame.GameSyncCheckpointInfo) 
 }
 
 func CurrencyProtoToResponse(ctx context.Context, currency *platformgame.GameCurrencyInfo) *types.GameCurrencyResp {
-	currencyName := corei18n.TG(ctx, corei18n.CodePlatform, "game", currency.CurrencyNameKey)
+	currencyName := corei18n.TG(ctx, corei18n.CodePlatform, "base", currency.CurrencyNameKey)
 	return &types.GameCurrencyResp{
 		ID:           currency.Id,
 		GameID:       currency.GameId,

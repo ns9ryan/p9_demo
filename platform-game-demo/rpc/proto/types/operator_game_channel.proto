@@ -10,8 +10,9 @@ message OperatorGameChannelInfo {
     string op_code = 2;
     string channel_code = 3;
     int32 status = 4;
-    int64 created_at = 5;
-    int64 updated_at = 6;
+    int32 check_status = 5;
+    int64 created_at = 6;
+    int64 updated_at = 7;
 }
 
 // GetOperatorGameChannelListRequest 获取分站游戏渠道列表请求
@@ -20,7 +21,7 @@ message GetOperatorGameChannelListRequest {
     int32 page_size = 2;
     string op_code = 3;
     string channel_code = 4;
-    int32 status = 5;
+    int32 check_status = 5;
 }
 
 // GetOperatorGameChannelListResp 分站游戏渠道列表响应
@@ -29,25 +30,6 @@ message GetOperatorGameChannelListResp {
     int64 total = 2;
     int32 page = 3;
     int32 page_size = 4;
-}
-
-// BatchCreateOperatorGameChannelItemRequest 批量创建分站游戏渠道请求项
-message BatchCreateOperatorGameChannelItemRequest {
-    string op_code = 1;
-    string channel_code = 2;
-    int32 status = 3;
-}
-
-// BatchCreateOperatorGameChannelRequest 批量创建分站游戏渠道请求
-message BatchCreateOperatorGameChannelRequest {
-    repeated BatchCreateOperatorGameChannelItemRequest items = 1;
-}
-
-// BatchCreateOperatorGameChannelResp 批量创建分站游戏渠道响应
-message BatchCreateOperatorGameChannelResp {
-    int64 total = 1;
-    int64 success = 2;
-    int64 failed = 3;
 }
 
 // BatchUpdateOperatorGameChannelStatusRequest 批量修改分站游戏渠道状态请求
@@ -63,14 +45,22 @@ message BatchUpdateOperatorGameChannelStatusResp {
     int64 failed = 3;
 }
 
-// BatchDeleteOperatorGameChannelRequest 批量删除分站游戏渠道请求
-message BatchDeleteOperatorGameChannelRequest {
-    repeated int64 ids = 1;
+message SaveOperatorGameChannelAllocationInfo {
+    string code = 1;
+    int32 check_status = 2;
 }
 
-// BatchDeleteOperatorGameChannelResp 批量删除分站游戏渠道响应
-message BatchDeleteOperatorGameChannelResp {
+// SaveOperatorGameChannelAllocationRequest 保存分站游戏渠道分配请求项
+message SaveOperatorGameChannelAllocationRequest {
+    string op_code = 1;
+    repeated SaveOperatorGameChannelAllocationInfo items = 2;
+}
+
+// SaveOperatorGameChannelAllocationResp 保存分站游戏渠道分配响应
+message SaveOperatorGameChannelAllocationResp {
     int64 total = 1;
-    int64 success = 2;
-    int64 failed = 3;
+    int64 created = 2;
+    int64 deleted = 3;
+    int64 exist = 4;
+    int64 failed = 5;
 }

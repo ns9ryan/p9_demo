@@ -9,6 +9,7 @@ import (
 	"oa.98ent.com/p9/core/rpc/model"
 )
 
+// 将字符串转换为指针
 func strPtr(s string) *string {
 	if s == "" {
 		return nil
@@ -16,6 +17,7 @@ func strPtr(s string) *string {
 	return &s
 }
 
+// 将int32转换为指针
 func i32Ptr(v int32) *int32 {
 	if v == 0 {
 		return nil
@@ -23,6 +25,7 @@ func i32Ptr(v int32) *int32 {
 	return &v
 }
 
+// 将int64转换为指针
 func i64Ptr(v int64) *int64 {
 	if v == 0 {
 		return nil
@@ -30,6 +33,7 @@ func i64Ptr(v int64) *int64 {
 	return &v
 }
 
+// 将用户公共信息转换为API响应
 func UserPublic(ctx context.Context, in *coreclient.UserPublic) *types.UserPublic {
 	if in == nil {
 		return nil
@@ -56,6 +60,7 @@ func UserPublic(ctx context.Context, in *coreclient.UserPublic) *types.UserPubli
 	}
 }
 
+// 复制字符串切片
 func copyStrSlice(in []string) []string {
 	if in == nil {
 		return []string{}
@@ -65,6 +70,7 @@ func copyStrSlice(in []string) []string {
 	return out
 }
 
+// 登录响应转换为API响应
 func LoginResp(ctx context.Context, in *coreclient.LoginResp) *types.LoginResp {
 	if in == nil {
 		return nil
@@ -82,6 +88,7 @@ func LoginResp(ctx context.Context, in *coreclient.LoginResp) *types.LoginResp {
 	return out
 }
 
+// 颁发预览令牌响应转换为API响应
 func IssuePreviewTokenResp(in *coreclient.IssuePreviewTokenResp) *types.IssuePreviewTokenResp {
 	if in == nil {
 		return nil
@@ -94,6 +101,7 @@ func IssuePreviewTokenResp(in *coreclient.IssuePreviewTokenResp) *types.IssuePre
 	}
 }
 
+// 权限响应转换为API响应
 func PermResp(in *coreclient.PermResp) *types.PermResp {
 	codes := in.GetPermissions()
 	if codes == nil {
@@ -102,6 +110,7 @@ func PermResp(in *coreclient.PermResp) *types.PermResp {
 	return &types.PermResp{Permissions: codes}
 }
 
+// 菜单节点转换为API响应
 func MenuNodes(ctx context.Context, code string, in []*coreclient.MenuNode) []types.MenuNode {
 	out := make([]types.MenuNode, 0, len(in))
 	for _, n := range in {
@@ -110,6 +119,7 @@ func MenuNodes(ctx context.Context, code string, in []*coreclient.MenuNode) []ty
 	return out
 }
 
+// 菜单节点转换为API响应
 func menuNode(ctx context.Context, code string, n *coreclient.MenuNode) types.MenuNode {
 	if n == nil {
 		return types.MenuNode{Children: []types.MenuNode{}}
@@ -121,6 +131,7 @@ func menuNode(ctx context.Context, code string, n *coreclient.MenuNode) types.Me
 	}
 }
 
+// 角色信息转换为API响应
 func RoleInfo(ctx context.Context, in *coreclient.RoleInfo) *types.RoleInfo {
 	if in == nil {
 		return nil
@@ -132,6 +143,7 @@ func RoleInfo(ctx context.Context, in *coreclient.RoleInfo) *types.RoleInfo {
 	}
 }
 
+// 菜单信息转换为API响应
 func MenuInfo(ctx context.Context, code string, in *coreclient.MenuInfo) *types.MenuInfo {
 	if in == nil {
 		return nil
@@ -144,6 +156,7 @@ func MenuInfo(ctx context.Context, code string, in *coreclient.MenuInfo) *types.
 	}
 }
 
+// API信息转换为API响应
 func ApiInfo(ctx context.Context, code string, in *coreclient.ApiInfo) *types.ApiInfo {
 	if in == nil {
 		return nil
@@ -154,6 +167,7 @@ func ApiInfo(ctx context.Context, code string, in *coreclient.ApiInfo) *types.Ap
 	}
 }
 
+// 用户列表响应转换为API响应
 func UserList(ctx context.Context, in *coreclient.UserListResp) *types.UserListResp {
 	list := make([]types.UserPublic, 0, len(in.GetList()))
 	for _, u := range in.GetList() {
@@ -164,6 +178,7 @@ func UserList(ctx context.Context, in *coreclient.UserListResp) *types.UserListR
 	return &types.UserListResp{List: list, Total: in.GetTotal()}
 }
 
+// 角色列表响应转换为API响应
 func RoleList(ctx context.Context, in *coreclient.RoleListResp) *types.RoleListResp {
 	list := make([]types.RoleInfo, 0, len(in.GetList()))
 	for _, r := range in.GetList() {
@@ -174,6 +189,7 @@ func RoleList(ctx context.Context, in *coreclient.RoleListResp) *types.RoleListR
 	return &types.RoleListResp{List: list, Total: in.GetTotal()}
 }
 
+// 菜单信息列表转换为API响应
 func MenuInfos(ctx context.Context, code string, in []*coreclient.MenuInfo) []types.MenuInfo {
 	out := make([]types.MenuInfo, 0, len(in))
 	for _, m := range in {
@@ -184,6 +200,7 @@ func MenuInfos(ctx context.Context, code string, in []*coreclient.MenuInfo) []ty
 	return out
 }
 
+// API信息列表转换为API响应
 func ApiInfos(ctx context.Context, code string, in []*coreclient.ApiInfo) []types.ApiInfo {
 	out := make([]types.ApiInfo, 0, len(in))
 	for _, a := range in {
@@ -194,10 +211,12 @@ func ApiInfos(ctx context.Context, code string, in []*coreclient.ApiInfo) []type
 	return out
 }
 
+// API列表响应转换为API响应
 func ApiList(ctx context.Context, code string, in *coreclient.ApiListResp) *types.ApiListResp {
 	return &types.ApiListResp{List: ApiInfos(ctx, code, in.GetList()), Total: in.GetTotal()}
 }
 
+// API列表请求转换为RPC请求
 func ApiListReq(in *types.ApiListReq) *coreclient.ApiListReq {
 	return &coreclient.ApiListReq{
 		Page:        in.Page,
@@ -210,6 +229,7 @@ func ApiListReq(in *types.ApiListReq) *coreclient.ApiListReq {
 	}
 }
 
+// API授权项列表转换为API响应
 func ApiAuthItems(in []*coreclient.ApiAuthItem) []types.ApiAuthItem {
 	out := make([]types.ApiAuthItem, 0, len(in))
 	for _, it := range in {
@@ -221,6 +241,7 @@ func ApiAuthItems(in []*coreclient.ApiAuthItem) []types.ApiAuthItem {
 	return out
 }
 
+// 创建用户请求转换为RPC请求
 func CreateUserReq(in *types.CreateUserReq) *coreclient.CreateUserReq {
 	out := &coreclient.CreateUserReq{
 		Username: in.Username, Password: in.Password, DisplayName: in.DisplayName,
@@ -231,6 +252,7 @@ func CreateUserReq(in *types.CreateUserReq) *coreclient.CreateUserReq {
 	return out
 }
 
+// 更新用户请求转换为RPC请求
 func UpdateUserReq(in *types.UpdateUserReq) *coreclient.UpdateUserReq {
 	return &coreclient.UpdateUserReq{
 		Id: in.Id, DisplayName: strPtr(in.DisplayName), Mobile: strPtr(in.Mobile),
@@ -238,6 +260,7 @@ func UpdateUserReq(in *types.UpdateUserReq) *coreclient.UpdateUserReq {
 	}
 }
 
+// 更新用户IP白名单请求转换为RPC请求
 func UpdateUserIpWhitelistReq(in *types.UpdateUserIpWhitelistReq) *coreclient.UpdateUserIpWhitelistReq {
 	list := in.IpWhitelist
 	if list == nil {
@@ -248,6 +271,7 @@ func UpdateUserIpWhitelistReq(in *types.UpdateUserIpWhitelistReq) *coreclient.Up
 	}
 }
 
+// 创建角色请求转换为RPC请求
 func CreateRoleReq(in *types.CreateRoleReq) *coreclient.CreateRoleReq {
 	return &coreclient.CreateRoleReq{
 		RoleCode: in.RoleCode, RoleName: in.RoleName, Description: in.Description,
@@ -255,6 +279,7 @@ func CreateRoleReq(in *types.CreateRoleReq) *coreclient.CreateRoleReq {
 	}
 }
 
+// 更新角色请求转换为RPC请求
 func UpdateRoleReq(in *types.UpdateRoleReq) *coreclient.UpdateRoleReq {
 	return &coreclient.UpdateRoleReq{
 		Id: in.Id, RoleName: strPtr(in.RoleName), Description: strPtr(in.Description),
@@ -262,6 +287,7 @@ func UpdateRoleReq(in *types.UpdateRoleReq) *coreclient.UpdateRoleReq {
 	}
 }
 
+// 创建菜单请求转换为RPC请求
 func CreateMenuReq(in *types.CreateMenuReq) *coreclient.CreateMenuReq {
 	return &coreclient.CreateMenuReq{
 		ParentId: in.ParentId, MenuType: in.MenuType, Path: in.Path, Name: in.Name, Component: in.Component,
@@ -270,6 +296,7 @@ func CreateMenuReq(in *types.CreateMenuReq) *coreclient.CreateMenuReq {
 	}
 }
 
+// 更新菜单请求转换为RPC请求
 func UpdateMenuReq(in *types.UpdateMenuReq) *coreclient.UpdateMenuReq {
 	return &coreclient.UpdateMenuReq{
 		Id: in.Id, ParentId: in.ParentId, MenuType: in.MenuType, Path: strPtr(in.Path),
@@ -279,6 +306,7 @@ func UpdateMenuReq(in *types.UpdateMenuReq) *coreclient.UpdateMenuReq {
 	}
 }
 
+// 创建API请求转换为RPC请求
 func CreateApiReq(in *types.CreateApiReq) *coreclient.CreateApiReq {
 	return &coreclient.CreateApiReq{
 		Description: in.Description, ApiGroup: in.ApiGroup, Method: in.Method, Path: in.Path,
@@ -286,6 +314,7 @@ func CreateApiReq(in *types.CreateApiReq) *coreclient.CreateApiReq {
 	}
 }
 
+// 更新API请求转换为RPC请求
 func UpdateApiReq(in *types.UpdateApiReq) *coreclient.UpdateApiReq {
 	return &coreclient.UpdateApiReq{
 		Id: in.Id, Description: strPtr(in.Description), ApiGroup: strPtr(in.ApiGroup),
@@ -294,14 +323,17 @@ func UpdateApiReq(in *types.UpdateApiReq) *coreclient.UpdateApiReq {
 	}
 }
 
+// IDs请求转换为RPC请求
 func IDsReq(in *types.IDsReq) *coreclient.IDsReq {
 	return &coreclient.IDsReq{Id: in.Id, Ids: in.Ids}
 }
 
+// 分页请求转换为RPC请求
 func PageReq(in *types.PageReq) *coreclient.PageReq {
 	return &coreclient.PageReq{Page: in.Page, PageSize: in.PageSize}
 }
 
+// 角色列表请求转换为RPC请求
 func RoleListReq(in *types.RoleListReq) *coreclient.RoleListReq {
 	return &coreclient.RoleListReq{
 		Page:     in.Page,
@@ -310,6 +342,7 @@ func RoleListReq(in *types.RoleListReq) *coreclient.RoleListReq {
 	}
 }
 
+// 用户列表请求转换为RPC请求
 func UserListReq(in *types.UserListReq) *coreclient.UserListReq {
 	return &coreclient.UserListReq{
 		Page:        in.Page,
@@ -322,6 +355,7 @@ func UserListReq(in *types.UserListReq) *coreclient.UserListReq {
 	}
 }
 
+// API授权请求转换为RPC请求
 func ApiAuthReq(in *types.ApiAuthReq) *coreclient.ApiAuthReq {
 	data := make([]*coreclient.ApiAuthItem, 0, len(in.Data))
 	for _, it := range in.Data {
@@ -330,6 +364,7 @@ func ApiAuthReq(in *types.ApiAuthReq) *coreclient.ApiAuthReq {
 	return &coreclient.ApiAuthReq{RoleId: in.RoleId, Data: data}
 }
 
+// 登录日志列表请求转换为RPC请求
 func LoginLogListReq(in *types.LoginLogListReq) *coreclient.LoginLogListReq {
 	return &coreclient.LoginLogListReq{
 		Page:        in.Page,
@@ -342,6 +377,7 @@ func LoginLogListReq(in *types.LoginLogListReq) *coreclient.LoginLogListReq {
 	}
 }
 
+// 登录日志列表响应转换为API响应
 func LoginLogList(ctx context.Context, in *coreclient.LoginLogListResp) *types.LoginLogListResp {
 	list := make([]types.LoginLogInfo, 0, len(in.GetList()))
 	for _, row := range in.GetList() {
@@ -350,6 +386,7 @@ func LoginLogList(ctx context.Context, in *coreclient.LoginLogListResp) *types.L
 	return &types.LoginLogListResp{List: list, Total: in.GetTotal()}
 }
 
+// 登录日志信息转换为API响应
 func loginLogInfo(ctx context.Context, in *coreclient.LoginLogInfo) types.LoginLogInfo {
 	if in == nil {
 		return types.LoginLogInfo{}
@@ -370,6 +407,7 @@ func loginLogInfo(ctx context.Context, in *coreclient.LoginLogInfo) types.LoginL
 	return out
 }
 
+// 登录结果文本转换为字符串
 func loginResultText(ctx context.Context, result int32) string {
 	switch int16(result) {
 	case model.LoginResultSuccess:
@@ -381,6 +419,7 @@ func loginResultText(ctx context.Context, result int32) string {
 	}
 }
 
+// 管理员操作日志列表请求转换为RPC请求
 func AdminActionLogListReq(in *types.AdminActionLogListReq) *coreclient.AdminActionLogListReq {
 	return &coreclient.AdminActionLogListReq{
 		Page:          in.Page,
@@ -395,6 +434,7 @@ func AdminActionLogListReq(in *types.AdminActionLogListReq) *coreclient.AdminAct
 	}
 }
 
+// 管理员操作日志列表响应转换为API响应
 func AdminActionLogList(ctx context.Context, in *coreclient.AdminActionLogListResp) *types.AdminActionLogListResp {
 	list := make([]types.AdminActionLogInfo, 0, len(in.GetList()))
 	for _, row := range in.GetList() {
@@ -403,6 +443,7 @@ func AdminActionLogList(ctx context.Context, in *coreclient.AdminActionLogListRe
 	return &types.AdminActionLogListResp{List: list, Total: in.GetTotal()}
 }
 
+// 管理员操作日志信息转换为API响应
 func adminActionLogInfo(ctx context.Context, in *coreclient.AdminActionLogInfo) types.AdminActionLogInfo {
 	if in == nil {
 		return types.AdminActionLogInfo{}
@@ -425,6 +466,7 @@ func adminActionLogInfo(ctx context.Context, in *coreclient.AdminActionLogInfo) 
 	}
 }
 
+// 错误日志列表请求转换为RPC请求
 func ErrorLogListReq(in *types.ErrorLogListReq) *coreclient.ErrorLogListReq {
 	return &coreclient.ErrorLogListReq{
 		Page:           in.Page,
@@ -438,6 +480,7 @@ func ErrorLogListReq(in *types.ErrorLogListReq) *coreclient.ErrorLogListReq {
 	}
 }
 
+// 错误日志列表响应转换为API响应
 func ErrorLogList(in *coreclient.ErrorLogListResp) *types.ErrorLogListResp {
 	list := make([]types.ErrorLogInfo, 0, len(in.GetList()))
 	for _, row := range in.GetList() {
@@ -446,6 +489,7 @@ func ErrorLogList(in *coreclient.ErrorLogListResp) *types.ErrorLogListResp {
 	return &types.ErrorLogListResp{List: list, Total: in.GetTotal()}
 }
 
+// I18n信息转换为API响应
 func I18nInfo(in *coreclient.I18NInfo) *types.I18nInfo {
 	if in == nil {
 		return nil
@@ -456,6 +500,7 @@ func I18nInfo(in *coreclient.I18NInfo) *types.I18nInfo {
 	}
 }
 
+// I18n信息列表转换为API响应
 func I18nInfos(in []*coreclient.I18NInfo) []types.I18nInfo {
 	out := make([]types.I18nInfo, 0, len(in))
 	for _, row := range in {
@@ -466,16 +511,19 @@ func I18nInfos(in []*coreclient.I18NInfo) []types.I18nInfo {
 	return out
 }
 
+// I18n列表响应转换为API响应
 func I18nList(in *coreclient.I18NListResp) *types.I18nListResp {
 	return &types.I18nListResp{List: I18nInfos(in.GetList()), Total: in.GetTotal()}
 }
 
+// 创建I18n请求转换为RPC请求
 func CreateI18nReq(in *types.CreateI18nReq) *coreclient.CreateI18NReq {
 	return &coreclient.CreateI18NReq{
 		I18NCode: in.I18nCode, I18NGroup: in.I18nGroup, TransKey: in.TransKey, Lang: in.Lang, Value: in.Value,
 	}
 }
 
+// 更新I18n请求转换为RPC请求
 func UpdateI18nReq(in *types.UpdateI18nReq) *coreclient.UpdateI18NReq {
 	return &coreclient.UpdateI18NReq{
 		Id: in.Id, I18NCode: strPtr(in.I18nCode), I18NGroup: strPtr(in.I18nGroup), TransKey: strPtr(in.TransKey),
@@ -483,20 +531,31 @@ func UpdateI18nReq(in *types.UpdateI18nReq) *coreclient.UpdateI18NReq {
 	}
 }
 
+// 更新I18nByKey请求转换为RPC请求
 func UpdateI18nByKeyReq(in *types.UpdateI18nByKeyReq) *coreclient.UpdateI18NByKeyReq {
 	return &coreclient.UpdateI18NByKeyReq{I18NCode: in.I18nCode, I18NGroup: in.I18nGroup, TransKey: in.TransKey, Data: in.Data}
 }
 
+func DeleteI18nByKeyReq(in *types.DeleteI18nByKeyReq) *coreclient.DeleteI18NByKeyReq {
+	if in == nil {
+		return &coreclient.DeleteI18NByKeyReq{}
+	}
+	return &coreclient.DeleteI18NByKeyReq{I18NCode: in.I18nCode, I18NGroup: in.I18nGroup, TransKey: in.TransKey}
+}
+
+// 获取I18n列表请求转换为RPC请求
 func I18nListReq(in *types.I18nListReq) *coreclient.I18NListReq {
 	return &coreclient.I18NListReq{
 		Page: in.Page, PageSize: in.PageSize, I18NCode: in.I18nCode, I18NGroup: in.I18nGroup, TransKey: in.TransKey, Lang: in.Lang,
 	}
 }
 
+// 获取I18n字典请求转换为RPC请求
 func I18nDictReq(in *types.GetI18nDictReq) *coreclient.GetI18NDictReq {
 	return &coreclient.GetI18NDictReq{I18NCode: in.I18nCode, I18NGroup: in.I18nGroup, Lang: in.Lang}
 }
 
+// 将I18n字典响应转换为API响应
 func I18nDict(in *coreclient.I18NDictResp) *types.I18nDictResp {
 	items := in.GetItems()
 	if items == nil {
@@ -505,6 +564,40 @@ func I18nDict(in *coreclient.I18NDictResp) *types.I18nDictResp {
 	return &types.I18nDictResp{Items: items}
 }
 
+// 导出I18n请求转换为RPC请求
+func ExportI18nReq(in *types.ExportI18nReq) *coreclient.ExportI18NReq {
+	return &coreclient.ExportI18NReq{Lang: in.Lang, I18NCode: in.I18nCode, I18NGroup: in.I18nGroup}
+}
+
+// 将I18n文件项转换为API响应
+func I18nFileItems(in []*coreclient.I18NFileItem) []types.I18nFileItem {
+	out := make([]types.I18nFileItem, 0, len(in))
+	for _, row := range in {
+		if row == nil {
+			continue
+		}
+		out = append(out, types.I18nFileItem{
+			I18nCode: row.I18NCode, I18nGroup: row.I18NGroup, I18nKey: row.I18NKey, I18nValue: row.I18NValue,
+		})
+	}
+	return out
+}
+
+// 导出I18n响应转换为API响应
+func ExportI18n(in *coreclient.ExportI18NResp) *types.ExportI18nResp {
+	items := I18nFileItems(in.GetI18NItems())
+	if items == nil {
+		items = []types.I18nFileItem{}
+	}
+	return &types.ExportI18nResp{Lang: in.GetLang(), I18nItems: items}
+}
+
+// 导入I18n响应转换为API响应
+func ImportI18n(in *coreclient.ImportI18NResp) *types.ImportI18nResp {
+	return &types.ImportI18nResp{Created: in.GetCreated(), Updated: in.GetUpdated(), Skipped: in.GetSkipped()}
+}
+
+// 获取I18n语言信息
 func I18nLangInfo(ctx context.Context, code string, in *coreclient.I18NLangInfo) *types.I18nLangInfo {
 	if in == nil {
 		return nil
@@ -521,6 +614,7 @@ func I18nLangInfo(ctx context.Context, code string, in *coreclient.I18NLangInfo)
 	}
 }
 
+// 获取I18n语言列表
 func I18nLangInfos(ctx context.Context, code string, in []*coreclient.I18NLangInfo) []types.I18nLangInfo {
 	out := make([]types.I18nLangInfo, 0, len(in))
 	for _, row := range in {
@@ -531,24 +625,29 @@ func I18nLangInfos(ctx context.Context, code string, in []*coreclient.I18NLangIn
 	return out
 }
 
+// 获取I18n语言列表响应
 func I18nLangList(ctx context.Context, code string, in *coreclient.I18NLangListResp) *types.I18nLangListResp {
 	return &types.I18nLangListResp{List: I18nLangInfos(ctx, code, in.GetList()), Total: in.GetTotal()}
 }
 
+// 创建I18n语言请求
 func CreateI18nLangReq(in *types.CreateI18nLangReq) *coreclient.CreateI18NLangReq {
 	return &coreclient.CreateI18NLangReq{Lang: in.Lang, Name: in.Name, I18NKey: in.I18nKey, Disabled: in.Disabled, SortNo: in.SortNo}
 }
 
+// 更新I18n语言请求
 func UpdateI18nLangReq(in *types.UpdateI18nLangReq) *coreclient.UpdateI18NLangReq {
 	return &coreclient.UpdateI18NLangReq{
 		Id: in.Id, Lang: strPtr(in.Lang), Name: strPtr(in.Name), I18NKey: strPtr(in.I18nKey), Disabled: in.Disabled, SortNo: in.SortNo,
 	}
 }
 
+// 重新排序I18n语言请求
 func ReorderI18nLangReq(in *types.ReorderI18nLangReq) *coreclient.ReorderI18NLangReq {
 	return &coreclient.ReorderI18NLangReq{Id: in.Id, TargetId: in.TargetId}
 }
 
+// 获取I18n语言列表请求
 func I18nLangListReq(in *types.I18nLangListReq) *coreclient.I18NLangListReq {
 	return &coreclient.I18NLangListReq{
 		Page: in.Page, PageSize: in.PageSize, Lang: in.Lang, Disabled: in.Disabled,

@@ -93,6 +93,12 @@ service OperatorAdminService {
 
   // 按分站删除管理员
   rpc DeleteByOperatorId(platform_operator_admin.DeleteAdminsByOperatorIdRequest) returns (platform_operator_admin.DeleteAdminsByOperatorIdResponse);
+
+  // 检测分站管理员是否已存在
+  rpc ExistsByOperatorId(platform_operator_admin.ExistsAdminByOperatorIdRequest) returns (platform_operator_admin.ExistsAdminByOperatorIdResponse);
+
+  // 获取分站管理员
+  rpc Get(platform_operator_admin.GetAdminRequest) returns (platform_operator_admin.GetAdminResponse);
 }
 
 // 分站基础资源分配服务

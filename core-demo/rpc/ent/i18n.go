@@ -16,7 +16,7 @@ import (
 type I18n struct {
 	config `json:"-"`
 	// ID of the ent.
-	// Primary key | 主键
+	// Primary key | 主键ID
 	ID int64 `json:"id,omitempty"`
 	// Created At | 创建时间
 	CreatedAt time.Time `json:"created_at,omitempty"`

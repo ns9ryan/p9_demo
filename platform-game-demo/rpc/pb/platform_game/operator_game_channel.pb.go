@@ -28,8 +28,9 @@ type OperatorGameChannelInfo struct {
 	OpCode        string                 `protobuf:"bytes,2,opt,name=op_code,json=opCode,proto3" json:"op_code,omitempty"`
 	ChannelCode   string                 `protobuf:"bytes,3,opt,name=channel_code,json=channelCode,proto3" json:"channel_code,omitempty"`
 	Status        int32                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`
-	CreatedAt     int64                  `protobuf:"varint,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     int64                  `protobuf:"varint,6,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	CheckStatus   int32                  `protobuf:"varint,5,opt,name=check_status,json=checkStatus,proto3" json:"check_status,omitempty"`
+	CreatedAt     int64                  `protobuf:"varint,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     int64                  `protobuf:"varint,7,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -92,6 +93,13 @@ func (x *OperatorGameChannelInfo) GetStatus() int32 {
 	return 0
 }
 
+func (x *OperatorGameChannelInfo) GetCheckStatus() int32 {
+	if x != nil {
+		return x.CheckStatus
+	}
+	return 0
+}
+
 func (x *OperatorGameChannelInfo) GetCreatedAt() int64 {
 	if x != nil {
 		return x.CreatedAt
@@ -113,7 +121,7 @@ type GetOperatorGameChannelListRequest struct {
 	PageSize      int32                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
 	OpCode        string                 `protobuf:"bytes,3,opt,name=op_code,json=opCode,proto3" json:"op_code,omitempty"`
 	ChannelCode   string                 `protobuf:"bytes,4,opt,name=channel_code,json=channelCode,proto3" json:"channel_code,omitempty"`
-	Status        int32                  `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`
+	CheckStatus   int32                  `protobuf:"varint,5,opt,name=check_status,json=checkStatus,proto3" json:"check_status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -176,9 +184,9 @@ func (x *GetOperatorGameChannelListRequest) GetChannelCode() string {
 	return ""
 }
 
-func (x *GetOperatorGameChannelListRequest) GetStatus() int32 {
+func (x *GetOperatorGameChannelListRequest) GetCheckStatus() int32 {
 	if x != nil {
-		return x.Status
+		return x.CheckStatus
 	}
 	return 0
 }
@@ -252,173 +260,6 @@ func (x *GetOperatorGameChannelListResp) GetPageSize() int32 {
 	return 0
 }
 
-// BatchCreateOperatorGameChannelItemRequest 批量创建分站游戏渠道请求项
-type BatchCreateOperatorGameChannelItemRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	OpCode        string                 `protobuf:"bytes,1,opt,name=op_code,json=opCode,proto3" json:"op_code,omitempty"`
-	ChannelCode   string                 `protobuf:"bytes,2,opt,name=channel_code,json=channelCode,proto3" json:"channel_code,omitempty"`
-	Status        int32                  `protobuf:"varint,3,opt,name=status,proto3" json:"status,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *BatchCreateOperatorGameChannelItemRequest) Reset() {
-	*x = BatchCreateOperatorGameChannelItemRequest{}
-	mi := &file_types_operator_game_channel_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *BatchCreateOperatorGameChannelItemRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*BatchCreateOperatorGameChannelItemRequest) ProtoMessage() {}
-
-func (x *BatchCreateOperatorGameChannelItemRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_game_channel_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use BatchCreateOperatorGameChannelItemRequest.ProtoReflect.Descriptor instead.
-func (*BatchCreateOperatorGameChannelItemRequest) Descriptor() ([]byte, []int) {
-	return file_types_operator_game_channel_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *BatchCreateOperatorGameChannelItemRequest) GetOpCode() string {
-	if x != nil {
-		return x.OpCode
-	}
-	return ""
-}
-
-func (x *BatchCreateOperatorGameChannelItemRequest) GetChannelCode() string {
-	if x != nil {
-		return x.ChannelCode
-	}
-	return ""
-}
-
-func (x *BatchCreateOperatorGameChannelItemRequest) GetStatus() int32 {
-	if x != nil {
-		return x.Status
-	}
-	return 0
-}
-
-// BatchCreateOperatorGameChannelRequest 批量创建分站游戏渠道请求
-type BatchCreateOperatorGameChannelRequest struct {
-	state         protoimpl.MessageState                       `protogen:"open.v1"`
-	Items         []*BatchCreateOperatorGameChannelItemRequest `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *BatchCreateOperatorGameChannelRequest) Reset() {
-	*x = BatchCreateOperatorGameChannelRequest{}
-	mi := &file_types_operator_game_channel_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *BatchCreateOperatorGameChannelRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*BatchCreateOperatorGameChannelRequest) ProtoMessage() {}
-
-func (x *BatchCreateOperatorGameChannelRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_game_channel_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use BatchCreateOperatorGameChannelRequest.ProtoReflect.Descriptor instead.
-func (*BatchCreateOperatorGameChannelRequest) Descriptor() ([]byte, []int) {
-	return file_types_operator_game_channel_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *BatchCreateOperatorGameChannelRequest) GetItems() []*BatchCreateOperatorGameChannelItemRequest {
-	if x != nil {
-		return x.Items
-	}
-	return nil
-}
-
-// BatchCreateOperatorGameChannelResp 批量创建分站游戏渠道响应
-type BatchCreateOperatorGameChannelResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
-	Success       int64                  `protobuf:"varint,2,opt,name=success,proto3" json:"success,omitempty"`
-	Failed        int64                  `protobuf:"varint,3,opt,name=failed,proto3" json:"failed,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *BatchCreateOperatorGameChannelResp) Reset() {
-	*x = BatchCreateOperatorGameChannelResp{}
-	mi := &file_types_operator_game_channel_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *BatchCreateOperatorGameChannelResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*BatchCreateOperatorGameChannelResp) ProtoMessage() {}
-
-func (x *BatchCreateOperatorGameChannelResp) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_game_channel_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use BatchCreateOperatorGameChannelResp.ProtoReflect.Descriptor instead.
-func (*BatchCreateOperatorGameChannelResp) Descriptor() ([]byte, []int) {
-	return file_types_operator_game_channel_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *BatchCreateOperatorGameChannelResp) GetTotal() int64 {
-	if x != nil {
-		return x.Total
-	}
-	return 0
-}
-
-func (x *BatchCreateOperatorGameChannelResp) GetSuccess() int64 {
-	if x != nil {
-		return x.Success
-	}
-	return 0
-}
-
-func (x *BatchCreateOperatorGameChannelResp) GetFailed() int64 {
-	if x != nil {
-		return x.Failed
-	}
-	return 0
-}
-
 // BatchUpdateOperatorGameChannelStatusRequest 批量修改分站游戏渠道状态请求
 type BatchUpdateOperatorGameChannelStatusRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -430,7 +271,7 @@ type BatchUpdateOperatorGameChannelStatusRequest struct {
 
 func (x *BatchUpdateOperatorGameChannelStatusRequest) Reset() {
 	*x = BatchUpdateOperatorGameChannelStatusRequest{}
-	mi := &file_types_operator_game_channel_proto_msgTypes[6]
+	mi := &file_types_operator_game_channel_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -442,7 +283,7 @@ func (x *BatchUpdateOperatorGameChannelStatusRequest) String() string {
 func (*BatchUpdateOperatorGameChannelStatusRequest) ProtoMessage() {}
 
 func (x *BatchUpdateOperatorGameChannelStatusRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_game_channel_proto_msgTypes[6]
+	mi := &file_types_operator_game_channel_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -455,7 +296,7 @@ func (x *BatchUpdateOperatorGameChannelStatusRequest) ProtoReflect() protoreflec
 
 // Deprecated: Use BatchUpdateOperatorGameChannelStatusRequest.ProtoReflect.Descriptor instead.
 func (*BatchUpdateOperatorGameChannelStatusRequest) Descriptor() ([]byte, []int) {
-	return file_types_operator_game_channel_proto_rawDescGZIP(), []int{6}
+	return file_types_operator_game_channel_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *BatchUpdateOperatorGameChannelStatusRequest) GetIds() []int64 {
@@ -484,7 +325,7 @@ type BatchUpdateOperatorGameChannelStatusResp struct {
 
 func (x *BatchUpdateOperatorGameChannelStatusResp) Reset() {
 	*x = BatchUpdateOperatorGameChannelStatusResp{}
-	mi := &file_types_operator_game_channel_proto_msgTypes[7]
+	mi := &file_types_operator_game_channel_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -496,7 +337,7 @@ func (x *BatchUpdateOperatorGameChannelStatusResp) String() string {
 func (*BatchUpdateOperatorGameChannelStatusResp) ProtoMessage() {}
 
 func (x *BatchUpdateOperatorGameChannelStatusResp) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_game_channel_proto_msgTypes[7]
+	mi := &file_types_operator_game_channel_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -509,7 +350,7 @@ func (x *BatchUpdateOperatorGameChannelStatusResp) ProtoReflect() protoreflect.M
 
 // Deprecated: Use BatchUpdateOperatorGameChannelStatusResp.ProtoReflect.Descriptor instead.
 func (*BatchUpdateOperatorGameChannelStatusResp) Descriptor() ([]byte, []int) {
-	return file_types_operator_game_channel_proto_rawDescGZIP(), []int{7}
+	return file_types_operator_game_channel_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *BatchUpdateOperatorGameChannelStatusResp) GetTotal() int64 {
@@ -533,29 +374,29 @@ func (x *BatchUpdateOperatorGameChannelStatusResp) GetFailed() int64 {
 	return 0
 }
 
-// BatchDeleteOperatorGameChannelRequest 批量删除分站游戏渠道请求
-type BatchDeleteOperatorGameChannelRequest struct {
+type SaveOperatorGameChannelAllocationInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Ids           []int64                `protobuf:"varint,1,rep,packed,name=ids,proto3" json:"ids,omitempty"`
+	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	CheckStatus   int32                  `protobuf:"varint,2,opt,name=check_status,json=checkStatus,proto3" json:"check_status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *BatchDeleteOperatorGameChannelRequest) Reset() {
-	*x = BatchDeleteOperatorGameChannelRequest{}
-	mi := &file_types_operator_game_channel_proto_msgTypes[8]
+func (x *SaveOperatorGameChannelAllocationInfo) Reset() {
+	*x = SaveOperatorGameChannelAllocationInfo{}
+	mi := &file_types_operator_game_channel_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *BatchDeleteOperatorGameChannelRequest) String() string {
+func (x *SaveOperatorGameChannelAllocationInfo) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BatchDeleteOperatorGameChannelRequest) ProtoMessage() {}
+func (*SaveOperatorGameChannelAllocationInfo) ProtoMessage() {}
 
-func (x *BatchDeleteOperatorGameChannelRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_game_channel_proto_msgTypes[8]
+func (x *SaveOperatorGameChannelAllocationInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_types_operator_game_channel_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -566,43 +407,105 @@ func (x *BatchDeleteOperatorGameChannelRequest) ProtoReflect() protoreflect.Mess
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use BatchDeleteOperatorGameChannelRequest.ProtoReflect.Descriptor instead.
-func (*BatchDeleteOperatorGameChannelRequest) Descriptor() ([]byte, []int) {
-	return file_types_operator_game_channel_proto_rawDescGZIP(), []int{8}
+// Deprecated: Use SaveOperatorGameChannelAllocationInfo.ProtoReflect.Descriptor instead.
+func (*SaveOperatorGameChannelAllocationInfo) Descriptor() ([]byte, []int) {
+	return file_types_operator_game_channel_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *BatchDeleteOperatorGameChannelRequest) GetIds() []int64 {
+func (x *SaveOperatorGameChannelAllocationInfo) GetCode() string {
 	if x != nil {
-		return x.Ids
+		return x.Code
+	}
+	return ""
+}
+
+func (x *SaveOperatorGameChannelAllocationInfo) GetCheckStatus() int32 {
+	if x != nil {
+		return x.CheckStatus
+	}
+	return 0
+}
+
+// SaveOperatorGameChannelAllocationRequest 保存分站游戏渠道分配请求项
+type SaveOperatorGameChannelAllocationRequest struct {
+	state         protoimpl.MessageState                   `protogen:"open.v1"`
+	OpCode        string                                   `protobuf:"bytes,1,opt,name=op_code,json=opCode,proto3" json:"op_code,omitempty"`
+	Items         []*SaveOperatorGameChannelAllocationInfo `protobuf:"bytes,2,rep,name=items,proto3" json:"items,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SaveOperatorGameChannelAllocationRequest) Reset() {
+	*x = SaveOperatorGameChannelAllocationRequest{}
+	mi := &file_types_operator_game_channel_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SaveOperatorGameChannelAllocationRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SaveOperatorGameChannelAllocationRequest) ProtoMessage() {}
+
+func (x *SaveOperatorGameChannelAllocationRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_types_operator_game_channel_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SaveOperatorGameChannelAllocationRequest.ProtoReflect.Descriptor instead.
+func (*SaveOperatorGameChannelAllocationRequest) Descriptor() ([]byte, []int) {
+	return file_types_operator_game_channel_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *SaveOperatorGameChannelAllocationRequest) GetOpCode() string {
+	if x != nil {
+		return x.OpCode
+	}
+	return ""
+}
+
+func (x *SaveOperatorGameChannelAllocationRequest) GetItems() []*SaveOperatorGameChannelAllocationInfo {
+	if x != nil {
+		return x.Items
 	}
 	return nil
 }
 
-// BatchDeleteOperatorGameChannelResp 批量删除分站游戏渠道响应
-type BatchDeleteOperatorGameChannelResp struct {
+// SaveOperatorGameChannelAllocationResp 保存分站游戏渠道分配响应
+type SaveOperatorGameChannelAllocationResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
-	Success       int64                  `protobuf:"varint,2,opt,name=success,proto3" json:"success,omitempty"`
-	Failed        int64                  `protobuf:"varint,3,opt,name=failed,proto3" json:"failed,omitempty"`
+	Created       int64                  `protobuf:"varint,2,opt,name=created,proto3" json:"created,omitempty"`
+	Deleted       int64                  `protobuf:"varint,3,opt,name=deleted,proto3" json:"deleted,omitempty"`
+	Exist         int64                  `protobuf:"varint,4,opt,name=exist,proto3" json:"exist,omitempty"`
+	Failed        int64                  `protobuf:"varint,5,opt,name=failed,proto3" json:"failed,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *BatchDeleteOperatorGameChannelResp) Reset() {
-	*x = BatchDeleteOperatorGameChannelResp{}
-	mi := &file_types_operator_game_channel_proto_msgTypes[9]
+func (x *SaveOperatorGameChannelAllocationResp) Reset() {
+	*x = SaveOperatorGameChannelAllocationResp{}
+	mi := &file_types_operator_game_channel_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *BatchDeleteOperatorGameChannelResp) String() string {
+func (x *SaveOperatorGameChannelAllocationResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BatchDeleteOperatorGameChannelResp) ProtoMessage() {}
+func (*SaveOperatorGameChannelAllocationResp) ProtoMessage() {}
 
-func (x *BatchDeleteOperatorGameChannelResp) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_game_channel_proto_msgTypes[9]
+func (x *SaveOperatorGameChannelAllocationResp) ProtoReflect() protoreflect.Message {
+	mi := &file_types_operator_game_channel_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -613,26 +516,40 @@ func (x *BatchDeleteOperatorGameChannelResp) ProtoReflect() protoreflect.Message
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use BatchDeleteOperatorGameChannelResp.ProtoReflect.Descriptor instead.
-func (*BatchDeleteOperatorGameChannelResp) Descriptor() ([]byte, []int) {
-	return file_types_operator_game_channel_proto_rawDescGZIP(), []int{9}
+// Deprecated: Use SaveOperatorGameChannelAllocationResp.ProtoReflect.Descriptor instead.
+func (*SaveOperatorGameChannelAllocationResp) Descriptor() ([]byte, []int) {
+	return file_types_operator_game_channel_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *BatchDeleteOperatorGameChannelResp) GetTotal() int64 {
+func (x *SaveOperatorGameChannelAllocationResp) GetTotal() int64 {
 	if x != nil {
 		return x.Total
 	}
 	return 0
 }
 
-func (x *BatchDeleteOperatorGameChannelResp) GetSuccess() int64 {
+func (x *SaveOperatorGameChannelAllocationResp) GetCreated() int64 {
 	if x != nil {
-		return x.Success
+		return x.Created
 	}
 	return 0
 }
 
-func (x *BatchDeleteOperatorGameChannelResp) GetFailed() int64 {
+func (x *SaveOperatorGameChannelAllocationResp) GetDeleted() int64 {
+	if x != nil {
+		return x.Deleted
+	}
+	return 0
+}
+
+func (x *SaveOperatorGameChannelAllocationResp) GetExist() int64 {
+	if x != nil {
+		return x.Exist
+	}
+	return 0
+}
+
+func (x *SaveOperatorGameChannelAllocationResp) GetFailed() int64 {
 	if x != nil {
 		return x.Failed
 	}
@@ -643,50 +560,47 @@ var File_types_operator_game_channel_proto protoreflect.FileDescriptor
 
 const file_types_operator_game_channel_proto_rawDesc = "" +
 	"\n" +
-	"!types/operator_game_channel.proto\x12\rplatform_game\"\xbb\x01\n" +
+	"!types/operator_game_channel.proto\x12\rplatform_game\"\xde\x01\n" +
 	"\x17OperatorGameChannelInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\aop_code\x18\x02 \x01(\tR\x06opCode\x12!\n" +
 	"\fchannel_code\x18\x03 \x01(\tR\vchannelCode\x12\x16\n" +
-	"\x06status\x18\x04 \x01(\x05R\x06status\x12\x1d\n" +
+	"\x06status\x18\x04 \x01(\x05R\x06status\x12!\n" +
+	"\fcheck_status\x18\x05 \x01(\x05R\vcheckStatus\x12\x1d\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\x03R\tcreatedAt\x12\x1d\n" +
+	"created_at\x18\x06 \x01(\x03R\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\x06 \x01(\x03R\tupdatedAt\"\xa8\x01\n" +
+	"updated_at\x18\a \x01(\x03R\tupdatedAt\"\xb3\x01\n" +
 	"!GetOperatorGameChannelListRequest\x12\x12\n" +
 	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1b\n" +
 	"\tpage_size\x18\x02 \x01(\x05R\bpageSize\x12\x17\n" +
 	"\aop_code\x18\x03 \x01(\tR\x06opCode\x12!\n" +
-	"\fchannel_code\x18\x04 \x01(\tR\vchannelCode\x12\x16\n" +
-	"\x06status\x18\x05 \x01(\x05R\x06status\"\xa5\x01\n" +
+	"\fchannel_code\x18\x04 \x01(\tR\vchannelCode\x12!\n" +
+	"\fcheck_status\x18\x05 \x01(\x05R\vcheckStatus\"\xa5\x01\n" +
 	"\x1eGetOperatorGameChannelListResp\x12<\n" +
 	"\x05items\x18\x01 \x03(\v2&.platform_game.OperatorGameChannelInfoR\x05items\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\x12\x12\n" +
 	"\x04page\x18\x03 \x01(\x05R\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x04 \x01(\x05R\bpageSize\"\x7f\n" +
-	")BatchCreateOperatorGameChannelItemRequest\x12\x17\n" +
-	"\aop_code\x18\x01 \x01(\tR\x06opCode\x12!\n" +
-	"\fchannel_code\x18\x02 \x01(\tR\vchannelCode\x12\x16\n" +
-	"\x06status\x18\x03 \x01(\x05R\x06status\"w\n" +
-	"%BatchCreateOperatorGameChannelRequest\x12N\n" +
-	"\x05items\x18\x01 \x03(\v28.platform_game.BatchCreateOperatorGameChannelItemRequestR\x05items\"l\n" +
-	"\"BatchCreateOperatorGameChannelResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x03R\x05total\x12\x18\n" +
-	"\asuccess\x18\x02 \x01(\x03R\asuccess\x12\x16\n" +
-	"\x06failed\x18\x03 \x01(\x03R\x06failed\"W\n" +
+	"\tpage_size\x18\x04 \x01(\x05R\bpageSize\"W\n" +
 	"+BatchUpdateOperatorGameChannelStatusRequest\x12\x10\n" +
 	"\x03ids\x18\x01 \x03(\x03R\x03ids\x12\x16\n" +
 	"\x06status\x18\x02 \x01(\x05R\x06status\"r\n" +
 	"(BatchUpdateOperatorGameChannelStatusResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x03R\x05total\x12\x18\n" +
 	"\asuccess\x18\x02 \x01(\x03R\asuccess\x12\x16\n" +
-	"\x06failed\x18\x03 \x01(\x03R\x06failed\"9\n" +
-	"%BatchDeleteOperatorGameChannelRequest\x12\x10\n" +
-	"\x03ids\x18\x01 \x03(\x03R\x03ids\"l\n" +
-	"\"BatchDeleteOperatorGameChannelResp\x12\x14\n" +
+	"\x06failed\x18\x03 \x01(\x03R\x06failed\"^\n" +
+	"%SaveOperatorGameChannelAllocationInfo\x12\x12\n" +
+	"\x04code\x18\x01 \x01(\tR\x04code\x12!\n" +
+	"\fcheck_status\x18\x02 \x01(\x05R\vcheckStatus\"\x8f\x01\n" +
+	"(SaveOperatorGameChannelAllocationRequest\x12\x17\n" +
+	"\aop_code\x18\x01 \x01(\tR\x06opCode\x12J\n" +
+	"\x05items\x18\x02 \x03(\v24.platform_game.SaveOperatorGameChannelAllocationInfoR\x05items\"\x9f\x01\n" +
+	"%SaveOperatorGameChannelAllocationResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x03R\x05total\x12\x18\n" +
-	"\asuccess\x18\x02 \x01(\x03R\asuccess\x12\x16\n" +
-	"\x06failed\x18\x03 \x01(\x03R\x06failedB4Z2oa.98ent.com/p9/platform-game/rpc/pb/platform_gameb\x06proto3"
+	"\acreated\x18\x02 \x01(\x03R\acreated\x12\x18\n" +
+	"\adeleted\x18\x03 \x01(\x03R\adeleted\x12\x14\n" +
+	"\x05exist\x18\x04 \x01(\x03R\x05exist\x12\x16\n" +
+	"\x06failed\x18\x05 \x01(\x03R\x06failedB4Z2oa.98ent.com/p9/platform-game/rpc/pb/platform_gameb\x06proto3"
 
 var (
 	file_types_operator_game_channel_proto_rawDescOnce sync.Once
@@ -700,22 +614,20 @@ func file_types_operator_game_channel_proto_rawDescGZIP() []byte {
 	return file_types_operator_game_channel_proto_rawDescData
 }
 
-var file_types_operator_game_channel_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_types_operator_game_channel_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_types_operator_game_channel_proto_goTypes = []any{
 	(*OperatorGameChannelInfo)(nil),                     // 0: platform_game.OperatorGameChannelInfo
 	(*GetOperatorGameChannelListRequest)(nil),           // 1: platform_game.GetOperatorGameChannelListRequest
 	(*GetOperatorGameChannelListResp)(nil),              // 2: platform_game.GetOperatorGameChannelListResp
-	(*BatchCreateOperatorGameChannelItemRequest)(nil),   // 3: platform_game.BatchCreateOperatorGameChannelItemRequest
-	(*BatchCreateOperatorGameChannelRequest)(nil),       // 4: platform_game.BatchCreateOperatorGameChannelRequest
-	(*BatchCreateOperatorGameChannelResp)(nil),          // 5: platform_game.BatchCreateOperatorGameChannelResp
-	(*BatchUpdateOperatorGameChannelStatusRequest)(nil), // 6: platform_game.BatchUpdateOperatorGameChannelStatusRequest
-	(*BatchUpdateOperatorGameChannelStatusResp)(nil),    // 7: platform_game.BatchUpdateOperatorGameChannelStatusResp
-	(*BatchDeleteOperatorGameChannelRequest)(nil),       // 8: platform_game.BatchDeleteOperatorGameChannelRequest
-	(*BatchDeleteOperatorGameChannelResp)(nil),          // 9: platform_game.BatchDeleteOperatorGameChannelResp
+	(*BatchUpdateOperatorGameChannelStatusRequest)(nil), // 3: platform_game.BatchUpdateOperatorGameChannelStatusRequest
+	(*BatchUpdateOperatorGameChannelStatusResp)(nil),    // 4: platform_game.BatchUpdateOperatorGameChannelStatusResp
+	(*SaveOperatorGameChannelAllocationInfo)(nil),       // 5: platform_game.SaveOperatorGameChannelAllocationInfo
+	(*SaveOperatorGameChannelAllocationRequest)(nil),    // 6: platform_game.SaveOperatorGameChannelAllocationRequest
+	(*SaveOperatorGameChannelAllocationResp)(nil),       // 7: platform_game.SaveOperatorGameChannelAllocationResp
 }
 var file_types_operator_game_channel_proto_depIdxs = []int32{
 	0, // 0: platform_game.GetOperatorGameChannelListResp.items:type_name -> platform_game.OperatorGameChannelInfo
-	3, // 1: platform_game.BatchCreateOperatorGameChannelRequest.items:type_name -> platform_game.BatchCreateOperatorGameChannelItemRequest
+	5, // 1: platform_game.SaveOperatorGameChannelAllocationRequest.items:type_name -> platform_game.SaveOperatorGameChannelAllocationInfo
 	2, // [2:2] is the sub-list for method output_type
 	2, // [2:2] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
@@ -734,7 +646,7 @@ func file_types_operator_game_channel_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_operator_game_channel_proto_rawDesc), len(file_types_operator_game_channel_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -21,12 +21,11 @@ func (API) Annotations() []schema.Annotation {
 }
 
 func (API) Mixin() []ent.Mixin {
-	return []ent.Mixin{entmixin.TimeMixin{}}
+	return []ent.Mixin{entmixin.IDMixin{}, entmixin.TimeMixin{}}
 }
 
 func (API) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int64("id").Comment("Primary key | 主键"),
 		field.String("description").MaxLen(255).Comment("Description i18n key | 描述词条"),
 		field.String("api_group").MaxLen(100).Comment("API group | 接口分组"),
 		field.String("method").MaxLen(10).Comment("HTTP method | 请求方法"),

@@ -7,6 +7,7 @@ const (
 	ConstraintError = "common.constraint_error" // 数据约束冲突
 	ValidationError = "common.validation_error" // 数据校验失败
 	DatabaseError   = "common.database_error"   // 数据库操作失败
+	AlreadyExists   = "common.already_exists"   // 数据已存在
 )
 
 // 系统与服务错误

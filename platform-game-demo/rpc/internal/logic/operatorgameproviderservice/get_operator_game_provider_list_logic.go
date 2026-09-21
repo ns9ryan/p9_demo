@@ -3,6 +3,7 @@ package operatorgameproviderservicelogic
 import (
 	"context"
 
+	"oa.98ent.com/p9/platform-game/rpc/ent"
 	"oa.98ent.com/p9/platform-game/rpc/internal/logic"
 	"oa.98ent.com/p9/platform-game/rpc/internal/svc"
 	"oa.98ent.com/p9/platform-game/rpc/internal/utils"
@@ -36,11 +37,28 @@ func (l *GetOperatorGameProviderListLogic) GetOperatorGameProviderList(in *platf
 	page, pageSize := utils.HandlePage(int64(in.Page), int64(in.PageSize))
 	offset := (page - 1) * pageSize
 
-	records, total, err := l.svcCtx.DAOManager.OperatorGameProvider.GetOperatorGameProviderList(
+	if in.GetCheckStatus() == 1 {
+		operatorGameProviderRecords, _ := l.svcCtx.DAOManager.OperatorGameProvider.FindAll(
+			l.ctx,
+			in.GetOpCode(),
+			in.GetProviderCode(),
+			offset,
+			pageSize,
+		)
+		return &platform_game.GetOperatorGameProviderListResp{
+			Items:    logic.OperatorGameProviderModelToProtoListWithoutMap(operatorGameProviderRecords),
+			Total:    int64(len(operatorGameProviderRecords)),
+			Page:     int32(page),
+			PageSize: int32(pageSize),
+		}, nil
+	}
+
+	// 查询分站游戏提供商列表
+	records, total, err := l.svcCtx.DAOManager.GameProvider.GetGameProviderList(
 		l.ctx,
-		in.GetOpCode(),
+		0,
+		1,
 		in.GetProviderCode(),
-		in.GetStatus(),
 		offset,
 		pageSize,
 	)
@@ -48,10 +66,30 @@ func (l *GetOperatorGameProviderListLogic) GetOperatorGameProviderList(in *platf
 		l.Errorf("[RPC GetOperatorGameProviderList] query failed: %v", err)
 		return &platform_game.GetOperatorGameProviderListResp{}, nil
 	}
+	// records对应OperatorGameProvider表中是否有数据,存在则设置check_status字段为1，不存在为2
+	recordsInOperatorGameProvider, err := l.svcCtx.DAOManager.OperatorGameProvider.FindAllByOpCodeAndProviderCodes(
+		l.ctx,
+		in.GetOpCode(),
+		func() []string {
+			codes := make([]string, 0, len(records))
+			for _, record := range records {
+				codes = append(codes, record.SourceProviderCode)
+			}
+			return codes
+		}(),
+	)
+	if err != nil {
+		l.Errorf("[RPC GetOperatorGameProviderList] query OperatorGameProvider failed: %v", err)
+		return &platform_game.GetOperatorGameProviderListResp{}, nil
+	}
+	mapProviderCodeToRecord := make(map[string]*ent.OperatorGameProvider)
+	for _, record := range recordsInOperatorGameProvider {
+		mapProviderCodeToRecord[record.ProviderCode] = record
+	}
 
 	l.Infof("[RPC GetOperatorGameProviderList] success: total=%d", total)
 	return &platform_game.GetOperatorGameProviderListResp{
-		Items:    logic.OperatorGameProviderModelToProtoList(records),
+		Items:    logic.OperatorGameProviderModelToProtoList(in.GetOpCode(), mapProviderCodeToRecord, records),
 		Total:    int64(total),
 		Page:     int32(page),
 		PageSize: int32(pageSize),

@@ -5,12 +5,40 @@ import (
 	"oa.98ent.com/p9/core/rpc/coreclient"
 )
 
-func langSeeds() []*coreclient.CreateI18NLangReq {
+// 语言数据种子数据
+func langSeeds(i18nCode string) []*coreclient.CreateI18NLangReq {
+	// 如果i18nCode为运营商，则返回空，等建分站分配语言在迁移
+	if i18nCode == i18n.CodeOperator {
+		return []*coreclient.CreateI18NLangReq{}
+	}
+
 	return []*coreclient.CreateI18NLangReq{
 		{Lang: i18n.LangZH, Name: "简体中文", I18NKey: "lang.zh-CN", SortNo: 1},
 		{Lang: i18n.LangHK, Name: "繁體中文", I18NKey: "lang.zh-HK", SortNo: 2},
 		{Lang: i18n.LangEN, Name: "English", I18NKey: "lang.en-US", SortNo: 3},
 	}
+}
+
+// 多语言数据种子数据
+func i18nSeeds(i18nCode string) []*coreclient.I18NItem {
+	items := make([]*coreclient.I18NItem, 0)
+	// 如果i18nCode为运营商，则返回空，等建分站分配语言在迁移
+	if i18nCode == i18n.CodeOperator {
+		return items
+	}
+	items = append(items, menuI18n(i18nCode)...)
+	items = append(items, apiI18n(i18nCode)...)
+	items = append(items, frontI18n(i18nCode)...)
+	items = append(items, langI18n(i18nCode)...)
+	// 如果i18nCode为总网平台，则添加运营商和代理站点的多语言数据
+	if i18nCode == i18n.CodePlatform {
+		items = append(items, menuI18n(i18n.CodeOperator)...)
+		items = append(items, apiI18n(i18n.CodeOperator)...)
+		items = append(items, frontI18n(i18n.CodeOperator)...)
+		items = append(items, langI18n(i18n.CodeOperator)...)
+	}
+
+	return items
 }
 
 func langI18n(i18nCode string) []*coreclient.I18NItem {
@@ -51,6 +79,8 @@ func menuI18n(i18nCode string) []*coreclient.I18NItem {
 	add("menu.route.menuCreate", "新建菜单", "新建菜單", "Create menu")
 	add("menu.route.apiCreate", "新建接口", "新建接口", "Create API")
 	add("menu.route.i18nCreate", "新建多语言", "新建多語言", "Create i18n")
+	add("menu.route.i18nExport", "导出词条", "導出詞條", "Export i18n")
+	add("menu.route.i18nImport", "导入词条", "導入詞條", "Import i18n")
 	add("menu.route.i18nLangCreate", "新建语言", "新建語言", "Create language")
 	add("menu.route.log", "日志管理", "日志管理", "Logs")
 	add("menu.route.loginLog", "登录日志", "登錄日志", "Login logs")
@@ -100,7 +130,10 @@ func apiI18n(i18nCode string) []*coreclient.I18NItem {
 	add("api.i18nUpdate", "更新多语言", "更新多語言", "Update i18n")
 	add("api.i18nUpdateByKey", "按词条key更新多语言", "按詞條key更新多語言", "Update i18n by key")
 	add("api.i18nDelete", "删除多语言", "刪除多語言", "Delete i18n")
+	add("api.i18nDeleteByKey", "按词条key删除多语言", "按詞條key刪除多語言", "Delete i18n by key")
 	add("api.i18nList", "多语言列表", "多語言列表", "I18n list")
+	add("api.i18nExport", "导出多语言", "導出多語言", "Export i18n")
+	add("api.i18nImport", "导入多语言", "導入多語言", "Import i18n")
 	add("api.i18nLangCreate", "创建支持的语言", "創建支持的語言", "Create language")
 	add("api.i18nLangUpdate", "更新支持的语言", "更新支持的語言", "Update language")
 	add("api.i18nLangReorder", "调整语言排序", "調整語言排序", "Reorder languages")

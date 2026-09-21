@@ -22,12 +22,11 @@ func (Menu) Annotations() []schema.Annotation {
 }
 
 func (Menu) Mixin() []ent.Mixin {
-	return []ent.Mixin{entmixin.TimeMixin{}}
+	return []ent.Mixin{entmixin.IDMixin{}, entmixin.TimeMixin{}}
 }
 
 func (Menu) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int64("id").Comment("Primary key | 主键"),
 		field.Int64("parent_id").Default(0).Comment("Parent ID | 父级 ID"),
 		field.Int16("menu_type").Comment("Menu type 0 directory 1 menu 2 button | 类型 0 目录 1 菜单 2 按钮"),
 		field.String("path").MaxLen(128).Default("").Comment("Route path | 路由路径"),

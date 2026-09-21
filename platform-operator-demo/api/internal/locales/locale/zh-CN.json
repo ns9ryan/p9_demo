@@ -5,7 +5,7 @@
 		"constraint_error": "数据约束冲突",
 		"validation_error": "数据校验失败",
 		"database_error": "数据库操作失败",
-
+		"already_exists": "数据已存在",
 		"internal_error": "系统内部错误",
 		"too_many_requests": "请求过于频繁",
 		"service_unavailable": "服务暂不可用",
@@ -16,6 +16,8 @@
 		"timezone_unavailable": "时区不可用",
 		"settlement_currency_unavailable": "结算币种不可用",
 		"language_unavailable": "语言不可用",
-		"region_unavailable": "国家地区不可用"
+		"region_unavailable": "国家地区不可用",
+		"admin_already_exists": "分站管理员已存在",
+		"forbidden_upd_op_has_published": "无法更新，分站已发布"
 	}
 }

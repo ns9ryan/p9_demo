@@ -29,26 +29,7 @@ func NewCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateLogi
 
 // Create 创建分站管理员
 func (l *CreateLogic) Create(in *adminpb.CreateAdminRequest) (*adminpb.CreateAdminResponse, error) {
-	// 分站ID必须大于0
 	if in.OperatorId <= 0 {
-		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
-	}
-
-	username := strings.TrimSpace(in.Username)
-	displayName := strings.TrimSpace(in.DisplayName)
-
-	// 账号和显示名称不能为空
-	if username == "" || displayName == "" {
-		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
-	}
-
-	// 明文密码长度 6-32
-	if len(in.Password) < 6 || len(in.Password) > 32 {
-		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
-	}
-
-	// 校验状态
-	if in.Status != nil && (*in.Status < 1 || *in.Status > 2) {
 		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
 	}
 
@@ -61,9 +42,9 @@ func (l *CreateLogic) Create(in *adminpb.CreateAdminRequest) (*adminpb.CreateAdm
 	data, err := l.svcCtx.DB.OperatorAdmin.
 		Create().
 		SetOperatorID(in.OperatorId).
-		SetUsername(username).
+		SetUsername(strings.TrimSpace(in.Username)).
 		SetPassword(in.Password).
-		SetDisplayName(displayName).
+		SetDisplayName(strings.TrimSpace(in.DisplayName)).
 		SetNillableStatus(in.Status).
 		Save(l.ctx)
 	if err != nil {

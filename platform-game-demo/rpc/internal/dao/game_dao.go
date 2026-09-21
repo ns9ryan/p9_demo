@@ -28,7 +28,7 @@ func NewGameDAO(db *ent.Client) *GameDAO {
 // GetGameByID 根据ID获取游戏
 func (d *GameDAO) GetGameByID(ctx context.Context, id int64) (*ent.Game, error) {
 	return d.db.Game.Query().
-		Where(game.IDEQ(id)).
+		Where(game.SourceIDEQ(id)).
 		Where(game.DeletedAtIsNil()).
 		Only(ctx)
 }
@@ -273,6 +273,13 @@ func (d *GameDAO) ExistByCode(ctx context.Context, code string) (bool, error) {
 func (d *GameDAO) GetGameBySourceId(ctx context.Context, SourceId int64) (*ent.Game, error) {
 	return d.db.Game.Query().
 		Where(game.SourceIDEQ(SourceId)).
+		Where(game.DeletedAtIsNil()).
+		Only(ctx)
+}
+
+func (d *GameDAO) GetGameByCode(ctx context.Context, code string) (*ent.Game, error) {
+	return d.db.Game.Query().
+		Where(game.SourceGameCodeEQ(code)).
 		Where(game.DeletedAtIsNil()).
 		Only(ctx)
 }

@@ -29,6 +29,7 @@ func NewResetOperatorAdminPasswordLogic(ctx context.Context, svcCtx *svc.Service
 
 // ResetOperatorAdminPassword 重置分站管理员密码
 func (l *ResetOperatorAdminPasswordLogic) ResetOperatorAdminPassword(req *types.ResetOperatorAdminPasswordRequest) (resp *types.ResetOperatorAdminPasswordResponse, err error) {
+	// 重置密码
 	_, err = l.svcCtx.OperatorAdminRpc.ResetPassword(
 		l.ctx,
 		&adminpb.ResetAdminPasswordRequest{

@@ -23,75 +23,75 @@ import (
 // to their package variables.
 func init() {
 	apiMixin := schema.API{}.Mixin()
-	apiMixinFields0 := apiMixin[0].Fields()
-	_ = apiMixinFields0
+	apiMixinFields1 := apiMixin[1].Fields()
+	_ = apiMixinFields1
 	apiFields := schema.API{}.Fields()
 	_ = apiFields
 	// apiDescCreatedAt is the schema descriptor for created_at field.
-	apiDescCreatedAt := apiMixinFields0[0].Descriptor()
+	apiDescCreatedAt := apiMixinFields1[0].Descriptor()
 	// api.DefaultCreatedAt holds the default value on creation for the created_at field.
 	api.DefaultCreatedAt = apiDescCreatedAt.Default.(func() time.Time)
 	// apiDescUpdatedAt is the schema descriptor for updated_at field.
-	apiDescUpdatedAt := apiMixinFields0[1].Descriptor()
+	apiDescUpdatedAt := apiMixinFields1[1].Descriptor()
 	// api.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	api.DefaultUpdatedAt = apiDescUpdatedAt.Default.(func() time.Time)
 	// api.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	api.UpdateDefaultUpdatedAt = apiDescUpdatedAt.UpdateDefault.(func() time.Time)
 	// apiDescDescription is the schema descriptor for description field.
-	apiDescDescription := apiFields[1].Descriptor()
+	apiDescDescription := apiFields[0].Descriptor()
 	// api.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	api.DescriptionValidator = apiDescDescription.Validators[0].(func(string) error)
 	// apiDescAPIGroup is the schema descriptor for api_group field.
-	apiDescAPIGroup := apiFields[2].Descriptor()
+	apiDescAPIGroup := apiFields[1].Descriptor()
 	// api.APIGroupValidator is a validator for the "api_group" field. It is called by the builders before save.
 	api.APIGroupValidator = apiDescAPIGroup.Validators[0].(func(string) error)
 	// apiDescMethod is the schema descriptor for method field.
-	apiDescMethod := apiFields[3].Descriptor()
+	apiDescMethod := apiFields[2].Descriptor()
 	// api.MethodValidator is a validator for the "method" field. It is called by the builders before save.
 	api.MethodValidator = apiDescMethod.Validators[0].(func(string) error)
 	// apiDescPath is the schema descriptor for path field.
-	apiDescPath := apiFields[4].Descriptor()
+	apiDescPath := apiFields[3].Descriptor()
 	// api.PathValidator is a validator for the "path" field. It is called by the builders before save.
 	api.PathValidator = apiDescPath.Validators[0].(func(string) error)
 	// apiDescIsRequired is the schema descriptor for is_required field.
-	apiDescIsRequired := apiFields[5].Descriptor()
+	apiDescIsRequired := apiFields[4].Descriptor()
 	// api.DefaultIsRequired holds the default value on creation for the is_required field.
 	api.DefaultIsRequired = apiDescIsRequired.Default.(int16)
 	// apiDescServiceName is the schema descriptor for service_name field.
-	apiDescServiceName := apiFields[6].Descriptor()
+	apiDescServiceName := apiFields[5].Descriptor()
 	// api.ServiceNameValidator is a validator for the "service_name" field. It is called by the builders before save.
 	api.ServiceNameValidator = apiDescServiceName.Validators[0].(func(string) error)
 	adminactionlogMixin := schema.AdminActionLog{}.Mixin()
-	adminactionlogMixinHooks0 := adminactionlogMixin[0].Hooks()
-	adminactionlog.Hooks[0] = adminactionlogMixinHooks0[0]
-	adminactionlogMixinInters0 := adminactionlogMixin[0].Interceptors()
-	adminactionlog.Interceptors[0] = adminactionlogMixinInters0[0]
-	adminactionlogMixinFields0 := adminactionlogMixin[0].Fields()
-	_ = adminactionlogMixinFields0
+	adminactionlogMixinHooks1 := adminactionlogMixin[1].Hooks()
+	adminactionlog.Hooks[0] = adminactionlogMixinHooks1[0]
+	adminactionlogMixinInters1 := adminactionlogMixin[1].Interceptors()
+	adminactionlog.Interceptors[0] = adminactionlogMixinInters1[0]
+	adminactionlogMixinFields1 := adminactionlogMixin[1].Fields()
+	_ = adminactionlogMixinFields1
 	adminactionlogFields := schema.AdminActionLog{}.Fields()
 	_ = adminactionlogFields
 	// adminactionlogDescOperatorCode is the schema descriptor for operator_code field.
-	adminactionlogDescOperatorCode := adminactionlogMixinFields0[0].Descriptor()
+	adminactionlogDescOperatorCode := adminactionlogMixinFields1[0].Descriptor()
 	// adminactionlog.OperatorCodeValidator is a validator for the "operator_code" field. It is called by the builders before save.
 	adminactionlog.OperatorCodeValidator = adminactionlogDescOperatorCode.Validators[0].(func(string) error)
 	// adminactionlogDescRequestMethod is the schema descriptor for request_method field.
-	adminactionlogDescRequestMethod := adminactionlogFields[2].Descriptor()
+	adminactionlogDescRequestMethod := adminactionlogFields[1].Descriptor()
 	// adminactionlog.RequestMethodValidator is a validator for the "request_method" field. It is called by the builders before save.
 	adminactionlog.RequestMethodValidator = adminactionlogDescRequestMethod.Validators[0].(func(string) error)
 	// adminactionlogDescRequestPath is the schema descriptor for request_path field.
-	adminactionlogDescRequestPath := adminactionlogFields[3].Descriptor()
+	adminactionlogDescRequestPath := adminactionlogFields[2].Descriptor()
 	// adminactionlog.RequestPathValidator is a validator for the "request_path" field. It is called by the builders before save.
 	adminactionlog.RequestPathValidator = adminactionlogDescRequestPath.Validators[0].(func(string) error)
 	// adminactionlogDescDurationMs is the schema descriptor for duration_ms field.
-	adminactionlogDescDurationMs := adminactionlogFields[9].Descriptor()
+	adminactionlogDescDurationMs := adminactionlogFields[8].Descriptor()
 	// adminactionlog.DefaultDurationMs holds the default value on creation for the duration_ms field.
 	adminactionlog.DefaultDurationMs = adminactionlogDescDurationMs.Default.(int)
 	// adminactionlogDescUserAgent is the schema descriptor for user_agent field.
-	adminactionlogDescUserAgent := adminactionlogFields[11].Descriptor()
+	adminactionlogDescUserAgent := adminactionlogFields[10].Descriptor()
 	// adminactionlog.UserAgentValidator is a validator for the "user_agent" field. It is called by the builders before save.
 	adminactionlog.UserAgentValidator = adminactionlogDescUserAgent.Validators[0].(func(string) error)
 	// adminactionlogDescCreatedAt is the schema descriptor for created_at field.
-	adminactionlogDescCreatedAt := adminactionlogFields[12].Descriptor()
+	adminactionlogDescCreatedAt := adminactionlogFields[11].Descriptor()
 	// adminactionlog.DefaultCreatedAt holds the default value on creation for the created_at field.
 	adminactionlog.DefaultCreatedAt = adminactionlogDescCreatedAt.Default.(func() time.Time)
 	casbinruleFields := schema.CasbinRule{}.Fields()
@@ -139,344 +139,344 @@ func init() {
 	// casbinrule.V5Validator is a validator for the "v5" field. It is called by the builders before save.
 	casbinrule.V5Validator = casbinruleDescV5.Validators[0].(func(string) error)
 	errorlogMixin := schema.ErrorLog{}.Mixin()
-	errorlogMixinHooks0 := errorlogMixin[0].Hooks()
-	errorlog.Hooks[0] = errorlogMixinHooks0[0]
-	errorlogMixinInters0 := errorlogMixin[0].Interceptors()
-	errorlog.Interceptors[0] = errorlogMixinInters0[0]
-	errorlogMixinFields0 := errorlogMixin[0].Fields()
-	_ = errorlogMixinFields0
+	errorlogMixinHooks1 := errorlogMixin[1].Hooks()
+	errorlog.Hooks[0] = errorlogMixinHooks1[0]
+	errorlogMixinInters1 := errorlogMixin[1].Interceptors()
+	errorlog.Interceptors[0] = errorlogMixinInters1[0]
+	errorlogMixinFields1 := errorlogMixin[1].Fields()
+	_ = errorlogMixinFields1
 	errorlogFields := schema.ErrorLog{}.Fields()
 	_ = errorlogFields
 	// errorlogDescOperatorCode is the schema descriptor for operator_code field.
-	errorlogDescOperatorCode := errorlogMixinFields0[0].Descriptor()
+	errorlogDescOperatorCode := errorlogMixinFields1[0].Descriptor()
 	// errorlog.OperatorCodeValidator is a validator for the "operator_code" field. It is called by the builders before save.
 	errorlog.OperatorCodeValidator = errorlogDescOperatorCode.Validators[0].(func(string) error)
 	// errorlogDescRequestMethod is the schema descriptor for request_method field.
-	errorlogDescRequestMethod := errorlogFields[2].Descriptor()
+	errorlogDescRequestMethod := errorlogFields[1].Descriptor()
 	// errorlog.RequestMethodValidator is a validator for the "request_method" field. It is called by the builders before save.
 	errorlog.RequestMethodValidator = errorlogDescRequestMethod.Validators[0].(func(string) error)
 	// errorlogDescRequestPath is the schema descriptor for request_path field.
-	errorlogDescRequestPath := errorlogFields[3].Descriptor()
+	errorlogDescRequestPath := errorlogFields[2].Descriptor()
 	// errorlog.RequestPathValidator is a validator for the "request_path" field. It is called by the builders before save.
 	errorlog.RequestPathValidator = errorlogDescRequestPath.Validators[0].(func(string) error)
 	// errorlogDescServiceName is the schema descriptor for service_name field.
-	errorlogDescServiceName := errorlogFields[6].Descriptor()
+	errorlogDescServiceName := errorlogFields[5].Descriptor()
 	// errorlog.ServiceNameValidator is a validator for the "service_name" field. It is called by the builders before save.
 	errorlog.ServiceNameValidator = errorlogDescServiceName.Validators[0].(func(string) error)
 	// errorlogDescDurationMs is the schema descriptor for duration_ms field.
-	errorlogDescDurationMs := errorlogFields[11].Descriptor()
+	errorlogDescDurationMs := errorlogFields[10].Descriptor()
 	// errorlog.DefaultDurationMs holds the default value on creation for the duration_ms field.
 	errorlog.DefaultDurationMs = errorlogDescDurationMs.Default.(int)
 	// errorlogDescUserAgent is the schema descriptor for user_agent field.
-	errorlogDescUserAgent := errorlogFields[13].Descriptor()
+	errorlogDescUserAgent := errorlogFields[12].Descriptor()
 	// errorlog.UserAgentValidator is a validator for the "user_agent" field. It is called by the builders before save.
 	errorlog.UserAgentValidator = errorlogDescUserAgent.Validators[0].(func(string) error)
 	// errorlogDescCreatedAt is the schema descriptor for created_at field.
-	errorlogDescCreatedAt := errorlogFields[14].Descriptor()
+	errorlogDescCreatedAt := errorlogFields[13].Descriptor()
 	// errorlog.DefaultCreatedAt holds the default value on creation for the created_at field.
 	errorlog.DefaultCreatedAt = errorlogDescCreatedAt.Default.(func() time.Time)
 	i18nMixin := schema.I18n{}.Mixin()
-	i18nMixinFields0 := i18nMixin[0].Fields()
-	_ = i18nMixinFields0
+	i18nMixinFields1 := i18nMixin[1].Fields()
+	_ = i18nMixinFields1
 	i18nFields := schema.I18n{}.Fields()
 	_ = i18nFields
 	// i18nDescCreatedAt is the schema descriptor for created_at field.
-	i18nDescCreatedAt := i18nMixinFields0[0].Descriptor()
+	i18nDescCreatedAt := i18nMixinFields1[0].Descriptor()
 	// i18n.DefaultCreatedAt holds the default value on creation for the created_at field.
 	i18n.DefaultCreatedAt = i18nDescCreatedAt.Default.(func() time.Time)
 	// i18nDescUpdatedAt is the schema descriptor for updated_at field.
-	i18nDescUpdatedAt := i18nMixinFields0[1].Descriptor()
+	i18nDescUpdatedAt := i18nMixinFields1[1].Descriptor()
 	// i18n.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	i18n.DefaultUpdatedAt = i18nDescUpdatedAt.Default.(func() time.Time)
 	// i18n.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	i18n.UpdateDefaultUpdatedAt = i18nDescUpdatedAt.UpdateDefault.(func() time.Time)
 	// i18nDescI18nCode is the schema descriptor for i18n_code field.
-	i18nDescI18nCode := i18nFields[1].Descriptor()
+	i18nDescI18nCode := i18nFields[0].Descriptor()
 	// i18n.DefaultI18nCode holds the default value on creation for the i18n_code field.
 	i18n.DefaultI18nCode = i18nDescI18nCode.Default.(string)
 	// i18n.I18nCodeValidator is a validator for the "i18n_code" field. It is called by the builders before save.
 	i18n.I18nCodeValidator = i18nDescI18nCode.Validators[0].(func(string) error)
 	// i18nDescI18nGroup is the schema descriptor for i18n_group field.
-	i18nDescI18nGroup := i18nFields[2].Descriptor()
+	i18nDescI18nGroup := i18nFields[1].Descriptor()
 	// i18n.I18nGroupValidator is a validator for the "i18n_group" field. It is called by the builders before save.
 	i18n.I18nGroupValidator = i18nDescI18nGroup.Validators[0].(func(string) error)
 	// i18nDescTransKey is the schema descriptor for trans_key field.
-	i18nDescTransKey := i18nFields[3].Descriptor()
+	i18nDescTransKey := i18nFields[2].Descriptor()
 	// i18n.TransKeyValidator is a validator for the "trans_key" field. It is called by the builders before save.
 	i18n.TransKeyValidator = i18nDescTransKey.Validators[0].(func(string) error)
 	// i18nDescLang is the schema descriptor for lang field.
-	i18nDescLang := i18nFields[4].Descriptor()
+	i18nDescLang := i18nFields[3].Descriptor()
 	// i18n.LangValidator is a validator for the "lang" field. It is called by the builders before save.
 	i18n.LangValidator = i18nDescLang.Validators[0].(func(string) error)
 	// i18nDescValue is the schema descriptor for value field.
-	i18nDescValue := i18nFields[5].Descriptor()
+	i18nDescValue := i18nFields[4].Descriptor()
 	// i18n.ValueValidator is a validator for the "value" field. It is called by the builders before save.
 	i18n.ValueValidator = i18nDescValue.Validators[0].(func(string) error)
 	i18nlangMixin := schema.I18nLang{}.Mixin()
-	i18nlangMixinFields0 := i18nlangMixin[0].Fields()
-	_ = i18nlangMixinFields0
+	i18nlangMixinFields1 := i18nlangMixin[1].Fields()
+	_ = i18nlangMixinFields1
 	i18nlangFields := schema.I18nLang{}.Fields()
 	_ = i18nlangFields
 	// i18nlangDescCreatedAt is the schema descriptor for created_at field.
-	i18nlangDescCreatedAt := i18nlangMixinFields0[0].Descriptor()
+	i18nlangDescCreatedAt := i18nlangMixinFields1[0].Descriptor()
 	// i18nlang.DefaultCreatedAt holds the default value on creation for the created_at field.
 	i18nlang.DefaultCreatedAt = i18nlangDescCreatedAt.Default.(func() time.Time)
 	// i18nlangDescUpdatedAt is the schema descriptor for updated_at field.
-	i18nlangDescUpdatedAt := i18nlangMixinFields0[1].Descriptor()
+	i18nlangDescUpdatedAt := i18nlangMixinFields1[1].Descriptor()
 	// i18nlang.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	i18nlang.DefaultUpdatedAt = i18nlangDescUpdatedAt.Default.(func() time.Time)
 	// i18nlang.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	i18nlang.UpdateDefaultUpdatedAt = i18nlangDescUpdatedAt.UpdateDefault.(func() time.Time)
 	// i18nlangDescLang is the schema descriptor for lang field.
-	i18nlangDescLang := i18nlangFields[1].Descriptor()
+	i18nlangDescLang := i18nlangFields[0].Descriptor()
 	// i18nlang.LangValidator is a validator for the "lang" field. It is called by the builders before save.
 	i18nlang.LangValidator = i18nlangDescLang.Validators[0].(func(string) error)
 	// i18nlangDescName is the schema descriptor for name field.
-	i18nlangDescName := i18nlangFields[2].Descriptor()
+	i18nlangDescName := i18nlangFields[1].Descriptor()
 	// i18nlang.DefaultName holds the default value on creation for the name field.
 	i18nlang.DefaultName = i18nlangDescName.Default.(string)
 	// i18nlang.NameValidator is a validator for the "name" field. It is called by the builders before save.
 	i18nlang.NameValidator = i18nlangDescName.Validators[0].(func(string) error)
 	// i18nlangDescI18nKey is the schema descriptor for i18n_key field.
-	i18nlangDescI18nKey := i18nlangFields[3].Descriptor()
+	i18nlangDescI18nKey := i18nlangFields[2].Descriptor()
 	// i18nlang.DefaultI18nKey holds the default value on creation for the i18n_key field.
 	i18nlang.DefaultI18nKey = i18nlangDescI18nKey.Default.(string)
 	// i18nlang.I18nKeyValidator is a validator for the "i18n_key" field. It is called by the builders before save.
 	i18nlang.I18nKeyValidator = i18nlangDescI18nKey.Validators[0].(func(string) error)
 	// i18nlangDescDisabled is the schema descriptor for disabled field.
-	i18nlangDescDisabled := i18nlangFields[4].Descriptor()
+	i18nlangDescDisabled := i18nlangFields[3].Descriptor()
 	// i18nlang.DefaultDisabled holds the default value on creation for the disabled field.
 	i18nlang.DefaultDisabled = i18nlangDescDisabled.Default.(int16)
 	// i18nlangDescSortNo is the schema descriptor for sort_no field.
-	i18nlangDescSortNo := i18nlangFields[5].Descriptor()
+	i18nlangDescSortNo := i18nlangFields[4].Descriptor()
 	// i18nlang.DefaultSortNo holds the default value on creation for the sort_no field.
 	i18nlang.DefaultSortNo = i18nlangDescSortNo.Default.(int)
 	loginlogMixin := schema.LoginLog{}.Mixin()
-	loginlogMixinHooks0 := loginlogMixin[0].Hooks()
-	loginlog.Hooks[0] = loginlogMixinHooks0[0]
-	loginlogMixinInters0 := loginlogMixin[0].Interceptors()
-	loginlog.Interceptors[0] = loginlogMixinInters0[0]
-	loginlogMixinFields0 := loginlogMixin[0].Fields()
-	_ = loginlogMixinFields0
+	loginlogMixinHooks1 := loginlogMixin[1].Hooks()
+	loginlog.Hooks[0] = loginlogMixinHooks1[0]
+	loginlogMixinInters1 := loginlogMixin[1].Interceptors()
+	loginlog.Interceptors[0] = loginlogMixinInters1[0]
+	loginlogMixinFields1 := loginlogMixin[1].Fields()
+	_ = loginlogMixinFields1
 	loginlogFields := schema.LoginLog{}.Fields()
 	_ = loginlogFields
 	// loginlogDescOperatorCode is the schema descriptor for operator_code field.
-	loginlogDescOperatorCode := loginlogMixinFields0[0].Descriptor()
+	loginlogDescOperatorCode := loginlogMixinFields1[0].Descriptor()
 	// loginlog.OperatorCodeValidator is a validator for the "operator_code" field. It is called by the builders before save.
 	loginlog.OperatorCodeValidator = loginlogDescOperatorCode.Validators[0].(func(string) error)
 	// loginlogDescUsername is the schema descriptor for username field.
-	loginlogDescUsername := loginlogFields[2].Descriptor()
+	loginlogDescUsername := loginlogFields[1].Descriptor()
 	// loginlog.UsernameValidator is a validator for the "username" field. It is called by the builders before save.
 	loginlog.UsernameValidator = loginlogDescUsername.Validators[0].(func(string) error)
 	// loginlogDescFailureReason is the schema descriptor for failure_reason field.
-	loginlogDescFailureReason := loginlogFields[4].Descriptor()
+	loginlogDescFailureReason := loginlogFields[3].Descriptor()
 	// loginlog.FailureReasonValidator is a validator for the "failure_reason" field. It is called by the builders before save.
 	loginlog.FailureReasonValidator = loginlogDescFailureReason.Validators[0].(func(string) error)
 	// loginlogDescUserAgent is the schema descriptor for user_agent field.
-	loginlogDescUserAgent := loginlogFields[7].Descriptor()
+	loginlogDescUserAgent := loginlogFields[6].Descriptor()
 	// loginlog.UserAgentValidator is a validator for the "user_agent" field. It is called by the builders before save.
 	loginlog.UserAgentValidator = loginlogDescUserAgent.Validators[0].(func(string) error)
 	// loginlogDescLoginAt is the schema descriptor for login_at field.
-	loginlogDescLoginAt := loginlogFields[8].Descriptor()
+	loginlogDescLoginAt := loginlogFields[7].Descriptor()
 	// loginlog.DefaultLoginAt holds the default value on creation for the login_at field.
 	loginlog.DefaultLoginAt = loginlogDescLoginAt.Default.(func() time.Time)
 	menuMixin := schema.Menu{}.Mixin()
-	menuMixinFields0 := menuMixin[0].Fields()
-	_ = menuMixinFields0
+	menuMixinFields1 := menuMixin[1].Fields()
+	_ = menuMixinFields1
 	menuFields := schema.Menu{}.Fields()
 	_ = menuFields
 	// menuDescCreatedAt is the schema descriptor for created_at field.
-	menuDescCreatedAt := menuMixinFields0[0].Descriptor()
+	menuDescCreatedAt := menuMixinFields1[0].Descriptor()
 	// menu.DefaultCreatedAt holds the default value on creation for the created_at field.
 	menu.DefaultCreatedAt = menuDescCreatedAt.Default.(func() time.Time)
 	// menuDescUpdatedAt is the schema descriptor for updated_at field.
-	menuDescUpdatedAt := menuMixinFields0[1].Descriptor()
+	menuDescUpdatedAt := menuMixinFields1[1].Descriptor()
 	// menu.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	menu.DefaultUpdatedAt = menuDescUpdatedAt.Default.(func() time.Time)
 	// menu.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	menu.UpdateDefaultUpdatedAt = menuDescUpdatedAt.UpdateDefault.(func() time.Time)
 	// menuDescParentID is the schema descriptor for parent_id field.
-	menuDescParentID := menuFields[1].Descriptor()
+	menuDescParentID := menuFields[0].Descriptor()
 	// menu.DefaultParentID holds the default value on creation for the parent_id field.
 	menu.DefaultParentID = menuDescParentID.Default.(int64)
 	// menuDescPath is the schema descriptor for path field.
-	menuDescPath := menuFields[3].Descriptor()
+	menuDescPath := menuFields[2].Descriptor()
 	// menu.DefaultPath holds the default value on creation for the path field.
 	menu.DefaultPath = menuDescPath.Default.(string)
 	// menu.PathValidator is a validator for the "path" field. It is called by the builders before save.
 	menu.PathValidator = menuDescPath.Validators[0].(func(string) error)
 	// menuDescName is the schema descriptor for name field.
-	menuDescName := menuFields[4].Descriptor()
+	menuDescName := menuFields[3].Descriptor()
 	// menu.DefaultName holds the default value on creation for the name field.
 	menu.DefaultName = menuDescName.Default.(string)
 	// menu.NameValidator is a validator for the "name" field. It is called by the builders before save.
 	menu.NameValidator = menuDescName.Validators[0].(func(string) error)
 	// menuDescComponent is the schema descriptor for component field.
-	menuDescComponent := menuFields[5].Descriptor()
+	menuDescComponent := menuFields[4].Descriptor()
 	// menu.DefaultComponent holds the default value on creation for the component field.
 	menu.DefaultComponent = menuDescComponent.Default.(string)
 	// menu.ComponentValidator is a validator for the "component" field. It is called by the builders before save.
 	menu.ComponentValidator = menuDescComponent.Validators[0].(func(string) error)
 	// menuDescRedirect is the schema descriptor for redirect field.
-	menuDescRedirect := menuFields[6].Descriptor()
+	menuDescRedirect := menuFields[5].Descriptor()
 	// menu.DefaultRedirect holds the default value on creation for the redirect field.
 	menu.DefaultRedirect = menuDescRedirect.Default.(string)
 	// menu.RedirectValidator is a validator for the "redirect" field. It is called by the builders before save.
 	menu.RedirectValidator = menuDescRedirect.Validators[0].(func(string) error)
 	// menuDescTitle is the schema descriptor for title field.
-	menuDescTitle := menuFields[7].Descriptor()
+	menuDescTitle := menuFields[6].Descriptor()
 	// menu.DefaultTitle holds the default value on creation for the title field.
 	menu.DefaultTitle = menuDescTitle.Default.(string)
 	// menu.TitleValidator is a validator for the "title" field. It is called by the builders before save.
 	menu.TitleValidator = menuDescTitle.Validators[0].(func(string) error)
 	// menuDescIcon is the schema descriptor for icon field.
-	menuDescIcon := menuFields[8].Descriptor()
+	menuDescIcon := menuFields[7].Descriptor()
 	// menu.DefaultIcon holds the default value on creation for the icon field.
 	menu.DefaultIcon = menuDescIcon.Default.(string)
 	// menu.IconValidator is a validator for the "icon" field. It is called by the builders before save.
 	menu.IconValidator = menuDescIcon.Validators[0].(func(string) error)
 	// menuDescPermission is the schema descriptor for permission field.
-	menuDescPermission := menuFields[9].Descriptor()
+	menuDescPermission := menuFields[8].Descriptor()
 	// menu.DefaultPermission holds the default value on creation for the permission field.
 	menu.DefaultPermission = menuDescPermission.Default.(string)
 	// menu.PermissionValidator is a validator for the "permission" field. It is called by the builders before save.
 	menu.PermissionValidator = menuDescPermission.Validators[0].(func(string) error)
 	// menuDescHideMenu is the schema descriptor for hide_menu field.
-	menuDescHideMenu := menuFields[10].Descriptor()
+	menuDescHideMenu := menuFields[9].Descriptor()
 	// menu.DefaultHideMenu holds the default value on creation for the hide_menu field.
 	menu.DefaultHideMenu = menuDescHideMenu.Default.(int16)
 	// menuDescSort is the schema descriptor for sort field.
-	menuDescSort := menuFields[11].Descriptor()
+	menuDescSort := menuFields[10].Descriptor()
 	// menu.DefaultSort holds the default value on creation for the sort field.
 	menu.DefaultSort = menuDescSort.Default.(int)
 	// menuDescDisabled is the schema descriptor for disabled field.
-	menuDescDisabled := menuFields[12].Descriptor()
+	menuDescDisabled := menuFields[11].Descriptor()
 	// menu.DefaultDisabled holds the default value on creation for the disabled field.
 	menu.DefaultDisabled = menuDescDisabled.Default.(int16)
 	roleMixin := schema.Role{}.Mixin()
-	roleMixinHooks1 := roleMixin[1].Hooks()
 	roleMixinHooks2 := roleMixin[2].Hooks()
-	role.Hooks[0] = roleMixinHooks1[0]
-	role.Hooks[1] = roleMixinHooks2[0]
-	roleMixinInters1 := roleMixin[1].Interceptors()
+	roleMixinHooks3 := roleMixin[3].Hooks()
+	role.Hooks[0] = roleMixinHooks2[0]
+	role.Hooks[1] = roleMixinHooks3[0]
 	roleMixinInters2 := roleMixin[2].Interceptors()
-	role.Interceptors[0] = roleMixinInters1[0]
-	role.Interceptors[1] = roleMixinInters2[0]
-	roleMixinFields0 := roleMixin[0].Fields()
-	_ = roleMixinFields0
-	roleMixinFields2 := roleMixin[2].Fields()
-	_ = roleMixinFields2
+	roleMixinInters3 := roleMixin[3].Interceptors()
+	role.Interceptors[0] = roleMixinInters2[0]
+	role.Interceptors[1] = roleMixinInters3[0]
+	roleMixinFields1 := roleMixin[1].Fields()
+	_ = roleMixinFields1
+	roleMixinFields3 := roleMixin[3].Fields()
+	_ = roleMixinFields3
 	roleFields := schema.Role{}.Fields()
 	_ = roleFields
 	// roleDescCreatedAt is the schema descriptor for created_at field.
-	roleDescCreatedAt := roleMixinFields0[0].Descriptor()
+	roleDescCreatedAt := roleMixinFields1[0].Descriptor()
 	// role.DefaultCreatedAt holds the default value on creation for the created_at field.
 	role.DefaultCreatedAt = roleDescCreatedAt.Default.(func() time.Time)
 	// roleDescUpdatedAt is the schema descriptor for updated_at field.
-	roleDescUpdatedAt := roleMixinFields0[1].Descriptor()
+	roleDescUpdatedAt := roleMixinFields1[1].Descriptor()
 	// role.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	role.DefaultUpdatedAt = roleDescUpdatedAt.Default.(func() time.Time)
 	// role.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	role.UpdateDefaultUpdatedAt = roleDescUpdatedAt.UpdateDefault.(func() time.Time)
 	// roleDescOperatorCode is the schema descriptor for operator_code field.
-	roleDescOperatorCode := roleMixinFields2[0].Descriptor()
+	roleDescOperatorCode := roleMixinFields3[0].Descriptor()
 	// role.OperatorCodeValidator is a validator for the "operator_code" field. It is called by the builders before save.
 	role.OperatorCodeValidator = roleDescOperatorCode.Validators[0].(func(string) error)
 	// roleDescRoleCode is the schema descriptor for role_code field.
-	roleDescRoleCode := roleFields[1].Descriptor()
+	roleDescRoleCode := roleFields[0].Descriptor()
 	// role.RoleCodeValidator is a validator for the "role_code" field. It is called by the builders before save.
 	role.RoleCodeValidator = roleDescRoleCode.Validators[0].(func(string) error)
 	// roleDescRoleName is the schema descriptor for role_name field.
-	roleDescRoleName := roleFields[2].Descriptor()
+	roleDescRoleName := roleFields[1].Descriptor()
 	// role.RoleNameValidator is a validator for the "role_name" field. It is called by the builders before save.
 	role.RoleNameValidator = roleDescRoleName.Validators[0].(func(string) error)
 	// roleDescDescription is the schema descriptor for description field.
-	roleDescDescription := roleFields[3].Descriptor()
+	roleDescDescription := roleFields[2].Descriptor()
 	// role.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	role.DescriptionValidator = roleDescDescription.Validators[0].(func(string) error)
 	// roleDescStatus is the schema descriptor for status field.
-	roleDescStatus := roleFields[4].Descriptor()
+	roleDescStatus := roleFields[3].Descriptor()
 	// role.DefaultStatus holds the default value on creation for the status field.
 	role.DefaultStatus = roleDescStatus.Default.(int16)
 	// roleDescIsSystem is the schema descriptor for is_system field.
-	roleDescIsSystem := roleFields[5].Descriptor()
+	roleDescIsSystem := roleFields[4].Descriptor()
 	// role.DefaultIsSystem holds the default value on creation for the is_system field.
 	role.DefaultIsSystem = roleDescIsSystem.Default.(bool)
 	// roleDescSortNo is the schema descriptor for sort_no field.
-	roleDescSortNo := roleFields[6].Descriptor()
+	roleDescSortNo := roleFields[5].Descriptor()
 	// role.DefaultSortNo holds the default value on creation for the sort_no field.
 	role.DefaultSortNo = roleDescSortNo.Default.(int)
 	userMixin := schema.User{}.Mixin()
-	userMixinHooks1 := userMixin[1].Hooks()
 	userMixinHooks2 := userMixin[2].Hooks()
-	user.Hooks[0] = userMixinHooks1[0]
-	user.Hooks[1] = userMixinHooks2[0]
-	userMixinInters1 := userMixin[1].Interceptors()
+	userMixinHooks3 := userMixin[3].Hooks()
+	user.Hooks[0] = userMixinHooks2[0]
+	user.Hooks[1] = userMixinHooks3[0]
 	userMixinInters2 := userMixin[2].Interceptors()
-	user.Interceptors[0] = userMixinInters1[0]
-	user.Interceptors[1] = userMixinInters2[0]
-	userMixinFields0 := userMixin[0].Fields()
-	_ = userMixinFields0
-	userMixinFields2 := userMixin[2].Fields()
-	_ = userMixinFields2
+	userMixinInters3 := userMixin[3].Interceptors()
+	user.Interceptors[0] = userMixinInters2[0]
+	user.Interceptors[1] = userMixinInters3[0]
+	userMixinFields1 := userMixin[1].Fields()
+	_ = userMixinFields1
+	userMixinFields3 := userMixin[3].Fields()
+	_ = userMixinFields3
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescCreatedAt is the schema descriptor for created_at field.
-	userDescCreatedAt := userMixinFields0[0].Descriptor()
+	userDescCreatedAt := userMixinFields1[0].Descriptor()
 	// user.DefaultCreatedAt holds the default value on creation for the created_at field.
 	user.DefaultCreatedAt = userDescCreatedAt.Default.(func() time.Time)
 	// userDescUpdatedAt is the schema descriptor for updated_at field.
-	userDescUpdatedAt := userMixinFields0[1].Descriptor()
+	userDescUpdatedAt := userMixinFields1[1].Descriptor()
 	// user.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	user.DefaultUpdatedAt = userDescUpdatedAt.Default.(func() time.Time)
 	// user.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	user.UpdateDefaultUpdatedAt = userDescUpdatedAt.UpdateDefault.(func() time.Time)
 	// userDescOperatorCode is the schema descriptor for operator_code field.
-	userDescOperatorCode := userMixinFields2[0].Descriptor()
+	userDescOperatorCode := userMixinFields3[0].Descriptor()
 	// user.OperatorCodeValidator is a validator for the "operator_code" field. It is called by the builders before save.
 	user.OperatorCodeValidator = userDescOperatorCode.Validators[0].(func(string) error)
 	// userDescUserCode is the schema descriptor for user_code field.
-	userDescUserCode := userFields[1].Descriptor()
+	userDescUserCode := userFields[0].Descriptor()
 	// user.UserCodeValidator is a validator for the "user_code" field. It is called by the builders before save.
 	user.UserCodeValidator = userDescUserCode.Validators[0].(func(string) error)
 	// userDescUsername is the schema descriptor for username field.
-	userDescUsername := userFields[2].Descriptor()
+	userDescUsername := userFields[1].Descriptor()
 	// user.UsernameValidator is a validator for the "username" field. It is called by the builders before save.
 	user.UsernameValidator = userDescUsername.Validators[0].(func(string) error)
 	// userDescPasswordHash is the schema descriptor for password_hash field.
-	userDescPasswordHash := userFields[3].Descriptor()
+	userDescPasswordHash := userFields[2].Descriptor()
 	// user.PasswordHashValidator is a validator for the "password_hash" field. It is called by the builders before save.
 	user.PasswordHashValidator = userDescPasswordHash.Validators[0].(func(string) error)
 	// userDescSalt is the schema descriptor for salt field.
-	userDescSalt := userFields[4].Descriptor()
+	userDescSalt := userFields[3].Descriptor()
 	// user.SaltValidator is a validator for the "salt" field. It is called by the builders before save.
 	user.SaltValidator = userDescSalt.Validators[0].(func(string) error)
 	// userDescDisplayName is the schema descriptor for display_name field.
-	userDescDisplayName := userFields[5].Descriptor()
+	userDescDisplayName := userFields[4].Descriptor()
 	// user.DisplayNameValidator is a validator for the "display_name" field. It is called by the builders before save.
 	user.DisplayNameValidator = userDescDisplayName.Validators[0].(func(string) error)
 	// userDescMobile is the schema descriptor for mobile field.
-	userDescMobile := userFields[6].Descriptor()
+	userDescMobile := userFields[5].Descriptor()
 	// user.MobileValidator is a validator for the "mobile" field. It is called by the builders before save.
 	user.MobileValidator = userDescMobile.Validators[0].(func(string) error)
 	// userDescEmail is the schema descriptor for email field.
-	userDescEmail := userFields[7].Descriptor()
+	userDescEmail := userFields[6].Descriptor()
 	// user.EmailValidator is a validator for the "email" field. It is called by the builders before save.
 	user.EmailValidator = userDescEmail.Validators[0].(func(string) error)
 	// userDescStatus is the schema descriptor for status field.
-	userDescStatus := userFields[8].Descriptor()
+	userDescStatus := userFields[7].Descriptor()
 	// user.DefaultStatus holds the default value on creation for the status field.
 	user.DefaultStatus = userDescStatus.Default.(int16)
 	// userDescIsSuperAdmin is the schema descriptor for is_super_admin field.
-	userDescIsSuperAdmin := userFields[9].Descriptor()
+	userDescIsSuperAdmin := userFields[8].Descriptor()
 	// user.DefaultIsSuperAdmin holds the default value on creation for the is_super_admin field.
 	user.DefaultIsSuperAdmin = userDescIsSuperAdmin.Default.(bool)
 	// userDescIPWhitelistEnabled is the schema descriptor for ip_whitelist_enabled field.
-	userDescIPWhitelistEnabled := userFields[12].Descriptor()
+	userDescIPWhitelistEnabled := userFields[11].Descriptor()
 	// user.DefaultIPWhitelistEnabled holds the default value on creation for the ip_whitelist_enabled field.
 	user.DefaultIPWhitelistEnabled = userDescIPWhitelistEnabled.Default.(int16)
 	// userDescIPWhitelist is the schema descriptor for ip_whitelist field.
-	userDescIPWhitelist := userFields[13].Descriptor()
+	userDescIPWhitelist := userFields[12].Descriptor()
 	// user.DefaultIPWhitelist holds the default value on creation for the ip_whitelist field.
 	user.DefaultIPWhitelist = userDescIPWhitelist.Default.([]string)
 }

@@ -28,8 +28,9 @@ type OperatorGameProviderInfo struct {
 	OpCode        string                 `protobuf:"bytes,2,opt,name=op_code,json=opCode,proto3" json:"op_code,omitempty"`
 	ProviderCode  string                 `protobuf:"bytes,3,opt,name=provider_code,json=providerCode,proto3" json:"provider_code,omitempty"`
 	Status        int32                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`
-	CreatedAt     int64                  `protobuf:"varint,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     int64                  `protobuf:"varint,6,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	CheckStatus   int32                  `protobuf:"varint,5,opt,name=check_status,json=checkStatus,proto3" json:"check_status,omitempty"`
+	CreatedAt     int64                  `protobuf:"varint,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     int64                  `protobuf:"varint,7,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -92,6 +93,13 @@ func (x *OperatorGameProviderInfo) GetStatus() int32 {
 	return 0
 }
 
+func (x *OperatorGameProviderInfo) GetCheckStatus() int32 {
+	if x != nil {
+		return x.CheckStatus
+	}
+	return 0
+}
+
 func (x *OperatorGameProviderInfo) GetCreatedAt() int64 {
 	if x != nil {
 		return x.CreatedAt
@@ -113,7 +121,7 @@ type GetOperatorGameProviderListRequest struct {
 	PageSize      int32                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
 	OpCode        string                 `protobuf:"bytes,3,opt,name=op_code,json=opCode,proto3" json:"op_code,omitempty"`
 	ProviderCode  string                 `protobuf:"bytes,4,opt,name=provider_code,json=providerCode,proto3" json:"provider_code,omitempty"`
-	Status        int32                  `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`
+	CheckStatus   int32                  `protobuf:"varint,5,opt,name=check_status,json=checkStatus,proto3" json:"check_status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -176,9 +184,9 @@ func (x *GetOperatorGameProviderListRequest) GetProviderCode() string {
 	return ""
 }
 
-func (x *GetOperatorGameProviderListRequest) GetStatus() int32 {
+func (x *GetOperatorGameProviderListRequest) GetCheckStatus() int32 {
 	if x != nil {
-		return x.Status
+		return x.CheckStatus
 	}
 	return 0
 }
@@ -252,173 +260,6 @@ func (x *GetOperatorGameProviderListResp) GetPageSize() int32 {
 	return 0
 }
 
-// BatchCreateOperatorGameProviderItemRequest 批量创建分站游戏提供商请求项
-type BatchCreateOperatorGameProviderItemRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	OpCode        string                 `protobuf:"bytes,1,opt,name=op_code,json=opCode,proto3" json:"op_code,omitempty"`
-	ProviderCode  string                 `protobuf:"bytes,2,opt,name=provider_code,json=providerCode,proto3" json:"provider_code,omitempty"`
-	Status        int32                  `protobuf:"varint,3,opt,name=status,proto3" json:"status,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *BatchCreateOperatorGameProviderItemRequest) Reset() {
-	*x = BatchCreateOperatorGameProviderItemRequest{}
-	mi := &file_types_operator_game_provider_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *BatchCreateOperatorGameProviderItemRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*BatchCreateOperatorGameProviderItemRequest) ProtoMessage() {}
-
-func (x *BatchCreateOperatorGameProviderItemRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_game_provider_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use BatchCreateOperatorGameProviderItemRequest.ProtoReflect.Descriptor instead.
-func (*BatchCreateOperatorGameProviderItemRequest) Descriptor() ([]byte, []int) {
-	return file_types_operator_game_provider_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *BatchCreateOperatorGameProviderItemRequest) GetOpCode() string {
-	if x != nil {
-		return x.OpCode
-	}
-	return ""
-}
-
-func (x *BatchCreateOperatorGameProviderItemRequest) GetProviderCode() string {
-	if x != nil {
-		return x.ProviderCode
-	}
-	return ""
-}
-
-func (x *BatchCreateOperatorGameProviderItemRequest) GetStatus() int32 {
-	if x != nil {
-		return x.Status
-	}
-	return 0
-}
-
-// BatchCreateOperatorGameProviderRequest 批量创建分站游戏提供商请求
-type BatchCreateOperatorGameProviderRequest struct {
-	state         protoimpl.MessageState                        `protogen:"open.v1"`
-	Items         []*BatchCreateOperatorGameProviderItemRequest `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *BatchCreateOperatorGameProviderRequest) Reset() {
-	*x = BatchCreateOperatorGameProviderRequest{}
-	mi := &file_types_operator_game_provider_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *BatchCreateOperatorGameProviderRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*BatchCreateOperatorGameProviderRequest) ProtoMessage() {}
-
-func (x *BatchCreateOperatorGameProviderRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_game_provider_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use BatchCreateOperatorGameProviderRequest.ProtoReflect.Descriptor instead.
-func (*BatchCreateOperatorGameProviderRequest) Descriptor() ([]byte, []int) {
-	return file_types_operator_game_provider_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *BatchCreateOperatorGameProviderRequest) GetItems() []*BatchCreateOperatorGameProviderItemRequest {
-	if x != nil {
-		return x.Items
-	}
-	return nil
-}
-
-// BatchCreateOperatorGameProviderResp 批量创建分站游戏提供商响应
-type BatchCreateOperatorGameProviderResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
-	Success       int64                  `protobuf:"varint,2,opt,name=success,proto3" json:"success,omitempty"`
-	Failed        int64                  `protobuf:"varint,3,opt,name=failed,proto3" json:"failed,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *BatchCreateOperatorGameProviderResp) Reset() {
-	*x = BatchCreateOperatorGameProviderResp{}
-	mi := &file_types_operator_game_provider_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *BatchCreateOperatorGameProviderResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*BatchCreateOperatorGameProviderResp) ProtoMessage() {}
-
-func (x *BatchCreateOperatorGameProviderResp) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_game_provider_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use BatchCreateOperatorGameProviderResp.ProtoReflect.Descriptor instead.
-func (*BatchCreateOperatorGameProviderResp) Descriptor() ([]byte, []int) {
-	return file_types_operator_game_provider_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *BatchCreateOperatorGameProviderResp) GetTotal() int64 {
-	if x != nil {
-		return x.Total
-	}
-	return 0
-}
-
-func (x *BatchCreateOperatorGameProviderResp) GetSuccess() int64 {
-	if x != nil {
-		return x.Success
-	}
-	return 0
-}
-
-func (x *BatchCreateOperatorGameProviderResp) GetFailed() int64 {
-	if x != nil {
-		return x.Failed
-	}
-	return 0
-}
-
 // BatchUpdateOperatorGameProviderStatusRequest 批量修改分站游戏提供商状态请求
 type BatchUpdateOperatorGameProviderStatusRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -430,7 +271,7 @@ type BatchUpdateOperatorGameProviderStatusRequest struct {
 
 func (x *BatchUpdateOperatorGameProviderStatusRequest) Reset() {
 	*x = BatchUpdateOperatorGameProviderStatusRequest{}
-	mi := &file_types_operator_game_provider_proto_msgTypes[6]
+	mi := &file_types_operator_game_provider_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -442,7 +283,7 @@ func (x *BatchUpdateOperatorGameProviderStatusRequest) String() string {
 func (*BatchUpdateOperatorGameProviderStatusRequest) ProtoMessage() {}
 
 func (x *BatchUpdateOperatorGameProviderStatusRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_game_provider_proto_msgTypes[6]
+	mi := &file_types_operator_game_provider_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -455,7 +296,7 @@ func (x *BatchUpdateOperatorGameProviderStatusRequest) ProtoReflect() protorefle
 
 // Deprecated: Use BatchUpdateOperatorGameProviderStatusRequest.ProtoReflect.Descriptor instead.
 func (*BatchUpdateOperatorGameProviderStatusRequest) Descriptor() ([]byte, []int) {
-	return file_types_operator_game_provider_proto_rawDescGZIP(), []int{6}
+	return file_types_operator_game_provider_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *BatchUpdateOperatorGameProviderStatusRequest) GetIds() []int64 {
@@ -484,7 +325,7 @@ type BatchUpdateOperatorGameProviderStatusResp struct {
 
 func (x *BatchUpdateOperatorGameProviderStatusResp) Reset() {
 	*x = BatchUpdateOperatorGameProviderStatusResp{}
-	mi := &file_types_operator_game_provider_proto_msgTypes[7]
+	mi := &file_types_operator_game_provider_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -496,7 +337,7 @@ func (x *BatchUpdateOperatorGameProviderStatusResp) String() string {
 func (*BatchUpdateOperatorGameProviderStatusResp) ProtoMessage() {}
 
 func (x *BatchUpdateOperatorGameProviderStatusResp) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_game_provider_proto_msgTypes[7]
+	mi := &file_types_operator_game_provider_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -509,7 +350,7 @@ func (x *BatchUpdateOperatorGameProviderStatusResp) ProtoReflect() protoreflect.
 
 // Deprecated: Use BatchUpdateOperatorGameProviderStatusResp.ProtoReflect.Descriptor instead.
 func (*BatchUpdateOperatorGameProviderStatusResp) Descriptor() ([]byte, []int) {
-	return file_types_operator_game_provider_proto_rawDescGZIP(), []int{7}
+	return file_types_operator_game_provider_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *BatchUpdateOperatorGameProviderStatusResp) GetTotal() int64 {
@@ -533,29 +374,29 @@ func (x *BatchUpdateOperatorGameProviderStatusResp) GetFailed() int64 {
 	return 0
 }
 
-// BatchDeleteOperatorGameProviderRequest 批量删除分站游戏提供商请求
-type BatchDeleteOperatorGameProviderRequest struct {
+type SaveOperatorGameProviderAllocationInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Ids           []int64                `protobuf:"varint,1,rep,packed,name=ids,proto3" json:"ids,omitempty"`
+	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	CheckStatus   int32                  `protobuf:"varint,2,opt,name=check_status,json=checkStatus,proto3" json:"check_status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *BatchDeleteOperatorGameProviderRequest) Reset() {
-	*x = BatchDeleteOperatorGameProviderRequest{}
-	mi := &file_types_operator_game_provider_proto_msgTypes[8]
+func (x *SaveOperatorGameProviderAllocationInfo) Reset() {
+	*x = SaveOperatorGameProviderAllocationInfo{}
+	mi := &file_types_operator_game_provider_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *BatchDeleteOperatorGameProviderRequest) String() string {
+func (x *SaveOperatorGameProviderAllocationInfo) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BatchDeleteOperatorGameProviderRequest) ProtoMessage() {}
+func (*SaveOperatorGameProviderAllocationInfo) ProtoMessage() {}
 
-func (x *BatchDeleteOperatorGameProviderRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_game_provider_proto_msgTypes[8]
+func (x *SaveOperatorGameProviderAllocationInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_types_operator_game_provider_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -566,43 +407,105 @@ func (x *BatchDeleteOperatorGameProviderRequest) ProtoReflect() protoreflect.Mes
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use BatchDeleteOperatorGameProviderRequest.ProtoReflect.Descriptor instead.
-func (*BatchDeleteOperatorGameProviderRequest) Descriptor() ([]byte, []int) {
-	return file_types_operator_game_provider_proto_rawDescGZIP(), []int{8}
+// Deprecated: Use SaveOperatorGameProviderAllocationInfo.ProtoReflect.Descriptor instead.
+func (*SaveOperatorGameProviderAllocationInfo) Descriptor() ([]byte, []int) {
+	return file_types_operator_game_provider_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *BatchDeleteOperatorGameProviderRequest) GetIds() []int64 {
+func (x *SaveOperatorGameProviderAllocationInfo) GetCode() string {
 	if x != nil {
-		return x.Ids
+		return x.Code
+	}
+	return ""
+}
+
+func (x *SaveOperatorGameProviderAllocationInfo) GetCheckStatus() int32 {
+	if x != nil {
+		return x.CheckStatus
+	}
+	return 0
+}
+
+// SaveOperatorGameProviderAllocationRequest 保存分站游戏提供商分配请求项
+type SaveOperatorGameProviderAllocationRequest struct {
+	state         protoimpl.MessageState                    `protogen:"open.v1"`
+	OpCode        string                                    `protobuf:"bytes,1,opt,name=op_code,json=opCode,proto3" json:"op_code,omitempty"`
+	Items         []*SaveOperatorGameProviderAllocationInfo `protobuf:"bytes,2,rep,name=items,proto3" json:"items,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SaveOperatorGameProviderAllocationRequest) Reset() {
+	*x = SaveOperatorGameProviderAllocationRequest{}
+	mi := &file_types_operator_game_provider_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SaveOperatorGameProviderAllocationRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SaveOperatorGameProviderAllocationRequest) ProtoMessage() {}
+
+func (x *SaveOperatorGameProviderAllocationRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_types_operator_game_provider_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SaveOperatorGameProviderAllocationRequest.ProtoReflect.Descriptor instead.
+func (*SaveOperatorGameProviderAllocationRequest) Descriptor() ([]byte, []int) {
+	return file_types_operator_game_provider_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *SaveOperatorGameProviderAllocationRequest) GetOpCode() string {
+	if x != nil {
+		return x.OpCode
+	}
+	return ""
+}
+
+func (x *SaveOperatorGameProviderAllocationRequest) GetItems() []*SaveOperatorGameProviderAllocationInfo {
+	if x != nil {
+		return x.Items
 	}
 	return nil
 }
 
-// BatchDeleteOperatorGameProviderResp 批量删除分站游戏提供商响应
-type BatchDeleteOperatorGameProviderResp struct {
+// SaveOperatorGameProviderAllocationResp 保存分站游戏提供商分配响应
+type SaveOperatorGameProviderAllocationResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
-	Success       int64                  `protobuf:"varint,2,opt,name=success,proto3" json:"success,omitempty"`
-	Failed        int64                  `protobuf:"varint,3,opt,name=failed,proto3" json:"failed,omitempty"`
+	Created       int64                  `protobuf:"varint,2,opt,name=created,proto3" json:"created,omitempty"`
+	Deleted       int64                  `protobuf:"varint,3,opt,name=deleted,proto3" json:"deleted,omitempty"`
+	Exist         int64                  `protobuf:"varint,4,opt,name=exist,proto3" json:"exist,omitempty"`
+	Failed        int64                  `protobuf:"varint,5,opt,name=failed,proto3" json:"failed,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *BatchDeleteOperatorGameProviderResp) Reset() {
-	*x = BatchDeleteOperatorGameProviderResp{}
-	mi := &file_types_operator_game_provider_proto_msgTypes[9]
+func (x *SaveOperatorGameProviderAllocationResp) Reset() {
+	*x = SaveOperatorGameProviderAllocationResp{}
+	mi := &file_types_operator_game_provider_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *BatchDeleteOperatorGameProviderResp) String() string {
+func (x *SaveOperatorGameProviderAllocationResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BatchDeleteOperatorGameProviderResp) ProtoMessage() {}
+func (*SaveOperatorGameProviderAllocationResp) ProtoMessage() {}
 
-func (x *BatchDeleteOperatorGameProviderResp) ProtoReflect() protoreflect.Message {
-	mi := &file_types_operator_game_provider_proto_msgTypes[9]
+func (x *SaveOperatorGameProviderAllocationResp) ProtoReflect() protoreflect.Message {
+	mi := &file_types_operator_game_provider_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -613,26 +516,40 @@ func (x *BatchDeleteOperatorGameProviderResp) ProtoReflect() protoreflect.Messag
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use BatchDeleteOperatorGameProviderResp.ProtoReflect.Descriptor instead.
-func (*BatchDeleteOperatorGameProviderResp) Descriptor() ([]byte, []int) {
-	return file_types_operator_game_provider_proto_rawDescGZIP(), []int{9}
+// Deprecated: Use SaveOperatorGameProviderAllocationResp.ProtoReflect.Descriptor instead.
+func (*SaveOperatorGameProviderAllocationResp) Descriptor() ([]byte, []int) {
+	return file_types_operator_game_provider_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *BatchDeleteOperatorGameProviderResp) GetTotal() int64 {
+func (x *SaveOperatorGameProviderAllocationResp) GetTotal() int64 {
 	if x != nil {
 		return x.Total
 	}
 	return 0
 }
 
-func (x *BatchDeleteOperatorGameProviderResp) GetSuccess() int64 {
+func (x *SaveOperatorGameProviderAllocationResp) GetCreated() int64 {
 	if x != nil {
-		return x.Success
+		return x.Created
 	}
 	return 0
 }
 
-func (x *BatchDeleteOperatorGameProviderResp) GetFailed() int64 {
+func (x *SaveOperatorGameProviderAllocationResp) GetDeleted() int64 {
+	if x != nil {
+		return x.Deleted
+	}
+	return 0
+}
+
+func (x *SaveOperatorGameProviderAllocationResp) GetExist() int64 {
+	if x != nil {
+		return x.Exist
+	}
+	return 0
+}
+
+func (x *SaveOperatorGameProviderAllocationResp) GetFailed() int64 {
 	if x != nil {
 		return x.Failed
 	}
@@ -643,50 +560,47 @@ var File_types_operator_game_provider_proto protoreflect.FileDescriptor
 
 const file_types_operator_game_provider_proto_rawDesc = "" +
 	"\n" +
-	"\"types/operator_game_provider.proto\x12\rplatform_game\"\xbe\x01\n" +
+	"\"types/operator_game_provider.proto\x12\rplatform_game\"\xe1\x01\n" +
 	"\x18OperatorGameProviderInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\aop_code\x18\x02 \x01(\tR\x06opCode\x12#\n" +
 	"\rprovider_code\x18\x03 \x01(\tR\fproviderCode\x12\x16\n" +
-	"\x06status\x18\x04 \x01(\x05R\x06status\x12\x1d\n" +
+	"\x06status\x18\x04 \x01(\x05R\x06status\x12!\n" +
+	"\fcheck_status\x18\x05 \x01(\x05R\vcheckStatus\x12\x1d\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\x03R\tcreatedAt\x12\x1d\n" +
+	"created_at\x18\x06 \x01(\x03R\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\x06 \x01(\x03R\tupdatedAt\"\xab\x01\n" +
+	"updated_at\x18\a \x01(\x03R\tupdatedAt\"\xb6\x01\n" +
 	"\"GetOperatorGameProviderListRequest\x12\x12\n" +
 	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1b\n" +
 	"\tpage_size\x18\x02 \x01(\x05R\bpageSize\x12\x17\n" +
 	"\aop_code\x18\x03 \x01(\tR\x06opCode\x12#\n" +
-	"\rprovider_code\x18\x04 \x01(\tR\fproviderCode\x12\x16\n" +
-	"\x06status\x18\x05 \x01(\x05R\x06status\"\xa7\x01\n" +
+	"\rprovider_code\x18\x04 \x01(\tR\fproviderCode\x12!\n" +
+	"\fcheck_status\x18\x05 \x01(\x05R\vcheckStatus\"\xa7\x01\n" +
 	"\x1fGetOperatorGameProviderListResp\x12=\n" +
 	"\x05items\x18\x01 \x03(\v2'.platform_game.OperatorGameProviderInfoR\x05items\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\x12\x12\n" +
 	"\x04page\x18\x03 \x01(\x05R\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x04 \x01(\x05R\bpageSize\"\x82\x01\n" +
-	"*BatchCreateOperatorGameProviderItemRequest\x12\x17\n" +
-	"\aop_code\x18\x01 \x01(\tR\x06opCode\x12#\n" +
-	"\rprovider_code\x18\x02 \x01(\tR\fproviderCode\x12\x16\n" +
-	"\x06status\x18\x03 \x01(\x05R\x06status\"y\n" +
-	"&BatchCreateOperatorGameProviderRequest\x12O\n" +
-	"\x05items\x18\x01 \x03(\v29.platform_game.BatchCreateOperatorGameProviderItemRequestR\x05items\"m\n" +
-	"#BatchCreateOperatorGameProviderResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x03R\x05total\x12\x18\n" +
-	"\asuccess\x18\x02 \x01(\x03R\asuccess\x12\x16\n" +
-	"\x06failed\x18\x03 \x01(\x03R\x06failed\"X\n" +
+	"\tpage_size\x18\x04 \x01(\x05R\bpageSize\"X\n" +
 	",BatchUpdateOperatorGameProviderStatusRequest\x12\x10\n" +
 	"\x03ids\x18\x01 \x03(\x03R\x03ids\x12\x16\n" +
 	"\x06status\x18\x02 \x01(\x05R\x06status\"s\n" +
 	")BatchUpdateOperatorGameProviderStatusResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x03R\x05total\x12\x18\n" +
 	"\asuccess\x18\x02 \x01(\x03R\asuccess\x12\x16\n" +
-	"\x06failed\x18\x03 \x01(\x03R\x06failed\":\n" +
-	"&BatchDeleteOperatorGameProviderRequest\x12\x10\n" +
-	"\x03ids\x18\x01 \x03(\x03R\x03ids\"m\n" +
-	"#BatchDeleteOperatorGameProviderResp\x12\x14\n" +
+	"\x06failed\x18\x03 \x01(\x03R\x06failed\"_\n" +
+	"&SaveOperatorGameProviderAllocationInfo\x12\x12\n" +
+	"\x04code\x18\x01 \x01(\tR\x04code\x12!\n" +
+	"\fcheck_status\x18\x02 \x01(\x05R\vcheckStatus\"\x91\x01\n" +
+	")SaveOperatorGameProviderAllocationRequest\x12\x17\n" +
+	"\aop_code\x18\x01 \x01(\tR\x06opCode\x12K\n" +
+	"\x05items\x18\x02 \x03(\v25.platform_game.SaveOperatorGameProviderAllocationInfoR\x05items\"\xa0\x01\n" +
+	"&SaveOperatorGameProviderAllocationResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x03R\x05total\x12\x18\n" +
-	"\asuccess\x18\x02 \x01(\x03R\asuccess\x12\x16\n" +
-	"\x06failed\x18\x03 \x01(\x03R\x06failedB4Z2oa.98ent.com/p9/platform-game/rpc/pb/platform_gameb\x06proto3"
+	"\acreated\x18\x02 \x01(\x03R\acreated\x12\x18\n" +
+	"\adeleted\x18\x03 \x01(\x03R\adeleted\x12\x14\n" +
+	"\x05exist\x18\x04 \x01(\x03R\x05exist\x12\x16\n" +
+	"\x06failed\x18\x05 \x01(\x03R\x06failedB4Z2oa.98ent.com/p9/platform-game/rpc/pb/platform_gameb\x06proto3"
 
 var (
 	file_types_operator_game_provider_proto_rawDescOnce sync.Once
@@ -700,22 +614,20 @@ func file_types_operator_game_provider_proto_rawDescGZIP() []byte {
 	return file_types_operator_game_provider_proto_rawDescData
 }
 
-var file_types_operator_game_provider_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_types_operator_game_provider_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_types_operator_game_provider_proto_goTypes = []any{
 	(*OperatorGameProviderInfo)(nil),                     // 0: platform_game.OperatorGameProviderInfo
 	(*GetOperatorGameProviderListRequest)(nil),           // 1: platform_game.GetOperatorGameProviderListRequest
 	(*GetOperatorGameProviderListResp)(nil),              // 2: platform_game.GetOperatorGameProviderListResp
-	(*BatchCreateOperatorGameProviderItemRequest)(nil),   // 3: platform_game.BatchCreateOperatorGameProviderItemRequest
-	(*BatchCreateOperatorGameProviderRequest)(nil),       // 4: platform_game.BatchCreateOperatorGameProviderRequest
-	(*BatchCreateOperatorGameProviderResp)(nil),          // 5: platform_game.BatchCreateOperatorGameProviderResp
-	(*BatchUpdateOperatorGameProviderStatusRequest)(nil), // 6: platform_game.BatchUpdateOperatorGameProviderStatusRequest
-	(*BatchUpdateOperatorGameProviderStatusResp)(nil),    // 7: platform_game.BatchUpdateOperatorGameProviderStatusResp
-	(*BatchDeleteOperatorGameProviderRequest)(nil),       // 8: platform_game.BatchDeleteOperatorGameProviderRequest
-	(*BatchDeleteOperatorGameProviderResp)(nil),          // 9: platform_game.BatchDeleteOperatorGameProviderResp
+	(*BatchUpdateOperatorGameProviderStatusRequest)(nil), // 3: platform_game.BatchUpdateOperatorGameProviderStatusRequest
+	(*BatchUpdateOperatorGameProviderStatusResp)(nil),    // 4: platform_game.BatchUpdateOperatorGameProviderStatusResp
+	(*SaveOperatorGameProviderAllocationInfo)(nil),       // 5: platform_game.SaveOperatorGameProviderAllocationInfo
+	(*SaveOperatorGameProviderAllocationRequest)(nil),    // 6: platform_game.SaveOperatorGameProviderAllocationRequest
+	(*SaveOperatorGameProviderAllocationResp)(nil),       // 7: platform_game.SaveOperatorGameProviderAllocationResp
 }
 var file_types_operator_game_provider_proto_depIdxs = []int32{
 	0, // 0: platform_game.GetOperatorGameProviderListResp.items:type_name -> platform_game.OperatorGameProviderInfo
-	3, // 1: platform_game.BatchCreateOperatorGameProviderRequest.items:type_name -> platform_game.BatchCreateOperatorGameProviderItemRequest
+	5, // 1: platform_game.SaveOperatorGameProviderAllocationRequest.items:type_name -> platform_game.SaveOperatorGameProviderAllocationInfo
 	2, // [2:2] is the sub-list for method output_type
 	2, // [2:2] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
@@ -734,7 +646,7 @@ func file_types_operator_game_provider_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_operator_game_provider_proto_rawDesc), len(file_types_operator_game_provider_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

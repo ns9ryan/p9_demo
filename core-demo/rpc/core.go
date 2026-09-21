@@ -33,6 +33,7 @@ func main() {
 			reflection.Register(grpcServer)
 		}
 	})
+	// 注册tracing拦截器
 	s.AddUnaryInterceptors(tracing.UnaryServerInterceptor())
 	defer s.Stop()
 

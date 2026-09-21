@@ -1,7 +1,10 @@
 package middleware
 
 import (
+	"bytes"
 	"context"
+	"io"
+	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -98,6 +101,49 @@ func TestActionLogMiddlewareSkips(t *testing.T) {
 	case rec := <-ch:
 		t.Fatalf("unexpected %+v", rec)
 	case <-time.After(200 * time.Millisecond):
+	}
+}
+
+func TestActionLogMiddlewareLeavesMultipartBody(t *testing.T) {
+	payload := bytes.Repeat([]byte("x"), maxActionBody+1024)
+	var buf bytes.Buffer
+	mw := multipart.NewWriter(&buf)
+	fw, err := mw.CreateFormFile("file", "i18n.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := fw.Write(payload); err != nil {
+		t.Fatal(err)
+	}
+	if err := mw.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	ch := make(chan ActionRecord, 1)
+	h := ActionLog(chanRecorder{ch: ch})(func(w http.ResponseWriter, r *http.Request) {
+		f, _, err := r.FormFile("file")
+		if err != nil {
+			t.Errorf("form file: %v", err)
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		defer f.Close()
+		got, err := io.ReadAll(f)
+		if err != nil {
+			t.Errorf("read file: %v", err)
+		}
+		if !bytes.Equal(got, payload) {
+			t.Errorf("truncated file len=%d want=%d", len(got), len(payload))
+		}
+		w.WriteHeader(http.StatusOK)
+	})
+	req := httptest.NewRequest(http.MethodPost, "/admin/i18n/import", bytes.NewReader(buf.Bytes()))
+	req.Header.Set("Content-Type", mw.FormDataContentType())
+	req = req.WithContext(ctxdata.WithClaims(req.Context(), &ctxdata.Claims{UserID: 1}))
+	h(httptest.NewRecorder(), req)
+	rec := waitRec(t, ch)
+	if rec.RequestBody != multipartBodyMark {
+		t.Fatalf("body=%q", rec.RequestBody)
 	}
 }
 

@@ -34,6 +34,8 @@ func catalogReq(code string) *coreclient.RegisterCatalogReq {
 			{Name: "MenuCreate", Title: "menu.route.menuCreate", MenuType: menuTypeButton, Permission: "menu:create", ParentName: "Menu", Sort: 131},
 			{Name: "APICreate", Title: "menu.route.apiCreate", MenuType: menuTypeButton, Permission: "api:create", ParentName: "API", Sort: 141},
 			{Name: "I18nCreate", Title: "menu.route.i18nCreate", MenuType: menuTypeButton, Permission: "i18n:create", ParentName: "I18nEntry", Sort: 1611},
+			{Name: "I18nExport", Title: "menu.route.i18nExport", MenuType: menuTypeButton, Permission: "i18n:export", ParentName: "I18nEntry", Sort: 1612},
+			{Name: "I18nImport", Title: "menu.route.i18nImport", MenuType: menuTypeButton, Permission: "i18n:import", ParentName: "I18nEntry", Sort: 1613},
 			{Name: "I18nLangCreate", Title: "menu.route.i18nLangCreate", MenuType: menuTypeButton, Permission: "i18nLang:create", ParentName: "I18nLang", Sort: 1621},
 		},
 		Apis: []*coreclient.CreateApiReq{
@@ -69,14 +71,17 @@ func catalogReq(code string) *coreclient.RegisterCatalogReq {
 			{Path: "/admin/i18n/update", Method: http.MethodPost, Description: "api.i18nUpdate", ApiGroup: "i18n", ServiceName: "core-api"},
 			{Path: "/admin/i18n/updateByKey", Method: http.MethodPost, Description: "api.i18nUpdateByKey", ApiGroup: "i18n", ServiceName: "core-api"},
 			{Path: "/admin/i18n/delete", Method: http.MethodPost, Description: "api.i18nDelete", ApiGroup: "i18n", ServiceName: "core-api"},
+			{Path: "/admin/i18n/deleteByKey", Method: http.MethodPost, Description: "api.i18nDeleteByKey", ApiGroup: "i18n", ServiceName: "core-api"},
 			{Path: "/admin/i18n/list", Method: http.MethodPost, Description: "api.i18nList", ApiGroup: "i18n", ServiceName: "core-api"},
+			{Path: "/admin/i18n/export", Method: http.MethodPost, Description: "api.i18nExport", ApiGroup: "i18n", ServiceName: "core-api"},
+			{Path: "/admin/i18n/import", Method: http.MethodPost, Description: "api.i18nImport", ApiGroup: "i18n", ServiceName: "core-api"},
 			{Path: "/admin/i18n/lang/create", Method: http.MethodPost, Description: "api.i18nLangCreate", ApiGroup: "i18n", ServiceName: "core-api"},
 			{Path: "/admin/i18n/lang/update", Method: http.MethodPost, Description: "api.i18nLangUpdate", ApiGroup: "i18n", ServiceName: "core-api"},
 			{Path: "/admin/i18n/lang/reorder", Method: http.MethodPost, Description: "api.i18nLangReorder", ApiGroup: "i18n", ServiceName: "core-api"},
 			{Path: "/admin/i18n/lang/delete", Method: http.MethodPost, Description: "api.i18nLangDelete", ApiGroup: "i18n", ServiceName: "core-api"},
 			{Path: "/admin/i18n/lang/list", Method: http.MethodPost, Description: "api.i18nLangList", ApiGroup: "i18n", ServiceName: "core-api"},
 		},
-		I18N:      append(append(append(menuI18n(code), apiI18n(code)...), frontI18n(code)...), langI18n(code)...),
-		I18NLangs: langSeeds(),
+		I18NLangs: langSeeds(code),
+		I18N:      i18nSeeds(code),
 	}
 }

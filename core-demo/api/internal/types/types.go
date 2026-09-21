@@ -138,7 +138,7 @@ type PageReq struct {
 // ID query | ID 查询
 type IDQuery struct {
 	// ID | 主键
-	Id int64 `form:"id"`
+	Id int64 `form:"id,range=(0:]"`
 }
 
 // Base message | 结果信息
@@ -543,6 +543,64 @@ type UpdateI18nByKeyReq struct {
 	TransKey string `json:"trans_key"`
 	// Data | 各语言译文
 	Data map[string]string `json:"data"`
+}
+
+// Delete i18n by key request | 按站点/分组/key删除词条（该 key 全部语言）
+type DeleteI18nByKeyReq struct {
+	// Site | 站点编码
+	I18nCode string `json:"i18n_code"`
+	// Group | 分组
+	I18nGroup string `json:"i18n_group"`
+	// Key | 词条key
+	TransKey string `json:"trans_key"`
+}
+
+// I18n file item | 导出/导入词条
+type I18nFileItem struct {
+	// Site | 站点编码
+	I18nCode string `json:"i18n_code,optional"`
+	// Group | 分组
+	I18nGroup string `json:"i18n_group,optional"`
+	// Key | 词条key
+	I18nKey string `json:"i18n_key"`
+	// Value | 译文
+	I18nValue string `json:"i18n_value"`
+}
+
+// Export i18n request | 导出多语言
+type ExportI18nReq struct {
+	// Lang | 语言
+	Lang string `json:"lang"`
+	// Site | 站点编码，空则不按站点过滤
+	I18nCode string `json:"i18n_code,optional"`
+	// Group | 分组，空则导出全部组
+	I18nGroup string `json:"i18n_group,optional"`
+}
+
+// Export i18n response | 导出多语言
+type ExportI18nResp struct {
+	// Lang | 语言
+	Lang string `json:"lang"`
+	// Items | 词条
+	I18nItems []I18nFileItem `json:"i18n_items"`
+}
+
+// Import i18n request | 导入多语言（上传 JSON 文件，格式同导出）
+type ImportI18nReq struct {
+	// File | JSON 文件
+	File []byte `form:"file"`
+	// Lang | 指定语言，空则用文件内 lang；非空必须与文件 lang 相等
+	Lang string `form:"lang,optional"`
+}
+
+// Import i18n response | 导入多语言结果
+type ImportI18nResp struct {
+	// Created | 新建条数
+	Created int32 `json:"created"`
+	// Updated | 更新条数
+	Updated int32 `json:"updated"`
+	// Skipped | 跳过条数
+	Skipped int32 `json:"skipped"`
 }
 
 // I18n lang info | 支持的语言

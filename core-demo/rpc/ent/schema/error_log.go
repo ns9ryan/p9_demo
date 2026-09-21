@@ -25,12 +25,11 @@ func (ErrorLog) Annotations() []schema.Annotation {
 }
 
 func (ErrorLog) Mixin() []ent.Mixin {
-	return []ent.Mixin{entmixin.OperatorCodeMixin{}}
+	return []ent.Mixin{entmixin.IDMixin{}, entmixin.OperatorCodeMixin{}}
 }
 
 func (ErrorLog) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int64("id").Comment("Primary key | 主键"),
 		field.Int64("user_id").Optional().Nillable().Comment("User ID | 用户 ID"),
 		field.String("request_method").MaxLen(10).Comment("HTTP method | 请求方法"),
 		field.String("request_path").MaxLen(500).Comment("Request path | 请求路径"),

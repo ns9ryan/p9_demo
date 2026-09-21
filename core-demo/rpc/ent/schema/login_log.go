@@ -25,12 +25,11 @@ func (LoginLog) Annotations() []schema.Annotation {
 }
 
 func (LoginLog) Mixin() []ent.Mixin {
-	return []ent.Mixin{entmixin.OperatorCodeMixin{}}
+	return []ent.Mixin{entmixin.IDMixin{}, entmixin.OperatorCodeMixin{}}
 }
 
 func (LoginLog) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int64("id").Comment("Primary key | 主键"),
 		field.Int64("user_id").Optional().Nillable().Comment("User ID | 用户 ID"),
 		field.String("username").MaxLen(64).Comment("Login name | 登录名"),
 		field.Int16("login_result").Comment("Login result 1 success 2 fail | 登录结果 1 成功 2 失败"),

@@ -111,6 +111,64 @@ type UpdateI18nByKeyReq {
 	Data      map[string]string `json:"data"`
 }
 
+// Delete i18n by key request | 按站点/分组/key删除词条（该 key 全部语言）
+type DeleteI18nByKeyReq {
+	// Site | 站点编码
+	I18nCode  string `json:"i18n_code"`
+	// Group | 分组
+	I18nGroup string `json:"i18n_group"`
+	// Key | 词条key
+	TransKey  string `json:"trans_key"`
+}
+
+// I18n file item | 导出/导入词条
+type I18nFileItem {
+	// Site | 站点编码
+	I18nCode  string `json:"i18n_code,optional"`
+	// Group | 分组
+	I18nGroup string `json:"i18n_group,optional"`
+	// Key | 词条key
+	I18nKey   string `json:"i18n_key"`
+	// Value | 译文
+	I18nValue string `json:"i18n_value"`
+}
+
+// Export i18n request | 导出多语言
+type ExportI18nReq {
+	// Lang | 语言
+	Lang      string `json:"lang"`
+	// Site | 站点编码，空则不按站点过滤
+	I18nCode  string `json:"i18n_code,optional"`
+	// Group | 分组，空则导出全部组
+	I18nGroup string `json:"i18n_group,optional"`
+}
+
+// Export i18n response | 导出多语言
+type ExportI18nResp {
+	// Lang | 语言
+	Lang      string         `json:"lang"`
+	// Items | 词条
+	I18nItems []I18nFileItem `json:"i18n_items"`
+}
+
+// Import i18n request | 导入多语言（上传 JSON 文件，格式同导出）
+type ImportI18nReq {
+	// File | JSON 文件
+	File []byte `form:"file"`
+	// Lang | 指定语言，空则用文件内 lang；非空必须与文件 lang 相等
+	Lang string `form:"lang,optional"`
+}
+
+// Import i18n response | 导入多语言结果
+type ImportI18nResp {
+	// Created | 新建条数
+	Created int32 `json:"created"`
+	// Updated | 更新条数
+	Updated int32 `json:"updated"`
+	// Skipped | 跳过条数
+	Skipped int32 `json:"skipped"`
+}
+
 // I18n lang info | 支持的语言
 type I18nLangInfo {
 	// ID | 语言ID
@@ -228,9 +286,21 @@ service Core {
 	@handler deleteI18n
 	post /i18n/delete (IDsReq) returns (BaseMsgResp)
 
+	@doc "按站点/分组/key删除词条"
+	@handler deleteI18nByKey
+	post /i18n/deleteByKey (DeleteI18nByKeyReq) returns (BaseMsgResp)
+
 	@doc "多语言列表"
 	@handler getI18nList
 	post /i18n/list (I18nListReq) returns (I18nListResp)
+
+	@doc "导出多语言（下载 JSON 文件）"
+	@handler exportI18n
+	post /i18n/export (ExportI18nReq) returns (ExportI18nResp)
+
+	@doc "导入多语言（上传 JSON 文件，字段 file，格式同导出）"
+	@handler importI18n
+	post /i18n/import (ImportI18nReq) returns (ImportI18nResp)
 
 	@doc "创建支持的语言"
 	@handler createI18nLang

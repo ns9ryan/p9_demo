@@ -23,12 +23,16 @@ func (User) Annotations() []schema.Annotation {
 }
 
 func (User) Mixin() []ent.Mixin {
-	return []ent.Mixin{entmixin.TimeMixin{}, entmixin.SoftDeleteMixin{}, entmixin.OperatorCodeMixin{}}
+	return []ent.Mixin{
+		entmixin.IDMixin{},
+		entmixin.TimeMixin{},
+		entmixin.SoftDeleteMixin{},
+		entmixin.OperatorCodeMixin{},
+	}
 }
 
 func (User) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int64("id").Comment("Primary key | 主键"),
 		field.String("user_code").MaxLen(64).Comment("User code | 用户编码"),
 		field.String("username").MaxLen(64).Comment("Login name | 登录名"),
 		field.String("password_hash").MaxLen(255).Sensitive().Comment("Password hash | 密码哈希"),

@@ -11,7 +11,7 @@ import (
 var (
 	// SysAPIColumns holds the columns for the "sys_api" table.
 	SysAPIColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键"},
+		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键ID", SchemaType: map[string]string{"postgres": "bigint"}},
 		{Name: "created_at", Type: field.TypeTime, Comment: "Created At | 创建时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
 		{Name: "updated_at", Type: field.TypeTime, Comment: "Updated At | 更新时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
 		{Name: "description", Type: field.TypeString, Size: 255, Comment: "Description i18n key | 描述词条"},
@@ -37,7 +37,7 @@ var (
 	}
 	// SysAdminActionLogColumns holds the columns for the "sys_admin_action_log" table.
 	SysAdminActionLogColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键"},
+		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键ID", SchemaType: map[string]string{"postgres": "bigint"}},
 		{Name: "operator_code", Type: field.TypeString, Nullable: true, Size: 64, Comment: "Operator Code | 分站编码"},
 		{Name: "request_method", Type: field.TypeString, Size: 10, Comment: "HTTP method | 请求方法"},
 		{Name: "request_path", Type: field.TypeString, Size: 500, Comment: "Request path | 请求路径"},
@@ -50,7 +50,7 @@ var (
 		{Name: "client_ip", Type: field.TypeString, Comment: "Client IP | 客户端 IP", SchemaType: map[string]string{"postgres": "inet"}},
 		{Name: "user_agent", Type: field.TypeString, Nullable: true, Size: 1000, Comment: "User agent | 客户端标识"},
 		{Name: "created_at", Type: field.TypeTime, Comment: "Created at | 创建时间"},
-		{Name: "user_id", Type: field.TypeInt64, Comment: "User ID | 用户 ID"},
+		{Name: "user_id", Type: field.TypeInt64, Comment: "User ID | 用户 ID", SchemaType: map[string]string{"postgres": "bigint"}},
 	}
 	// SysAdminActionLogTable holds the schema information for the "sys_admin_action_log" table.
 	SysAdminActionLogTable = &schema.Table{
@@ -116,7 +116,7 @@ var (
 	}
 	// SysErrorLogColumns holds the columns for the "sys_error_log" table.
 	SysErrorLogColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键"},
+		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键ID", SchemaType: map[string]string{"postgres": "bigint"}},
 		{Name: "operator_code", Type: field.TypeString, Nullable: true, Size: 64, Comment: "Operator Code | 分站编码"},
 		{Name: "request_method", Type: field.TypeString, Size: 10, Comment: "HTTP method | 请求方法"},
 		{Name: "request_path", Type: field.TypeString, Size: 500, Comment: "Request path | 请求路径"},
@@ -131,7 +131,7 @@ var (
 		{Name: "client_ip", Type: field.TypeString, Comment: "Client IP | 客户端 IP", SchemaType: map[string]string{"postgres": "inet"}},
 		{Name: "user_agent", Type: field.TypeString, Nullable: true, Size: 1000, Comment: "User agent | 客户端标识"},
 		{Name: "created_at", Type: field.TypeTime, Comment: "Created at | 创建时间"},
-		{Name: "user_id", Type: field.TypeInt64, Nullable: true, Comment: "User ID | 用户 ID"},
+		{Name: "user_id", Type: field.TypeInt64, Nullable: true, Comment: "User ID | 用户 ID", SchemaType: map[string]string{"postgres": "bigint"}},
 	}
 	// SysErrorLogTable holds the schema information for the "sys_error_log" table.
 	SysErrorLogTable = &schema.Table{
@@ -180,7 +180,7 @@ var (
 	}
 	// SysI18nColumns holds the columns for the "sys_i18n" table.
 	SysI18nColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键"},
+		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键ID", SchemaType: map[string]string{"postgres": "bigint"}},
 		{Name: "created_at", Type: field.TypeTime, Comment: "Created At | 创建时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
 		{Name: "updated_at", Type: field.TypeTime, Comment: "Updated At | 更新时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
 		{Name: "i18n_code", Type: field.TypeString, Size: 32, Comment: "Site code | 站点编码", Default: "platform"},
@@ -210,7 +210,7 @@ var (
 	}
 	// SysI18nLangColumns holds the columns for the "sys_i18n_lang" table.
 	SysI18nLangColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键"},
+		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键ID", SchemaType: map[string]string{"postgres": "bigint"}},
 		{Name: "created_at", Type: field.TypeTime, Comment: "Created At | 创建时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
 		{Name: "updated_at", Type: field.TypeTime, Comment: "Updated At | 更新时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
 		{Name: "lang", Type: field.TypeString, Size: 16, Comment: "Language code | 语言码"},
@@ -235,7 +235,7 @@ var (
 	}
 	// SysLoginLogColumns holds the columns for the "sys_login_log" table.
 	SysLoginLogColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键"},
+		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键ID", SchemaType: map[string]string{"postgres": "bigint"}},
 		{Name: "operator_code", Type: field.TypeString, Nullable: true, Size: 64, Comment: "Operator Code | 分站编码"},
 		{Name: "username", Type: field.TypeString, Size: 64, Comment: "Login name | 登录名"},
 		{Name: "login_result", Type: field.TypeInt16, Comment: "Login result 1 success 2 fail | 登录结果 1 成功 2 失败"},
@@ -244,7 +244,7 @@ var (
 		{Name: "device_id", Type: field.TypeInt64, Nullable: true, Comment: "Device ID | 设备 ID"},
 		{Name: "user_agent", Type: field.TypeString, Nullable: true, Size: 1000, Comment: "User agent | 客户端标识"},
 		{Name: "login_at", Type: field.TypeTime, Comment: "Login time | 登录时间"},
-		{Name: "user_id", Type: field.TypeInt64, Nullable: true, Comment: "User ID | 用户 ID"},
+		{Name: "user_id", Type: field.TypeInt64, Nullable: true, Comment: "User ID | 用户 ID", SchemaType: map[string]string{"postgres": "bigint"}},
 	}
 	// SysLoginLogTable holds the schema information for the "sys_login_log" table.
 	SysLoginLogTable = &schema.Table{
@@ -288,7 +288,7 @@ var (
 	}
 	// SysMenuColumns holds the columns for the "sys_menu" table.
 	SysMenuColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键"},
+		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键ID", SchemaType: map[string]string{"postgres": "bigint"}},
 		{Name: "created_at", Type: field.TypeTime, Comment: "Created At | 创建时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
 		{Name: "updated_at", Type: field.TypeTime, Comment: "Updated At | 更新时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
 		{Name: "parent_id", Type: field.TypeInt64, Comment: "Parent ID | 父级 ID", Default: 0},
@@ -320,7 +320,7 @@ var (
 	}
 	// SysRoleColumns holds the columns for the "sys_role" table.
 	SysRoleColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键"},
+		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键ID", SchemaType: map[string]string{"postgres": "bigint"}},
 		{Name: "created_at", Type: field.TypeTime, Comment: "Created At | 创建时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
 		{Name: "updated_at", Type: field.TypeTime, Comment: "Updated At | 更新时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "Deleted At | 删除时间"},
@@ -367,7 +367,7 @@ var (
 	}
 	// SysUserColumns holds the columns for the "sys_user" table.
 	SysUserColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键"},
+		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键ID", SchemaType: map[string]string{"postgres": "bigint"}},
 		{Name: "created_at", Type: field.TypeTime, Comment: "Created At | 创建时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
 		{Name: "updated_at", Type: field.TypeTime, Comment: "Updated At | 更新时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "Deleted At | 删除时间"},
@@ -431,8 +431,8 @@ var (
 	}
 	// SysRoleMenuColumns holds the columns for the "sys_role_menu" table.
 	SysRoleMenuColumns = []*schema.Column{
-		{Name: "role_id", Type: field.TypeInt64},
-		{Name: "menu_id", Type: field.TypeInt64},
+		{Name: "role_id", Type: field.TypeInt64, SchemaType: map[string]string{"postgres": "bigint"}},
+		{Name: "menu_id", Type: field.TypeInt64, SchemaType: map[string]string{"postgres": "bigint"}},
 	}
 	// SysRoleMenuTable holds the schema information for the "sys_role_menu" table.
 	SysRoleMenuTable = &schema.Table{
@@ -456,8 +456,8 @@ var (
 	}
 	// SysUserRoleColumns holds the columns for the "sys_user_role" table.
 	SysUserRoleColumns = []*schema.Column{
-		{Name: "user_id", Type: field.TypeInt64},
-		{Name: "role_id", Type: field.TypeInt64},
+		{Name: "user_id", Type: field.TypeInt64, SchemaType: map[string]string{"postgres": "bigint"}},
+		{Name: "role_id", Type: field.TypeInt64, SchemaType: map[string]string{"postgres": "bigint"}},
 	}
 	// SysUserRoleTable holds the schema information for the "sys_user_role" table.
 	SysUserRoleTable = &schema.Table{

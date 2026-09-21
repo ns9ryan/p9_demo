@@ -35,14 +35,18 @@ type (
 	CreateMenuReq            = core.CreateMenuReq
 	CreateRoleReq            = core.CreateRoleReq
 	CreateUserReq            = core.CreateUserReq
+	DeleteI18NByKeyReq       = core.DeleteI18NByKeyReq
 	Empty                    = core.Empty
 	EnforceReq               = core.EnforceReq
 	EnforceResp              = core.EnforceResp
 	ErrorLogInfo             = core.ErrorLogInfo
 	ErrorLogListReq          = core.ErrorLogListReq
 	ErrorLogListResp         = core.ErrorLogListResp
+	ExportI18NReq            = core.ExportI18NReq
+	ExportI18NResp           = core.ExportI18NResp
 	GetI18NDictReq           = core.GetI18NDictReq
 	I18NDictResp             = core.I18NDictResp
+	I18NFileItem             = core.I18NFileItem
 	I18NInfo                 = core.I18NInfo
 	I18NItem                 = core.I18NItem
 	I18NLangInfo             = core.I18NLangInfo
@@ -52,6 +56,8 @@ type (
 	I18NListResp             = core.I18NListResp
 	IDReq                    = core.IDReq
 	IDsReq                   = core.IDsReq
+	ImportI18NReq            = core.ImportI18NReq
+	ImportI18NResp           = core.ImportI18NResp
 	IssuePreviewTokenReq     = core.IssuePreviewTokenReq
 	IssuePreviewTokenResp    = core.IssuePreviewTokenResp
 	LoginLogInfo             = core.LoginLogInfo
@@ -118,8 +124,11 @@ type (
 		UpdateI18N(ctx context.Context, in *UpdateI18NReq, opts ...grpc.CallOption) (*Empty, error)
 		UpdateI18NByKey(ctx context.Context, in *UpdateI18NByKeyReq, opts ...grpc.CallOption) (*Empty, error)
 		DeleteI18N(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*Empty, error)
+		DeleteI18NByKey(ctx context.Context, in *DeleteI18NByKeyReq, opts ...grpc.CallOption) (*Empty, error)
 		GetI18NList(ctx context.Context, in *I18NListReq, opts ...grpc.CallOption) (*I18NListResp, error)
 		GetI18NDict(ctx context.Context, in *GetI18NDictReq, opts ...grpc.CallOption) (*I18NDictResp, error)
+		ExportI18N(ctx context.Context, in *ExportI18NReq, opts ...grpc.CallOption) (*ExportI18NResp, error)
+		ImportI18N(ctx context.Context, in *ImportI18NReq, opts ...grpc.CallOption) (*ImportI18NResp, error)
 		CreateI18NLang(ctx context.Context, in *CreateI18NLangReq, opts ...grpc.CallOption) (*I18NLangInfo, error)
 		UpdateI18NLang(ctx context.Context, in *UpdateI18NLangReq, opts ...grpc.CallOption) (*Empty, error)
 		DeleteI18NLang(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*Empty, error)
@@ -287,6 +296,11 @@ func (m *defaultCore) DeleteI18N(ctx context.Context, in *IDsReq, opts ...grpc.C
 	return client.DeleteI18N(ctx, in, opts...)
 }
 
+func (m *defaultCore) DeleteI18NByKey(ctx context.Context, in *DeleteI18NByKeyReq, opts ...grpc.CallOption) (*Empty, error) {
+	client := core.NewCoreClient(m.cli.Conn())
+	return client.DeleteI18NByKey(ctx, in, opts...)
+}
+
 func (m *defaultCore) GetI18NList(ctx context.Context, in *I18NListReq, opts ...grpc.CallOption) (*I18NListResp, error) {
 	client := core.NewCoreClient(m.cli.Conn())
 	return client.GetI18NList(ctx, in, opts...)
@@ -295,6 +309,16 @@ func (m *defaultCore) GetI18NList(ctx context.Context, in *I18NListReq, opts ...
 func (m *defaultCore) GetI18NDict(ctx context.Context, in *GetI18NDictReq, opts ...grpc.CallOption) (*I18NDictResp, error) {
 	client := core.NewCoreClient(m.cli.Conn())
 	return client.GetI18NDict(ctx, in, opts...)
+}
+
+func (m *defaultCore) ExportI18N(ctx context.Context, in *ExportI18NReq, opts ...grpc.CallOption) (*ExportI18NResp, error) {
+	client := core.NewCoreClient(m.cli.Conn())
+	return client.ExportI18N(ctx, in, opts...)
+}
+
+func (m *defaultCore) ImportI18N(ctx context.Context, in *ImportI18NReq, opts ...grpc.CallOption) (*ImportI18NResp, error) {
+	client := core.NewCoreClient(m.cli.Conn())
+	return client.ImportI18N(ctx, in, opts...)
 }
 
 func (m *defaultCore) CreateI18NLang(ctx context.Context, in *CreateI18NLangReq, opts ...grpc.CallOption) (*I18NLangInfo, error) {

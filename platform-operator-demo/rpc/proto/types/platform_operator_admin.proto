@@ -113,3 +113,27 @@ message DeleteAdminsByOperatorIdRequest {
 
 // 按分站删除管理员响应
 message DeleteAdminsByOperatorIdResponse {}
+
+// 检测分站管理员是否已存在请求
+message ExistsAdminByOperatorIdRequest {
+  // 分站ID
+  int64 operator_id = 1;
+}
+
+// 检测分站管理员是否已存在响应
+message ExistsAdminByOperatorIdResponse {
+  // 是否已存在管理员
+  bool exists = 1;
+}
+
+// 获取分站管理员请求
+message GetAdminRequest {
+  // 表自增ID
+  int64 id = 1;
+}
+
+// 获取分站管理员响应
+message GetAdminResponse {
+  // 分站管理员信息
+  AdminInfo admin = 1;
+}

@@ -29,7 +29,8 @@ func main() {
 
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
-	response.SetupHTTPX()
+	// 注册HTTPX的OK和Error处理函数
+	response.SetupHTTPX(c.Mode == service.DevMode || c.Mode == service.TestMode)
 
 	server := rest.MustNewServer(c.RestConf, rest.WithCors(c.CROSConf.Address))
 	defer server.Stop()

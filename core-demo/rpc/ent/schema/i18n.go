@@ -21,12 +21,11 @@ func (I18n) Annotations() []schema.Annotation {
 }
 
 func (I18n) Mixin() []ent.Mixin {
-	return []ent.Mixin{entmixin.TimeMixin{}}
+	return []ent.Mixin{entmixin.IDMixin{}, entmixin.TimeMixin{}}
 }
 
 func (I18n) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int64("id").Comment("Primary key | 主键"),
 		field.String("i18n_code").MaxLen(32).Default("platform").Comment("Site code | 站点编码"),
 		field.String("i18n_group").MaxLen(64).Comment("Group menu/api/front | 分组"),
 		field.String("trans_key").MaxLen(255).Comment("Translation key | 词条 key"),

@@ -29,6 +29,10 @@ type (
 		UpdateStatus(ctx context.Context, in *adminpb.UpdateAdminStatusRequest, opts ...grpc.CallOption) (*adminpb.UpdateAdminStatusResponse, error)
 		// 按分站删除管理员
 		DeleteByOperatorId(ctx context.Context, in *adminpb.DeleteAdminsByOperatorIdRequest, opts ...grpc.CallOption) (*adminpb.DeleteAdminsByOperatorIdResponse, error)
+		// 检测分站管理员是否已存在
+		ExistsByOperatorId(ctx context.Context, in *adminpb.ExistsAdminByOperatorIdRequest, opts ...grpc.CallOption) (*adminpb.ExistsAdminByOperatorIdResponse, error)
+		// 获取分站管理员
+		Get(ctx context.Context, in *adminpb.GetAdminRequest, opts ...grpc.CallOption) (*adminpb.GetAdminResponse, error)
 	}
 
 	defaultOperatorAdminService struct {
@@ -76,4 +80,16 @@ func (m *defaultOperatorAdminService) UpdateStatus(ctx context.Context, in *admi
 func (m *defaultOperatorAdminService) DeleteByOperatorId(ctx context.Context, in *adminpb.DeleteAdminsByOperatorIdRequest, opts ...grpc.CallOption) (*adminpb.DeleteAdminsByOperatorIdResponse, error) {
 	client := platformoperatorrpc.NewOperatorAdminServiceClient(m.cli.Conn())
 	return client.DeleteByOperatorId(ctx, in, opts...)
+}
+
+// 检测分站管理员是否已存在
+func (m *defaultOperatorAdminService) ExistsByOperatorId(ctx context.Context, in *adminpb.ExistsAdminByOperatorIdRequest, opts ...grpc.CallOption) (*adminpb.ExistsAdminByOperatorIdResponse, error) {
+	client := platformoperatorrpc.NewOperatorAdminServiceClient(m.cli.Conn())
+	return client.ExistsByOperatorId(ctx, in, opts...)
+}
+
+// 获取分站管理员
+func (m *defaultOperatorAdminService) Get(ctx context.Context, in *adminpb.GetAdminRequest, opts ...grpc.CallOption) (*adminpb.GetAdminResponse, error) {
+	client := platformoperatorrpc.NewOperatorAdminServiceClient(m.cli.Conn())
+	return client.Get(ctx, in, opts...)
 }

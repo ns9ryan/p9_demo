@@ -15,7 +15,7 @@ import (
 )
 
 // maxStack 最大堆栈大小
-const maxStack = 128 * 1024
+const maxStack = 12800 * 1024
 
 // Error 错误
 type Error struct {

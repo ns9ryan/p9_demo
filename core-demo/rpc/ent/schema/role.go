@@ -22,12 +22,16 @@ func (Role) Annotations() []schema.Annotation {
 }
 
 func (Role) Mixin() []ent.Mixin {
-	return []ent.Mixin{entmixin.TimeMixin{}, entmixin.SoftDeleteMixin{}, entmixin.OperatorCodeMixin{}}
+	return []ent.Mixin{
+		entmixin.IDMixin{},
+		entmixin.TimeMixin{},
+		entmixin.SoftDeleteMixin{},
+		entmixin.OperatorCodeMixin{},
+	}
 }
 
 func (Role) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int64("id").Comment("Primary key | 主键"),
 		field.String("role_code").MaxLen(64).Comment("Role code | 角色编码"),
 		field.String("role_name").MaxLen(100).Comment("Role name | 角色名"),
 		field.String("description").MaxLen(255).Optional().Nillable().Comment("Description | 描述"),

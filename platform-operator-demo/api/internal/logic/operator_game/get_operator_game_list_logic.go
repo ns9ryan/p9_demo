@@ -31,11 +31,11 @@ func NewGetOperatorGameListLogic(ctx context.Context, svcCtx *svc.ServiceContext
 func (l *GetOperatorGameListLogic) GetOperatorGameList(req *types.GetOperatorGameListRequest) (resp *types.GetOperatorGameListResponse, err error) {
 	// 调用 RPC 获取分站游戏列表
 	rpcResp, err := l.svcCtx.GameGrpcClient.GetOperatorGameServiceClient().GetOperatorGameList(l.ctx, &platform_game.GetOperatorGameListRequest{
-		Page:     int32(req.Page),
-		PageSize: int32(req.PageSize),
-		OpCode:   req.OpCode,
-		GameCode: req.GameCode,
-		Status:   req.Status,
+		Page:        int32(req.Page),
+		PageSize:    int32(req.PageSize),
+		OpCode:      req.OpCode,
+		GameCode:    req.GameCode,
+		CheckStatus: req.CheckStatus,
 	})
 	if err != nil {
 		l.Logger.Error("GetOperatorGameList error:", err)
@@ -52,13 +52,14 @@ func (l *GetOperatorGameListLogic) GetOperatorGameList(req *types.GetOperatorGam
 	// 转换数据
 	for _, item := range rpcResp.Items {
 		resp.Items = append(resp.Items, types.OperatorGameInfo{
-			Id:        item.Id,
-			OpCode:    item.OpCode,
-			GameCode:  item.GameCode,
-			Name:      item.Name,
-			Status:    item.Status,
-			CreatedAt: item.CreatedAt,
-			UpdatedAt: item.UpdatedAt,
+			Id:          item.Id,
+			OpCode:      item.OpCode,
+			GameCode:    item.GameCode,
+			Name:        item.Name,
+			Status:      item.Status,
+			CheckStatus: item.CheckStatus,
+			CreatedAt:   item.CreatedAt,
+			UpdatedAt:   item.UpdatedAt,
 		})
 	}
 

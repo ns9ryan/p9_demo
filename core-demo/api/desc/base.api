@@ -144,7 +144,7 @@ type PageReq {
 // ID query | ID 查询
 type IDQuery {
 	// ID | 主键
-	Id int64 `form:"id"`
+	Id int64 `form:"id,range=(0:]"`
 }
 
 // Base message | 结果信息

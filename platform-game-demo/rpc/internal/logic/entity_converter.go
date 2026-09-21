@@ -192,99 +192,212 @@ func IsDel(deletedAt time.Time) int32 {
 	return 0
 }
 
-// OperatorGameModelToProto 将 OperatorGame 模型转换为 proto
-func OperatorGameModelToProto(record *ent.OperatorGame) *platformgame.OperatorGameInfo {
-	return &platformgame.OperatorGameInfo{
-		Id:        record.ID,
-		OpCode:    record.OpCode,
-		GameCode:  record.GameCode,
-		Name:      record.Name,
-		Status:    int32(record.Status),
-		CreatedAt: record.CreatedAt.Unix(),
-		UpdatedAt: record.UpdatedAt.Unix(),
-	}
-}
-
 // OperatorGameModelToProtoList 将 OperatorGame 模型列表转换为 proto 列表
-func OperatorGameModelToProtoList(records []*ent.OperatorGame) []*platformgame.OperatorGameInfo {
+func OperatorGameModelToProtoList(opCode string, mapCategoryToRecord map[string]*ent.OperatorGame, records []*ent.Game) []*platformgame.OperatorGameInfo {
 	result := make([]*platformgame.OperatorGameInfo, 0, len(records))
 	for _, record := range records {
 		if record == nil {
 			continue
 		}
-		result = append(result, OperatorGameModelToProto(record))
+		// 设置 check_status 字段
+		if r, ok := mapCategoryToRecord[record.SourceGameCode]; ok {
+			result = append(result, &platformgame.OperatorGameInfo{
+				Id:          r.ID,
+				Name:        record.Name,
+				OpCode:      opCode,
+				GameCode:    r.GameCode,
+				Status:      int32(r.Status),
+				CheckStatus: 1,
+				CreatedAt:   r.CreatedAt.Unix(),
+				UpdatedAt:   r.UpdatedAt.Unix(),
+			})
+		} else {
+			result = append(result, &platformgame.OperatorGameInfo{
+				Id:          0,
+				Name:        record.Name,
+				OpCode:      opCode,
+				GameCode:    record.SourceGameCode,
+				Status:      0,
+				CheckStatus: 2,
+				CreatedAt:   0,
+				UpdatedAt:   0,
+			})
+		}
 	}
 	return result
 }
 
-// OperatorGameCategoryModelToProto 将 OperatorGameCategory 模型转换为 proto
-func OperatorGameCategoryModelToProto(record *ent.OperatorGameCategory) *platformgame.OperatorGameCategoryInfo {
-	return &platformgame.OperatorGameCategoryInfo{
-		Id:           record.ID,
-		OpCode:       record.OpCode,
-		CategoryCode: record.CategoryCode,
-		Status:       int32(record.Status),
-		CreatedAt:    record.CreatedAt.Unix(),
-		UpdatedAt:    record.UpdatedAt.Unix(),
+func OperatorGameModelToProtoListWithoutMap(records []*ent.OperatorGame) []*platformgame.OperatorGameInfo {
+	result := make([]*platformgame.OperatorGameInfo, 0, len(records))
+	for _, record := range records {
+		if record == nil {
+			continue
+		}
+		result = append(result, &platformgame.OperatorGameInfo{
+			Id:          record.ID,
+			Name:        record.Name,
+			OpCode:      record.OpCode,
+			GameCode:    record.GameCode,
+			Status:      int32(record.Status),
+			CheckStatus: 1,
+			CreatedAt:   record.CreatedAt.Unix(),
+			UpdatedAt:   record.UpdatedAt.Unix(),
+		})
 	}
+	return result
 }
 
 // OperatorGameCategoryModelToProtoList 将 OperatorGameCategory 模型列表转换为 proto 列表
-func OperatorGameCategoryModelToProtoList(records []*ent.OperatorGameCategory) []*platformgame.OperatorGameCategoryInfo {
+func OperatorGameCategoryModelToProtoList(opCode string, mapCategoryCodeToRecord map[string]*ent.OperatorGameCategory, records []*ent.GameCategory) []*platformgame.OperatorGameCategoryInfo {
 	result := make([]*platformgame.OperatorGameCategoryInfo, 0, len(records))
 	for _, record := range records {
 		if record == nil {
 			continue
 		}
-		result = append(result, OperatorGameCategoryModelToProto(record))
+		// 设置 check_status 字段
+		if r, ok := mapCategoryCodeToRecord[record.SourceCategoryCode]; ok {
+			result = append(result, &platformgame.OperatorGameCategoryInfo{
+				Id:           r.ID,
+				OpCode:       opCode,
+				CategoryCode: r.CategoryCode,
+				Status:       int32(r.Status),
+				CheckStatus:  1,
+				CreatedAt:    r.CreatedAt.Unix(),
+				UpdatedAt:    r.UpdatedAt.Unix(),
+			})
+		} else {
+			result = append(result, &platformgame.OperatorGameCategoryInfo{
+				Id:           0,
+				OpCode:       opCode,
+				CategoryCode: record.SourceCategoryCode,
+				Status:       0,
+				CheckStatus:  2,
+				CreatedAt:    0,
+				UpdatedAt:    0,
+			})
+		}
 	}
 	return result
 }
 
-// OperatorGameChannelModelToProto 将 OperatorGameChannel 模型转换为 proto
-func OperatorGameChannelModelToProto(record *ent.OperatorGameChannel) *platformgame.OperatorGameChannelInfo {
-	return &platformgame.OperatorGameChannelInfo{
-		Id:          record.ID,
-		OpCode:      record.OpCode,
-		ChannelCode: record.ChannelCode,
-		Status:      int32(record.Status),
-		CreatedAt:   record.CreatedAt.Unix(),
-		UpdatedAt:   record.UpdatedAt.Unix(),
+func OperatorGameCategoryModelToProtoListWithoutMap(records []*ent.OperatorGameCategory) []*platformgame.OperatorGameCategoryInfo {
+	result := make([]*platformgame.OperatorGameCategoryInfo, 0, len(records))
+	for _, record := range records {
+		if record == nil {
+			continue
+		}
+		result = append(result, &platformgame.OperatorGameCategoryInfo{
+			Id:           record.ID,
+			OpCode:       record.OpCode,
+			CategoryCode: record.CategoryCode,
+			Status:       int32(record.Status),
+			CheckStatus:  1,
+			CreatedAt:    record.CreatedAt.Unix(),
+			UpdatedAt:    record.UpdatedAt.Unix(),
+		})
 	}
+	return result
 }
 
 // OperatorGameChannelModelToProtoList 将 OperatorGameChannel 模型列表转换为 proto 列表
-func OperatorGameChannelModelToProtoList(records []*ent.OperatorGameChannel) []*platformgame.OperatorGameChannelInfo {
+func OperatorGameChannelModelToProtoList(opCode string, mapChannelCodeToRecord map[string]*ent.OperatorGameChannel, records []*ent.GameChannel) []*platformgame.OperatorGameChannelInfo {
 	result := make([]*platformgame.OperatorGameChannelInfo, 0, len(records))
 	for _, record := range records {
 		if record == nil {
 			continue
 		}
-		result = append(result, OperatorGameChannelModelToProto(record))
+		// 设置 check_status 字段
+		if r, ok := mapChannelCodeToRecord[record.SourceChannelCode]; ok {
+			result = append(result, &platformgame.OperatorGameChannelInfo{
+				Id:          r.ID,
+				OpCode:      opCode,
+				ChannelCode: r.ChannelCode,
+				Status:      int32(r.Status),
+				CheckStatus: 1,
+				CreatedAt:   r.CreatedAt.Unix(),
+				UpdatedAt:   r.UpdatedAt.Unix(),
+			})
+		} else {
+			result = append(result, &platformgame.OperatorGameChannelInfo{
+				Id:          0,
+				OpCode:      opCode,
+				ChannelCode: record.SourceChannelCode,
+				Status:      0,
+				CheckStatus: 2,
+				CreatedAt:   0,
+				UpdatedAt:   0,
+			})
+		}
 	}
 	return result
 }
 
-// OperatorGameProviderModelToProto 将 OperatorGameProvider 模型转换为 proto
-func OperatorGameProviderModelToProto(record *ent.OperatorGameProvider) *platformgame.OperatorGameProviderInfo {
-	return &platformgame.OperatorGameProviderInfo{
-		Id:           record.ID,
-		OpCode:       record.OpCode,
-		ProviderCode: record.ProviderCode,
-		Status:       int32(record.Status),
-		CreatedAt:    record.CreatedAt.Unix(),
-		UpdatedAt:    record.UpdatedAt.Unix(),
+func OperatorGameChannelModelToProtoListWithoutMap(records []*ent.OperatorGameChannel) []*platformgame.OperatorGameChannelInfo {
+	result := make([]*platformgame.OperatorGameChannelInfo, 0, len(records))
+	for _, record := range records {
+		if record == nil {
+			continue
+		}
+		result = append(result, &platformgame.OperatorGameChannelInfo{
+			Id:          record.ID,
+			OpCode:      record.OpCode,
+			ChannelCode: record.ChannelCode,
+			Status:      int32(record.Status),
+			CheckStatus: 1,
+			CreatedAt:   record.CreatedAt.Unix(),
+			UpdatedAt:   record.UpdatedAt.Unix(),
+		})
 	}
+	return result
 }
 
 // OperatorGameProviderModelToProtoList 将 OperatorGameProvider 模型列表转换为 proto 列表
-func OperatorGameProviderModelToProtoList(records []*ent.OperatorGameProvider) []*platformgame.OperatorGameProviderInfo {
+func OperatorGameProviderModelToProtoList(opCode string, mapProviderCodeToRecord map[string]*ent.OperatorGameProvider, records []*ent.GameProvider) []*platformgame.OperatorGameProviderInfo {
 	result := make([]*platformgame.OperatorGameProviderInfo, 0, len(records))
 	for _, record := range records {
 		if record == nil {
 			continue
 		}
-		result = append(result, OperatorGameProviderModelToProto(record))
+		if r, ok := mapProviderCodeToRecord[record.SourceProviderCode]; ok {
+			result = append(result, &platformgame.OperatorGameProviderInfo{
+				Id:           r.ID,
+				OpCode:       opCode,
+				ProviderCode: r.ProviderCode,
+				Status:       int32(r.Status),
+				CheckStatus:  1,
+				CreatedAt:    r.CreatedAt.Unix(),
+				UpdatedAt:    r.UpdatedAt.Unix(),
+			})
+		} else {
+			result = append(result, &platformgame.OperatorGameProviderInfo{
+				Id:           0,
+				OpCode:       opCode,
+				ProviderCode: record.SourceProviderCode,
+				Status:       0,
+				CheckStatus:  2,
+				CreatedAt:    0,
+				UpdatedAt:    0,
+			})
+		}
+	}
+	return result
+}
+
+func OperatorGameProviderModelToProtoListWithoutMap(records []*ent.OperatorGameProvider) []*platformgame.OperatorGameProviderInfo {
+	result := make([]*platformgame.OperatorGameProviderInfo, 0, len(records))
+	for _, record := range records {
+		if record == nil {
+			continue
+		}
+		result = append(result, &platformgame.OperatorGameProviderInfo{
+			Id:           record.ID,
+			OpCode:       record.OpCode,
+			ProviderCode: record.ProviderCode,
+			Status:       int32(record.Status),
+			CheckStatus:  1,
+			CreatedAt:    record.CreatedAt.Unix(),
+			UpdatedAt:    record.UpdatedAt.Unix(),
+		})
 	}
 	return result
 }

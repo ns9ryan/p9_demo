@@ -10,8 +10,9 @@ message OperatorGameCategoryInfo {
     string op_code = 2;
     string category_code = 3;
     int32 status = 4;
-    int64 created_at = 5;
-    int64 updated_at = 6;
+    int32 check_status = 5;
+    int64 created_at = 6;
+    int64 updated_at = 7;
 }
 
 // GetOperatorGameCategoryListRequest 获取分站游戏分类列表请求
@@ -20,7 +21,7 @@ message GetOperatorGameCategoryListRequest {
     int32 page_size = 2;
     string op_code = 3;
     string category_code = 4;
-    int32 status = 5;
+    int32 check_status = 5;
 }
 
 // GetOperatorGameCategoryListResp 分站游戏分类列表响应
@@ -29,25 +30,6 @@ message GetOperatorGameCategoryListResp {
     int64 total = 2;
     int32 page = 3;
     int32 page_size = 4;
-}
-
-// BatchCreateOperatorGameCategoryItemRequest 批量创建分站游戏分类请求项
-message BatchCreateOperatorGameCategoryItemRequest {
-    string op_code = 1;
-    string category_code = 2;
-    int32 status = 3;
-}
-
-// BatchCreateOperatorGameCategoryRequest 批量创建分站游戏分类请求
-message BatchCreateOperatorGameCategoryRequest {
-    repeated BatchCreateOperatorGameCategoryItemRequest items = 1;
-}
-
-// BatchCreateOperatorGameCategoryResp 批量创建分站游戏分类响应
-message BatchCreateOperatorGameCategoryResp {
-    int64 total = 1;
-    int64 success = 2;
-    int64 failed = 3;
 }
 
 // BatchUpdateOperatorGameCategoryStatusRequest 批量修改分站游戏分类状态请求
@@ -63,14 +45,22 @@ message BatchUpdateOperatorGameCategoryStatusResp {
     int64 failed = 3;
 }
 
-// BatchDeleteOperatorGameCategoryRequest 批量删除分站游戏分类请求
-message BatchDeleteOperatorGameCategoryRequest {
-    repeated int64 ids = 1;
+message SaveOperatorGameCategoryAllocationInfo {
+    string code = 1;
+    int32 check_status = 2;
 }
 
-// BatchDeleteOperatorGameCategoryResp 批量删除分站游戏分类响应
-message BatchDeleteOperatorGameCategoryResp {
+// SaveOperatorGameCategoryAllocationRequest 保存分站游戏分类分配请求项
+message SaveOperatorGameCategoryAllocationRequest {
+    string op_code = 1;
+    repeated SaveOperatorGameCategoryAllocationInfo items = 2;
+}
+
+// SaveOperatorGameCategoryAllocationResp 保存分站游戏分类分配响应
+message SaveOperatorGameCategoryAllocationResp {
     int64 total = 1;
-    int64 success = 2;
-    int64 failed = 3;
+    int64 created = 2;
+    int64 deleted = 3;
+    int64 exist = 4;
+    int64 failed = 5;
 }

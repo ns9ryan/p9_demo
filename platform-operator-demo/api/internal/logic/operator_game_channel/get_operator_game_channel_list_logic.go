@@ -37,7 +37,7 @@ func (l *GetOperatorGameChannelListLogic) GetOperatorGameChannelList(req *types.
 		PageSize:    int32(req.PageSize),
 		OpCode:      req.OpCode,
 		ChannelCode: req.ChannelCode,
-		Status:      req.Status,
+		CheckStatus: req.CheckStatus,
 	})
 	if err != nil {
 		l.Logger.Error("GetOperatorGameChannelList error:", err)
@@ -60,6 +60,7 @@ func (l *GetOperatorGameChannelListLogic) GetOperatorGameChannelList(req *types.
 			ChannelCode: item.ChannelCode,
 			Name:        name,
 			Status:      item.Status,
+			CheckStatus: item.CheckStatus,
 			CreatedAt:   item.CreatedAt,
 			UpdatedAt:   item.UpdatedAt,
 		})

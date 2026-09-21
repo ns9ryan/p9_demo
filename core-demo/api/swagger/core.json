@@ -727,9 +727,9 @@
                   "description": "Mobile | 手机号",
                   "type": "string"
                 },
-                "operator_id": {
-                  "description": "Operator ID | 分站ID",
-                  "type": "integer"
+                "operator_code": {
+                  "description": "Operator code | 分站编码",
+                  "type": "string"
                 },
                 "role_codes": {
                   "description": "Role codes | 角色编码",
@@ -765,7 +765,7 @@
     },
     "/admin/bootstrap/operator": {
       "post": {
-        "description": "初始化分站及超管",
+        "description": "初始化分站超管",
         "consumes": [
           "application/json"
         ],
@@ -775,7 +775,7 @@
         "tags": [
           "public"
         ],
-        "summary": "初始化分站及超管",
+        "summary": "初始化分站超管",
         "operationId": "publicBootstrapOperator",
         "parameters": [
           {
@@ -806,14 +806,6 @@
                 },
                 "password": {
                   "description": "Password | 密码",
-                  "type": "string"
-                },
-                "settlement_currency_code": {
-                  "description": "Settlement currency | 结算币种",
-                  "type": "string"
-                },
-                "timezone_code": {
-                  "description": "Timezone code | 时区",
                   "type": "string"
                 },
                 "username": {
@@ -873,9 +865,9 @@
                   "description": "Mobile | 手机号",
                   "type": "string"
                 },
-                "operator_id": {
-                  "description": "Operator ID | 分站ID",
-                  "type": "integer"
+                "operator_code": {
+                  "description": "Operator code | 分站编码",
+                  "type": "string"
                 },
                 "role_codes": {
                   "description": "Role codes | 角色编码",
@@ -1058,6 +1050,65 @@
         }
       }
     },
+    "/admin/i18n/deleteByKey": {
+      "post": {
+        "description": "按站点/分组/key删除词条",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "i18n"
+        ],
+        "summary": "按站点/分组/key删除词条",
+        "operationId": "i18nDeleteI18nByKey",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "i18n_code",
+                "i18n_group",
+                "trans_key"
+              ],
+              "properties": {
+                "i18n_code": {
+                  "description": "Site | 站点编码",
+                  "type": "string"
+                },
+                "i18n_group": {
+                  "description": "Group | 分组",
+                  "type": "string"
+                },
+                "trans_key": {
+                  "description": "Key | 词条key",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "description": "Result | 结果信息",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/admin/i18n/dict": {
       "get": {
         "description": "词条下发",
@@ -1111,6 +1162,149 @@
         }
       }
     },
+    "/admin/i18n/export": {
+      "post": {
+        "description": "导出多语言（下载 JSON 文件）",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "i18n"
+        ],
+        "summary": "导出多语言（下载 JSON 文件）",
+        "operationId": "i18nExportI18n",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "lang"
+              ],
+              "properties": {
+                "i18n_code": {
+                  "description": "Site | 站点编码，空则不按站点过滤",
+                  "type": "string"
+                },
+                "i18n_group": {
+                  "description": "Group | 分组，空则导出全部组",
+                  "type": "string"
+                },
+                "lang": {
+                  "description": "Lang | 语言",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "i18n_items": {
+                  "description": "Items | 词条",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "i18n_key",
+                      "i18n_value"
+                    ],
+                    "properties": {
+                      "i18n_code": {
+                        "description": "Site | 站点编码",
+                        "type": "string"
+                      },
+                      "i18n_group": {
+                        "description": "Group | 分组",
+                        "type": "string"
+                      },
+                      "i18n_key": {
+                        "description": "Key | 词条key",
+                        "type": "string"
+                      },
+                      "i18n_value": {
+                        "description": "Value | 译文",
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "lang": {
+                  "description": "Lang | 语言",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/i18n/import": {
+      "post": {
+        "description": "导入多语言（上传 JSON 文件，字段 file，格式同导出）",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "i18n"
+        ],
+        "summary": "导入多语言（上传 JSON 文件，字段 file，格式同导出）",
+        "operationId": "i18nImportI18n",
+        "parameters": [
+          {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "File | JSON 文件",
+            "name": "file",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Lang | 指定语言，空则用文件内 lang；非空必须与文件 lang 相等",
+            "name": "lang",
+            "in": "formData",
+            "allowEmptyValue": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "created": {
+                  "description": "Created | 新建条数",
+                  "type": "integer"
+                },
+                "skipped": {
+                  "description": "Skipped | 跳过条数",
+                  "type": "integer"
+                },
+                "updated": {
+                  "description": "Updated | 更新条数",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/admin/i18n/lang/create": {
       "post": {
         "description": "创建支持的语言",
@@ -1141,6 +1335,10 @@
                   "description": "Disabled | 是否停用",
                   "type": "integer"
                 },
+                "i18n_key": {
+                  "description": "I18n key | 多语言 key",
+                  "type": "string"
+                },
                 "lang": {
                   "description": "Lang | 语言码",
                   "type": "string"
@@ -1170,6 +1368,14 @@
                 "disabled": {
                   "description": "Disabled | 是否停用",
                   "type": "integer"
+                },
+                "i18n_key": {
+                  "description": "I18n key | 多语言 key",
+                  "type": "string"
+                },
+                "i18n_name": {
+                  "description": "I18n name | 多语言显示名",
+                  "type": "string"
                 },
                 "id": {
                   "description": "ID | 语言ID",
@@ -1276,6 +1482,8 @@
                       "id",
                       "lang",
                       "name",
+                      "i18n_key",
+                      "i18n_name",
                       "disabled",
                       "sort_no",
                       "created_at",
@@ -1289,6 +1497,14 @@
                       "disabled": {
                         "description": "Disabled | 是否停用",
                         "type": "integer"
+                      },
+                      "i18n_key": {
+                        "description": "I18n key | 多语言 key",
+                        "type": "string"
+                      },
+                      "i18n_name": {
+                        "description": "I18n name | 多语言显示名",
+                        "type": "string"
                       },
                       "id": {
                         "description": "ID | 语言ID",
@@ -1380,6 +1596,8 @@
                       "id",
                       "lang",
                       "name",
+                      "i18n_key",
+                      "i18n_name",
                       "disabled",
                       "sort_no",
                       "created_at",
@@ -1393,6 +1611,14 @@
                       "disabled": {
                         "description": "Disabled | 是否停用",
                         "type": "integer"
+                      },
+                      "i18n_key": {
+                        "description": "I18n key | 多语言 key",
+                        "type": "string"
+                      },
+                      "i18n_name": {
+                        "description": "I18n name | 多语言显示名",
+                        "type": "string"
                       },
                       "id": {
                         "description": "ID | 语言ID",
@@ -1509,6 +1735,10 @@
                 "disabled": {
                   "description": "Disabled | 是否停用",
                   "type": "integer"
+                },
+                "i18n_key": {
+                  "description": "I18n key | 多语言 key",
+                  "type": "string"
                 },
                 "id": {
                   "description": "ID | 语言ID",
@@ -2053,9 +2283,9 @@
                         "description": "ID | 日志ID",
                         "type": "integer"
                       },
-                      "operator_id": {
-                        "description": "Operator ID | 厅ID",
-                        "type": "integer"
+                      "operator_code": {
+                        "description": "Operator code | 分站编码",
+                        "type": "string"
                       },
                       "request_body": {
                         "description": "Request body | 脱敏后的请求内容",
@@ -2372,9 +2602,9 @@
                       "description": "Mobile | 手机号",
                       "type": "string"
                     },
-                    "operator_id": {
-                      "description": "Operator ID | 分站ID",
-                      "type": "integer"
+                    "operator_code": {
+                      "description": "Operator code | 分站编码",
+                      "type": "string"
                     },
                     "role_codes": {
                       "description": "Role codes | 角色编码",
@@ -3406,119 +3636,6 @@
         }
       }
     },
-    "/admin/operator/self": {
-      "get": {
-        "description": "当前分站信息",
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "operator"
-        ],
-        "summary": "当前分站信息",
-        "operationId": "operatorGetOperator",
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "completed_config_version": {
-                  "description": "Completed config version | 已完成配置版本",
-                  "type": "integer"
-                },
-                "config_completed_at": {
-                  "description": "Config completed at unix | 配置完成时间",
-                  "type": "integer"
-                },
-                "created_at": {
-                  "description": "Created at unix | 创建时间",
-                  "type": "integer"
-                },
-                "id": {
-                  "description": "ID | 分站ID",
-                  "type": "integer"
-                },
-                "operator_code": {
-                  "description": "Operator code | 分站编码",
-                  "type": "string"
-                },
-                "required_config_version": {
-                  "description": "Required config version | 要求配置版本",
-                  "type": "integer"
-                },
-                "settlement_currency_code": {
-                  "description": "Settlement currency | 结算币种",
-                  "type": "string"
-                },
-                "status": {
-                  "description": "Status | 状态",
-                  "type": "integer"
-                },
-                "timezone_code": {
-                  "description": "Timezone code | 时区",
-                  "type": "string"
-                },
-                "updated_at": {
-                  "description": "Updated at unix | 更新时间",
-                  "type": "integer"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/admin/operator/update": {
-      "post": {
-        "description": "更新当前分站",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "operator"
-        ],
-        "summary": "更新当前分站",
-        "operationId": "operatorUpdateOperator",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "settlement_currency_code": {
-                  "description": "Settlement currency | 结算币种",
-                  "type": "string"
-                },
-                "timezone_code": {
-                  "description": "Timezone code | 时区",
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "result": {
-                  "description": "Result | 结果信息",
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/admin/previewToken": {
       "post": {
         "description": "签发总网预览令牌，只读",
@@ -3707,9 +3824,9 @@
                       "description": "Mobile | 手机号",
                       "type": "string"
                     },
-                    "operator_id": {
-                      "description": "Operator ID | 分站ID",
-                      "type": "integer"
+                    "operator_code": {
+                      "description": "Operator code | 分站编码",
+                      "type": "string"
                     },
                     "role_codes": {
                       "description": "Role codes | 角色编码",
@@ -3817,9 +3934,9 @@
                   "description": "System role | 是否系统角色",
                   "type": "boolean"
                 },
-                "operator_id": {
-                  "description": "Operator ID | 分站ID",
-                  "type": "integer"
+                "operator_code": {
+                  "description": "Operator code | 分站编码",
+                  "type": "string"
                 },
                 "role_code": {
                   "description": "Role code | 角色编码",
@@ -3913,6 +4030,8 @@
         "operationId": "roleGetRoleById",
         "parameters": [
           {
+            "minimum": 0,
+            "exclusiveMinimum": true,
             "type": "integer",
             "description": "ID | 主键",
             "name": "id",
@@ -3942,9 +4061,9 @@
                   "description": "System role | 是否系统角色",
                   "type": "boolean"
                 },
-                "operator_id": {
-                  "description": "Operator ID | 分站ID",
-                  "type": "integer"
+                "operator_code": {
+                  "description": "Operator code | 分站编码",
+                  "type": "string"
                 },
                 "role_code": {
                   "description": "Role code | 角色编码",
@@ -4048,9 +4167,9 @@
                         "description": "System role | 是否系统角色",
                         "type": "boolean"
                       },
-                      "operator_id": {
-                        "description": "Operator ID | 分站ID",
-                        "type": "integer"
+                      "operator_code": {
+                        "description": "Operator code | 分站编码",
+                        "type": "string"
                       },
                       "role_code": {
                         "description": "Role code | 角色编码",
@@ -4261,9 +4380,9 @@
                   "description": "Mobile | 手机号",
                   "type": "string"
                 },
-                "operator_id": {
-                  "description": "Operator ID | 分站ID",
-                  "type": "integer"
+                "operator_code": {
+                  "description": "Operator code | 分站编码",
+                  "type": "string"
                 },
                 "role_codes": {
                   "description": "Role codes | 角色编码",
@@ -4363,6 +4482,8 @@
         "operationId": "userGetUserById",
         "parameters": [
           {
+            "minimum": 0,
+            "exclusiveMinimum": true,
             "type": "integer",
             "description": "ID | 主键",
             "name": "id",
@@ -4419,9 +4540,9 @@
                   "description": "Mobile | 手机号",
                   "type": "string"
                 },
-                "operator_id": {
-                  "description": "Operator ID | 分站ID",
-                  "type": "integer"
+                "operator_code": {
+                  "description": "Operator code | 分站编码",
+                  "type": "string"
                 },
                 "role_codes": {
                   "description": "Role codes | 角色编码",
@@ -4515,9 +4636,9 @@
                   "description": "Mobile | 手机号",
                   "type": "string"
                 },
-                "operator_id": {
-                  "description": "Operator ID | 分站ID",
-                  "type": "integer"
+                "operator_code": {
+                  "description": "Operator code | 分站编码",
+                  "type": "string"
                 },
                 "role_codes": {
                   "description": "Role codes | 角色编码",
@@ -4738,9 +4859,9 @@
                         "description": "Mobile | 手机号",
                         "type": "string"
                       },
-                      "operator_id": {
-                        "description": "Operator ID | 分站ID",
-                        "type": "integer"
+                      "operator_code": {
+                        "description": "Operator code | 分站编码",
+                        "type": "string"
                       },
                       "role_codes": {
                         "description": "Role codes | 角色编码",
@@ -5054,7 +5175,7 @@
       "Token": []
     }
   ],
-  "x-date": "2026-09-11 16:00:50",
+  "x-date": "2026-09-18 15:22:11",
   "x-description": "This is a goctls generated swagger file.",
   "x-github": "https://github.com/suyuan32/simple-admin-core",
   "x-goctl-version": "v1.14.8",

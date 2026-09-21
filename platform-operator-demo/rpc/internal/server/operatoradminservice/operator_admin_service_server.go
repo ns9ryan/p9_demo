@@ -59,3 +59,15 @@ func (s *OperatorAdminServiceServer) DeleteByOperatorId(ctx context.Context, in 
 	l := operatoradminservicelogic.NewDeleteByOperatorIdLogic(ctx, s.svcCtx)
 	return l.DeleteByOperatorId(in)
 }
+
+// 检测分站管理员是否已存在
+func (s *OperatorAdminServiceServer) ExistsByOperatorId(ctx context.Context, in *adminpb.ExistsAdminByOperatorIdRequest) (*adminpb.ExistsAdminByOperatorIdResponse, error) {
+	l := operatoradminservicelogic.NewExistsByOperatorIdLogic(ctx, s.svcCtx)
+	return l.ExistsByOperatorId(in)
+}
+
+// 获取分站管理员
+func (s *OperatorAdminServiceServer) Get(ctx context.Context, in *adminpb.GetAdminRequest) (*adminpb.GetAdminResponse, error) {
+	l := operatoradminservicelogic.NewGetLogic(ctx, s.svcCtx)
+	return l.Get(in)
+}

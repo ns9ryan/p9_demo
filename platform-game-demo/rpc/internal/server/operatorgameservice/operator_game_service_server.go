@@ -29,20 +29,14 @@ func (s *OperatorGameServiceServer) GetOperatorGameList(ctx context.Context, in 
 	return l.GetOperatorGameList(in)
 }
 
-// 批量创建分站游戏
-func (s *OperatorGameServiceServer) BatchCreateOperatorGame(ctx context.Context, in *platform_game.BatchCreateOperatorGameRequest) (*platform_game.BatchCreateOperatorGameResp, error) {
-	l := operatorgameservicelogic.NewBatchCreateOperatorGameLogic(ctx, s.svcCtx)
-	return l.BatchCreateOperatorGame(in)
-}
-
 // 批量修改分站游戏状态
 func (s *OperatorGameServiceServer) BatchUpdateOperatorGameStatus(ctx context.Context, in *platform_game.BatchUpdateOperatorGameStatusRequest) (*platform_game.BatchUpdateOperatorGameStatusResp, error) {
 	l := operatorgameservicelogic.NewBatchUpdateOperatorGameStatusLogic(ctx, s.svcCtx)
 	return l.BatchUpdateOperatorGameStatus(in)
 }
 
-// 批量删除分站游戏
-func (s *OperatorGameServiceServer) BatchDeleteOperatorGame(ctx context.Context, in *platform_game.BatchDeleteOperatorGameRequest) (*platform_game.BatchDeleteOperatorGameResp, error) {
-	l := operatorgameservicelogic.NewBatchDeleteOperatorGameLogic(ctx, s.svcCtx)
-	return l.BatchDeleteOperatorGame(in)
+// 保存分站游戏分配
+func (s *OperatorGameServiceServer) SaveOperatorGameAllocation(ctx context.Context, in *platform_game.SaveOperatorGameAllocationRequest) (*platform_game.SaveOperatorGameAllocationResp, error) {
+	l := operatorgameservicelogic.NewSaveOperatorGameAllocationLogic(ctx, s.svcCtx)
+	return l.SaveOperatorGameAllocation(in)
 }

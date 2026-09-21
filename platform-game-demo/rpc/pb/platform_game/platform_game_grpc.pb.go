@@ -1337,9 +1337,8 @@ var SyncService_ServiceDesc = grpc.ServiceDesc{
 
 const (
 	OperatorGameCategoryService_GetOperatorGameCategoryList_FullMethodName           = "/platform_game.OperatorGameCategoryService/GetOperatorGameCategoryList"
-	OperatorGameCategoryService_BatchCreateOperatorGameCategory_FullMethodName       = "/platform_game.OperatorGameCategoryService/BatchCreateOperatorGameCategory"
 	OperatorGameCategoryService_BatchUpdateOperatorGameCategoryStatus_FullMethodName = "/platform_game.OperatorGameCategoryService/BatchUpdateOperatorGameCategoryStatus"
-	OperatorGameCategoryService_BatchDeleteOperatorGameCategory_FullMethodName       = "/platform_game.OperatorGameCategoryService/BatchDeleteOperatorGameCategory"
+	OperatorGameCategoryService_SaveOperatorGameCategoryAllocation_FullMethodName    = "/platform_game.OperatorGameCategoryService/SaveOperatorGameCategoryAllocation"
 )
 
 // OperatorGameCategoryServiceClient is the client API for OperatorGameCategoryService service.
@@ -1348,12 +1347,10 @@ const (
 type OperatorGameCategoryServiceClient interface {
 	// 获取分站游戏分类列表
 	GetOperatorGameCategoryList(ctx context.Context, in *GetOperatorGameCategoryListRequest, opts ...grpc.CallOption) (*GetOperatorGameCategoryListResp, error)
-	// 批量创建分站游戏分类
-	BatchCreateOperatorGameCategory(ctx context.Context, in *BatchCreateOperatorGameCategoryRequest, opts ...grpc.CallOption) (*BatchCreateOperatorGameCategoryResp, error)
 	// 批量修改分站游戏分类状态
 	BatchUpdateOperatorGameCategoryStatus(ctx context.Context, in *BatchUpdateOperatorGameCategoryStatusRequest, opts ...grpc.CallOption) (*BatchUpdateOperatorGameCategoryStatusResp, error)
-	// 批量删除分站游戏分类
-	BatchDeleteOperatorGameCategory(ctx context.Context, in *BatchDeleteOperatorGameCategoryRequest, opts ...grpc.CallOption) (*BatchDeleteOperatorGameCategoryResp, error)
+	// 保存分站游戏分类分配
+	SaveOperatorGameCategoryAllocation(ctx context.Context, in *SaveOperatorGameCategoryAllocationRequest, opts ...grpc.CallOption) (*SaveOperatorGameCategoryAllocationResp, error)
 }
 
 type operatorGameCategoryServiceClient struct {
@@ -1374,16 +1371,6 @@ func (c *operatorGameCategoryServiceClient) GetOperatorGameCategoryList(ctx cont
 	return out, nil
 }
 
-func (c *operatorGameCategoryServiceClient) BatchCreateOperatorGameCategory(ctx context.Context, in *BatchCreateOperatorGameCategoryRequest, opts ...grpc.CallOption) (*BatchCreateOperatorGameCategoryResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(BatchCreateOperatorGameCategoryResp)
-	err := c.cc.Invoke(ctx, OperatorGameCategoryService_BatchCreateOperatorGameCategory_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *operatorGameCategoryServiceClient) BatchUpdateOperatorGameCategoryStatus(ctx context.Context, in *BatchUpdateOperatorGameCategoryStatusRequest, opts ...grpc.CallOption) (*BatchUpdateOperatorGameCategoryStatusResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(BatchUpdateOperatorGameCategoryStatusResp)
@@ -1394,10 +1381,10 @@ func (c *operatorGameCategoryServiceClient) BatchUpdateOperatorGameCategoryStatu
 	return out, nil
 }
 
-func (c *operatorGameCategoryServiceClient) BatchDeleteOperatorGameCategory(ctx context.Context, in *BatchDeleteOperatorGameCategoryRequest, opts ...grpc.CallOption) (*BatchDeleteOperatorGameCategoryResp, error) {
+func (c *operatorGameCategoryServiceClient) SaveOperatorGameCategoryAllocation(ctx context.Context, in *SaveOperatorGameCategoryAllocationRequest, opts ...grpc.CallOption) (*SaveOperatorGameCategoryAllocationResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(BatchDeleteOperatorGameCategoryResp)
-	err := c.cc.Invoke(ctx, OperatorGameCategoryService_BatchDeleteOperatorGameCategory_FullMethodName, in, out, cOpts...)
+	out := new(SaveOperatorGameCategoryAllocationResp)
+	err := c.cc.Invoke(ctx, OperatorGameCategoryService_SaveOperatorGameCategoryAllocation_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1410,12 +1397,10 @@ func (c *operatorGameCategoryServiceClient) BatchDeleteOperatorGameCategory(ctx 
 type OperatorGameCategoryServiceServer interface {
 	// 获取分站游戏分类列表
 	GetOperatorGameCategoryList(context.Context, *GetOperatorGameCategoryListRequest) (*GetOperatorGameCategoryListResp, error)
-	// 批量创建分站游戏分类
-	BatchCreateOperatorGameCategory(context.Context, *BatchCreateOperatorGameCategoryRequest) (*BatchCreateOperatorGameCategoryResp, error)
 	// 批量修改分站游戏分类状态
 	BatchUpdateOperatorGameCategoryStatus(context.Context, *BatchUpdateOperatorGameCategoryStatusRequest) (*BatchUpdateOperatorGameCategoryStatusResp, error)
-	// 批量删除分站游戏分类
-	BatchDeleteOperatorGameCategory(context.Context, *BatchDeleteOperatorGameCategoryRequest) (*BatchDeleteOperatorGameCategoryResp, error)
+	// 保存分站游戏分类分配
+	SaveOperatorGameCategoryAllocation(context.Context, *SaveOperatorGameCategoryAllocationRequest) (*SaveOperatorGameCategoryAllocationResp, error)
 	mustEmbedUnimplementedOperatorGameCategoryServiceServer()
 }
 
@@ -1429,14 +1414,11 @@ type UnimplementedOperatorGameCategoryServiceServer struct{}
 func (UnimplementedOperatorGameCategoryServiceServer) GetOperatorGameCategoryList(context.Context, *GetOperatorGameCategoryListRequest) (*GetOperatorGameCategoryListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetOperatorGameCategoryList not implemented")
 }
-func (UnimplementedOperatorGameCategoryServiceServer) BatchCreateOperatorGameCategory(context.Context, *BatchCreateOperatorGameCategoryRequest) (*BatchCreateOperatorGameCategoryResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method BatchCreateOperatorGameCategory not implemented")
-}
 func (UnimplementedOperatorGameCategoryServiceServer) BatchUpdateOperatorGameCategoryStatus(context.Context, *BatchUpdateOperatorGameCategoryStatusRequest) (*BatchUpdateOperatorGameCategoryStatusResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method BatchUpdateOperatorGameCategoryStatus not implemented")
 }
-func (UnimplementedOperatorGameCategoryServiceServer) BatchDeleteOperatorGameCategory(context.Context, *BatchDeleteOperatorGameCategoryRequest) (*BatchDeleteOperatorGameCategoryResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method BatchDeleteOperatorGameCategory not implemented")
+func (UnimplementedOperatorGameCategoryServiceServer) SaveOperatorGameCategoryAllocation(context.Context, *SaveOperatorGameCategoryAllocationRequest) (*SaveOperatorGameCategoryAllocationResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SaveOperatorGameCategoryAllocation not implemented")
 }
 func (UnimplementedOperatorGameCategoryServiceServer) mustEmbedUnimplementedOperatorGameCategoryServiceServer() {
 }
@@ -1478,24 +1460,6 @@ func _OperatorGameCategoryService_GetOperatorGameCategoryList_Handler(srv interf
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OperatorGameCategoryService_BatchCreateOperatorGameCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BatchCreateOperatorGameCategoryRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OperatorGameCategoryServiceServer).BatchCreateOperatorGameCategory(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OperatorGameCategoryService_BatchCreateOperatorGameCategory_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OperatorGameCategoryServiceServer).BatchCreateOperatorGameCategory(ctx, req.(*BatchCreateOperatorGameCategoryRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _OperatorGameCategoryService_BatchUpdateOperatorGameCategoryStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(BatchUpdateOperatorGameCategoryStatusRequest)
 	if err := dec(in); err != nil {
@@ -1514,20 +1478,20 @@ func _OperatorGameCategoryService_BatchUpdateOperatorGameCategoryStatus_Handler(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OperatorGameCategoryService_BatchDeleteOperatorGameCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BatchDeleteOperatorGameCategoryRequest)
+func _OperatorGameCategoryService_SaveOperatorGameCategoryAllocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SaveOperatorGameCategoryAllocationRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OperatorGameCategoryServiceServer).BatchDeleteOperatorGameCategory(ctx, in)
+		return srv.(OperatorGameCategoryServiceServer).SaveOperatorGameCategoryAllocation(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: OperatorGameCategoryService_BatchDeleteOperatorGameCategory_FullMethodName,
+		FullMethod: OperatorGameCategoryService_SaveOperatorGameCategoryAllocation_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OperatorGameCategoryServiceServer).BatchDeleteOperatorGameCategory(ctx, req.(*BatchDeleteOperatorGameCategoryRequest))
+		return srv.(OperatorGameCategoryServiceServer).SaveOperatorGameCategoryAllocation(ctx, req.(*SaveOperatorGameCategoryAllocationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1544,16 +1508,12 @@ var OperatorGameCategoryService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _OperatorGameCategoryService_GetOperatorGameCategoryList_Handler,
 		},
 		{
-			MethodName: "BatchCreateOperatorGameCategory",
-			Handler:    _OperatorGameCategoryService_BatchCreateOperatorGameCategory_Handler,
-		},
-		{
 			MethodName: "BatchUpdateOperatorGameCategoryStatus",
 			Handler:    _OperatorGameCategoryService_BatchUpdateOperatorGameCategoryStatus_Handler,
 		},
 		{
-			MethodName: "BatchDeleteOperatorGameCategory",
-			Handler:    _OperatorGameCategoryService_BatchDeleteOperatorGameCategory_Handler,
+			MethodName: "SaveOperatorGameCategoryAllocation",
+			Handler:    _OperatorGameCategoryService_SaveOperatorGameCategoryAllocation_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -1562,9 +1522,8 @@ var OperatorGameCategoryService_ServiceDesc = grpc.ServiceDesc{
 
 const (
 	OperatorGameChannelService_GetOperatorGameChannelList_FullMethodName           = "/platform_game.OperatorGameChannelService/GetOperatorGameChannelList"
-	OperatorGameChannelService_BatchCreateOperatorGameChannel_FullMethodName       = "/platform_game.OperatorGameChannelService/BatchCreateOperatorGameChannel"
 	OperatorGameChannelService_BatchUpdateOperatorGameChannelStatus_FullMethodName = "/platform_game.OperatorGameChannelService/BatchUpdateOperatorGameChannelStatus"
-	OperatorGameChannelService_BatchDeleteOperatorGameChannel_FullMethodName       = "/platform_game.OperatorGameChannelService/BatchDeleteOperatorGameChannel"
+	OperatorGameChannelService_SaveOperatorGameChannelAllocation_FullMethodName    = "/platform_game.OperatorGameChannelService/SaveOperatorGameChannelAllocation"
 )
 
 // OperatorGameChannelServiceClient is the client API for OperatorGameChannelService service.
@@ -1573,12 +1532,10 @@ const (
 type OperatorGameChannelServiceClient interface {
 	// 获取分站游戏渠道列表
 	GetOperatorGameChannelList(ctx context.Context, in *GetOperatorGameChannelListRequest, opts ...grpc.CallOption) (*GetOperatorGameChannelListResp, error)
-	// 批量创建分站游戏渠道
-	BatchCreateOperatorGameChannel(ctx context.Context, in *BatchCreateOperatorGameChannelRequest, opts ...grpc.CallOption) (*BatchCreateOperatorGameChannelResp, error)
 	// 批量修改分站游戏渠道状态
 	BatchUpdateOperatorGameChannelStatus(ctx context.Context, in *BatchUpdateOperatorGameChannelStatusRequest, opts ...grpc.CallOption) (*BatchUpdateOperatorGameChannelStatusResp, error)
-	// 批量删除分站游戏渠道
-	BatchDeleteOperatorGameChannel(ctx context.Context, in *BatchDeleteOperatorGameChannelRequest, opts ...grpc.CallOption) (*BatchDeleteOperatorGameChannelResp, error)
+	// 保存分站游戏渠道分配
+	SaveOperatorGameChannelAllocation(ctx context.Context, in *SaveOperatorGameChannelAllocationRequest, opts ...grpc.CallOption) (*SaveOperatorGameChannelAllocationResp, error)
 }
 
 type operatorGameChannelServiceClient struct {
@@ -1599,16 +1556,6 @@ func (c *operatorGameChannelServiceClient) GetOperatorGameChannelList(ctx contex
 	return out, nil
 }
 
-func (c *operatorGameChannelServiceClient) BatchCreateOperatorGameChannel(ctx context.Context, in *BatchCreateOperatorGameChannelRequest, opts ...grpc.CallOption) (*BatchCreateOperatorGameChannelResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(BatchCreateOperatorGameChannelResp)
-	err := c.cc.Invoke(ctx, OperatorGameChannelService_BatchCreateOperatorGameChannel_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *operatorGameChannelServiceClient) BatchUpdateOperatorGameChannelStatus(ctx context.Context, in *BatchUpdateOperatorGameChannelStatusRequest, opts ...grpc.CallOption) (*BatchUpdateOperatorGameChannelStatusResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(BatchUpdateOperatorGameChannelStatusResp)
@@ -1619,10 +1566,10 @@ func (c *operatorGameChannelServiceClient) BatchUpdateOperatorGameChannelStatus(
 	return out, nil
 }
 
-func (c *operatorGameChannelServiceClient) BatchDeleteOperatorGameChannel(ctx context.Context, in *BatchDeleteOperatorGameChannelRequest, opts ...grpc.CallOption) (*BatchDeleteOperatorGameChannelResp, error) {
+func (c *operatorGameChannelServiceClient) SaveOperatorGameChannelAllocation(ctx context.Context, in *SaveOperatorGameChannelAllocationRequest, opts ...grpc.CallOption) (*SaveOperatorGameChannelAllocationResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(BatchDeleteOperatorGameChannelResp)
-	err := c.cc.Invoke(ctx, OperatorGameChannelService_BatchDeleteOperatorGameChannel_FullMethodName, in, out, cOpts...)
+	out := new(SaveOperatorGameChannelAllocationResp)
+	err := c.cc.Invoke(ctx, OperatorGameChannelService_SaveOperatorGameChannelAllocation_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1635,12 +1582,10 @@ func (c *operatorGameChannelServiceClient) BatchDeleteOperatorGameChannel(ctx co
 type OperatorGameChannelServiceServer interface {
 	// 获取分站游戏渠道列表
 	GetOperatorGameChannelList(context.Context, *GetOperatorGameChannelListRequest) (*GetOperatorGameChannelListResp, error)
-	// 批量创建分站游戏渠道
-	BatchCreateOperatorGameChannel(context.Context, *BatchCreateOperatorGameChannelRequest) (*BatchCreateOperatorGameChannelResp, error)
 	// 批量修改分站游戏渠道状态
 	BatchUpdateOperatorGameChannelStatus(context.Context, *BatchUpdateOperatorGameChannelStatusRequest) (*BatchUpdateOperatorGameChannelStatusResp, error)
-	// 批量删除分站游戏渠道
-	BatchDeleteOperatorGameChannel(context.Context, *BatchDeleteOperatorGameChannelRequest) (*BatchDeleteOperatorGameChannelResp, error)
+	// 保存分站游戏渠道分配
+	SaveOperatorGameChannelAllocation(context.Context, *SaveOperatorGameChannelAllocationRequest) (*SaveOperatorGameChannelAllocationResp, error)
 	mustEmbedUnimplementedOperatorGameChannelServiceServer()
 }
 
@@ -1654,14 +1599,11 @@ type UnimplementedOperatorGameChannelServiceServer struct{}
 func (UnimplementedOperatorGameChannelServiceServer) GetOperatorGameChannelList(context.Context, *GetOperatorGameChannelListRequest) (*GetOperatorGameChannelListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetOperatorGameChannelList not implemented")
 }
-func (UnimplementedOperatorGameChannelServiceServer) BatchCreateOperatorGameChannel(context.Context, *BatchCreateOperatorGameChannelRequest) (*BatchCreateOperatorGameChannelResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method BatchCreateOperatorGameChannel not implemented")
-}
 func (UnimplementedOperatorGameChannelServiceServer) BatchUpdateOperatorGameChannelStatus(context.Context, *BatchUpdateOperatorGameChannelStatusRequest) (*BatchUpdateOperatorGameChannelStatusResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method BatchUpdateOperatorGameChannelStatus not implemented")
 }
-func (UnimplementedOperatorGameChannelServiceServer) BatchDeleteOperatorGameChannel(context.Context, *BatchDeleteOperatorGameChannelRequest) (*BatchDeleteOperatorGameChannelResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method BatchDeleteOperatorGameChannel not implemented")
+func (UnimplementedOperatorGameChannelServiceServer) SaveOperatorGameChannelAllocation(context.Context, *SaveOperatorGameChannelAllocationRequest) (*SaveOperatorGameChannelAllocationResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SaveOperatorGameChannelAllocation not implemented")
 }
 func (UnimplementedOperatorGameChannelServiceServer) mustEmbedUnimplementedOperatorGameChannelServiceServer() {
 }
@@ -1703,24 +1645,6 @@ func _OperatorGameChannelService_GetOperatorGameChannelList_Handler(srv interfac
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OperatorGameChannelService_BatchCreateOperatorGameChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BatchCreateOperatorGameChannelRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OperatorGameChannelServiceServer).BatchCreateOperatorGameChannel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OperatorGameChannelService_BatchCreateOperatorGameChannel_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OperatorGameChannelServiceServer).BatchCreateOperatorGameChannel(ctx, req.(*BatchCreateOperatorGameChannelRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _OperatorGameChannelService_BatchUpdateOperatorGameChannelStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(BatchUpdateOperatorGameChannelStatusRequest)
 	if err := dec(in); err != nil {
@@ -1739,20 +1663,20 @@ func _OperatorGameChannelService_BatchUpdateOperatorGameChannelStatus_Handler(sr
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OperatorGameChannelService_BatchDeleteOperatorGameChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BatchDeleteOperatorGameChannelRequest)
+func _OperatorGameChannelService_SaveOperatorGameChannelAllocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SaveOperatorGameChannelAllocationRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OperatorGameChannelServiceServer).BatchDeleteOperatorGameChannel(ctx, in)
+		return srv.(OperatorGameChannelServiceServer).SaveOperatorGameChannelAllocation(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: OperatorGameChannelService_BatchDeleteOperatorGameChannel_FullMethodName,
+		FullMethod: OperatorGameChannelService_SaveOperatorGameChannelAllocation_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OperatorGameChannelServiceServer).BatchDeleteOperatorGameChannel(ctx, req.(*BatchDeleteOperatorGameChannelRequest))
+		return srv.(OperatorGameChannelServiceServer).SaveOperatorGameChannelAllocation(ctx, req.(*SaveOperatorGameChannelAllocationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1769,16 +1693,12 @@ var OperatorGameChannelService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _OperatorGameChannelService_GetOperatorGameChannelList_Handler,
 		},
 		{
-			MethodName: "BatchCreateOperatorGameChannel",
-			Handler:    _OperatorGameChannelService_BatchCreateOperatorGameChannel_Handler,
-		},
-		{
 			MethodName: "BatchUpdateOperatorGameChannelStatus",
 			Handler:    _OperatorGameChannelService_BatchUpdateOperatorGameChannelStatus_Handler,
 		},
 		{
-			MethodName: "BatchDeleteOperatorGameChannel",
-			Handler:    _OperatorGameChannelService_BatchDeleteOperatorGameChannel_Handler,
+			MethodName: "SaveOperatorGameChannelAllocation",
+			Handler:    _OperatorGameChannelService_SaveOperatorGameChannelAllocation_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -1787,9 +1707,8 @@ var OperatorGameChannelService_ServiceDesc = grpc.ServiceDesc{
 
 const (
 	OperatorGameProviderService_GetOperatorGameProviderList_FullMethodName           = "/platform_game.OperatorGameProviderService/GetOperatorGameProviderList"
-	OperatorGameProviderService_BatchCreateOperatorGameProvider_FullMethodName       = "/platform_game.OperatorGameProviderService/BatchCreateOperatorGameProvider"
 	OperatorGameProviderService_BatchUpdateOperatorGameProviderStatus_FullMethodName = "/platform_game.OperatorGameProviderService/BatchUpdateOperatorGameProviderStatus"
-	OperatorGameProviderService_BatchDeleteOperatorGameProvider_FullMethodName       = "/platform_game.OperatorGameProviderService/BatchDeleteOperatorGameProvider"
+	OperatorGameProviderService_SaveOperatorGameProviderAllocation_FullMethodName    = "/platform_game.OperatorGameProviderService/SaveOperatorGameProviderAllocation"
 )
 
 // OperatorGameProviderServiceClient is the client API for OperatorGameProviderService service.
@@ -1798,12 +1717,10 @@ const (
 type OperatorGameProviderServiceClient interface {
 	// 获取分站游戏提供商列表
 	GetOperatorGameProviderList(ctx context.Context, in *GetOperatorGameProviderListRequest, opts ...grpc.CallOption) (*GetOperatorGameProviderListResp, error)
-	// 批量创建分站游戏提供商
-	BatchCreateOperatorGameProvider(ctx context.Context, in *BatchCreateOperatorGameProviderRequest, opts ...grpc.CallOption) (*BatchCreateOperatorGameProviderResp, error)
 	// 批量修改分站游戏提供商状态
 	BatchUpdateOperatorGameProviderStatus(ctx context.Context, in *BatchUpdateOperatorGameProviderStatusRequest, opts ...grpc.CallOption) (*BatchUpdateOperatorGameProviderStatusResp, error)
-	// 批量删除分站游戏提供商
-	BatchDeleteOperatorGameProvider(ctx context.Context, in *BatchDeleteOperatorGameProviderRequest, opts ...grpc.CallOption) (*BatchDeleteOperatorGameProviderResp, error)
+	// 保存分站游戏提供商分配
+	SaveOperatorGameProviderAllocation(ctx context.Context, in *SaveOperatorGameProviderAllocationRequest, opts ...grpc.CallOption) (*SaveOperatorGameProviderAllocationResp, error)
 }
 
 type operatorGameProviderServiceClient struct {
@@ -1824,16 +1741,6 @@ func (c *operatorGameProviderServiceClient) GetOperatorGameProviderList(ctx cont
 	return out, nil
 }
 
-func (c *operatorGameProviderServiceClient) BatchCreateOperatorGameProvider(ctx context.Context, in *BatchCreateOperatorGameProviderRequest, opts ...grpc.CallOption) (*BatchCreateOperatorGameProviderResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(BatchCreateOperatorGameProviderResp)
-	err := c.cc.Invoke(ctx, OperatorGameProviderService_BatchCreateOperatorGameProvider_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *operatorGameProviderServiceClient) BatchUpdateOperatorGameProviderStatus(ctx context.Context, in *BatchUpdateOperatorGameProviderStatusRequest, opts ...grpc.CallOption) (*BatchUpdateOperatorGameProviderStatusResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(BatchUpdateOperatorGameProviderStatusResp)
@@ -1844,10 +1751,10 @@ func (c *operatorGameProviderServiceClient) BatchUpdateOperatorGameProviderStatu
 	return out, nil
 }
 
-func (c *operatorGameProviderServiceClient) BatchDeleteOperatorGameProvider(ctx context.Context, in *BatchDeleteOperatorGameProviderRequest, opts ...grpc.CallOption) (*BatchDeleteOperatorGameProviderResp, error) {
+func (c *operatorGameProviderServiceClient) SaveOperatorGameProviderAllocation(ctx context.Context, in *SaveOperatorGameProviderAllocationRequest, opts ...grpc.CallOption) (*SaveOperatorGameProviderAllocationResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(BatchDeleteOperatorGameProviderResp)
-	err := c.cc.Invoke(ctx, OperatorGameProviderService_BatchDeleteOperatorGameProvider_FullMethodName, in, out, cOpts...)
+	out := new(SaveOperatorGameProviderAllocationResp)
+	err := c.cc.Invoke(ctx, OperatorGameProviderService_SaveOperatorGameProviderAllocation_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1860,12 +1767,10 @@ func (c *operatorGameProviderServiceClient) BatchDeleteOperatorGameProvider(ctx 
 type OperatorGameProviderServiceServer interface {
 	// 获取分站游戏提供商列表
 	GetOperatorGameProviderList(context.Context, *GetOperatorGameProviderListRequest) (*GetOperatorGameProviderListResp, error)
-	// 批量创建分站游戏提供商
-	BatchCreateOperatorGameProvider(context.Context, *BatchCreateOperatorGameProviderRequest) (*BatchCreateOperatorGameProviderResp, error)
 	// 批量修改分站游戏提供商状态
 	BatchUpdateOperatorGameProviderStatus(context.Context, *BatchUpdateOperatorGameProviderStatusRequest) (*BatchUpdateOperatorGameProviderStatusResp, error)
-	// 批量删除分站游戏提供商
-	BatchDeleteOperatorGameProvider(context.Context, *BatchDeleteOperatorGameProviderRequest) (*BatchDeleteOperatorGameProviderResp, error)
+	// 保存分站游戏提供商分配
+	SaveOperatorGameProviderAllocation(context.Context, *SaveOperatorGameProviderAllocationRequest) (*SaveOperatorGameProviderAllocationResp, error)
 	mustEmbedUnimplementedOperatorGameProviderServiceServer()
 }
 
@@ -1879,14 +1784,11 @@ type UnimplementedOperatorGameProviderServiceServer struct{}
 func (UnimplementedOperatorGameProviderServiceServer) GetOperatorGameProviderList(context.Context, *GetOperatorGameProviderListRequest) (*GetOperatorGameProviderListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetOperatorGameProviderList not implemented")
 }
-func (UnimplementedOperatorGameProviderServiceServer) BatchCreateOperatorGameProvider(context.Context, *BatchCreateOperatorGameProviderRequest) (*BatchCreateOperatorGameProviderResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method BatchCreateOperatorGameProvider not implemented")
-}
 func (UnimplementedOperatorGameProviderServiceServer) BatchUpdateOperatorGameProviderStatus(context.Context, *BatchUpdateOperatorGameProviderStatusRequest) (*BatchUpdateOperatorGameProviderStatusResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method BatchUpdateOperatorGameProviderStatus not implemented")
 }
-func (UnimplementedOperatorGameProviderServiceServer) BatchDeleteOperatorGameProvider(context.Context, *BatchDeleteOperatorGameProviderRequest) (*BatchDeleteOperatorGameProviderResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method BatchDeleteOperatorGameProvider not implemented")
+func (UnimplementedOperatorGameProviderServiceServer) SaveOperatorGameProviderAllocation(context.Context, *SaveOperatorGameProviderAllocationRequest) (*SaveOperatorGameProviderAllocationResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SaveOperatorGameProviderAllocation not implemented")
 }
 func (UnimplementedOperatorGameProviderServiceServer) mustEmbedUnimplementedOperatorGameProviderServiceServer() {
 }
@@ -1928,24 +1830,6 @@ func _OperatorGameProviderService_GetOperatorGameProviderList_Handler(srv interf
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OperatorGameProviderService_BatchCreateOperatorGameProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BatchCreateOperatorGameProviderRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OperatorGameProviderServiceServer).BatchCreateOperatorGameProvider(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OperatorGameProviderService_BatchCreateOperatorGameProvider_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OperatorGameProviderServiceServer).BatchCreateOperatorGameProvider(ctx, req.(*BatchCreateOperatorGameProviderRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _OperatorGameProviderService_BatchUpdateOperatorGameProviderStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(BatchUpdateOperatorGameProviderStatusRequest)
 	if err := dec(in); err != nil {
@@ -1964,20 +1848,20 @@ func _OperatorGameProviderService_BatchUpdateOperatorGameProviderStatus_Handler(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OperatorGameProviderService_BatchDeleteOperatorGameProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BatchDeleteOperatorGameProviderRequest)
+func _OperatorGameProviderService_SaveOperatorGameProviderAllocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SaveOperatorGameProviderAllocationRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OperatorGameProviderServiceServer).BatchDeleteOperatorGameProvider(ctx, in)
+		return srv.(OperatorGameProviderServiceServer).SaveOperatorGameProviderAllocation(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: OperatorGameProviderService_BatchDeleteOperatorGameProvider_FullMethodName,
+		FullMethod: OperatorGameProviderService_SaveOperatorGameProviderAllocation_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OperatorGameProviderServiceServer).BatchDeleteOperatorGameProvider(ctx, req.(*BatchDeleteOperatorGameProviderRequest))
+		return srv.(OperatorGameProviderServiceServer).SaveOperatorGameProviderAllocation(ctx, req.(*SaveOperatorGameProviderAllocationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1994,16 +1878,12 @@ var OperatorGameProviderService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _OperatorGameProviderService_GetOperatorGameProviderList_Handler,
 		},
 		{
-			MethodName: "BatchCreateOperatorGameProvider",
-			Handler:    _OperatorGameProviderService_BatchCreateOperatorGameProvider_Handler,
-		},
-		{
 			MethodName: "BatchUpdateOperatorGameProviderStatus",
 			Handler:    _OperatorGameProviderService_BatchUpdateOperatorGameProviderStatus_Handler,
 		},
 		{
-			MethodName: "BatchDeleteOperatorGameProvider",
-			Handler:    _OperatorGameProviderService_BatchDeleteOperatorGameProvider_Handler,
+			MethodName: "SaveOperatorGameProviderAllocation",
+			Handler:    _OperatorGameProviderService_SaveOperatorGameProviderAllocation_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -2012,9 +1892,8 @@ var OperatorGameProviderService_ServiceDesc = grpc.ServiceDesc{
 
 const (
 	OperatorGameService_GetOperatorGameList_FullMethodName           = "/platform_game.OperatorGameService/GetOperatorGameList"
-	OperatorGameService_BatchCreateOperatorGame_FullMethodName       = "/platform_game.OperatorGameService/BatchCreateOperatorGame"
 	OperatorGameService_BatchUpdateOperatorGameStatus_FullMethodName = "/platform_game.OperatorGameService/BatchUpdateOperatorGameStatus"
-	OperatorGameService_BatchDeleteOperatorGame_FullMethodName       = "/platform_game.OperatorGameService/BatchDeleteOperatorGame"
+	OperatorGameService_SaveOperatorGameAllocation_FullMethodName    = "/platform_game.OperatorGameService/SaveOperatorGameAllocation"
 )
 
 // OperatorGameServiceClient is the client API for OperatorGameService service.
@@ -2023,12 +1902,10 @@ const (
 type OperatorGameServiceClient interface {
 	// 获取分站游戏列表
 	GetOperatorGameList(ctx context.Context, in *GetOperatorGameListRequest, opts ...grpc.CallOption) (*GetOperatorGameListResp, error)
-	// 批量创建分站游戏
-	BatchCreateOperatorGame(ctx context.Context, in *BatchCreateOperatorGameRequest, opts ...grpc.CallOption) (*BatchCreateOperatorGameResp, error)
 	// 批量修改分站游戏状态
 	BatchUpdateOperatorGameStatus(ctx context.Context, in *BatchUpdateOperatorGameStatusRequest, opts ...grpc.CallOption) (*BatchUpdateOperatorGameStatusResp, error)
-	// 批量删除分站游戏
-	BatchDeleteOperatorGame(ctx context.Context, in *BatchDeleteOperatorGameRequest, opts ...grpc.CallOption) (*BatchDeleteOperatorGameResp, error)
+	// 保存分站游戏分配
+	SaveOperatorGameAllocation(ctx context.Context, in *SaveOperatorGameAllocationRequest, opts ...grpc.CallOption) (*SaveOperatorGameAllocationResp, error)
 }
 
 type operatorGameServiceClient struct {
@@ -2049,16 +1926,6 @@ func (c *operatorGameServiceClient) GetOperatorGameList(ctx context.Context, in 
 	return out, nil
 }
 
-func (c *operatorGameServiceClient) BatchCreateOperatorGame(ctx context.Context, in *BatchCreateOperatorGameRequest, opts ...grpc.CallOption) (*BatchCreateOperatorGameResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(BatchCreateOperatorGameResp)
-	err := c.cc.Invoke(ctx, OperatorGameService_BatchCreateOperatorGame_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *operatorGameServiceClient) BatchUpdateOperatorGameStatus(ctx context.Context, in *BatchUpdateOperatorGameStatusRequest, opts ...grpc.CallOption) (*BatchUpdateOperatorGameStatusResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(BatchUpdateOperatorGameStatusResp)
@@ -2069,10 +1936,10 @@ func (c *operatorGameServiceClient) BatchUpdateOperatorGameStatus(ctx context.Co
 	return out, nil
 }
 
-func (c *operatorGameServiceClient) BatchDeleteOperatorGame(ctx context.Context, in *BatchDeleteOperatorGameRequest, opts ...grpc.CallOption) (*BatchDeleteOperatorGameResp, error) {
+func (c *operatorGameServiceClient) SaveOperatorGameAllocation(ctx context.Context, in *SaveOperatorGameAllocationRequest, opts ...grpc.CallOption) (*SaveOperatorGameAllocationResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(BatchDeleteOperatorGameResp)
-	err := c.cc.Invoke(ctx, OperatorGameService_BatchDeleteOperatorGame_FullMethodName, in, out, cOpts...)
+	out := new(SaveOperatorGameAllocationResp)
+	err := c.cc.Invoke(ctx, OperatorGameService_SaveOperatorGameAllocation_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2085,12 +1952,10 @@ func (c *operatorGameServiceClient) BatchDeleteOperatorGame(ctx context.Context,
 type OperatorGameServiceServer interface {
 	// 获取分站游戏列表
 	GetOperatorGameList(context.Context, *GetOperatorGameListRequest) (*GetOperatorGameListResp, error)
-	// 批量创建分站游戏
-	BatchCreateOperatorGame(context.Context, *BatchCreateOperatorGameRequest) (*BatchCreateOperatorGameResp, error)
 	// 批量修改分站游戏状态
 	BatchUpdateOperatorGameStatus(context.Context, *BatchUpdateOperatorGameStatusRequest) (*BatchUpdateOperatorGameStatusResp, error)
-	// 批量删除分站游戏
-	BatchDeleteOperatorGame(context.Context, *BatchDeleteOperatorGameRequest) (*BatchDeleteOperatorGameResp, error)
+	// 保存分站游戏分配
+	SaveOperatorGameAllocation(context.Context, *SaveOperatorGameAllocationRequest) (*SaveOperatorGameAllocationResp, error)
 	mustEmbedUnimplementedOperatorGameServiceServer()
 }
 
@@ -2104,14 +1969,11 @@ type UnimplementedOperatorGameServiceServer struct{}
 func (UnimplementedOperatorGameServiceServer) GetOperatorGameList(context.Context, *GetOperatorGameListRequest) (*GetOperatorGameListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetOperatorGameList not implemented")
 }
-func (UnimplementedOperatorGameServiceServer) BatchCreateOperatorGame(context.Context, *BatchCreateOperatorGameRequest) (*BatchCreateOperatorGameResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method BatchCreateOperatorGame not implemented")
-}
 func (UnimplementedOperatorGameServiceServer) BatchUpdateOperatorGameStatus(context.Context, *BatchUpdateOperatorGameStatusRequest) (*BatchUpdateOperatorGameStatusResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method BatchUpdateOperatorGameStatus not implemented")
 }
-func (UnimplementedOperatorGameServiceServer) BatchDeleteOperatorGame(context.Context, *BatchDeleteOperatorGameRequest) (*BatchDeleteOperatorGameResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method BatchDeleteOperatorGame not implemented")
+func (UnimplementedOperatorGameServiceServer) SaveOperatorGameAllocation(context.Context, *SaveOperatorGameAllocationRequest) (*SaveOperatorGameAllocationResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SaveOperatorGameAllocation not implemented")
 }
 func (UnimplementedOperatorGameServiceServer) mustEmbedUnimplementedOperatorGameServiceServer() {}
 func (UnimplementedOperatorGameServiceServer) testEmbeddedByValue()                             {}
@@ -2152,24 +2014,6 @@ func _OperatorGameService_GetOperatorGameList_Handler(srv interface{}, ctx conte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OperatorGameService_BatchCreateOperatorGame_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BatchCreateOperatorGameRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OperatorGameServiceServer).BatchCreateOperatorGame(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OperatorGameService_BatchCreateOperatorGame_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OperatorGameServiceServer).BatchCreateOperatorGame(ctx, req.(*BatchCreateOperatorGameRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _OperatorGameService_BatchUpdateOperatorGameStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(BatchUpdateOperatorGameStatusRequest)
 	if err := dec(in); err != nil {
@@ -2188,20 +2032,20 @@ func _OperatorGameService_BatchUpdateOperatorGameStatus_Handler(srv interface{},
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OperatorGameService_BatchDeleteOperatorGame_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BatchDeleteOperatorGameRequest)
+func _OperatorGameService_SaveOperatorGameAllocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SaveOperatorGameAllocationRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OperatorGameServiceServer).BatchDeleteOperatorGame(ctx, in)
+		return srv.(OperatorGameServiceServer).SaveOperatorGameAllocation(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: OperatorGameService_BatchDeleteOperatorGame_FullMethodName,
+		FullMethod: OperatorGameService_SaveOperatorGameAllocation_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OperatorGameServiceServer).BatchDeleteOperatorGame(ctx, req.(*BatchDeleteOperatorGameRequest))
+		return srv.(OperatorGameServiceServer).SaveOperatorGameAllocation(ctx, req.(*SaveOperatorGameAllocationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2218,16 +2062,12 @@ var OperatorGameService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _OperatorGameService_GetOperatorGameList_Handler,
 		},
 		{
-			MethodName: "BatchCreateOperatorGame",
-			Handler:    _OperatorGameService_BatchCreateOperatorGame_Handler,
-		},
-		{
 			MethodName: "BatchUpdateOperatorGameStatus",
 			Handler:    _OperatorGameService_BatchUpdateOperatorGameStatus_Handler,
 		},
 		{
-			MethodName: "BatchDeleteOperatorGame",
-			Handler:    _OperatorGameService_BatchDeleteOperatorGame_Handler,
+			MethodName: "SaveOperatorGameAllocation",
+			Handler:    _OperatorGameService_SaveOperatorGameAllocation_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

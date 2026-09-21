@@ -781,6 +781,190 @@ func (*DeleteAdminsByOperatorIdResponse) Descriptor() ([]byte, []int) {
 	return file_types_platform_operator_admin_proto_rawDescGZIP(), []int{12}
 }
 
+// 检测分站管理员是否已存在请求
+type ExistsAdminByOperatorIdRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 分站ID
+	OperatorId    int64 `protobuf:"varint,1,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ExistsAdminByOperatorIdRequest) Reset() {
+	*x = ExistsAdminByOperatorIdRequest{}
+	mi := &file_types_platform_operator_admin_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ExistsAdminByOperatorIdRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ExistsAdminByOperatorIdRequest) ProtoMessage() {}
+
+func (x *ExistsAdminByOperatorIdRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_types_platform_operator_admin_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ExistsAdminByOperatorIdRequest.ProtoReflect.Descriptor instead.
+func (*ExistsAdminByOperatorIdRequest) Descriptor() ([]byte, []int) {
+	return file_types_platform_operator_admin_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *ExistsAdminByOperatorIdRequest) GetOperatorId() int64 {
+	if x != nil {
+		return x.OperatorId
+	}
+	return 0
+}
+
+// 检测分站管理员是否已存在响应
+type ExistsAdminByOperatorIdResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 是否已存在管理员
+	Exists        bool `protobuf:"varint,1,opt,name=exists,proto3" json:"exists,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ExistsAdminByOperatorIdResponse) Reset() {
+	*x = ExistsAdminByOperatorIdResponse{}
+	mi := &file_types_platform_operator_admin_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ExistsAdminByOperatorIdResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ExistsAdminByOperatorIdResponse) ProtoMessage() {}
+
+func (x *ExistsAdminByOperatorIdResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_types_platform_operator_admin_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ExistsAdminByOperatorIdResponse.ProtoReflect.Descriptor instead.
+func (*ExistsAdminByOperatorIdResponse) Descriptor() ([]byte, []int) {
+	return file_types_platform_operator_admin_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *ExistsAdminByOperatorIdResponse) GetExists() bool {
+	if x != nil {
+		return x.Exists
+	}
+	return false
+}
+
+// 获取分站管理员请求
+type GetAdminRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 表自增ID
+	Id            int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAdminRequest) Reset() {
+	*x = GetAdminRequest{}
+	mi := &file_types_platform_operator_admin_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAdminRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAdminRequest) ProtoMessage() {}
+
+func (x *GetAdminRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_types_platform_operator_admin_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAdminRequest.ProtoReflect.Descriptor instead.
+func (*GetAdminRequest) Descriptor() ([]byte, []int) {
+	return file_types_platform_operator_admin_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *GetAdminRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+// 获取分站管理员响应
+type GetAdminResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 分站管理员信息
+	Admin         *AdminInfo `protobuf:"bytes,1,opt,name=admin,proto3" json:"admin,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAdminResponse) Reset() {
+	*x = GetAdminResponse{}
+	mi := &file_types_platform_operator_admin_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAdminResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAdminResponse) ProtoMessage() {}
+
+func (x *GetAdminResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_types_platform_operator_admin_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAdminResponse.ProtoReflect.Descriptor instead.
+func (*GetAdminResponse) Descriptor() ([]byte, []int) {
+	return file_types_platform_operator_admin_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *GetAdminResponse) GetAdmin() *AdminInfo {
+	if x != nil {
+		return x.Admin
+	}
+	return nil
+}
+
 var File_types_platform_operator_admin_proto protoreflect.FileDescriptor
 
 var file_types_platform_operator_admin_proto_rawDesc = string([]byte{
@@ -871,12 +1055,27 @@ var file_types_platform_operator_admin_proto_rawDesc = string([]byte{
 	0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0a, 0x6f, 0x70, 0x65, 0x72, 0x61, 0x74,
 	0x6f, 0x72, 0x49, 0x64, 0x22, 0x22, 0x0a, 0x20, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x41, 0x64,
 	0x6d, 0x69, 0x6e, 0x73, 0x42, 0x79, 0x4f, 0x70, 0x65, 0x72, 0x61, 0x74, 0x6f, 0x72, 0x49, 0x64,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x46, 0x5a, 0x44, 0x6f, 0x61, 0x2e, 0x39,
-	0x38, 0x65, 0x6e, 0x74, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x70, 0x39, 0x2f, 0x70, 0x6c, 0x61, 0x74,
-	0x66, 0x6f, 0x72, 0x6d, 0x2d, 0x6f, 0x70, 0x65, 0x72, 0x61, 0x74, 0x6f, 0x72, 0x2f, 0x72, 0x70,
-	0x63, 0x2f, 0x70, 0x62, 0x2f, 0x70, 0x6c, 0x61, 0x74, 0x66, 0x6f, 0x72, 0x6d, 0x6f, 0x70, 0x65,
-	0x72, 0x61, 0x74, 0x6f, 0x72, 0x72, 0x70, 0x63, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x70, 0x62,
-	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x41, 0x0a, 0x1e, 0x45, 0x78, 0x69, 0x73,
+	0x74, 0x73, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x42, 0x79, 0x4f, 0x70, 0x65, 0x72, 0x61, 0x74, 0x6f,
+	0x72, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1f, 0x0a, 0x0b, 0x6f, 0x70,
+	0x65, 0x72, 0x61, 0x74, 0x6f, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52,
+	0x0a, 0x6f, 0x70, 0x65, 0x72, 0x61, 0x74, 0x6f, 0x72, 0x49, 0x64, 0x22, 0x39, 0x0a, 0x1f, 0x45,
+	0x78, 0x69, 0x73, 0x74, 0x73, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x42, 0x79, 0x4f, 0x70, 0x65, 0x72,
+	0x61, 0x74, 0x6f, 0x72, 0x49, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x16,
+	0x0a, 0x06, 0x65, 0x78, 0x69, 0x73, 0x74, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x06,
+	0x65, 0x78, 0x69, 0x73, 0x74, 0x73, 0x22, 0x21, 0x0a, 0x0f, 0x47, 0x65, 0x74, 0x41, 0x64, 0x6d,
+	0x69, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x02, 0x69, 0x64, 0x22, 0x4c, 0x0a, 0x10, 0x47, 0x65, 0x74,
+	0x41, 0x64, 0x6d, 0x69, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x38, 0x0a,
+	0x05, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x22, 0x2e, 0x70,
+	0x6c, 0x61, 0x74, 0x66, 0x6f, 0x72, 0x6d, 0x5f, 0x6f, 0x70, 0x65, 0x72, 0x61, 0x74, 0x6f, 0x72,
+	0x5f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x49, 0x6e, 0x66, 0x6f,
+	0x52, 0x05, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x42, 0x46, 0x5a, 0x44, 0x6f, 0x61, 0x2e, 0x39, 0x38,
+	0x65, 0x6e, 0x74, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x70, 0x39, 0x2f, 0x70, 0x6c, 0x61, 0x74, 0x66,
+	0x6f, 0x72, 0x6d, 0x2d, 0x6f, 0x70, 0x65, 0x72, 0x61, 0x74, 0x6f, 0x72, 0x2f, 0x72, 0x70, 0x63,
+	0x2f, 0x70, 0x62, 0x2f, 0x70, 0x6c, 0x61, 0x74, 0x66, 0x6f, 0x72, 0x6d, 0x6f, 0x70, 0x65, 0x72,
+	0x61, 0x74, 0x6f, 0x72, 0x72, 0x70, 0x63, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x70, 0x62, 0x62,
+	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 })
 
 var (
@@ -891,7 +1090,7 @@ func file_types_platform_operator_admin_proto_rawDescGZIP() []byte {
 	return file_types_platform_operator_admin_proto_rawDescData
 }
 
-var file_types_platform_operator_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_types_platform_operator_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_types_platform_operator_admin_proto_goTypes = []any{
 	(*AdminInfo)(nil),                        // 0: platform_operator_admin.AdminInfo
 	(*CreateAdminRequest)(nil),               // 1: platform_operator_admin.CreateAdminRequest
@@ -906,14 +1105,19 @@ var file_types_platform_operator_admin_proto_goTypes = []any{
 	(*UpdateAdminStatusResponse)(nil),        // 10: platform_operator_admin.UpdateAdminStatusResponse
 	(*DeleteAdminsByOperatorIdRequest)(nil),  // 11: platform_operator_admin.DeleteAdminsByOperatorIdRequest
 	(*DeleteAdminsByOperatorIdResponse)(nil), // 12: platform_operator_admin.DeleteAdminsByOperatorIdResponse
+	(*ExistsAdminByOperatorIdRequest)(nil),   // 13: platform_operator_admin.ExistsAdminByOperatorIdRequest
+	(*ExistsAdminByOperatorIdResponse)(nil),  // 14: platform_operator_admin.ExistsAdminByOperatorIdResponse
+	(*GetAdminRequest)(nil),                  // 15: platform_operator_admin.GetAdminRequest
+	(*GetAdminResponse)(nil),                 // 16: platform_operator_admin.GetAdminResponse
 }
 var file_types_platform_operator_admin_proto_depIdxs = []int32{
 	0, // 0: platform_operator_admin.ListAdminsResponse.list:type_name -> platform_operator_admin.AdminInfo
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	0, // 1: platform_operator_admin.GetAdminResponse.admin:type_name -> platform_operator_admin.AdminInfo
+	2, // [2:2] is the sub-list for method output_type
+	2, // [2:2] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_types_platform_operator_admin_proto_init() }
@@ -930,7 +1134,7 @@ func file_types_platform_operator_admin_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_platform_operator_admin_proto_rawDesc), len(file_types_platform_operator_admin_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   13,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

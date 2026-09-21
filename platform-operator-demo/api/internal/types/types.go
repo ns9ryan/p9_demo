@@ -18,111 +18,6 @@ type BasicResourceAllocationInfo struct {
 	AgentLineCount int64  `json:"agent_line_count"`
 }
 
-type BatchCreateOperatorGameCategoryItem struct {
-	OpCode       string `json:"op_code"`
-	CategoryCode string `json:"category_code"`
-	Status       int32  `json:"status"`
-}
-
-type BatchCreateOperatorGameCategoryRequest struct {
-	Items []BatchCreateOperatorGameCategoryItem `json:"items"`
-}
-
-type BatchCreateOperatorGameCategoryResponse struct {
-	Total   int64 `json:"total"`
-	Success int64 `json:"success"`
-	Failed  int64 `json:"failed"`
-}
-
-type BatchCreateOperatorGameChannelItem struct {
-	OpCode      string `json:"op_code"`
-	ChannelCode string `json:"channel_code"`
-	Status      int32  `json:"status"`
-}
-
-type BatchCreateOperatorGameChannelRequest struct {
-	Items []BatchCreateOperatorGameChannelItem `json:"items"`
-}
-
-type BatchCreateOperatorGameChannelResponse struct {
-	Total   int64 `json:"total"`
-	Success int64 `json:"success"`
-	Failed  int64 `json:"failed"`
-}
-
-type BatchCreateOperatorGameItem struct {
-	OpCode   string `json:"op_code"`
-	GameCode string `json:"game_code"`
-	Name     string `json:"name"`
-	Status   int32  `json:"status"`
-}
-
-type BatchCreateOperatorGameProviderItem struct {
-	OpCode       string `json:"op_code"`
-	ProviderCode string `json:"provider_code"`
-	Status       int32  `json:"status"`
-}
-
-type BatchCreateOperatorGameProviderRequest struct {
-	Items []BatchCreateOperatorGameProviderItem `json:"items"`
-}
-
-type BatchCreateOperatorGameProviderResponse struct {
-	Total   int64 `json:"total"`
-	Success int64 `json:"success"`
-	Failed  int64 `json:"failed"`
-}
-
-type BatchCreateOperatorGameRequest struct {
-	Items []BatchCreateOperatorGameItem `json:"items"`
-}
-
-type BatchCreateOperatorGameResponse struct {
-	Total   int64 `json:"total"`
-	Success int64 `json:"success"`
-	Failed  int64 `json:"failed"`
-}
-
-type BatchDeleteOperatorGameCategoryRequest struct {
-	Ids []int64 `json:"ids"`
-}
-
-type BatchDeleteOperatorGameCategoryResponse struct {
-	Total   int64 `json:"total"`
-	Success int64 `json:"success"`
-	Failed  int64 `json:"failed"`
-}
-
-type BatchDeleteOperatorGameChannelRequest struct {
-	Ids []int64 `json:"ids"`
-}
-
-type BatchDeleteOperatorGameChannelResponse struct {
-	Total   int64 `json:"total"`
-	Success int64 `json:"success"`
-	Failed  int64 `json:"failed"`
-}
-
-type BatchDeleteOperatorGameProviderRequest struct {
-	Ids []int64 `json:"ids"`
-}
-
-type BatchDeleteOperatorGameProviderResponse struct {
-	Total   int64 `json:"total"`
-	Success int64 `json:"success"`
-	Failed  int64 `json:"failed"`
-}
-
-type BatchDeleteOperatorGameRequest struct {
-	Ids []int64 `json:"ids"`
-}
-
-type BatchDeleteOperatorGameResponse struct {
-	Total   int64 `json:"total"`
-	Success int64 `json:"success"`
-	Failed  int64 `json:"failed"`
-}
-
 type BatchUpdateOperatorGameCategoryStatusRequest struct {
 	Ids    []int64 `json:"ids"`
 	Status int32   `json:"status"`
@@ -248,9 +143,9 @@ type GetOperatorDomainResponse struct {
 type GetOperatorGameCategoryListRequest struct {
 	Page         int32  `form:"page,default=1"`
 	PageSize     int32  `form:"page_size,default=10"`
-	OpCode       string `form:"op_code,optional"`
+	OpCode       string `form:"op_code" validate:"required"`
 	CategoryCode string `form:"category_code,optional"`
-	Status       int32  `form:"status,optional"`
+	CheckStatus  int32  `form:"check_status,optional"`
 }
 
 type GetOperatorGameCategoryListResponse struct {
@@ -263,9 +158,9 @@ type GetOperatorGameCategoryListResponse struct {
 type GetOperatorGameChannelListRequest struct {
 	Page        int32  `form:"page,default=1"`
 	PageSize    int32  `form:"page_size,default=10"`
-	OpCode      string `form:"op_code,optional"`
+	OpCode      string `form:"op_code" validate:"required"`
 	ChannelCode string `form:"channel_code,optional"`
-	Status      int32  `form:"status,optional"`
+	CheckStatus int32  `form:"check_status,optional"`
 }
 
 type GetOperatorGameChannelListResponse struct {
@@ -276,11 +171,11 @@ type GetOperatorGameChannelListResponse struct {
 }
 
 type GetOperatorGameListRequest struct {
-	Page     int32  `form:"page,default=1"`
-	PageSize int32  `form:"page_size,default=10"`
-	OpCode   string `form:"op_code,optional"`
-	GameCode string `form:"game_code,optional"`
-	Status   int32  `form:"status,optional"`
+	Page        int32  `form:"page,default=1"`
+	PageSize    int32  `form:"page_size,default=10"`
+	OpCode      string `form:"op_code" validate:"required"`
+	GameCode    string `form:"game_code,optional"`
+	CheckStatus int32  `form:"check_status,optional"`
 }
 
 type GetOperatorGameListResponse struct {
@@ -293,9 +188,9 @@ type GetOperatorGameListResponse struct {
 type GetOperatorGameProviderListRequest struct {
 	Page         int32  `form:"page,default=1"`
 	PageSize     int32  `form:"page_size,default=10"`
-	OpCode       string `form:"op_code,optional"`
+	OpCode       string `form:"op_code" validate:"required"`
 	ProviderCode string `form:"provider_code,optional"`
-	Status       int32  `form:"status,optional"`
+	CheckStatus  int32  `form:"check_status,optional"`
 }
 
 type GetOperatorGameProviderListResponse struct {
@@ -449,40 +344,44 @@ type OperatorGameAllocationInfo struct {
 
 type OperatorGameCategoryInfo struct {
 	Id           int64  `json:"id"`
+	Name         string `json:"name"`
 	OpCode       string `json:"op_code"`
 	CategoryCode string `json:"category_code"`
-	Name         string `json:"name"`
 	Status       int32  `json:"status"`
+	CheckStatus  int32  `json:"check_status"`
 	CreatedAt    int64  `json:"created_at"`
 	UpdatedAt    int64  `json:"updated_at"`
 }
 
 type OperatorGameChannelInfo struct {
 	Id          int64  `json:"id"`
+	Name        string `json:"name"`
 	OpCode      string `json:"op_code"`
 	ChannelCode string `json:"channel_code"`
-	Name        string `json:"name"`
 	Status      int32  `json:"status"`
+	CheckStatus int32  `json:"check_status"`
 	CreatedAt   int64  `json:"created_at"`
 	UpdatedAt   int64  `json:"updated_at"`
 }
 
 type OperatorGameInfo struct {
-	Id        int64  `json:"id"`
-	OpCode    string `json:"op_code"`
-	GameCode  string `json:"game_code"`
-	Name      string `json:"name"`
-	Status    int32  `json:"status"`
-	CreatedAt int64  `json:"created_at"`
-	UpdatedAt int64  `json:"updated_at"`
+	Id          int64  `json:"id"`
+	OpCode      string `json:"op_code"`
+	GameCode    string `json:"game_code"`
+	Name        string `json:"name"`
+	Status      int32  `json:"status"`
+	CheckStatus int32  `json:"check_status"`
+	CreatedAt   int64  `json:"created_at"`
+	UpdatedAt   int64  `json:"updated_at"`
 }
 
 type OperatorGameProviderInfo struct {
 	Id           int64  `json:"id"`
+	Name         string `json:"name"`
 	OpCode       string `json:"op_code"`
 	ProviderCode string `json:"provider_code"`
-	Name         string `json:"name"`
 	Status       int32  `json:"status"`
+	CheckStatus  int32  `json:"check_status"`
 	CreatedAt    int64  `json:"created_at"`
 	UpdatedAt    int64  `json:"updated_at"`
 }
@@ -555,6 +454,78 @@ type SaveLanguageAllocationsRequest struct {
 }
 
 type SaveLanguageAllocationsResponse struct {
+}
+
+type SaveOperatorGameAllocationItem struct {
+	Code        string `json:"code"`
+	CheckStatus int32  `json:"check_status"`
+}
+
+type SaveOperatorGameAllocationRequest struct {
+	OpCode string                           `json:"op_code" validate:"required"`
+	Items  []SaveOperatorGameAllocationItem `json:"items"`
+}
+
+type SaveOperatorGameAllocationResponse struct {
+	Total   int64 `json:"total"`
+	Created int64 `json:"created"`
+	Deleted int64 `json:"deleted"`
+	Exist   int64 `json:"exist"`
+	Failed  int64 `json:"failed"`
+}
+
+type SaveOperatorGameCategoryAllocationItem struct {
+	Code        string `json:"code"`
+	CheckStatus int32  `json:"check_status"`
+}
+
+type SaveOperatorGameCategoryAllocationRequest struct {
+	OpCode string                                   `json:"op_code" validate:"required"`
+	Items  []SaveOperatorGameCategoryAllocationItem `json:"items"`
+}
+
+type SaveOperatorGameCategoryAllocationResponse struct {
+	Total   int64 `json:"total"`
+	Created int64 `json:"created"`
+	Deleted int64 `json:"deleted"`
+	Exist   int64 `json:"exist"`
+	Failed  int64 `json:"failed"`
+}
+
+type SaveOperatorGameChannelAllocationItem struct {
+	Code        string `json:"code"`
+	CheckStatus int32  `json:"check_status"`
+}
+
+type SaveOperatorGameChannelAllocationRequest struct {
+	OpCode string                                  `json:"op_code" validate:"required"`
+	Items  []SaveOperatorGameChannelAllocationItem `json:"items"`
+}
+
+type SaveOperatorGameChannelAllocationResponse struct {
+	Total   int64 `json:"total"`
+	Created int64 `json:"created"`
+	Deleted int64 `json:"deleted"`
+	Exist   int64 `json:"exist"`
+	Failed  int64 `json:"failed"`
+}
+
+type SaveOperatorGameProviderAllocationItem struct {
+	Code        string `json:"code"`
+	CheckStatus int32  `json:"check_status"`
+}
+
+type SaveOperatorGameProviderAllocationRequest struct {
+	OpCode string                                   `json:"op_code" validate:"required"`
+	Items  []SaveOperatorGameProviderAllocationItem `json:"items"`
+}
+
+type SaveOperatorGameProviderAllocationResponse struct {
+	Total   int64 `json:"total"`
+	Created int64 `json:"created"`
+	Deleted int64 `json:"deleted"`
+	Exist   int64 `json:"exist"`
+	Failed  int64 `json:"failed"`
 }
 
 type SaveRegionAllocationsRequest struct {

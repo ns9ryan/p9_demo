@@ -111,4 +111,16 @@ func TestTf(t *testing.T) {
 	if got := Tf(en, ParamTypeMismatch, data); got != "parameter type mismatch: id" {
 		t.Fatalf("en ParamTypeMismatch=%q", got)
 	}
+	if got := T(zh, ParamValueInvalid); got != "参数值错误" {
+		t.Fatalf("zh ParamValueInvalid=%q", got)
+	}
+	if got := T(en, ParamValueInvalid); got != "invalid parameter value" {
+		t.Fatalf("en ParamValueInvalid=%q", got)
+	}
+	if got := Tf(zh, ParamValueInvalidField, data); got != "参数值错误: id" {
+		t.Fatalf("zh ParamValueInvalidField=%q", got)
+	}
+	if got := Tf(en, ParamValueInvalidField, data); got != "invalid parameter value: id" {
+		t.Fatalf("en ParamValueInvalidField=%q", got)
+	}
 }

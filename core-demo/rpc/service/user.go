@@ -41,21 +41,6 @@ type UpdateUserIpWhitelistReq struct {
 	IPWhitelist        []string `json:"ip_whitelist"`
 }
 
-type IDReq struct {
-	ID int64 `json:"id"`
-}
-
-type IDsReq struct {
-	IDs []int64 `json:"ids"`
-}
-
-const maxPageSize = 100
-
-type PageReq struct {
-	Page     int `json:"page"`
-	PageSize int `json:"page_size"`
-}
-
 type UserListReq struct {
 	PageReq
 	Username    string
@@ -63,18 +48,6 @@ type UserListReq struct {
 	Email       string
 	DisplayName string
 	RoleIDs     []int64
-}
-
-func (p *PageReq) normalize(defaultSize int) {
-	if p.Page <= 0 {
-		p.Page = 1
-	}
-	if p.PageSize <= 0 {
-		p.PageSize = defaultSize
-	}
-	if p.PageSize > maxPageSize {
-		p.PageSize = maxPageSize
-	}
 }
 
 type BindRolesReq struct {

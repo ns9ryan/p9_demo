@@ -1,4 +1,4 @@
-Name: core.rpc
+Name: core-rpc
 ListenOn: 0.0.0.0:19000
 Timeout: 10000
 
@@ -8,7 +8,7 @@ Log:
 
 # 链路追踪, 生产建议 Sampler 0.01~0.1
 Telemetry:
-  Name: core.rpc
+  Name: core-rpc
   Endpoint: jaeger:4317
   Sampler: 1.0
   Batcher: otlpgrpc

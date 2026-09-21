@@ -52,7 +52,10 @@ core-api 默认 `http://192.168.0.15:18000`，前缀 `/admin`。JSON 字段以 `
     - [POST /admin/i18n/update](#post-admini18nupdate)
     - [POST /admin/i18n/updateByKey](#post-admini18nupdatebykey)
     - [POST /admin/i18n/delete](#post-admini18ndelete)
+    - [POST /admin/i18n/deleteByKey](#post-admini18ndeletebykey)
     - [POST /admin/i18n/list](#post-admini18nlist)
+    - [POST /admin/i18n/export](#post-admini18nexport)
+    - [POST /admin/i18n/import](#post-admini18nimport)
     - [POST /admin/i18n/lang/create](#post-admini18nlangcreate)
     - [POST /admin/i18n/lang/update](#post-admini18nlangupdate)
     - [POST /admin/i18n/lang/reorder](#post-admini18nlangreorder)
@@ -101,7 +104,7 @@ access 过期（前端用 refresh 后续请求）：
 { "code": 498, "msg": "登录已过期" }
 ```
 
-无 `returns` 的接口成功时 `data` 为 `null`。时间字段为 Unix 秒。下文示例均为完整 HTTP body。
+无 `returns` 的接口成功时 `data` 为 `null`。时间字段为 Unix 秒。下文示例均为完整 HTTP body。例外：[POST /admin/i18n/export](#post-admini18nexport) 成功时直接下载 JSON 文件，不套信封；失败仍走信封。[POST /admin/i18n/import](#post-admini18nimport) 请求为 `multipart/form-data`，不是 JSON。
 
 ### 鉴权
 
@@ -1534,7 +1537,7 @@ Query：`/admin/role/detail?id=2`
 
 词条按 `(i18n_code, trans_key, lang)` 唯一。`i18n_code` 区分业务站点/服务（`core`、`promo` 等），**不是**分站租户；空则服务端当作 `core`。同一 `trans_key`+`lang` 可在不同站点各有一条。`trans_key` 为业务标识，形如 `menu.route.dashboard`（group 拼进 key）。`i18n_group` 仍保留，供列表过滤和按组分发。创建/目录注册仍可传短 key（如 `route.dashboard`），服务端会拼成完整 key。菜单 `title` 仍存短 key。新增词条（含按 key 更新时新建、目录 upsert 新建）的 `lang` 必须已在 `sys_i18n_lang`。
 
-支持的语言存在 `sys_i18n_lang`（全局，不分站点）。core-api 启动时随 `RegisterCatalog` 幂等种子 `zh-CN` / 简体中文 / `i18n_key=lang.zh-CN`（`sort_no=1`）、`zh-HK` / 繁體中文 / `lang.zh-HK`（`sort_no=2`）、`en-US` / English / `lang.en-US`（`sort_no=3`）；已存在不改 `disabled` / `sort_no`，仅当 `name` 或 `i18n_key` 为空时回填。HTTP 出参 `name` 是库里的回退原文，`i18n_key` 是词条 key，`i18n_name` 按当前 `X-Lang` 用 `i18n.TG`（`i18n_group=lang`）翻译，无词条则回退 `name`。该语言在 `sys_i18n` 已有词条时，不能改 `lang`、不能删除。拖拽排序见 [POST /admin/i18n/lang/reorder](#post-admini18nlangreorder)，按当前 `sort_no` 序列把 `id` 挪到 `target_id` 的位置后重写全表 `sort_no` 为 `1..n`。管理 CRUD（含 reorder）走 JWT + Casbin；已开启列表和词条下发仅 JWT（登录后切语言 / 拉文案），不进 Casbin 目录，见 [GET /admin/i18n/lang/enabled](#get-admini18nlangenabled)、[GET /admin/i18n/dict](#get-admini18ndict)。
+支持的语言存在 `sys_i18n_lang`（全局，不分站点）。core-api 启动时随 `RegisterCatalog` 幂等种子 `zh-CN` / 简体中文 / `i18n_key=lang.zh-CN`（`sort_no=1`）、`zh-HK` / 繁體中文 / `lang.zh-HK`（`sort_no=2`）、`en-US` / English / `lang.en-US`（`sort_no=3`）；已存在不改 `disabled` / `sort_no`，仅当 `name` 或 `i18n_key` 为空时回填。HTTP 出参 `name` 是库里的回退原文，`i18n_key` 是词条 key，`i18n_name` 按当前 `X-Lang` 用 `i18n.TG`（`i18n_group=lang`）翻译，无词条则回退 `name`。该语言在 `sys_i18n` 已有词条时，不能改 `lang`、不能删除。拖拽排序见 [POST /admin/i18n/lang/reorder](#post-admini18nlangreorder)，按当前 `sort_no` 序列把 `id` 挪到 `target_id` 的位置后重写全表 `sort_no` 为 `1..n`。管理 CRUD（含 reorder、导出、导入）走 JWT + Casbin；已开启列表和词条下发仅 JWT（登录后切语言 / 拉文案），不进 Casbin 目录，见 [GET /admin/i18n/lang/enabled](#get-admini18nlangenabled)、[GET /admin/i18n/dict](#get-admini18ndict)。一种语言一个 JSON 文件的导入导出见 [POST /admin/i18n/export](#post-admini18nexport)、[POST /admin/i18n/import](#post-admini18nimport)。
 
 #### POST /admin/i18n/create
 
@@ -1667,6 +1670,36 @@ Query：`/admin/role/detail?id=2`
 
 
 
+#### POST /admin/i18n/deleteByKey
+
+按 `i18n_code` + `i18n_group` + `trans_key` 删除该词条的**全部语言**。不删其它站点或其它 key。短 key 会拼上 group（如 `menu` + `route.dashboard` → `menu.route.dashboard`）。无匹配行返回 404。
+
+**请求**
+
+
+| 字段           | 位置   | 必填  | 类型     | 说明                                          |
+| ------------ | ---- | --- | ------ | ------------------------------------------- |
+| `i18n_code`  | json | 是    | string | 站点编码，如 `platform`                          |
+| `i18n_group` | json | 是    | string | 分组，如 `menu`                                 |
+| `trans_key`  | json | 是    | string | 词条 key；可传短 key 或完整 key                      |
+
+
+```json
+{
+  "i18n_code": "platform",
+  "i18n_group": "menu",
+  "trans_key": "menu.route.dashboard"
+}
+```
+
+**响应**
+
+```json
+{ "code": 0, "msg": "ok", "data": { "result": "success" } }
+```
+
+
+
 #### POST /admin/i18n/list
 
 **请求(卡片**`i18n_code:` platform总网,  operator分站, agent代理, user会员端**)**
@@ -1706,6 +1739,97 @@ Query：`/admin/role/detail?id=2`
       }
     ],
     "total": 1
+  }
+}
+```
+
+
+
+#### POST /admin/i18n/export
+
+按一种语言导出全部（或按站点/分组过滤）词条，下载 JSON 文件。JWT + Casbin。按钮权限 `i18n:export`。必须 POST 并带 `Authorization`，不能用 `window.open` / GET（会 401）。
+
+成功时**不套信封**：`Content-Type: application/json; charset=utf-8`，`Content-Disposition: attachment; filename="i18n-{lang}.json"`。失败仍返回信封。文件内 `i18n_key` 为库里的完整 `trans_key`。
+
+**请求**
+
+
+| 字段           | 位置   | 必填  | 类型     | 说明                         |
+| ------------ | ---- | --- | ------ | -------------------------- |
+| `lang`       | json | 是   | string | 语言码，如 `zh-CN`              |
+| `i18n_code`  | json | 否   | string | 站点精确过滤；空则导出该语言全部站点         |
+| `i18n_group` | json | 否   | string | 分组精确过滤；空则导出该语言（及站点）全部组     |
+
+
+```json
+{ "lang": "zh-CN", "i18n_code": "platform" }
+```
+
+**响应**（文件正文，非信封）
+
+```json
+{
+  "lang": "zh-CN",
+  "i18n_items": [
+    {
+      "i18n_code": "platform",
+      "i18n_group": "menu",
+      "i18n_key": "menu.route.dashboard",
+      "i18n_value": "工作台"
+    },
+    {
+      "i18n_code": "platform",
+      "i18n_group": "front",
+      "i18n_key": "common.search.search",
+      "i18n_value": "搜索"
+    }
+  ]
+}
+```
+
+
+
+#### POST /admin/i18n/import
+
+上传与导出同格式的 JSON 文件，按文件内 `lang` upsert 到该语言。JWT + Casbin。按钮权限 `i18n:import`。不删除文件里没有的词条，也不改其它语言。
+
+`Content-Type` 必须是 `multipart/form-data`（由客户端自动带 boundary，不要手动改成 `application/json`）。字段名 `file`，类型为文件。可选字段 `lang`：空则用文件内 `lang`；非空必须与文件 `lang` 完全相等，否则 400。整包上限 8MB。目标 `lang` 必须已在 `sys_i18n_lang`。空 `i18n_key` 计入 `skipped`；空 `i18n_code` 当作 `platform`；空 `i18n_group` 从 key 第一段推断（如 `menu.route.dashboard` → `menu`）。短 key 会拼成完整 `trans_key`。全部条目无效则 400。
+
+**请求**
+
+
+| 字段     | 位置        | 必填  | 类型    | 说明                                      |
+| ------ | --------- | --- | ----- | --------------------------------------- |
+| `file` | form-data | 是   | file  | JSON 文件，结构同导出；字段名必须是 `file` |
+| `lang` | form-data | 否   | string | 指定语言；空则取文件 `lang`，非空必须与文件 `lang` 相等 |
+
+
+文件示例：
+
+```json
+{
+  "lang": "ja-JP",
+  "i18n_items": [
+    {
+      "i18n_code": "platform",
+      "i18n_group": "menu",
+      "i18n_key": "menu.route.dashboard",
+      "i18n_value": "ダッシュボード"
+    }
+  ]
+}
+```
+
+**响应**
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "created": 10,
+    "updated": 2,
+    "skipped": 0
   }
 }
 ```

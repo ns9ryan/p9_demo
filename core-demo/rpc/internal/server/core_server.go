@@ -150,6 +150,11 @@ func (s *CoreServer) DeleteI18N(ctx context.Context, in *core.IDsReq) (*core.Emp
 	return l.DeleteI18N(in)
 }
 
+func (s *CoreServer) DeleteI18NByKey(ctx context.Context, in *core.DeleteI18NByKeyReq) (*core.Empty, error) {
+	l := i18n.NewDeleteI18nByKeyLogic(ctx, s.svcCtx)
+	return l.DeleteI18NByKey(in)
+}
+
 func (s *CoreServer) GetI18NList(ctx context.Context, in *core.I18NListReq) (*core.I18NListResp, error) {
 	l := i18n.NewGetI18nListLogic(ctx, s.svcCtx)
 	return l.GetI18NList(in)
@@ -158,6 +163,16 @@ func (s *CoreServer) GetI18NList(ctx context.Context, in *core.I18NListReq) (*co
 func (s *CoreServer) GetI18NDict(ctx context.Context, in *core.GetI18NDictReq) (*core.I18NDictResp, error) {
 	l := i18n.NewGetI18nDictLogic(ctx, s.svcCtx)
 	return l.GetI18NDict(in)
+}
+
+func (s *CoreServer) ExportI18N(ctx context.Context, in *core.ExportI18NReq) (*core.ExportI18NResp, error) {
+	l := i18n.NewExportI18nLogic(ctx, s.svcCtx)
+	return l.ExportI18N(in)
+}
+
+func (s *CoreServer) ImportI18N(ctx context.Context, in *core.ImportI18NReq) (*core.ImportI18NResp, error) {
+	l := i18n.NewImportI18nLogic(ctx, s.svcCtx)
+	return l.ImportI18N(in)
 }
 
 func (s *CoreServer) CreateI18NLang(ctx context.Context, in *core.CreateI18NLangReq) (*core.I18NLangInfo, error) {

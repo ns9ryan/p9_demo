@@ -41,7 +41,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: public.BootstrapAdminHandler(serverCtx),
 			},
 			{
-				// 初始化分站及超管
+				// 初始化分站超管
 				Method:  http.MethodPost,
 				Path:    "/bootstrap/operator",
 				Handler: public.BootstrapOperatorHandler(serverCtx),
@@ -289,10 +289,28 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Handler: i18n.DeleteI18nHandler(serverCtx),
 				},
 				{
+					// 按站点/分组/key删除词条
+					Method:  http.MethodPost,
+					Path:    "/i18n/deleteByKey",
+					Handler: i18n.DeleteI18nByKeyHandler(serverCtx),
+				},
+				{
 					// 多语言列表
 					Method:  http.MethodPost,
 					Path:    "/i18n/list",
 					Handler: i18n.GetI18nListHandler(serverCtx),
+				},
+				{
+					// 导出多语言（下载 JSON 文件）
+					Method:  http.MethodPost,
+					Path:    "/i18n/export",
+					Handler: i18n.ExportI18nHandler(serverCtx),
+				},
+				{
+					// 导入多语言（上传 JSON 文件，字段 file，格式同导出）
+					Method:  http.MethodPost,
+					Path:    "/i18n/import",
+					Handler: i18n.ImportI18nHandler(serverCtx),
 				},
 				{
 					// 创建支持的语言

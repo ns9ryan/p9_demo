@@ -17,7 +17,10 @@ import (
 	"github.com/zeromicro/go-zero/rest"
 )
 
-const maxActionBody = 16 * 1024
+const (
+	maxActionBody     = 16 * 1024     // 限制请求体大小为16KB
+	multipartBodyMark = "[multipart]" // 上传文件时，请求体标记
+)
 
 type ActionRecord struct {
 	UserID         int64
@@ -88,6 +91,9 @@ func readBody(r *http.Request) []byte {
 	if r.Body == nil {
 		return nil
 	}
+	if isMultipartRequest(r) {
+		return []byte(multipartBodyMark)
+	}
 	body, err := io.ReadAll(io.LimitReader(r.Body, maxActionBody+1))
 	_ = r.Body.Close()
 	if err != nil {
@@ -97,6 +103,10 @@ func readBody(r *http.Request) []byte {
 	}
 	r.Body = io.NopCloser(bytes.NewReader(body))
 	return body
+}
+
+func isMultipartRequest(r *http.Request) bool {
+	return strings.Contains(strings.ToLower(r.Header.Get("Content-Type")), "multipart/")
 }
 
 func clipBytes(b []byte, n int) string {

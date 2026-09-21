@@ -44,6 +44,19 @@ type I18nItem struct {
 	Value     string
 }
 
+type I18nFileItem struct {
+	I18nCode  string
+	I18nGroup string
+	I18nKey   string
+	I18nValue string
+}
+
+type ImportI18nResult struct {
+	Created int32
+	Updated int32
+	Skipped int32
+}
+
 type UpdateI18nByKeyReq struct {
 	I18nCode  string
 	I18nGroup string
@@ -117,6 +130,32 @@ func (d *Deps) DeleteI18ns(ctx context.Context, ids []int64) error {
 	return nil
 }
 
+func (d *Deps) DeleteI18nsByKey(ctx context.Context, code, group, transKey string) error {
+	key := strings.TrimSpace(transKey)
+	if key == "" {
+		return xerr.BadRequest(i18n.I18nTransKeyRequired)
+	}
+	group = strings.TrimSpace(group)
+	if group == "" {
+		group = inferI18nGroup(key)
+	}
+	if group == "" {
+		return xerr.BadRequest(i18n.I18nGroupKeyLangRequired)
+	}
+	code = normalizeI18nCode(code)
+	key = concatTransKey(group, key)
+	n, err := d.Client.I18n.Delete().
+		Where(enti18n.I18nCodeEQ(code), enti18n.I18nGroupEQ(group), enti18n.TransKeyEQ(key)).
+		Exec(ctx)
+	if err != nil {
+		return err
+	}
+	if n == 0 {
+		return xerr.NotFound(i18n.I18nNotFound)
+	}
+	return nil
+}
+
 func (d *Deps) ListI18ns(ctx context.Context, req I18nListReq) ([]model.I18n, int64, error) {
 	q := d.Client.I18n.Query()
 	if s := strings.TrimSpace(req.I18nCode); s != "" {
@@ -164,6 +203,88 @@ func (d *Deps) GetI18nDict(ctx context.Context, code, group, lang string) (map[s
 	out := make(map[string]string, len(list))
 	for _, row := range list {
 		out[row.TransKey] = row.Value
+	}
+	return out, nil
+}
+
+func (d *Deps) ExportI18ns(ctx context.Context, lang, code, group string) ([]I18nFileItem, error) {
+	lang = strings.TrimSpace(lang)
+	if lang == "" {
+		return nil, xerr.BadRequest(i18n.I18nLangRequired)
+	}
+	code = strings.TrimSpace(code)
+	group = strings.TrimSpace(group)
+	q := d.Client.I18n.Query().Where(enti18n.LangEQ(lang))
+	if code != "" {
+		q.Where(enti18n.I18nCodeEQ(code))
+	}
+	if group != "" {
+		q.Where(enti18n.I18nGroupEQ(group))
+	}
+	list, err := q.Order(ent.Asc(enti18n.FieldI18nCode), ent.Asc(enti18n.FieldI18nGroup), ent.Asc(enti18n.FieldTransKey), ent.Asc(enti18n.FieldID)).All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]I18nFileItem, 0, len(list))
+	for _, row := range list {
+		out = append(out, I18nFileItem{
+			I18nCode:  row.I18nCode,
+			I18nGroup: row.I18nGroup,
+			I18nKey:   row.TransKey,
+			I18nValue: row.Value,
+		})
+	}
+	return out, nil
+}
+
+func (d *Deps) ImportI18ns(ctx context.Context, lang string, items []I18nFileItem) (ImportI18nResult, error) {
+	lang = strings.TrimSpace(lang)
+	if lang == "" {
+		return ImportI18nResult{}, xerr.BadRequest(i18n.I18nLangRequired)
+	}
+	if len(items) == 0 {
+		return ImportI18nResult{}, xerr.BadRequest(i18n.I18nDataRequired)
+	}
+	if err := d.requireSupportedLang(ctx, lang); err != nil {
+		return ImportI18nResult{}, err
+	}
+	var out ImportI18nResult
+	err := d.withTx(ctx, func(tx *Deps) error {
+		valid := 0
+		for _, it := range items {
+			key := strings.TrimSpace(it.I18nKey)
+			if key == "" {
+				out.Skipped++
+				continue
+			}
+			group := strings.TrimSpace(it.I18nGroup)
+			if group == "" {
+				group = inferI18nGroup(key)
+			}
+			if group == "" {
+				out.Skipped++
+				continue
+			}
+			code := normalizeI18nCode(it.I18nCode)
+			key = concatTransKey(group, key)
+			created, err := tx.upsertI18nLangCounted(ctx, code, group, key, lang, strings.TrimSpace(it.I18nValue))
+			if err != nil {
+				return err
+			}
+			valid++
+			if created {
+				out.Created++
+			} else {
+				out.Updated++
+			}
+		}
+		if valid == 0 {
+			return xerr.BadRequest(i18n.I18nDataRequired)
+		}
+		return nil
+	})
+	if err != nil {
+		return ImportI18nResult{}, err
 	}
 	return out, nil
 }
@@ -271,23 +392,28 @@ func (d *Deps) i18nByKeyTargets(ctx context.Context, code, group, key string) ([
 }
 
 func (d *Deps) upsertI18nLang(ctx context.Context, code, group, key, lang, value string) error {
+	_, err := d.upsertI18nLangCounted(ctx, code, group, key, lang, value)
+	return err
+}
+
+func (d *Deps) upsertI18nLangCounted(ctx context.Context, code, group, key, lang, value string) (bool, error) {
 	exist, err := d.Client.I18n.Query().
 		Where(enti18n.I18nCodeEQ(code), enti18n.TransKeyEQ(key), enti18n.LangEQ(lang)).
 		Only(ctx)
 	if ent.IsNotFound(err) {
 		if err := d.requireSupportedLang(ctx, lang); err != nil {
-			return err
+			return false, err
 		}
 		_, err = d.Client.I18n.Create().
 			SetI18nCode(code).SetI18nGroup(group).SetTransKey(key).
 			SetLang(lang).SetValue(value).
 			Save(ctx)
-		return err
+		return true, err
 	}
 	if err != nil {
-		return err
+		return false, err
 	}
-	return d.Client.I18n.UpdateOne(exist).SetValue(value).Exec(ctx)
+	return false, d.Client.I18n.UpdateOne(exist).SetValue(value).Exec(ctx)
 }
 
 func (d *Deps) i18nByID(ctx context.Context, id int64) (model.I18n, error) {

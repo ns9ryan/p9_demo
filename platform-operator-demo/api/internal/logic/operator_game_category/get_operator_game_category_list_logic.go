@@ -37,7 +37,7 @@ func (l *GetOperatorGameCategoryListLogic) GetOperatorGameCategoryList(req *type
 		PageSize:     int32(req.PageSize),
 		OpCode:       req.OpCode,
 		CategoryCode: req.CategoryCode,
-		Status:       req.Status,
+		CheckStatus:  req.CheckStatus,
 	})
 	if err != nil {
 		l.Logger.Error("GetOperatorGameCategoryList error:", err)
@@ -60,6 +60,7 @@ func (l *GetOperatorGameCategoryListLogic) GetOperatorGameCategoryList(req *type
 			CategoryCode: item.CategoryCode,
 			Name:         name,
 			Status:       item.Status,
+			CheckStatus:  item.CheckStatus,
 			CreatedAt:    item.CreatedAt,
 			UpdatedAt:    item.UpdatedAt,
 		})

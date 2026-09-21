@@ -1,11 +1,17 @@
 package convert
 
 import (
+	"bytes"
 	"context"
+	"mime/multipart"
+	"net/http"
+	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"oa.98ent.com/p9/core/api/internal/types"
 	"oa.98ent.com/p9/core/common/i18n"
+	"oa.98ent.com/p9/core/common/xerr"
 	"oa.98ent.com/p9/core/rpc/coreclient"
 	"oa.98ent.com/p9/core/rpc/model"
 )
@@ -251,4 +257,141 @@ func equalStrings(a, b []string) bool {
 		}
 	}
 	return true
+}
+
+func TestI18nExportFilename(t *testing.T) {
+	if got := I18nExportFilename("zh-CN"); got != "i18n-zh-CN.json" {
+		t.Fatalf("filename=%q", got)
+	}
+	if got := I18nExportFilename("en US"); got != "i18n-en_US.json" {
+		t.Fatalf("space filename=%q", got)
+	}
+}
+
+func TestMarshalUnmarshalI18nFile(t *testing.T) {
+	in := &types.ExportI18nResp{
+		Lang: i18n.LangZH,
+		I18nItems: []types.I18nFileItem{
+			{I18nCode: i18n.CodePlatform, I18nGroup: "front", I18nKey: "common.search.search", I18nValue: "搜索"},
+		},
+	}
+	body, err := MarshalI18nFile(in)
+	if err != nil {
+		t.Fatal(err)
+	}
+	out, err := UnmarshalI18nFile(body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if out.Lang != i18n.LangZH || len(out.I18nItems) != 1 || out.I18nItems[0].I18nKey != "common.search.search" || out.I18nItems[0].I18nValue != "搜索" {
+		t.Fatalf("roundtrip=%+v", out)
+	}
+	if _, err := UnmarshalI18nFile(nil); err == nil {
+		t.Fatal("expected empty file")
+	} else if got := xerr.AsError(err); got.Message != i18n.I18nDataRequired {
+		t.Fatalf("empty file=%v", got.Message)
+	}
+	if _, err := UnmarshalI18nFile([]byte("{")); err == nil {
+		t.Fatal("expected invalid json")
+	} else if got := xerr.AsError(err); got.Message != i18n.InvalidParam {
+		t.Fatalf("invalid json=%v", got.Message)
+	}
+}
+
+func TestCheckImportI18nLang(t *testing.T) {
+	if err := CheckImportI18nLang("", "zh-CN"); err != nil {
+		t.Fatalf("empty req lang: %v", err)
+	}
+	if err := CheckImportI18nLang("  ", "zh-CN"); err != nil {
+		t.Fatalf("blank req lang: %v", err)
+	}
+	if err := CheckImportI18nLang("zh-CN", "zh-CN"); err != nil {
+		t.Fatalf("equal lang: %v", err)
+	}
+	if err := CheckImportI18nLang(" zh-CN ", "zh-CN"); err != nil {
+		t.Fatalf("trimmed equal lang: %v", err)
+	}
+	if err := CheckImportI18nLang("ja-JP", "zh-CN"); err == nil {
+		t.Fatal("expected mismatch")
+	} else if got := xerr.AsError(err); got.Message != i18n.I18nLangMismatch {
+		t.Fatalf("mismatch=%v", got.Message)
+	}
+}
+
+func TestReadI18nImportReqLang(t *testing.T) {
+	payload := []byte(`{"lang":"zh-CN","i18n_items":[]}`)
+	req := newMultipartFileRequest(t, "/admin/i18n/import", "file", "i18n-zh-CN.json", payload, "lang", "ja-JP")
+	got, err := ReadI18nImportReq(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(got.File, payload) {
+		t.Fatalf("file=%q", got.File)
+	}
+	if got.Lang != "ja-JP" {
+		t.Fatalf("lang=%q", got.Lang)
+	}
+
+	noLang := newMultipartFileRequest(t, "/admin/i18n/import", "file", "i18n-zh-CN.json", payload)
+	got, err = ReadI18nImportReq(noLang)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got.Lang != "" {
+		t.Fatalf("empty lang=%q", got.Lang)
+	}
+}
+
+func TestReadI18nUploadFile(t *testing.T) {
+	payload := []byte(`{"lang":"zh-CN","i18n_items":[]}`)
+	req := newMultipartFileRequest(t, "/admin/i18n/import", "file", "i18n-zh-CN.json", payload)
+	got, err := ReadI18nUploadFile(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(got, payload) {
+		t.Fatalf("got=%q", got)
+	}
+
+	missing := newMultipartFileRequest(t, "/admin/i18n/import", "other", "i18n.json", payload)
+	if _, err := ReadI18nUploadFile(missing); err == nil {
+		t.Fatal("expected missing file")
+	} else if got := xerr.AsError(err); got.Message != i18n.I18nDataRequired {
+		t.Fatalf("missing file=%v", got.Message)
+	}
+
+	raw := httptest.NewRequest(http.MethodPost, "/admin/i18n/import", strings.NewReader(string(payload)))
+	raw.Header.Set("Content-Type", "application/json")
+	if _, err := ReadI18nUploadFile(raw); err == nil {
+		t.Fatal("expected invalid param")
+	} else if got := xerr.AsError(err); got.Message != i18n.InvalidParam {
+		t.Fatalf("json body=%v", got.Message)
+	}
+}
+
+func newMultipartFileRequest(t *testing.T, path, field, filename string, payload []byte, extra ...string) *http.Request {
+	t.Helper()
+	if len(extra)%2 != 0 {
+		t.Fatal("extra form fields must be key/value pairs")
+	}
+	var buf bytes.Buffer
+	mw := multipart.NewWriter(&buf)
+	fw, err := mw.CreateFormFile(field, filename)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := fw.Write(payload); err != nil {
+		t.Fatal(err)
+	}
+	for i := 0; i < len(extra); i += 2 {
+		if err := mw.WriteField(extra[i], extra[i+1]); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := mw.Close(); err != nil {
+		t.Fatal(err)
+	}
+	req := httptest.NewRequest(http.MethodPost, path, bytes.NewReader(buf.Bytes()))
+	req.Header.Set("Content-Type", mw.FormDataContentType())
+	return req
 }

@@ -37,7 +37,7 @@ func (l *GetOperatorGameProviderListLogic) GetOperatorGameProviderList(req *type
 		PageSize:     int32(req.PageSize),
 		OpCode:       req.OpCode,
 		ProviderCode: req.ProviderCode,
-		Status:       req.Status,
+		CheckStatus:  req.CheckStatus,
 	})
 	if err != nil {
 		l.Logger.Error("GetOperatorGameProviderList error:", err)
@@ -60,6 +60,7 @@ func (l *GetOperatorGameProviderListLogic) GetOperatorGameProviderList(req *type
 			ProviderCode: item.ProviderCode,
 			Name:         name,
 			Status:       item.Status,
+			CheckStatus:  item.CheckStatus,
 			CreatedAt:    item.CreatedAt,
 			UpdatedAt:    item.UpdatedAt,
 		})

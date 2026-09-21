@@ -3,6 +3,7 @@ package operatorgamechannelservicelogic
 import (
 	"context"
 
+	"oa.98ent.com/p9/platform-game/rpc/ent"
 	"oa.98ent.com/p9/platform-game/rpc/internal/logic"
 	"oa.98ent.com/p9/platform-game/rpc/internal/svc"
 	"oa.98ent.com/p9/platform-game/rpc/internal/utils"
@@ -36,11 +37,28 @@ func (l *GetOperatorGameChannelListLogic) GetOperatorGameChannelList(in *platfor
 	page, pageSize := utils.HandlePage(int64(in.Page), int64(in.PageSize))
 	offset := (page - 1) * pageSize
 
-	records, total, err := l.svcCtx.DAOManager.OperatorGameChannel.GetOperatorGameChannelList(
+	if in.GetCheckStatus() == 1 {
+		operatorGameChannelRecords, _ := l.svcCtx.DAOManager.OperatorGameChannel.FindAll(
+			l.ctx,
+			in.GetOpCode(),
+			in.GetChannelCode(),
+			offset,
+			pageSize,
+		)
+		return &platform_game.GetOperatorGameChannelListResp{
+			Items:    logic.OperatorGameChannelModelToProtoListWithoutMap(operatorGameChannelRecords),
+			Total:    int64(len(operatorGameChannelRecords)),
+			Page:     int32(page),
+			PageSize: int32(pageSize),
+		}, nil
+	}
+
+	// 查询分站游戏渠道列表
+	records, total, err := l.svcCtx.DAOManager.GameChannel.GetGameChannelList(
 		l.ctx,
-		in.GetOpCode(),
+		0,
+		1,
 		in.GetChannelCode(),
-		in.GetStatus(),
 		offset,
 		pageSize,
 	)
@@ -48,10 +66,30 @@ func (l *GetOperatorGameChannelListLogic) GetOperatorGameChannelList(in *platfor
 		l.Errorf("[RPC GetOperatorGameChannelList] query failed: %v", err)
 		return &platform_game.GetOperatorGameChannelListResp{}, nil
 	}
+	// records对应OperatorGameChannel表中是否有数据,存在则设置check_status字段为1，不存在为2
+	recordsInOperatorGameChannel, err := l.svcCtx.DAOManager.OperatorGameChannel.FindAllByOpCodeAndChannelCodes(
+		l.ctx,
+		in.GetOpCode(),
+		func() []string {
+			codes := make([]string, 0, len(records))
+			for _, record := range records {
+				codes = append(codes, record.SourceChannelCode)
+			}
+			return codes
+		}(),
+	)
+	if err != nil {
+		l.Errorf("[RPC GetOperatorGameChannelList] query OperatorGameChannel failed: %v", err)
+		return &platform_game.GetOperatorGameChannelListResp{}, nil
+	}
+	mapChannelCodeToRecord := make(map[string]*ent.OperatorGameChannel)
+	for _, record := range recordsInOperatorGameChannel {
+		mapChannelCodeToRecord[record.ChannelCode] = record
+	}
 
 	l.Infof("[RPC GetOperatorGameChannelList] success: total=%d", total)
 	return &platform_game.GetOperatorGameChannelListResp{
-		Items:    logic.OperatorGameChannelModelToProtoList(records),
+		Items:    logic.OperatorGameChannelModelToProtoList(in.GetOpCode(), mapChannelCodeToRecord, records),
 		Total:    int64(total),
 		Page:     int32(page),
 		PageSize: int32(pageSize),

@@ -21,6 +21,7 @@ import (
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
 )
@@ -41,7 +42,7 @@ func main() {
 	var c Config
 	conf.MustLoad(*configFile, &c)
 	// 设置HTTP响应格式、错误处理等
-	response.SetupHTTPX()
+	response.SetupHTTPX(c.Mode == service.DevMode || c.Mode == service.TestMode)
 
 	promo, err := openPromo(c.DB.Driver, c.DB.DSN)
 	logx.Must(err)
