@@ -22,18 +22,20 @@ message TaskInfo {
 
 // 调度任务执行信息
 message TaskRunInfo {
+  // 执行序号
+  int64 run_no = 1;
   // 执行节点编码
-  string node_code = 1;
+  string node_code = 2;
   // 执行状态: 1待执行, 2执行中, 3成功, 4失败
-  int64 status = 2;
+  int64 status = 3;
   // 执行结果, JSON数据
-  optional string result = 3;
+  optional string result = 4;
   // 执行失败原因
-  optional string error_message = 4;
+  optional string error_message = 5;
   // 开始执行时间, Unix毫秒时间戳
-  optional int64 started_at = 5;
+  optional int64 started_at = 6;
   // 执行结束时间, Unix毫秒时间戳
-  optional int64 finished_at = 6;
+  optional int64 finished_at = 7;
 }
 
 // 提交调度任务请求

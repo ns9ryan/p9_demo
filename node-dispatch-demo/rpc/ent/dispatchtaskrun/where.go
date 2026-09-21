@@ -75,6 +75,11 @@ func NodeID(v int64) predicate.DispatchTaskRun {
 	return predicate.DispatchTaskRun(sql.FieldEQ(FieldNodeID, v))
 }
 
+// RunNo applies equality check predicate on the "run_no" field. It's identical to RunNoEQ.
+func RunNo(v int64) predicate.DispatchTaskRun {
+	return predicate.DispatchTaskRun(sql.FieldEQ(FieldRunNo, v))
+}
+
 // Status applies equality check predicate on the "status" field. It's identical to StatusEQ.
 func Status(v int64) predicate.DispatchTaskRun {
 	return predicate.DispatchTaskRun(sql.FieldEQ(FieldStatus, v))
@@ -213,6 +218,46 @@ func NodeIDIn(vs ...int64) predicate.DispatchTaskRun {
 // NodeIDNotIn applies the NotIn predicate on the "node_id" field.
 func NodeIDNotIn(vs ...int64) predicate.DispatchTaskRun {
 	return predicate.DispatchTaskRun(sql.FieldNotIn(FieldNodeID, vs...))
+}
+
+// RunNoEQ applies the EQ predicate on the "run_no" field.
+func RunNoEQ(v int64) predicate.DispatchTaskRun {
+	return predicate.DispatchTaskRun(sql.FieldEQ(FieldRunNo, v))
+}
+
+// RunNoNEQ applies the NEQ predicate on the "run_no" field.
+func RunNoNEQ(v int64) predicate.DispatchTaskRun {
+	return predicate.DispatchTaskRun(sql.FieldNEQ(FieldRunNo, v))
+}
+
+// RunNoIn applies the In predicate on the "run_no" field.
+func RunNoIn(vs ...int64) predicate.DispatchTaskRun {
+	return predicate.DispatchTaskRun(sql.FieldIn(FieldRunNo, vs...))
+}
+
+// RunNoNotIn applies the NotIn predicate on the "run_no" field.
+func RunNoNotIn(vs ...int64) predicate.DispatchTaskRun {
+	return predicate.DispatchTaskRun(sql.FieldNotIn(FieldRunNo, vs...))
+}
+
+// RunNoGT applies the GT predicate on the "run_no" field.
+func RunNoGT(v int64) predicate.DispatchTaskRun {
+	return predicate.DispatchTaskRun(sql.FieldGT(FieldRunNo, v))
+}
+
+// RunNoGTE applies the GTE predicate on the "run_no" field.
+func RunNoGTE(v int64) predicate.DispatchTaskRun {
+	return predicate.DispatchTaskRun(sql.FieldGTE(FieldRunNo, v))
+}
+
+// RunNoLT applies the LT predicate on the "run_no" field.
+func RunNoLT(v int64) predicate.DispatchTaskRun {
+	return predicate.DispatchTaskRun(sql.FieldLT(FieldRunNo, v))
+}
+
+// RunNoLTE applies the LTE predicate on the "run_no" field.
+func RunNoLTE(v int64) predicate.DispatchTaskRun {
+	return predicate.DispatchTaskRun(sql.FieldLTE(FieldRunNo, v))
 }
 
 // StatusEQ applies the EQ predicate on the "status" field.

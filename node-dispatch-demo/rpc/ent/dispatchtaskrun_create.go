@@ -65,6 +65,20 @@ func (_c *DispatchTaskRunCreate) SetNodeID(v int64) *DispatchTaskRunCreate {
 	return _c
 }
 
+// SetRunNo sets the "run_no" field.
+func (_c *DispatchTaskRunCreate) SetRunNo(v int64) *DispatchTaskRunCreate {
+	_c.mutation.SetRunNo(v)
+	return _c
+}
+
+// SetNillableRunNo sets the "run_no" field if the given value is not nil.
+func (_c *DispatchTaskRunCreate) SetNillableRunNo(v *int64) *DispatchTaskRunCreate {
+	if v != nil {
+		_c.SetRunNo(*v)
+	}
+	return _c
+}
+
 // SetStatus sets the "status" field.
 func (_c *DispatchTaskRunCreate) SetStatus(v int64) *DispatchTaskRunCreate {
 	_c.mutation.SetStatus(v)
@@ -186,6 +200,10 @@ func (_c *DispatchTaskRunCreate) defaults() {
 		v := dispatchtaskrun.DefaultUpdatedAt()
 		_c.mutation.SetUpdatedAt(v)
 	}
+	if _, ok := _c.mutation.RunNo(); !ok {
+		v := dispatchtaskrun.DefaultRunNo
+		_c.mutation.SetRunNo(v)
+	}
 	if _, ok := _c.mutation.Status(); !ok {
 		v := dispatchtaskrun.DefaultStatus
 		_c.mutation.SetStatus(v)
@@ -205,6 +223,14 @@ func (_c *DispatchTaskRunCreate) check() error {
 	}
 	if _, ok := _c.mutation.NodeID(); !ok {
 		return &ValidationError{Name: "node_id", err: errors.New(`ent: missing required field "DispatchTaskRun.node_id"`)}
+	}
+	if _, ok := _c.mutation.RunNo(); !ok {
+		return &ValidationError{Name: "run_no", err: errors.New(`ent: missing required field "DispatchTaskRun.run_no"`)}
+	}
+	if v, ok := _c.mutation.RunNo(); ok {
+		if err := dispatchtaskrun.RunNoValidator(v); err != nil {
+			return &ValidationError{Name: "run_no", err: fmt.Errorf(`ent: validator failed for field "DispatchTaskRun.run_no": %w`, err)}
+		}
 	}
 	if _, ok := _c.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "DispatchTaskRun.status"`)}
@@ -265,6 +291,10 @@ func (_c *DispatchTaskRunCreate) createSpec() (*DispatchTaskRun, *sqlgraph.Creat
 	if value, ok := _c.mutation.UpdatedAt(); ok {
 		_spec.SetField(dispatchtaskrun.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
+	}
+	if value, ok := _c.mutation.RunNo(); ok {
+		_spec.SetField(dispatchtaskrun.FieldRunNo, field.TypeInt64, value)
+		_node.RunNo = value
 	}
 	if value, ok := _c.mutation.Status(); ok {
 		_spec.SetField(dispatchtaskrun.FieldStatus, field.TypeInt64, value)
@@ -499,6 +529,9 @@ func (u *DispatchTaskRunUpsertOne) UpdateNewValues() *DispatchTaskRunUpsertOne {
 		}
 		if _, exists := u.create.mutation.NodeID(); exists {
 			s.SetIgnore(dispatchtaskrun.FieldNodeID)
+		}
+		if _, exists := u.create.mutation.RunNo(); exists {
+			s.SetIgnore(dispatchtaskrun.FieldRunNo)
 		}
 	}))
 	return u
@@ -840,6 +873,9 @@ func (u *DispatchTaskRunUpsertBulk) UpdateNewValues() *DispatchTaskRunUpsertBulk
 			}
 			if _, exists := b.mutation.NodeID(); exists {
 				s.SetIgnore(dispatchtaskrun.FieldNodeID)
+			}
+			if _, exists := b.mutation.RunNo(); exists {
+				s.SetIgnore(dispatchtaskrun.FieldRunNo)
 			}
 		}
 	}))

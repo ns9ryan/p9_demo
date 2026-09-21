@@ -22,6 +22,8 @@ const (
 	FieldTaskID = "task_id"
 	// FieldNodeID holds the string denoting the node_id field in the database.
 	FieldNodeID = "node_id"
+	// FieldRunNo holds the string denoting the run_no field in the database.
+	FieldRunNo = "run_no"
 	// FieldStatus holds the string denoting the status field in the database.
 	FieldStatus = "status"
 	// FieldResult holds the string denoting the result field in the database.
@@ -61,6 +63,7 @@ var Columns = []string{
 	FieldUpdatedAt,
 	FieldTaskID,
 	FieldNodeID,
+	FieldRunNo,
 	FieldStatus,
 	FieldResult,
 	FieldErrorMessage,
@@ -85,6 +88,10 @@ var (
 	DefaultUpdatedAt func() time.Time
 	// UpdateDefaultUpdatedAt holds the default value on update for the "updated_at" field.
 	UpdateDefaultUpdatedAt func() time.Time
+	// DefaultRunNo holds the default value on creation for the "run_no" field.
+	DefaultRunNo int64
+	// RunNoValidator is a validator for the "run_no" field. It is called by the builders before save.
+	RunNoValidator func(int64) error
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus int64
 	// StatusValidator is a validator for the "status" field. It is called by the builders before save.
@@ -119,6 +126,11 @@ func ByTaskID(opts ...sql.OrderTermOption) OrderOption {
 // ByNodeID orders the results by the node_id field.
 func ByNodeID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldNodeID, opts...).ToFunc()
+}
+
+// ByRunNo orders the results by the run_no field.
+func ByRunNo(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldRunNo, opts...).ToFunc()
 }
 
 // ByStatus orders the results by the status field.

@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+	"entgo.io/ent/schema/index"
 )
 
 // DispatchTaskRun 定义调度任务执行表结构
@@ -28,6 +29,12 @@ func (DispatchTaskRun) Fields() []ent.Field {
 		field.Int64("node_id").
 			Immutable().
 			Comment("执行节点本地主键"),
+
+		field.Int64("run_no").
+			Default(1).
+			Min(1).
+			Immutable().
+			Comment("任务执行序号, 从1开始"),
 
 		field.Int64("status").
 			Default(1).
@@ -84,6 +91,13 @@ func (DispatchTaskRun) Edges() []ent.Edge {
 			Unique().
 			Required().
 			Immutable(),
+	}
+}
+
+// Indexes 定义调度任务执行表索引
+func (DispatchTaskRun) Indexes() []ent.Index {
+	return []ent.Index{
+		index.Fields("task_id", "run_no").Unique(),
 	}
 }
 

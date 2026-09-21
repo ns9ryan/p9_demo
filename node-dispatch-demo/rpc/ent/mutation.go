@@ -789,6 +789,8 @@ type DispatchTaskRunMutation struct {
 	id            *int64
 	created_at    *time.Time
 	updated_at    *time.Time
+	run_no        *int64
+	addrun_no     *int64
 	status        *int64
 	addstatus     *int64
 	result        *json.RawMessage
@@ -1052,6 +1054,62 @@ func (m *DispatchTaskRunMutation) OldNodeID(ctx context.Context) (v int64, err e
 // ResetNodeID resets all changes to the "node_id" field.
 func (m *DispatchTaskRunMutation) ResetNodeID() {
 	m.node = nil
+}
+
+// SetRunNo sets the "run_no" field.
+func (m *DispatchTaskRunMutation) SetRunNo(i int64) {
+	m.run_no = &i
+	m.addrun_no = nil
+}
+
+// RunNo returns the value of the "run_no" field in the mutation.
+func (m *DispatchTaskRunMutation) RunNo() (r int64, exists bool) {
+	v := m.run_no
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRunNo returns the old "run_no" field's value of the DispatchTaskRun entity.
+// If the DispatchTaskRun object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DispatchTaskRunMutation) OldRunNo(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRunNo is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRunNo requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRunNo: %w", err)
+	}
+	return oldValue.RunNo, nil
+}
+
+// AddRunNo adds i to the "run_no" field.
+func (m *DispatchTaskRunMutation) AddRunNo(i int64) {
+	if m.addrun_no != nil {
+		*m.addrun_no += i
+	} else {
+		m.addrun_no = &i
+	}
+}
+
+// AddedRunNo returns the value that was added to the "run_no" field in this mutation.
+func (m *DispatchTaskRunMutation) AddedRunNo() (r int64, exists bool) {
+	v := m.addrun_no
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetRunNo resets all changes to the "run_no" field.
+func (m *DispatchTaskRunMutation) ResetRunNo() {
+	m.run_no = nil
+	m.addrun_no = nil
 }
 
 // SetStatus sets the "status" field.
@@ -1410,7 +1468,7 @@ func (m *DispatchTaskRunMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *DispatchTaskRunMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 10)
 	if m.created_at != nil {
 		fields = append(fields, dispatchtaskrun.FieldCreatedAt)
 	}
@@ -1422,6 +1480,9 @@ func (m *DispatchTaskRunMutation) Fields() []string {
 	}
 	if m.node != nil {
 		fields = append(fields, dispatchtaskrun.FieldNodeID)
+	}
+	if m.run_no != nil {
+		fields = append(fields, dispatchtaskrun.FieldRunNo)
 	}
 	if m.status != nil {
 		fields = append(fields, dispatchtaskrun.FieldStatus)
@@ -1454,6 +1515,8 @@ func (m *DispatchTaskRunMutation) Field(name string) (ent.Value, bool) {
 		return m.TaskID()
 	case dispatchtaskrun.FieldNodeID:
 		return m.NodeID()
+	case dispatchtaskrun.FieldRunNo:
+		return m.RunNo()
 	case dispatchtaskrun.FieldStatus:
 		return m.Status()
 	case dispatchtaskrun.FieldResult:
@@ -1481,6 +1544,8 @@ func (m *DispatchTaskRunMutation) OldField(ctx context.Context, name string) (en
 		return m.OldTaskID(ctx)
 	case dispatchtaskrun.FieldNodeID:
 		return m.OldNodeID(ctx)
+	case dispatchtaskrun.FieldRunNo:
+		return m.OldRunNo(ctx)
 	case dispatchtaskrun.FieldStatus:
 		return m.OldStatus(ctx)
 	case dispatchtaskrun.FieldResult:
@@ -1528,6 +1593,13 @@ func (m *DispatchTaskRunMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetNodeID(v)
 		return nil
+	case dispatchtaskrun.FieldRunNo:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRunNo(v)
+		return nil
 	case dispatchtaskrun.FieldStatus:
 		v, ok := value.(int64)
 		if !ok {
@@ -1571,6 +1643,9 @@ func (m *DispatchTaskRunMutation) SetField(name string, value ent.Value) error {
 // this mutation.
 func (m *DispatchTaskRunMutation) AddedFields() []string {
 	var fields []string
+	if m.addrun_no != nil {
+		fields = append(fields, dispatchtaskrun.FieldRunNo)
+	}
 	if m.addstatus != nil {
 		fields = append(fields, dispatchtaskrun.FieldStatus)
 	}
@@ -1582,6 +1657,8 @@ func (m *DispatchTaskRunMutation) AddedFields() []string {
 // was not set, or was not defined in the schema.
 func (m *DispatchTaskRunMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
+	case dispatchtaskrun.FieldRunNo:
+		return m.AddedRunNo()
 	case dispatchtaskrun.FieldStatus:
 		return m.AddedStatus()
 	}
@@ -1593,6 +1670,13 @@ func (m *DispatchTaskRunMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *DispatchTaskRunMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case dispatchtaskrun.FieldRunNo:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddRunNo(v)
+		return nil
 	case dispatchtaskrun.FieldStatus:
 		v, ok := value.(int64)
 		if !ok {
@@ -1665,6 +1749,9 @@ func (m *DispatchTaskRunMutation) ResetField(name string) error {
 		return nil
 	case dispatchtaskrun.FieldNodeID:
 		m.ResetNodeID()
+		return nil
+	case dispatchtaskrun.FieldRunNo:
+		m.ResetRunNo()
 		return nil
 	case dispatchtaskrun.FieldStatus:
 		m.ResetStatus()

@@ -29,6 +29,8 @@ type DispatchTaskRun struct {
 	TaskID int64 `json:"task_id,omitempty"`
 	// 执行节点本地主键
 	NodeID int64 `json:"node_id,omitempty"`
+	// 任务执行序号, 从1开始
+	RunNo int64 `json:"run_no,omitempty"`
 	// 执行状态: 1待执行, 2执行中, 3成功, 4失败
 	Status int64 `json:"status,omitempty"`
 	// 执行结果
@@ -85,7 +87,7 @@ func (*DispatchTaskRun) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case dispatchtaskrun.FieldResult:
 			values[i] = new([]byte)
-		case dispatchtaskrun.FieldID, dispatchtaskrun.FieldTaskID, dispatchtaskrun.FieldNodeID, dispatchtaskrun.FieldStatus:
+		case dispatchtaskrun.FieldID, dispatchtaskrun.FieldTaskID, dispatchtaskrun.FieldNodeID, dispatchtaskrun.FieldRunNo, dispatchtaskrun.FieldStatus:
 			values[i] = new(sql.NullInt64)
 		case dispatchtaskrun.FieldErrorMessage:
 			values[i] = new(sql.NullString)
@@ -135,6 +137,12 @@ func (_m *DispatchTaskRun) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field node_id", values[i])
 			} else if value.Valid {
 				_m.NodeID = value.Int64
+			}
+		case dispatchtaskrun.FieldRunNo:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field run_no", values[i])
+			} else if value.Valid {
+				_m.RunNo = value.Int64
 			}
 		case dispatchtaskrun.FieldStatus:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -228,6 +236,9 @@ func (_m *DispatchTaskRun) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("node_id=")
 	builder.WriteString(fmt.Sprintf("%v", _m.NodeID))
+	builder.WriteString(", ")
+	builder.WriteString("run_no=")
+	builder.WriteString(fmt.Sprintf("%v", _m.RunNo))
 	builder.WriteString(", ")
 	builder.WriteString("status=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Status))

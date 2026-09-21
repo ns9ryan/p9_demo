@@ -31,6 +31,7 @@ var (
 		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "主键ID", SchemaType: map[string]string{"postgres": "bigint"}},
 		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间", SchemaType: map[string]string{"postgres": "timestamptz(3)"}},
 		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间", SchemaType: map[string]string{"postgres": "timestamptz(3)"}},
+		{Name: "run_no", Type: field.TypeInt64, Comment: "任务执行序号, 从1开始", Default: 1},
 		{Name: "status", Type: field.TypeInt64, Comment: "执行状态: 1待执行, 2执行中, 3成功, 4失败", Default: 1, SchemaType: map[string]string{"postgres": "smallint"}},
 		{Name: "result", Type: field.TypeJSON, Nullable: true, Comment: "执行结果", SchemaType: map[string]string{"postgres": "jsonb"}},
 		{Name: "error_message", Type: field.TypeString, Nullable: true, Size: 2000, Comment: "执行失败原因"},
@@ -48,15 +49,22 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "dispatch_task_run_dispatch_task_runs",
-				Columns:    []*schema.Column{DispatchTaskRunColumns[8]},
+				Columns:    []*schema.Column{DispatchTaskRunColumns[9]},
 				RefColumns: []*schema.Column{DispatchTaskColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
 				Symbol:     "dispatch_task_run_node_task_runs",
-				Columns:    []*schema.Column{DispatchTaskRunColumns[9]},
+				Columns:    []*schema.Column{DispatchTaskRunColumns[10]},
 				RefColumns: []*schema.Column{NodeColumns[0]},
 				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "dispatchtaskrun_task_id_run_no",
+				Unique:  true,
+				Columns: []*schema.Column{DispatchTaskRunColumns[9], DispatchTaskRunColumns[3]},
 			},
 		},
 	}

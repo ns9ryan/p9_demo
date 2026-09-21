@@ -115,18 +115,20 @@ func (x *TaskInfo) GetUpdatedAt() int64 {
 // 调度任务执行信息
 type TaskRunInfo struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
+	// 执行序号
+	RunNo int64 `protobuf:"varint,1,opt,name=run_no,json=runNo,proto3" json:"run_no,omitempty"`
 	// 执行节点编码
-	NodeCode string `protobuf:"bytes,1,opt,name=node_code,json=nodeCode,proto3" json:"node_code,omitempty"`
+	NodeCode string `protobuf:"bytes,2,opt,name=node_code,json=nodeCode,proto3" json:"node_code,omitempty"`
 	// 执行状态: 1待执行, 2执行中, 3成功, 4失败
-	Status int64 `protobuf:"varint,2,opt,name=status,proto3" json:"status,omitempty"`
+	Status int64 `protobuf:"varint,3,opt,name=status,proto3" json:"status,omitempty"`
 	// 执行结果, JSON数据
-	Result *string `protobuf:"bytes,3,opt,name=result,proto3,oneof" json:"result,omitempty"`
+	Result *string `protobuf:"bytes,4,opt,name=result,proto3,oneof" json:"result,omitempty"`
 	// 执行失败原因
-	ErrorMessage *string `protobuf:"bytes,4,opt,name=error_message,json=errorMessage,proto3,oneof" json:"error_message,omitempty"`
+	ErrorMessage *string `protobuf:"bytes,5,opt,name=error_message,json=errorMessage,proto3,oneof" json:"error_message,omitempty"`
 	// 开始执行时间, Unix毫秒时间戳
-	StartedAt *int64 `protobuf:"varint,5,opt,name=started_at,json=startedAt,proto3,oneof" json:"started_at,omitempty"`
+	StartedAt *int64 `protobuf:"varint,6,opt,name=started_at,json=startedAt,proto3,oneof" json:"started_at,omitempty"`
 	// 执行结束时间, Unix毫秒时间戳
-	FinishedAt    *int64 `protobuf:"varint,6,opt,name=finished_at,json=finishedAt,proto3,oneof" json:"finished_at,omitempty"`
+	FinishedAt    *int64 `protobuf:"varint,7,opt,name=finished_at,json=finishedAt,proto3,oneof" json:"finished_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -159,6 +161,13 @@ func (x *TaskRunInfo) ProtoReflect() protoreflect.Message {
 // Deprecated: Use TaskRunInfo.ProtoReflect.Descriptor instead.
 func (*TaskRunInfo) Descriptor() ([]byte, []int) {
 	return file_types_node_dispatch_dispatch_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *TaskRunInfo) GetRunNo() int64 {
+	if x != nil {
+		return x.RunNo
+	}
+	return 0
 }
 
 func (x *TaskRunInfo) GetNodeCode() string {
@@ -582,15 +591,16 @@ const file_types_node_dispatch_dispatch_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x05 \x01(\x03R\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\x06 \x01(\x03R\tupdatedAt\"\x8f\x02\n" +
-	"\vTaskRunInfo\x12\x1b\n" +
-	"\tnode_code\x18\x01 \x01(\tR\bnodeCode\x12\x16\n" +
-	"\x06status\x18\x02 \x01(\x03R\x06status\x12\x1b\n" +
-	"\x06result\x18\x03 \x01(\tH\x00R\x06result\x88\x01\x01\x12(\n" +
-	"\rerror_message\x18\x04 \x01(\tH\x01R\ferrorMessage\x88\x01\x01\x12\"\n" +
+	"updated_at\x18\x06 \x01(\x03R\tupdatedAt\"\xa6\x02\n" +
+	"\vTaskRunInfo\x12\x15\n" +
+	"\x06run_no\x18\x01 \x01(\x03R\x05runNo\x12\x1b\n" +
+	"\tnode_code\x18\x02 \x01(\tR\bnodeCode\x12\x16\n" +
+	"\x06status\x18\x03 \x01(\x03R\x06status\x12\x1b\n" +
+	"\x06result\x18\x04 \x01(\tH\x00R\x06result\x88\x01\x01\x12(\n" +
+	"\rerror_message\x18\x05 \x01(\tH\x01R\ferrorMessage\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"started_at\x18\x05 \x01(\x03H\x02R\tstartedAt\x88\x01\x01\x12$\n" +
-	"\vfinished_at\x18\x06 \x01(\x03H\x03R\n" +
+	"started_at\x18\x06 \x01(\x03H\x02R\tstartedAt\x88\x01\x01\x12$\n" +
+	"\vfinished_at\x18\a \x01(\x03H\x03R\n" +
 	"finishedAt\x88\x01\x01B\t\n" +
 	"\a_resultB\x10\n" +
 	"\x0e_error_messageB\r\n" +
