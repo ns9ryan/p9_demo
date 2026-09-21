@@ -1,0 +1,2621 @@
+{
+    "lang": "zh-CN",
+    "i18n_items": [
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.actionLogList",
+            "i18n_value": "操作日志列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.agentLineAllocationList",
+            "i18n_value": "代理子线路分配列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.agentLineAllocationSave",
+            "i18n_value": "保存代理子线路分配"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.apiCreate",
+            "i18n_value": "创建API"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.apiDelete",
+            "i18n_value": "删除API"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.apiList",
+            "i18n_value": "API目录"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.apiUpdate",
+            "i18n_value": "更新API"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.authorityApiRole",
+            "i18n_value": "查询角色API"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.authorityApiUpdate",
+            "i18n_value": "分配API"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.authorityMenuRole",
+            "i18n_value": "查询角色菜单"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.authorityMenuUpdate",
+            "i18n_value": "分配菜单"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.basicResourceAllocationList",
+            "i18n_value": "基础资源分配列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.currencyGet",
+            "i18n_value": "货币详情"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.currencyList",
+            "i18n_value": "货币列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.currencyListAll",
+            "i18n_value": "全部货币"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.currencyReorder",
+            "i18n_value": "调整货币排序"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.currencyUpdate",
+            "i18n_value": "更新货币"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.errorLogList",
+            "i18n_value": "错误日志列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.gameCategoryList",
+            "i18n_value": "游戏分类列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.gameCategoryUpdate",
+            "i18n_value": "更新游戏分类"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.gameChannelList",
+            "i18n_value": "游戏渠道列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.gameChannelUpdate",
+            "i18n_value": "更新游戏渠道"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.gameCurrencyList",
+            "i18n_value": "游戏币种列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.gameCurrencyUpdate",
+            "i18n_value": "更新游戏币种"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.gameList",
+            "i18n_value": "游戏列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.gameProviderList",
+            "i18n_value": "游戏厂商列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.gameProviderUpdate",
+            "i18n_value": "更新游戏厂商"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.gameSyncCheckpointList",
+            "i18n_value": "游戏同步检查点列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.gameSyncCheckpointUpdate",
+            "i18n_value": "更新游戏同步检查点"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.gameUpdate",
+            "i18n_value": "更新游戏"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.i18nCreate",
+            "i18n_value": "创建多语言"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.i18nDelete",
+            "i18n_value": "删除多语言"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.i18nExport",
+            "i18n_value": "导出多语言"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.i18nImport",
+            "i18n_value": "导入多语言"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.i18nLangCreate",
+            "i18n_value": "创建支持的语言"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.i18nLangDelete",
+            "i18n_value": "删除支持的语言"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.i18nLangList",
+            "i18n_value": "支持的语言列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.i18nLangReorder",
+            "i18n_value": "调整语言排序"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.i18nLangUpdate",
+            "i18n_value": "更新支持的语言"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.i18nList",
+            "i18n_value": "多语言列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.i18nUpdate",
+            "i18n_value": "更新多语言"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.i18nUpdateByKey",
+            "i18n_value": "按词条key更新多语言"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.ipgeoLocalCreate",
+            "i18n_value": "新增本地 IP"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.ipgeoLocalDelete",
+            "i18n_value": "删除本地 IP"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.ipgeoLocalDetail",
+            "i18n_value": "本地 IP 详情"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.ipgeoLocalList",
+            "i18n_value": "本地 IP 列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.ipgeoLocalUpdate",
+            "i18n_value": "更新本地 IP"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.ipgeoPolicyDefaultSave",
+            "i18n_value": "保存默认查询策略"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.ipgeoPolicyList",
+            "i18n_value": "查询策略列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.ipgeoPolicySave",
+            "i18n_value": "保存查询策略"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.ipgeoSearch",
+            "i18n_value": "IP 地理查询"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.languageAllocationList",
+            "i18n_value": "语言分配列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.languageAllocationSave",
+            "i18n_value": "保存语言分配"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.loginLogList",
+            "i18n_value": "登录日志列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.menuCreate",
+            "i18n_value": "创建菜单"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.menuDelete",
+            "i18n_value": "删除菜单"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.menuList",
+            "i18n_value": "菜单目录"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.menuUpdate",
+            "i18n_value": "更新菜单"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.operatorAdminCreate",
+            "i18n_value": "创建分站管理员"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.operatorAdminList",
+            "i18n_value": "分站管理员列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.operatorAdminResetPassword",
+            "i18n_value": "重置分站管理员密码"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.operatorAdminUpdate",
+            "i18n_value": "更新分站管理员"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.operatorAdminUpdateStatus",
+            "i18n_value": "更新分站管理员状态"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.operatorComplete",
+            "i18n_value": "完成分站创建"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.operatorCreate",
+            "i18n_value": "创建分站"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.operatorDelete",
+            "i18n_value": "删除分站"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.operatorDomainCreate",
+            "i18n_value": "创建分站域名"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.operatorDomainDelete",
+            "i18n_value": "删除分站域名"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.operatorDomainGet",
+            "i18n_value": "分站域名详情"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.operatorDomainList",
+            "i18n_value": "分站域名列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.operatorDomainUpdate",
+            "i18n_value": "修改分站域名"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.operatorGet",
+            "i18n_value": "分站详情"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.operatorList",
+            "i18n_value": "分站列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.operatorProfileCreate",
+            "i18n_value": "创建分站档案"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.operatorProfileGet",
+            "i18n_value": "分站档案详情"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.operatorProfileUpdate",
+            "i18n_value": "修改分站档案"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.operatorPublish",
+            "i18n_value": "发布分站"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.operatorUpdate",
+            "i18n_value": "修改分站"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.ossFileDelete",
+            "i18n_value": "删除文件"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.ossFileList",
+            "i18n_value": "文件列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.ossFileUpload",
+            "i18n_value": "上传文件"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.ossProviderActive",
+            "i18n_value": "当前生效服务商"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.ossProviderCreate",
+            "i18n_value": "创建服务商"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.ossProviderDelete",
+            "i18n_value": "删除服务商"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.ossProviderDetail",
+            "i18n_value": "服务商详情"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.ossProviderEnable",
+            "i18n_value": "启用服务商"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.ossProviderList",
+            "i18n_value": "服务商列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.ossProviderUpdate",
+            "i18n_value": "更新服务商"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.ossUploadComplete",
+            "i18n_value": "完成预签名上传"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.ossUploadPresign",
+            "i18n_value": "预签名上传"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.ossUrlDetail",
+            "i18n_value": "换取访问地址"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.regionAllocationList",
+            "i18n_value": "经营地区分配列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.regionAllocationSave",
+            "i18n_value": "保存经营地区分配"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.regionGet",
+            "i18n_value": "国家地区详情"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.regionList",
+            "i18n_value": "国家地区列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.regionListAll",
+            "i18n_value": "全部国家地区"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.regionReorder",
+            "i18n_value": "调整国家地区排序"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.regionUpdate",
+            "i18n_value": "更新国家地区"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.roleCreate",
+            "i18n_value": "创建角色"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.roleDelete",
+            "i18n_value": "删除角色"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.roleDetail",
+            "i18n_value": "角色详情"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.roleList",
+            "i18n_value": "角色列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.roleUpdate",
+            "i18n_value": "更新角色"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.syncCategoriesPreview",
+            "i18n_value": "预览同步游戏分类"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.syncCategoriesRun",
+            "i18n_value": "执行同步游戏分类"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.syncChannelPreview",
+            "i18n_value": "预览同步游戏渠道"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.syncChannelRun",
+            "i18n_value": "执行同步游戏渠道"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.syncCurrencyPreview",
+            "i18n_value": "预览同步游戏币种"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.syncCurrencyRun",
+            "i18n_value": "执行同步游戏币种"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.syncGamePreview",
+            "i18n_value": "预览同步游戏"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.syncGameRun",
+            "i18n_value": "执行同步游戏"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.syncProviderPreview",
+            "i18n_value": "预览同步游戏厂商"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.syncProviderRun",
+            "i18n_value": "执行同步游戏厂商"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.timezoneGet",
+            "i18n_value": "时区详情"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.timezoneList",
+            "i18n_value": "时区列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.timezoneListAll",
+            "i18n_value": "全部时区"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.timezoneReorder",
+            "i18n_value": "调整时区排序"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.timezoneUpdate",
+            "i18n_value": "更新时区"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.userCreate",
+            "i18n_value": "创建后台用户"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.userDelete",
+            "i18n_value": "删除后台用户"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.userDetail",
+            "i18n_value": "后台用户详情"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.userIpWhitelist",
+            "i18n_value": "修改用户IP白名单"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.userList",
+            "i18n_value": "后台用户列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.userPassword",
+            "i18n_value": "修改他人密码"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.userRoles",
+            "i18n_value": "绑定用户角色"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "api",
+            "i18n_key": "api.userUpdate",
+            "i18n_value": "更新后台用户"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.currency.brl.name",
+            "i18n_value": "巴西雷亚尔"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.currency.idr.name",
+            "i18n_value": "印度尼西亚卢比"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.currency.jpy.name",
+            "i18n_value": "日元"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.currency.krw.name",
+            "i18n_value": "韩元"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.currency.myr.name",
+            "i18n_value": "马来西亚林吉特"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.currency.php.name",
+            "i18n_value": "菲律宾比索"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.currency.sgd.name",
+            "i18n_value": "新加坡元"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.currency.thb.name",
+            "i18n_value": "泰铢"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.currency.usd.name",
+            "i18n_value": "美元"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.currency.usdt.name",
+            "i18n_value": "泰达币"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.currency.vnd.name",
+            "i18n_value": "越南盾"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.region.br.name",
+            "i18n_value": "巴西"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.region.id.name",
+            "i18n_value": "印度尼西亚"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.region.jp.name",
+            "i18n_value": "日本"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.region.kr.name",
+            "i18n_value": "韩国"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.region.my.name",
+            "i18n_value": "马来西亚"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.region.ph.name",
+            "i18n_value": "菲律宾"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.region.sg.name",
+            "i18n_value": "新加坡"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.region.th.name",
+            "i18n_value": "泰国"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.region.us.name",
+            "i18n_value": "美国"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.region.vn.name",
+            "i18n_value": "越南"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.timezone.america_sao_paulo.name",
+            "i18n_value": "巴西利亚时间"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.timezone.asia_bangkok.name",
+            "i18n_value": "泰国时间"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.timezone.asia_ho_chi_minh.name",
+            "i18n_value": "越南时间"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.timezone.asia_jakarta.name",
+            "i18n_value": "印度尼西亚西部时间"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.timezone.asia_kuala_lumpur.name",
+            "i18n_value": "马来西亚时间"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.timezone.asia_manila.name",
+            "i18n_value": "菲律宾时间"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.timezone.asia_seoul.name",
+            "i18n_value": "韩国标准时间"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.timezone.asia_singapore.name",
+            "i18n_value": "新加坡标准时间"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.timezone.asia_tokyo.name",
+            "i18n_value": "日本标准时间"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "base",
+            "i18n_key": "base.timezone.etc_utc.name",
+            "i18n_value": "协调世界时"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.action.back",
+            "i18n_value": "返回"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.action.delete",
+            "i18n_value": "删除"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.action.edit",
+            "i18n_value": "编辑"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.action.view",
+            "i18n_value": "查看"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.all",
+            "i18n_value": "全部"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.column.createdAt",
+            "i18n_value": "创建时间"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.column.index",
+            "i18n_value": "序号"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.column.operations",
+            "i18n_value": "操作"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.column.status",
+            "i18n_value": "状态"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.column.updatedAt",
+            "i18n_value": "更新时间"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.delete.okText",
+            "i18n_value": "删除"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.delete.title",
+            "i18n_value": "确认删除"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.message.createSuccess",
+            "i18n_value": "创建成功"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.message.deleteSuccess",
+            "i18n_value": "删除成功"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.message.enabled",
+            "i18n_value": "已启用"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.message.saveSuccess",
+            "i18n_value": "保存成功"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.message.submitSuccess",
+            "i18n_value": "提交成功"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.message.updateSuccess",
+            "i18n_value": "更新成功"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.no",
+            "i18n_value": "否"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.okText.create",
+            "i18n_value": "创建"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.okText.save",
+            "i18n_value": "保存"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.placeholder.input",
+            "i18n_value": "请输入"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.placeholder.select",
+            "i18n_value": "请选择"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.search.reset",
+            "i18n_value": "重置"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.search.search",
+            "i18n_value": "搜索"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.search.statusDisabled",
+            "i18n_value": "关闭"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.status.disabled",
+            "i18n_value": "停用"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.status.enabled",
+            "i18n_value": "启用"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.switch.off",
+            "i18n_value": "关"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.switch.on",
+            "i18n_value": "开"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.toolbar.add",
+            "i18n_value": "添加"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.toolbar.refresh",
+            "i18n_value": "刷新"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.common.yes",
+            "i18n_value": "是"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.login.brand.subtitle",
+            "i18n_value": "ZHINENGKEJIPINGTAI"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.login.brand.title",
+            "i18n_value": "智能科技平台"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.login.form.forgetPassword",
+            "i18n_value": "忘记密码?"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.login.form.login",
+            "i18n_value": "登录"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.login.form.login.success",
+            "i18n_value": "登录成功"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.login.form.password",
+            "i18n_value": "密码"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.login.form.password.errMsg",
+            "i18n_value": "请输入密码"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.login.form.password.placeholder",
+            "i18n_value": "请输入密码"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.login.form.rememberPassword",
+            "i18n_value": "记住我"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.login.form.title",
+            "i18n_value": "用户登录"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.login.form.userName",
+            "i18n_value": "用户名"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.login.form.userName.errMsg",
+            "i18n_value": "请输入用户名"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "front",
+            "i18n_key": "front.login.form.userName.placeholder",
+            "i18n_value": "请输入用户名"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.category.BD.name",
+            "i18n_value": "棋牌"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.category.FH.name",
+            "i18n_value": "捕鱼"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.category.GM.name",
+            "i18n_value": "电子"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.category.LT.name",
+            "i18n_value": "彩票"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.category.OT.name",
+            "i18n_value": "其他"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.category.SP.name",
+            "i18n_value": "体育"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.category.VD.name",
+            "i18n_value": "视讯"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.568WIN.name",
+            "i18n_value": "568WIN"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.5G.name",
+            "i18n_value": "5G"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.ATG.name",
+            "i18n_value": "Agile Titan Gaming"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.AWC.name",
+            "i18n_value": "277365 AWC[S9]"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.CFA88.name",
+            "i18n_value": "CFA88"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.COSMOPLAY.name",
+            "i18n_value": "CosmoPlay"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.CP.name",
+            "i18n_value": "112_CP"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.CQ9.name",
+            "i18n_value": "(SW2) MT-S9"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.DBLIVE.name",
+            "i18n_value": "DBLIVE"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.DIGMAAN.name",
+            "i18n_value": "S128 Cockfight API"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.DRAGONGAMING.name",
+            "i18n_value": "Dragon Gaming"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.GL.name",
+            "i18n_value": "GL"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.HEIBAO.name",
+            "i18n_value": "HEIBAO"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.IM.name",
+            "i18n_value": "IM"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.KA.name",
+            "i18n_value": "KA"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.LUCIFERGAMING.name",
+            "i18n_value": "LG26-TGIF-069"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.LUCKOAI.name",
+            "i18n_value": "LuckOAI"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.MTLIVE.name",
+            "i18n_value": "MTLIVE"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.OMG.name",
+            "i18n_value": "OMG"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.PP.name",
+            "i18n_value": "PP"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.PREDIX.name",
+            "i18n_value": "PREDIX"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.SAGaming.name",
+            "i18n_value": "M1781 (A15182) - SA Gaming - S9"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.SEVENSTAR.name",
+            "i18n_value": "SEVENSTAR"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.SG.name",
+            "i18n_value": "SG"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.TCG.name",
+            "i18n_value": "TCG"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.TFGaming.name",
+            "i18n_value": "[14094] S9_TF"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.TOP.name",
+            "i18n_value": "TOP"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.TOP10.name",
+            "i18n_value": "TOP10"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.V8OKER.name",
+            "i18n_value": "V8OKER"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.VG.name",
+            "i18n_value": "VG"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.VIA.name",
+            "i18n_value": "VIA"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.WC.name",
+            "i18n_value": "(S90) - WC evolution"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.WM.name",
+            "i18n_value": "WM"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.XPG.name",
+            "i18n_value": "XPG"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.ZF.name",
+            "i18n_value": "ZF1302(c)"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.channel.ZHIFENG.name",
+            "i18n_value": "ZF1302ZT"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.568WIN.name",
+            "i18n_value": "568WIN"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.5G.name",
+            "i18n_value": "5G"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ATG.name",
+            "i18n_value": "Agile Titan Gaming"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.AWC_SEXYBCRT.name",
+            "i18n_value": "SEXY BACCARAT"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.BETBY.name",
+            "i18n_value": "ZF_BETBY"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.CFA88.name",
+            "i18n_value": "CFA88"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.COSMOPLAY.name",
+            "i18n_value": "CosmoPlay"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.CP.name",
+            "i18n_value": "CP"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.DBLIVE.name",
+            "i18n_value": "DBLIVE"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.DIGMAAN.name",
+            "i18n_value": "Digmaan"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.DRAGONGAMING.name",
+            "i18n_value": "Dragon Gaming"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.GL.name",
+            "i18n_value": "GL"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.HEIBAO_CQ9.name",
+            "i18n_value": "CQ9"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.HEIBAO_FACHAI.name",
+            "i18n_value": "FACHAI"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.HEIBAO_JDB-BUYU.name",
+            "i18n_value": "JDB-BUYU"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.HEIBAO_JILI.name",
+            "i18n_value": "JILI"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.HEIBAO_PP.name",
+            "i18n_value": "PP"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.HEIBAO_SPRIBE.name",
+            "i18n_value": "SPRIBE"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.HEIBAO_TADA.name",
+            "i18n_value": "TADA"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.HEIBAO_V8POKER.name",
+            "i18n_value": "V8POKER"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.HEIBAO_YGR-BUYU.name",
+            "i18n_value": "YGR-BUYU"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.KA.name",
+            "i18n_value": "KA"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.LG_100HP.name",
+            "i18n_value": "100 HP"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.LG_ATG.name",
+            "i18n_value": "ATG"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.LG_BETBY.name",
+            "i18n_value": "Betby"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.LG_CALETA.name",
+            "i18n_value": "Caleta Gaming"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.LG_DRAGOONSOFT.name",
+            "i18n_value": "Dragoon Soft"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.LG_HACKSAW.name",
+            "i18n_value": "Hacksaw"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.LG_IDEAL_GAMING.name",
+            "i18n_value": "iDeal Gaming"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.LG_IMOON.name",
+            "i18n_value": "iMoon"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.LG_MANCALA.name",
+            "i18n_value": "Mancala"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.LG_MASCOT.name",
+            "i18n_value": "Mascot"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.LG_MI.name",
+            "i18n_value": "Mythic Isle"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.LG_PLATIPUS.name",
+            "i18n_value": "Platipus"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.LG_PLAYNGO.name",
+            "i18n_value": "Play'n Go"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.LG_PLAYSTAR.name",
+            "i18n_value": "PlayStar"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.LG_RED_EAGLE.name",
+            "i18n_value": "Red Eagle"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.LG_SA.name",
+            "i18n_value": "SA Gaming"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.LG_WE_GAMES.name",
+            "i18n_value": "World Entertainment"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.LG_WE_SPORTS.name",
+            "i18n_value": "World Entertainment Sports"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.LG_WOWGAMING.name",
+            "i18n_value": "WowGaming"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.LUCKOAI.name",
+            "i18n_value": "EEAI"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.MTLIVE.name",
+            "i18n_value": "MTLIVE"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.MT_CQ9.name",
+            "i18n_value": "MT_CQ9"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.OMG.name",
+            "i18n_value": "OMG"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.OMG_2JGAME.name",
+            "i18n_value": "2JGame"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.OMG_759.name",
+            "i18n_value": "759"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.OMG_ASKME.name",
+            "i18n_value": "ASKME"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.OMG_CP.name",
+            "i18n_value": "CP"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.OMG_FC.name",
+            "i18n_value": "FC"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.OMG_GAMEART.name",
+            "i18n_value": "GameArt"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.OMG_HACKSAW.name",
+            "i18n_value": "Hacksaw"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.OMG_IGT.name",
+            "i18n_value": "IGT"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.OMG_JDB.name",
+            "i18n_value": "JDB"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.OMG_JILI.name",
+            "i18n_value": "JILI"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.OMG_PG.name",
+            "i18n_value": "PG"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.OMG_PP.name",
+            "i18n_value": "PP"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.OMG_REDTIGER.name",
+            "i18n_value": "RedTiger"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.OMG_SLOTMILLL.name",
+            "i18n_value": "Slotmill"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.OMG_SPRIBE.name",
+            "i18n_value": "Spribe"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.OMG_TADA.name",
+            "i18n_value": "TADA"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.OMG_WG.name",
+            "i18n_value": "WG"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ORANGE.name",
+            "i18n_value": "ORANGE"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.PP.name",
+            "i18n_value": "Pragmatic Play"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.PREDIX.name",
+            "i18n_value": "Predix"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.SAGAMING.name",
+            "i18n_value": "SAGAMING"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.SEVENSTAR.name",
+            "i18n_value": "Seven Star"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.SG.name",
+            "i18n_value": "SG"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.TCG_VNLOTTO.name",
+            "i18n_value": "VNLOTTO"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.TFGAMING.name",
+            "i18n_value": "TFGAMING"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.TOP10_LTG.name",
+            "i18n_value": "LTG"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.TOP10_PG.name",
+            "i18n_value": "PG Soft"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.TOP_BETBY.name",
+            "i18n_value": "TOP_BETBY"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.V8POKER.name",
+            "i18n_value": "V8POKER"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.VG.name",
+            "i18n_value": "VG"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.VIA.name",
+            "i18n_value": "VIA"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.WHITECLIFF.name",
+            "i18n_value": "WC Evolution"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.WM.name",
+            "i18n_value": "WM"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.XPG.name",
+            "i18n_value": "XPG"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_AA.name",
+            "i18n_value": "AA Sexy"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_ALG.name",
+            "i18n_value": "Alize Slots"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_ALGM.name",
+            "i18n_value": "Alize Mini"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_AMBS.name",
+            "i18n_value": "Askmeslot"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_AMUSNET.name",
+            "i18n_value": "Amusnet"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_AP.name",
+            "i18n_value": "AdvantPlay"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_AVIA.name",
+            "i18n_value": "Aviatrix"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_BB.name",
+            "i18n_value": "Live88"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_BNG.name",
+            "i18n_value": "BNG"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_CQ9.name",
+            "i18n_value": "CQ9"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_DB.name",
+            "i18n_value": "DB Slots"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_EVOBTG.name",
+            "i18n_value": "Big Time Gaming"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_EVOLIVE.name",
+            "i18n_value": "Evolution Live"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_EVONLC.name",
+            "i18n_value": "NoLimit City"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_EVONTT.name",
+            "i18n_value": "Netent"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_EVOP.name",
+            "i18n_value": "Evoplay"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_EVORT.name",
+            "i18n_value": "Red Tiger"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_EW.name",
+            "i18n_value": "EpicWin"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_EZUGI.name",
+            "i18n_value": "Ezugi"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_FC.name",
+            "i18n_value": "FaChai"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_GPK7MJ.name",
+            "i18n_value": "7mojo"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_GPKBG.name",
+            "i18n_value": "Bgaming"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_GPKBM.name",
+            "i18n_value": "Booming"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_GPKSPINO.name",
+            "i18n_value": "Spinomenal"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_GPKTBG.name",
+            "i18n_value": "Turbo Games"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_HB.name",
+            "i18n_value": "Habanero"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_HSD.name",
+            "i18n_value": "Hacksaw"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_INOUT.name",
+            "i18n_value": "Inout"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_JDB-GTF.name",
+            "i18n_value": "GTF"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_JDB.name",
+            "i18n_value": "JDB"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_JL.name",
+            "i18n_value": "Jili"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_LIVE22.name",
+            "i18n_value": "Live22"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_LT.name",
+            "i18n_value": "Lite"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_MG.name",
+            "i18n_value": "Micro Gaming"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_PGS.name",
+            "i18n_value": "PG Soft"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_PNG.name",
+            "i18n_value": "PlayNGo"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_PP.name",
+            "i18n_value": "Pragmatic Play"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_QM.name",
+            "i18n_value": "KingMidas"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_RG.name",
+            "i18n_value": "Relax Gaming"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_SPB.name",
+            "i18n_value": "Spribe"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_SPDG.name",
+            "i18n_value": "Spade Gaming"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_TBP.name",
+            "i18n_value": "The Better Platform"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_WIFY.name",
+            "i18n_value": "Winfinity"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_YB.name",
+            "i18n_value": "YeeBet"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "game",
+            "i18n_key": "game.provider.ZHIFENG_YBNGO.name",
+            "i18n_value": "YellowBat"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "lang",
+            "i18n_key": "lang.en-US",
+            "i18n_value": "英语"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "lang",
+            "i18n_key": "lang.ja-JP",
+            "i18n_value": "日本语"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "lang",
+            "i18n_key": "lang.zh-CN",
+            "i18n_value": "简体中文"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "lang",
+            "i18n_key": "lang.zh-HK",
+            "i18n_value": "繁体中文"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.actionLog",
+            "i18n_value": "操作日志"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.api",
+            "i18n_value": "接口管理"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.apiCreate",
+            "i18n_value": "新建接口"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.baseData",
+            "i18n_value": "基础数据"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.basicResourceAllocation",
+            "i18n_value": "基础资源分配"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.basicResourceAllocationSave",
+            "i18n_value": "保存基础资源配置"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.currency",
+            "i18n_value": "货币管理"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.currencyReorder",
+            "i18n_value": "调整货币排序"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.currencyUpdate",
+            "i18n_value": "编辑货币"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.dashboard",
+            "i18n_value": "工作台"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.errorLog",
+            "i18n_value": "错误日志"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.game",
+            "i18n_value": "游戏管理"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.gameCategory",
+            "i18n_value": "游戏分类"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.gameChannel",
+            "i18n_value": "游戏渠道"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.gameCurrency",
+            "i18n_value": "游戏币种"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.gameIndie",
+            "i18n_value": "独立游戏"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.gameManufacturer",
+            "i18n_value": "游戏厂商"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.gameResourceAllocation",
+            "i18n_value": "游戏资源分配"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.gameSyncList",
+            "i18n_value": "游戏同步列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.i18n",
+            "i18n_value": "多语言"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.i18nCreate",
+            "i18n_value": "新建多语言"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.i18nEntry",
+            "i18n_value": "词条管理"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.i18nExport",
+            "i18n_value": "导出词条"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.i18nImport",
+            "i18n_value": "导入词条"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.i18nLang",
+            "i18n_value": "语言管理"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.i18nLangCreate",
+            "i18n_value": "新建语言"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.integration",
+            "i18n_value": "IP 地理"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.ipGeoLocal",
+            "i18n_value": "本地 IP"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.ipGeoPolicy",
+            "i18n_value": "查询策略"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.log",
+            "i18n_value": "日志管理"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.loginLog",
+            "i18n_value": "登录日志"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.menu",
+            "i18n_value": "菜单管理"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.menuCreate",
+            "i18n_value": "新建菜单"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.operatorAdmin",
+            "i18n_value": "管理员账号"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.operatorAdminCreate",
+            "i18n_value": "新增管理员"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.operatorAdminResetPassword",
+            "i18n_value": "重置密码"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.operatorAdminUpdate",
+            "i18n_value": "编辑管理员"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.operatorAdminUpdateStatus",
+            "i18n_value": "启停状态"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.operatorCreate",
+            "i18n_value": "创建分站"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.operatorDelete",
+            "i18n_value": "删除分站"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.operatorDomain",
+            "i18n_value": "域名管理"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.operatorDomainCreate",
+            "i18n_value": "创建域名"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.operatorDomainDelete",
+            "i18n_value": "删除域名"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.operatorDomainUpdate",
+            "i18n_value": "编辑域名"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.operatorList",
+            "i18n_value": "分站列表"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.operatorManagement",
+            "i18n_value": "分站管理"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.operatorPublish",
+            "i18n_value": "发布分站"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.operatorUpdate",
+            "i18n_value": "编辑分站"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.oss",
+            "i18n_value": "对象存储"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.ossFile",
+            "i18n_value": "文件"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.ossProvider",
+            "i18n_value": "服务商"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.region",
+            "i18n_value": "国家地区"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.regionReorder",
+            "i18n_value": "调整国家地区排序"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.regionUpdate",
+            "i18n_value": "编辑国家地区"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.role",
+            "i18n_value": "角色管理"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.roleCreate",
+            "i18n_value": "新建角色"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.system",
+            "i18n_value": "系统管理"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.timezone",
+            "i18n_value": "时区管理"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.timezoneReorder",
+            "i18n_value": "调整时区排序"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.timezoneUpdate",
+            "i18n_value": "编辑时区"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.user",
+            "i18n_value": "用户管理"
+        },
+        {
+            "i18n_code": "platform",
+            "i18n_group": "menu",
+            "i18n_key": "menu.route.userCreate",
+            "i18n_value": "新建用户"
+        }
+    ]
+}
