@@ -10,13 +10,12 @@ import (
 	"strings"
 	"time"
 
-	"oa.98ent.com/p9/node-dispatch/rpc/ent"
-	"oa.98ent.com/p9/node-dispatch/rpc/ent/node"
-	"oa.98ent.com/p9/node-dispatch/rpc/internal/svc"
-	"oa.98ent.com/p9/node-dispatch/rpc/internal/websocket"
-
 	coderws "github.com/coder/websocket"
 	"github.com/zeromicro/go-zero/core/logx"
+	"oa.98ent.com/p9/node-dispatch/rpc/ent"
+	"oa.98ent.com/p9/node-dispatch/rpc/ent/node"
+	"oa.98ent.com/p9/node-dispatch/rpc/internal/connection"
+	"oa.98ent.com/p9/node-dispatch/rpc/internal/svc"
 )
 
 const (
@@ -110,14 +109,14 @@ func (s *Server) handleNode(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 
 	// 创建节点连接
-	connection := &websocket.Connection{
+	nodeConnection := &connection.Connection{
 		NodeCode: data.Code, // 节点业务编码
 		Conn:     conn,      // WebSocket连接
 	}
 
 	// 注册节点连接
-	s.svcCtx.Connections.Register(connection)
-	defer s.svcCtx.Connections.Unregister(connection)
+	s.svcCtx.Connections.Register(nodeConnection)
+	defer s.svcCtx.Connections.Unregister(nodeConnection)
 
 	logger.Infow("节点WebSocket连接已建立", logx.Field("node_code", data.Code))
 

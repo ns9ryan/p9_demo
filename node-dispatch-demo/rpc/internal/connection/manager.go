@@ -1,4 +1,4 @@
-package websocket
+package connection
 
 import (
 	"context"
@@ -7,19 +7,21 @@ import (
 	"fmt"
 	"sync"
 
+	"oa.98ent.com/p9/node-dispatch/rpc/internal/protocol"
+
 	coderws "github.com/coder/websocket"
 )
 
 // ErrNodeOffline 节点当前不在线
 var ErrNodeOffline = errors.New("node offline")
 
-// Connection 表示一个已认证的节点WebSocket连接
+// Connection 节点WebSocket连接
 type Connection struct {
-	NodeCode string
-	Conn     *coderws.Conn
+	NodeCode string        // 节点业务编码
+	Conn     *coderws.Conn // WebSocket连接
 }
 
-// Manager 管理节点WebSocket连接
+// Manager 节点连接管理器
 type Manager struct {
 	mu          sync.RWMutex
 	connections map[string]*Connection
@@ -69,7 +71,7 @@ func (m *Manager) Get(nodeCode string) (*Connection, bool) {
 }
 
 // Send 向指定节点发送WebSocket消息
-func (m *Manager) Send(ctx context.Context, nodeCode string, message Message) error {
+func (m *Manager) Send(ctx context.Context, nodeCode string, message protocol.Message) error {
 	// 获取节点连接
 	connection, ok := m.Get(nodeCode)
 	if !ok {

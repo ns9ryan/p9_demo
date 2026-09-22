@@ -49,8 +49,44 @@ func init() {
 			return nil
 		}
 	}()
+	// dispatchtaskDescRequestNo is the schema descriptor for request_no field.
+	dispatchtaskDescRequestNo := dispatchtaskFields[1].Descriptor()
+	// dispatchtask.RequestNoValidator is a validator for the "request_no" field. It is called by the builders before save.
+	dispatchtask.RequestNoValidator = func() func(string) error {
+		validators := dispatchtaskDescRequestNo.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(request_no string) error {
+			for _, fn := range fns {
+				if err := fn(request_no); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// dispatchtaskDescTarget is the schema descriptor for target field.
+	dispatchtaskDescTarget := dispatchtaskFields[2].Descriptor()
+	// dispatchtask.TargetValidator is a validator for the "target" field. It is called by the builders before save.
+	dispatchtask.TargetValidator = func() func(string) error {
+		validators := dispatchtaskDescTarget.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(target string) error {
+			for _, fn := range fns {
+				if err := fn(target); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	// dispatchtaskDescTaskType is the schema descriptor for task_type field.
-	dispatchtaskDescTaskType := dispatchtaskFields[1].Descriptor()
+	dispatchtaskDescTaskType := dispatchtaskFields[3].Descriptor()
 	// dispatchtask.TaskTypeValidator is a validator for the "task_type" field. It is called by the builders before save.
 	dispatchtask.TaskTypeValidator = func() func(string) error {
 		validators := dispatchtaskDescTaskType.Validators
@@ -68,7 +104,7 @@ func init() {
 		}
 	}()
 	// dispatchtaskDescStatus is the schema descriptor for status field.
-	dispatchtaskDescStatus := dispatchtaskFields[3].Descriptor()
+	dispatchtaskDescStatus := dispatchtaskFields[5].Descriptor()
 	// dispatchtask.DefaultStatus holds the default value on creation for the status field.
 	dispatchtask.DefaultStatus = dispatchtaskDescStatus.Default.(int64)
 	// dispatchtask.StatusValidator is a validator for the "status" field. It is called by the builders before save.

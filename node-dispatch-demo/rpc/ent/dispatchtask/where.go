@@ -70,6 +70,16 @@ func TaskNo(v string) predicate.DispatchTask {
 	return predicate.DispatchTask(sql.FieldEQ(FieldTaskNo, v))
 }
 
+// RequestNo applies equality check predicate on the "request_no" field. It's identical to RequestNoEQ.
+func RequestNo(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldEQ(FieldRequestNo, v))
+}
+
+// Target applies equality check predicate on the "target" field. It's identical to TargetEQ.
+func Target(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldEQ(FieldTarget, v))
+}
+
 // TaskType applies equality check predicate on the "task_type" field. It's identical to TaskTypeEQ.
 func TaskType(v string) predicate.DispatchTask {
 	return predicate.DispatchTask(sql.FieldEQ(FieldTaskType, v))
@@ -223,6 +233,136 @@ func TaskNoEqualFold(v string) predicate.DispatchTask {
 // TaskNoContainsFold applies the ContainsFold predicate on the "task_no" field.
 func TaskNoContainsFold(v string) predicate.DispatchTask {
 	return predicate.DispatchTask(sql.FieldContainsFold(FieldTaskNo, v))
+}
+
+// RequestNoEQ applies the EQ predicate on the "request_no" field.
+func RequestNoEQ(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldEQ(FieldRequestNo, v))
+}
+
+// RequestNoNEQ applies the NEQ predicate on the "request_no" field.
+func RequestNoNEQ(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldNEQ(FieldRequestNo, v))
+}
+
+// RequestNoIn applies the In predicate on the "request_no" field.
+func RequestNoIn(vs ...string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldIn(FieldRequestNo, vs...))
+}
+
+// RequestNoNotIn applies the NotIn predicate on the "request_no" field.
+func RequestNoNotIn(vs ...string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldNotIn(FieldRequestNo, vs...))
+}
+
+// RequestNoGT applies the GT predicate on the "request_no" field.
+func RequestNoGT(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldGT(FieldRequestNo, v))
+}
+
+// RequestNoGTE applies the GTE predicate on the "request_no" field.
+func RequestNoGTE(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldGTE(FieldRequestNo, v))
+}
+
+// RequestNoLT applies the LT predicate on the "request_no" field.
+func RequestNoLT(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldLT(FieldRequestNo, v))
+}
+
+// RequestNoLTE applies the LTE predicate on the "request_no" field.
+func RequestNoLTE(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldLTE(FieldRequestNo, v))
+}
+
+// RequestNoContains applies the Contains predicate on the "request_no" field.
+func RequestNoContains(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldContains(FieldRequestNo, v))
+}
+
+// RequestNoHasPrefix applies the HasPrefix predicate on the "request_no" field.
+func RequestNoHasPrefix(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldHasPrefix(FieldRequestNo, v))
+}
+
+// RequestNoHasSuffix applies the HasSuffix predicate on the "request_no" field.
+func RequestNoHasSuffix(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldHasSuffix(FieldRequestNo, v))
+}
+
+// RequestNoEqualFold applies the EqualFold predicate on the "request_no" field.
+func RequestNoEqualFold(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldEqualFold(FieldRequestNo, v))
+}
+
+// RequestNoContainsFold applies the ContainsFold predicate on the "request_no" field.
+func RequestNoContainsFold(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldContainsFold(FieldRequestNo, v))
+}
+
+// TargetEQ applies the EQ predicate on the "target" field.
+func TargetEQ(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldEQ(FieldTarget, v))
+}
+
+// TargetNEQ applies the NEQ predicate on the "target" field.
+func TargetNEQ(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldNEQ(FieldTarget, v))
+}
+
+// TargetIn applies the In predicate on the "target" field.
+func TargetIn(vs ...string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldIn(FieldTarget, vs...))
+}
+
+// TargetNotIn applies the NotIn predicate on the "target" field.
+func TargetNotIn(vs ...string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldNotIn(FieldTarget, vs...))
+}
+
+// TargetGT applies the GT predicate on the "target" field.
+func TargetGT(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldGT(FieldTarget, v))
+}
+
+// TargetGTE applies the GTE predicate on the "target" field.
+func TargetGTE(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldGTE(FieldTarget, v))
+}
+
+// TargetLT applies the LT predicate on the "target" field.
+func TargetLT(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldLT(FieldTarget, v))
+}
+
+// TargetLTE applies the LTE predicate on the "target" field.
+func TargetLTE(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldLTE(FieldTarget, v))
+}
+
+// TargetContains applies the Contains predicate on the "target" field.
+func TargetContains(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldContains(FieldTarget, v))
+}
+
+// TargetHasPrefix applies the HasPrefix predicate on the "target" field.
+func TargetHasPrefix(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldHasPrefix(FieldTarget, v))
+}
+
+// TargetHasSuffix applies the HasSuffix predicate on the "target" field.
+func TargetHasSuffix(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldHasSuffix(FieldTarget, v))
+}
+
+// TargetEqualFold applies the EqualFold predicate on the "target" field.
+func TargetEqualFold(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldEqualFold(FieldTarget, v))
+}
+
+// TargetContainsFold applies the ContainsFold predicate on the "target" field.
+func TargetContainsFold(v string) predicate.DispatchTask {
+	return predicate.DispatchTask(sql.FieldContainsFold(FieldTarget, v))
 }
 
 // TaskTypeEQ applies the EQ predicate on the "task_type" field.

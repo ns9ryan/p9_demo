@@ -12,10 +12,12 @@ import (
 	"oa.98ent.com/p9/node-dispatch/rpc/ent/dispatchtask"
 	"oa.98ent.com/p9/node-dispatch/rpc/ent/dispatchtaskrun"
 	"oa.98ent.com/p9/node-dispatch/rpc/ent/node"
+	"oa.98ent.com/p9/node-dispatch/rpc/internal/connection"
+	"oa.98ent.com/p9/node-dispatch/rpc/internal/protocol"
 	"oa.98ent.com/p9/node-dispatch/rpc/internal/svc"
-	"oa.98ent.com/p9/node-dispatch/rpc/internal/websocket"
 	"oa.98ent.com/p9/node-dispatch/rpc/pb/nodedispatchrpc/dispatchpb"
 
+	"github.com/google/uuid"
 	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -40,14 +42,18 @@ func (l *SubmitTaskLogic) SubmitTask(in *dispatchpb.SubmitTaskRequest) (*dispatc
 	// ---------- 参数整理 ----------
 
 	// 整理任务参数
-	taskNo := strings.TrimSpace(in.TaskNo)
+	requestNo := strings.TrimSpace(in.RequestNo)
+	target := strings.TrimSpace(in.Target)
 	taskType := strings.TrimSpace(in.TaskType)
 	nodeCode := strings.TrimSpace(in.NodeCode)
 	params := json.RawMessage(in.Params)
 
 	// 校验基础参数
-	if taskNo == "" {
-		return nil, status.Error(codes.InvalidArgument, "task_no is required")
+	if requestNo == "" {
+		return nil, status.Error(codes.InvalidArgument, "request_no is required")
+	}
+	if target == "" {
+		return nil, status.Error(codes.InvalidArgument, "target is required")
 	}
 	if taskType == "" {
 		return nil, status.Error(codes.InvalidArgument, "task_type is required")
@@ -61,47 +67,69 @@ func (l *SubmitTaskLogic) SubmitTask(in *dispatchpb.SubmitTaskRequest) (*dispatc
 
 	// ---------- 幂等检查 ----------
 
-	// 检查任务编号是否已经存在
+	// 根据请求编号检查任务是否已经存在
 	existingTask, err := l.svcCtx.DB.DispatchTask.
 		Query().
-		Where(dispatchtask.TaskNoEQ(taskNo)).
+		Where(dispatchtask.RequestNoEQ(requestNo)).
 		Only(l.ctx)
 	if err == nil {
-		// 获取任务最近一次执行记录
+		// 获取任务首次执行记录
 		existingRun, runErr := l.svcCtx.DB.DispatchTaskRun.
 			Query().
-			Where(dispatchtaskrun.TaskIDEQ(existingTask.ID)).
-			Order(ent.Desc(dispatchtaskrun.FieldID)).
-			First(l.ctx)
+			Where(
+				dispatchtaskrun.TaskIDEQ(existingTask.ID),
+				dispatchtaskrun.RunNoEQ(1),
+			).
+			Only(l.ctx)
 		if runErr != nil {
-			l.Logger.Errorw("获取已有调度任务执行记录失败", logx.Field("task_no", taskNo), logx.Field("error", runErr.Error()))
+			l.Logger.Errorw(
+				"获取已有调度任务执行记录失败",
+				logx.Field("request_no", requestNo),
+				logx.Field("task_no", existingTask.TaskNo),
+				logx.Field("error", runErr.Error()),
+			)
 			return nil, runErr
 		}
 
-		// 获取已有任务执行节点
+		// 获取首次执行节点
 		existingNode, nodeErr := l.svcCtx.DB.Node.Get(l.ctx, existingRun.NodeID)
 		if nodeErr != nil {
-			l.Logger.Errorw("获取已有调度任务节点失败", logx.Field("task_no", taskNo), logx.Field("error", nodeErr.Error()))
+			l.Logger.Errorw(
+				"获取已有调度任务节点失败",
+				logx.Field("request_no", requestNo),
+				logx.Field("task_no", existingTask.TaskNo),
+				logx.Field("error", nodeErr.Error()),
+			)
 			return nil, nodeErr
 		}
 
 		// 比较任务参数
 		sameParams, compareErr := equalJSON(existingTask.Params, params)
 		if compareErr != nil {
-			l.Logger.Errorw("比较调度任务参数失败", logx.Field("task_no", taskNo), logx.Field("error", compareErr.Error()))
+			l.Logger.Errorw(
+				"比较调度任务参数失败",
+				logx.Field("request_no", requestNo),
+				logx.Field("task_no", existingTask.TaskNo),
+				logx.Field("error", compareErr.Error()),
+			)
 			return nil, compareErr
 		}
 
-		// 相同任务编号必须保持任务内容一致
-		if existingTask.TaskType != taskType || existingNode.Code != nodeCode || !sameParams {
-			return nil, status.Error(codes.AlreadyExists, "task_no already exists with different content")
+		// 相同请求编号必须保持任务内容一致
+		if existingTask.Target != target ||
+			existingTask.TaskType != taskType ||
+			existingNode.Code != nodeCode ||
+			!sameParams {
+			return nil, status.Error(codes.AlreadyExists, "request_no already exists with different content")
 		}
 
-		// 相同任务直接返回已有结果, 不重复创建和下发
-		return &dispatchpb.SubmitTaskResponse{}, nil
+		// 相同请求直接返回已有任务编号, 不重复创建和下发
+		return &dispatchpb.SubmitTaskResponse{
+			TaskNo: existingTask.TaskNo, // 调度任务编号
+		}, nil
 	}
 	if !ent.IsNotFound(err) {
-		l.Logger.Errorw("查询调度任务失败", logx.Field("task_no", taskNo), logx.Field("error", err.Error()))
+		l.Logger.Errorw("查询调度任务失败", logx.Field("request_no", requestNo), logx.Field("error", err.Error()))
 		return nil, err
 	}
 
@@ -133,31 +161,42 @@ func (l *SubmitTaskLogic) SubmitTask(in *dispatchpb.SubmitTaskRequest) (*dispatc
 
 	// ---------- 任务创建 ----------
 
+	// 生成调度中心任务编号
+	taskNo := uuid.NewString()
+
 	// 开启事务
 	tx, err := l.svcCtx.DB.Tx(l.ctx)
 	if err != nil {
-		l.Logger.Errorw("开启调度任务事务失败", logx.Field("error", err.Error()))
+		l.Logger.Errorw("开启调度任务事务失败", logx.Field("request_no", requestNo), logx.Field("error", err.Error()))
 		return nil, err
 	}
 
 	// 创建调度任务
 	taskData, err := tx.DispatchTask.
 		Create().
-		SetTaskNo(taskNo).     // 任务编号
-		SetTaskType(taskType). // 任务类型
-		SetParams(params).     // 任务参数
+		SetTaskNo(taskNo).       // 调度任务编号
+		SetRequestNo(requestNo). // 调用方请求编号
+		SetTarget(target).       // 目标服务
+		SetTaskType(taskType).   // 任务类型
+		SetParams(params).       // 任务参数
 		Save(l.ctx)
 	if err != nil {
 		_ = tx.Rollback()
-		l.Logger.Errorw("创建调度任务失败", logx.Field("task_no", taskNo), logx.Field("error", err.Error()))
+		l.Logger.Errorw(
+			"创建调度任务失败",
+			logx.Field("request_no", requestNo),
+			logx.Field("task_no", taskNo),
+			logx.Field("error", err.Error()),
+		)
 		return nil, err
 	}
 
-	// 创建任务执行记录
+	// 创建首次任务执行记录
 	runData, err := tx.DispatchTaskRun.
 		Create().
 		SetTaskID(taskData.ID). // 调度任务ID
 		SetNodeID(nodeData.ID). // 执行节点ID
+		SetRunNo(1).            // 首次执行序号
 		Save(l.ctx)
 	if err != nil {
 		_ = tx.Rollback()
@@ -174,10 +213,12 @@ func (l *SubmitTaskLogic) SubmitTask(in *dispatchpb.SubmitTaskRequest) (*dispatc
 	// ---------- 任务下发 ----------
 
 	// 编码任务下发数据
-	dispatchData, err := json.Marshal(websocket.TaskDispatchData{
-		TaskNo:   taskNo,   // 任务编号
-		TaskType: taskType, // 任务类型
-		Params:   params,   // 任务参数
+	dispatchData, err := json.Marshal(protocol.TaskDispatchData{
+		TaskNo:   taskNo,        // 调度任务编号
+		RunNo:    runData.RunNo, // 执行序号
+		Target:   target,        // 目标服务
+		TaskType: taskType,      // 任务类型
+		Params:   params,        // 任务参数
 	})
 	if err != nil {
 		l.Logger.Errorw("编码任务下发数据失败", logx.Field("task_no", taskNo), logx.Field("error", err.Error()))
@@ -186,27 +227,40 @@ func (l *SubmitTaskLogic) SubmitTask(in *dispatchpb.SubmitTaskRequest) (*dispatc
 	}
 
 	// 通过WebSocket下发任务
-	err = l.svcCtx.Connections.Send(l.ctx, nodeCode, websocket.Message{
-		Type: websocket.MessageTypeTaskDispatch, // 消息类型
-		Data: dispatchData,                      // 任务数据
+	err = l.svcCtx.Connections.Send(l.ctx, nodeCode, protocol.Message{
+		Type: protocol.MessageTypeTaskDispatch, // 消息类型
+		Data: dispatchData,                     // 任务数据
 	})
 	if err != nil {
-		l.Logger.Errorw("下发调度任务失败", logx.Field("task_no", taskNo), logx.Field("node_code", nodeCode), logx.Field("error", err.Error()))
+		l.Logger.Errorw(
+			"下发调度任务失败",
+			logx.Field("task_no", taskNo),
+			logx.Field("run_no", runData.RunNo),
+			logx.Field("node_code", nodeCode),
+			logx.Field("error", err.Error()),
+		)
 		l.markDispatchFailed(taskData.ID, runData.ID, err.Error())
 
-		if errors.Is(err, websocket.ErrNodeOffline) {
+		if errors.Is(err, connection.ErrNodeOffline) {
 			return nil, status.Error(codes.Unavailable, "node is offline")
 		}
 
 		return nil, status.Error(codes.Unavailable, "failed to dispatch task")
 	}
 
-	l.Logger.Infow("调度任务已下发", logx.Field("task_no", taskNo), logx.Field("node_code", nodeCode))
+	l.Logger.Infow(
+		"调度任务已下发",
+		logx.Field("task_no", taskNo),
+		logx.Field("run_no", runData.RunNo),
+		logx.Field("node_code", nodeCode),
+	)
 
 	// ---------- 返回结果 ----------
 
 	// 返回提交结果
-	return &dispatchpb.SubmitTaskResponse{}, nil
+	return &dispatchpb.SubmitTaskResponse{
+		TaskNo: taskNo, // 调度任务编号
+	}, nil
 }
 
 // markDispatchFailed 标记任务下发失败

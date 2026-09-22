@@ -20,6 +20,10 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldTaskNo holds the string denoting the task_no field in the database.
 	FieldTaskNo = "task_no"
+	// FieldRequestNo holds the string denoting the request_no field in the database.
+	FieldRequestNo = "request_no"
+	// FieldTarget holds the string denoting the target field in the database.
+	FieldTarget = "target"
 	// FieldTaskType holds the string denoting the task_type field in the database.
 	FieldTaskType = "task_type"
 	// FieldParams holds the string denoting the params field in the database.
@@ -45,6 +49,8 @@ var Columns = []string{
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldTaskNo,
+	FieldRequestNo,
+	FieldTarget,
 	FieldTaskType,
 	FieldParams,
 	FieldStatus,
@@ -69,6 +75,10 @@ var (
 	UpdateDefaultUpdatedAt func() time.Time
 	// TaskNoValidator is a validator for the "task_no" field. It is called by the builders before save.
 	TaskNoValidator func(string) error
+	// RequestNoValidator is a validator for the "request_no" field. It is called by the builders before save.
+	RequestNoValidator func(string) error
+	// TargetValidator is a validator for the "target" field. It is called by the builders before save.
+	TargetValidator func(string) error
 	// TaskTypeValidator is a validator for the "task_type" field. It is called by the builders before save.
 	TaskTypeValidator func(string) error
 	// DefaultStatus holds the default value on creation for the "status" field.
@@ -98,6 +108,16 @@ func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
 // ByTaskNo orders the results by the task_no field.
 func ByTaskNo(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldTaskNo, opts...).ToFunc()
+}
+
+// ByRequestNo orders the results by the request_no field.
+func ByRequestNo(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldRequestNo, opts...).ToFunc()
+}
+
+// ByTarget orders the results by the target field.
+func ByTarget(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTarget, opts...).ToFunc()
 }
 
 // ByTaskType orders the results by the task_type field.

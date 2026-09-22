@@ -43,6 +43,8 @@ type DispatchTaskMutation struct {
 	created_at    *time.Time
 	updated_at    *time.Time
 	task_no       *string
+	request_no    *string
+	target        *string
 	task_type     *string
 	params        *json.RawMessage
 	appendparams  json.RawMessage
@@ -267,6 +269,78 @@ func (m *DispatchTaskMutation) OldTaskNo(ctx context.Context) (v string, err err
 // ResetTaskNo resets all changes to the "task_no" field.
 func (m *DispatchTaskMutation) ResetTaskNo() {
 	m.task_no = nil
+}
+
+// SetRequestNo sets the "request_no" field.
+func (m *DispatchTaskMutation) SetRequestNo(s string) {
+	m.request_no = &s
+}
+
+// RequestNo returns the value of the "request_no" field in the mutation.
+func (m *DispatchTaskMutation) RequestNo() (r string, exists bool) {
+	v := m.request_no
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRequestNo returns the old "request_no" field's value of the DispatchTask entity.
+// If the DispatchTask object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DispatchTaskMutation) OldRequestNo(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRequestNo is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRequestNo requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRequestNo: %w", err)
+	}
+	return oldValue.RequestNo, nil
+}
+
+// ResetRequestNo resets all changes to the "request_no" field.
+func (m *DispatchTaskMutation) ResetRequestNo() {
+	m.request_no = nil
+}
+
+// SetTarget sets the "target" field.
+func (m *DispatchTaskMutation) SetTarget(s string) {
+	m.target = &s
+}
+
+// Target returns the value of the "target" field in the mutation.
+func (m *DispatchTaskMutation) Target() (r string, exists bool) {
+	v := m.target
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTarget returns the old "target" field's value of the DispatchTask entity.
+// If the DispatchTask object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DispatchTaskMutation) OldTarget(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTarget is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTarget requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTarget: %w", err)
+	}
+	return oldValue.Target, nil
+}
+
+// ResetTarget resets all changes to the "target" field.
+func (m *DispatchTaskMutation) ResetTarget() {
+	m.target = nil
 }
 
 // SetTaskType sets the "task_type" field.
@@ -500,7 +574,7 @@ func (m *DispatchTaskMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *DispatchTaskMutation) Fields() []string {
-	fields := make([]string, 0, 6)
+	fields := make([]string, 0, 8)
 	if m.created_at != nil {
 		fields = append(fields, dispatchtask.FieldCreatedAt)
 	}
@@ -509,6 +583,12 @@ func (m *DispatchTaskMutation) Fields() []string {
 	}
 	if m.task_no != nil {
 		fields = append(fields, dispatchtask.FieldTaskNo)
+	}
+	if m.request_no != nil {
+		fields = append(fields, dispatchtask.FieldRequestNo)
+	}
+	if m.target != nil {
+		fields = append(fields, dispatchtask.FieldTarget)
 	}
 	if m.task_type != nil {
 		fields = append(fields, dispatchtask.FieldTaskType)
@@ -533,6 +613,10 @@ func (m *DispatchTaskMutation) Field(name string) (ent.Value, bool) {
 		return m.UpdatedAt()
 	case dispatchtask.FieldTaskNo:
 		return m.TaskNo()
+	case dispatchtask.FieldRequestNo:
+		return m.RequestNo()
+	case dispatchtask.FieldTarget:
+		return m.Target()
 	case dispatchtask.FieldTaskType:
 		return m.TaskType()
 	case dispatchtask.FieldParams:
@@ -554,6 +638,10 @@ func (m *DispatchTaskMutation) OldField(ctx context.Context, name string) (ent.V
 		return m.OldUpdatedAt(ctx)
 	case dispatchtask.FieldTaskNo:
 		return m.OldTaskNo(ctx)
+	case dispatchtask.FieldRequestNo:
+		return m.OldRequestNo(ctx)
+	case dispatchtask.FieldTarget:
+		return m.OldTarget(ctx)
 	case dispatchtask.FieldTaskType:
 		return m.OldTaskType(ctx)
 	case dispatchtask.FieldParams:
@@ -589,6 +677,20 @@ func (m *DispatchTaskMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetTaskNo(v)
+		return nil
+	case dispatchtask.FieldRequestNo:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRequestNo(v)
+		return nil
+	case dispatchtask.FieldTarget:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTarget(v)
 		return nil
 	case dispatchtask.FieldTaskType:
 		v, ok := value.(string)
@@ -683,6 +785,12 @@ func (m *DispatchTaskMutation) ResetField(name string) error {
 		return nil
 	case dispatchtask.FieldTaskNo:
 		m.ResetTaskNo()
+		return nil
+	case dispatchtask.FieldRequestNo:
+		m.ResetRequestNo()
+		return nil
+	case dispatchtask.FieldTarget:
+		m.ResetTarget()
 		return nil
 	case dispatchtask.FieldTaskType:
 		m.ResetTaskType()

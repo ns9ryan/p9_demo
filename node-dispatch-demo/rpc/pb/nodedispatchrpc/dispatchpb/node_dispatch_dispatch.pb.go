@@ -24,18 +24,22 @@ const (
 // 调度任务信息
 type TaskInfo struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 任务编号
+	// 调度中心生成的任务编号
 	TaskNo string `protobuf:"bytes,1,opt,name=task_no,json=taskNo,proto3" json:"task_no,omitempty"`
+	// 调用方生成的请求编号
+	RequestNo string `protobuf:"bytes,2,opt,name=request_no,json=requestNo,proto3" json:"request_no,omitempty"`
+	// 任务目标服务
+	Target string `protobuf:"bytes,3,opt,name=target,proto3" json:"target,omitempty"`
 	// 任务类型
-	TaskType string `protobuf:"bytes,2,opt,name=task_type,json=taskType,proto3" json:"task_type,omitempty"`
+	TaskType string `protobuf:"bytes,4,opt,name=task_type,json=taskType,proto3" json:"task_type,omitempty"`
 	// 任务状态: 1待执行, 2执行中, 3成功, 4失败
-	Status int64 `protobuf:"varint,3,opt,name=status,proto3" json:"status,omitempty"`
+	Status int64 `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`
 	// 执行节点编码
-	NodeCode string `protobuf:"bytes,4,opt,name=node_code,json=nodeCode,proto3" json:"node_code,omitempty"`
+	NodeCode string `protobuf:"bytes,6,opt,name=node_code,json=nodeCode,proto3" json:"node_code,omitempty"`
 	// 创建时间, Unix毫秒时间戳
-	CreatedAt int64 `protobuf:"varint,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	CreatedAt int64 `protobuf:"varint,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	// 更新时间, Unix毫秒时间戳
-	UpdatedAt     int64 `protobuf:"varint,6,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	UpdatedAt     int64 `protobuf:"varint,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -73,6 +77,20 @@ func (*TaskInfo) Descriptor() ([]byte, []int) {
 func (x *TaskInfo) GetTaskNo() string {
 	if x != nil {
 		return x.TaskNo
+	}
+	return ""
+}
+
+func (x *TaskInfo) GetRequestNo() string {
+	if x != nil {
+		return x.RequestNo
+	}
+	return ""
+}
+
+func (x *TaskInfo) GetTarget() string {
+	if x != nil {
+		return x.Target
 	}
 	return ""
 }
@@ -215,14 +233,16 @@ func (x *TaskRunInfo) GetFinishedAt() int64 {
 // 提交调度任务请求
 type SubmitTaskRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 全局唯一任务编号
-	TaskNo string `protobuf:"bytes,1,opt,name=task_no,json=taskNo,proto3" json:"task_no,omitempty"`
+	// 调用方生成的请求编号
+	RequestNo string `protobuf:"bytes,1,opt,name=request_no,json=requestNo,proto3" json:"request_no,omitempty"`
+	// 任务目标服务
+	Target string `protobuf:"bytes,2,opt,name=target,proto3" json:"target,omitempty"`
 	// 任务类型
-	TaskType string `protobuf:"bytes,2,opt,name=task_type,json=taskType,proto3" json:"task_type,omitempty"`
+	TaskType string `protobuf:"bytes,3,opt,name=task_type,json=taskType,proto3" json:"task_type,omitempty"`
 	// 执行节点编码
-	NodeCode string `protobuf:"bytes,3,opt,name=node_code,json=nodeCode,proto3" json:"node_code,omitempty"`
+	NodeCode string `protobuf:"bytes,4,opt,name=node_code,json=nodeCode,proto3" json:"node_code,omitempty"`
 	// 任务参数, JSON数据
-	Params        string `protobuf:"bytes,4,opt,name=params,proto3" json:"params,omitempty"`
+	Params        string `protobuf:"bytes,5,opt,name=params,proto3" json:"params,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -257,9 +277,16 @@ func (*SubmitTaskRequest) Descriptor() ([]byte, []int) {
 	return file_types_node_dispatch_dispatch_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *SubmitTaskRequest) GetTaskNo() string {
+func (x *SubmitTaskRequest) GetRequestNo() string {
 	if x != nil {
-		return x.TaskNo
+		return x.RequestNo
+	}
+	return ""
+}
+
+func (x *SubmitTaskRequest) GetTarget() string {
+	if x != nil {
+		return x.Target
 	}
 	return ""
 }
@@ -287,7 +314,9 @@ func (x *SubmitTaskRequest) GetParams() string {
 
 // 提交调度任务响应
 type SubmitTaskResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 调度中心生成的任务编号
+	TaskNo        string `protobuf:"bytes,1,opt,name=task_no,json=taskNo,proto3" json:"task_no,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -322,11 +351,20 @@ func (*SubmitTaskResponse) Descriptor() ([]byte, []int) {
 	return file_types_node_dispatch_dispatch_proto_rawDescGZIP(), []int{3}
 }
 
+func (x *SubmitTaskResponse) GetTaskNo() string {
+	if x != nil {
+		return x.TaskNo
+	}
+	return ""
+}
+
 // 获取调度任务请求
 type GetTaskRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 任务编号
-	TaskNo        string `protobuf:"bytes,1,opt,name=task_no,json=taskNo,proto3" json:"task_no,omitempty"`
+	// 调度中心任务编号, 与request_no二选一
+	TaskNo *string `protobuf:"bytes,1,opt,name=task_no,json=taskNo,proto3,oneof" json:"task_no,omitempty"`
+	// 调用方请求编号, 与task_no二选一
+	RequestNo     *string `protobuf:"bytes,2,opt,name=request_no,json=requestNo,proto3,oneof" json:"request_no,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -362,8 +400,15 @@ func (*GetTaskRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetTaskRequest) GetTaskNo() string {
-	if x != nil {
-		return x.TaskNo
+	if x != nil && x.TaskNo != nil {
+		return *x.TaskNo
+	}
+	return ""
+}
+
+func (x *GetTaskRequest) GetRequestNo() string {
+	if x != nil && x.RequestNo != nil {
+		return *x.RequestNo
 	}
 	return ""
 }
@@ -439,7 +484,7 @@ type ListTasksRequest struct {
 	Page int64 `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
 	// 每页数量
 	PageSize int64 `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	// 搜索关键字, 匹配任务编号
+	// 搜索关键字, 匹配任务编号或请求编号
 	Keyword *string `protobuf:"bytes,3,opt,name=keyword,proto3,oneof" json:"keyword,omitempty"`
 	// 任务类型
 	TaskType *string `protobuf:"bytes,4,opt,name=task_type,json=taskType,proto3,oneof" json:"task_type,omitempty"`
@@ -582,16 +627,19 @@ var File_types_node_dispatch_dispatch_proto protoreflect.FileDescriptor
 
 const file_types_node_dispatch_dispatch_proto_rawDesc = "" +
 	"\n" +
-	"\"types/node_dispatch_dispatch.proto\x12\x16node_dispatch_dispatch\"\xb3\x01\n" +
+	"\"types/node_dispatch_dispatch.proto\x12\x16node_dispatch_dispatch\"\xea\x01\n" +
 	"\bTaskInfo\x12\x17\n" +
-	"\atask_no\x18\x01 \x01(\tR\x06taskNo\x12\x1b\n" +
-	"\ttask_type\x18\x02 \x01(\tR\btaskType\x12\x16\n" +
-	"\x06status\x18\x03 \x01(\x03R\x06status\x12\x1b\n" +
-	"\tnode_code\x18\x04 \x01(\tR\bnodeCode\x12\x1d\n" +
+	"\atask_no\x18\x01 \x01(\tR\x06taskNo\x12\x1d\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\x03R\tcreatedAt\x12\x1d\n" +
+	"request_no\x18\x02 \x01(\tR\trequestNo\x12\x16\n" +
+	"\x06target\x18\x03 \x01(\tR\x06target\x12\x1b\n" +
+	"\ttask_type\x18\x04 \x01(\tR\btaskType\x12\x16\n" +
+	"\x06status\x18\x05 \x01(\x03R\x06status\x12\x1b\n" +
+	"\tnode_code\x18\x06 \x01(\tR\bnodeCode\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\x06 \x01(\x03R\tupdatedAt\"\xa6\x02\n" +
+	"created_at\x18\a \x01(\x03R\tcreatedAt\x12\x1d\n" +
+	"\n" +
+	"updated_at\x18\b \x01(\x03R\tupdatedAt\"\xa6\x02\n" +
 	"\vTaskRunInfo\x12\x15\n" +
 	"\x06run_no\x18\x01 \x01(\x03R\x05runNo\x12\x1b\n" +
 	"\tnode_code\x18\x02 \x01(\tR\bnodeCode\x12\x16\n" +
@@ -605,15 +653,23 @@ const file_types_node_dispatch_dispatch_proto_rawDesc = "" +
 	"\a_resultB\x10\n" +
 	"\x0e_error_messageB\r\n" +
 	"\v_started_atB\x0e\n" +
-	"\f_finished_at\"~\n" +
-	"\x11SubmitTaskRequest\x12\x17\n" +
-	"\atask_no\x18\x01 \x01(\tR\x06taskNo\x12\x1b\n" +
-	"\ttask_type\x18\x02 \x01(\tR\btaskType\x12\x1b\n" +
-	"\tnode_code\x18\x03 \x01(\tR\bnodeCode\x12\x16\n" +
-	"\x06params\x18\x04 \x01(\tR\x06params\"\x14\n" +
-	"\x12SubmitTaskResponse\")\n" +
-	"\x0eGetTaskRequest\x12\x17\n" +
-	"\atask_no\x18\x01 \x01(\tR\x06taskNo\"\x98\x01\n" +
+	"\f_finished_at\"\x9c\x01\n" +
+	"\x11SubmitTaskRequest\x12\x1d\n" +
+	"\n" +
+	"request_no\x18\x01 \x01(\tR\trequestNo\x12\x16\n" +
+	"\x06target\x18\x02 \x01(\tR\x06target\x12\x1b\n" +
+	"\ttask_type\x18\x03 \x01(\tR\btaskType\x12\x1b\n" +
+	"\tnode_code\x18\x04 \x01(\tR\bnodeCode\x12\x16\n" +
+	"\x06params\x18\x05 \x01(\tR\x06params\"-\n" +
+	"\x12SubmitTaskResponse\x12\x17\n" +
+	"\atask_no\x18\x01 \x01(\tR\x06taskNo\"m\n" +
+	"\x0eGetTaskRequest\x12\x1c\n" +
+	"\atask_no\x18\x01 \x01(\tH\x00R\x06taskNo\x88\x01\x01\x12\"\n" +
+	"\n" +
+	"request_no\x18\x02 \x01(\tH\x01R\trequestNo\x88\x01\x01B\n" +
+	"\n" +
+	"\b_task_noB\r\n" +
+	"\v_request_no\"\x98\x01\n" +
 	"\x0fGetTaskResponse\x124\n" +
 	"\x04task\x18\x01 \x01(\v2 .node_dispatch_dispatch.TaskInfoR\x04task\x12\x16\n" +
 	"\x06params\x18\x02 \x01(\tR\x06params\x127\n" +
@@ -676,6 +732,7 @@ func file_types_node_dispatch_dispatch_proto_init() {
 		return
 	}
 	file_types_node_dispatch_dispatch_proto_msgTypes[1].OneofWrappers = []any{}
+	file_types_node_dispatch_dispatch_proto_msgTypes[4].OneofWrappers = []any{}
 	file_types_node_dispatch_dispatch_proto_msgTypes[6].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

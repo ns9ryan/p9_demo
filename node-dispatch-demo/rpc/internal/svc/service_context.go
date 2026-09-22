@@ -1,21 +1,25 @@
 package svc
 
 import (
-	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/core/service"
-
 	"oa.98ent.com/p9/node-dispatch/rpc/ent"
 	_ "oa.98ent.com/p9/node-dispatch/rpc/ent/runtime"
 	"oa.98ent.com/p9/node-dispatch/rpc/internal/config"
-	"oa.98ent.com/p9/node-dispatch/rpc/internal/websocket"
+	"oa.98ent.com/p9/node-dispatch/rpc/internal/connection"
+	"oa.98ent.com/p9/node-dispatch/rpc/internal/task"
+
+	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/service"
 )
 
+// ServiceContext 服务上下文
 type ServiceContext struct {
 	Config      config.Config
-	DB          *ent.Client        // Ent数据库客户端
-	Connections *websocket.Manager // 节点WebSocket连接管理器
+	DB          *ent.Client         // Ent数据库客户端
+	Connections *connection.Manager // 节点连接管理器
+	Task        *task.Service       // 调度任务服务
 }
 
+// NewServiceContext 创建服务上下文
 func NewServiceContext(c config.Config) *ServiceContext {
 	// 创建数据库驱动
 	driver, err := c.DatabaseConf.NewDriver()
@@ -35,12 +39,17 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	// 创建Ent数据库客户端
 	db := ent.NewClient(entOpts...)
 
-	// 创建节点WebSocket连接管理器
-	connections := websocket.NewManager()
+	// 创建节点连接管理器
+	connections := connection.NewManager()
 
+	// 创建调度任务服务
+	taskService := task.NewService(db, connections)
+
+	// 返回服务上下文
 	return &ServiceContext{
 		Config:      c,
 		DB:          db,
 		Connections: connections,
+		Task:        taskService,
 	}
 }

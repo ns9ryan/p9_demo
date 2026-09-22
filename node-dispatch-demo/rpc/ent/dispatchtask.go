@@ -23,8 +23,12 @@ type DispatchTask struct {
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// 更新时间
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	// 全局唯一任务编号
+	// 调度中心生成的全局唯一任务编号
 	TaskNo string `json:"task_no,omitempty"`
+	// 调用方生成的请求编号
+	RequestNo string `json:"request_no,omitempty"`
+	// 任务目标服务
+	Target string `json:"target,omitempty"`
 	// 任务类型
 	TaskType string `json:"task_type,omitempty"`
 	// 任务参数
@@ -64,7 +68,7 @@ func (*DispatchTask) scanValues(columns []string) ([]any, error) {
 			values[i] = new([]byte)
 		case dispatchtask.FieldID, dispatchtask.FieldStatus:
 			values[i] = new(sql.NullInt64)
-		case dispatchtask.FieldTaskNo, dispatchtask.FieldTaskType:
+		case dispatchtask.FieldTaskNo, dispatchtask.FieldRequestNo, dispatchtask.FieldTarget, dispatchtask.FieldTaskType:
 			values[i] = new(sql.NullString)
 		case dispatchtask.FieldCreatedAt, dispatchtask.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -106,6 +110,18 @@ func (_m *DispatchTask) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field task_no", values[i])
 			} else if value.Valid {
 				_m.TaskNo = value.String
+			}
+		case dispatchtask.FieldRequestNo:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field request_no", values[i])
+			} else if value.Valid {
+				_m.RequestNo = value.String
+			}
+		case dispatchtask.FieldTarget:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field target", values[i])
+			} else if value.Valid {
+				_m.Target = value.String
 			}
 		case dispatchtask.FieldTaskType:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -176,6 +192,12 @@ func (_m *DispatchTask) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("task_no=")
 	builder.WriteString(_m.TaskNo)
+	builder.WriteString(", ")
+	builder.WriteString("request_no=")
+	builder.WriteString(_m.RequestNo)
+	builder.WriteString(", ")
+	builder.WriteString("target=")
+	builder.WriteString(_m.Target)
 	builder.WriteString(", ")
 	builder.WriteString("task_type=")
 	builder.WriteString(_m.TaskType)

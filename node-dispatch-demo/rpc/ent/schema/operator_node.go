@@ -8,6 +8,7 @@ import (
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+	"entgo.io/ent/schema/index"
 )
 
 // OperatorNode 定义 operator 节点关系表结构
@@ -38,6 +39,13 @@ func (OperatorNode) Edges() []ent.Edge {
 			Field("node_id").
 			Unique().
 			Required(),
+	}
+}
+
+// Indexes 定义 operator 节点关系表索引
+func (OperatorNode) Indexes() []ent.Index {
+	return []ent.Index{
+		index.Fields("node_id"),
 	}
 }
 

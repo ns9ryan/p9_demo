@@ -26,7 +26,20 @@ func (DispatchTask) Fields() []ent.Field {
 			MaxLen(64).
 			Unique().
 			Immutable().
-			Comment("全局唯一任务编号"),
+			Comment("调度中心生成的全局唯一任务编号"),
+
+		field.String("request_no").
+			NotEmpty().
+			MaxLen(64).
+			Unique().
+			Immutable().
+			Comment("调用方生成的请求编号"),
+
+		field.String("target").
+			NotEmpty().
+			MaxLen(64).
+			Immutable().
+			Comment("任务目标服务"),
 
 		field.String("task_type").
 			NotEmpty().

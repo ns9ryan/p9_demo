@@ -58,6 +58,18 @@ func (_c *DispatchTaskCreate) SetTaskNo(v string) *DispatchTaskCreate {
 	return _c
 }
 
+// SetRequestNo sets the "request_no" field.
+func (_c *DispatchTaskCreate) SetRequestNo(v string) *DispatchTaskCreate {
+	_c.mutation.SetRequestNo(v)
+	return _c
+}
+
+// SetTarget sets the "target" field.
+func (_c *DispatchTaskCreate) SetTarget(v string) *DispatchTaskCreate {
+	_c.mutation.SetTarget(v)
+	return _c
+}
+
 // SetTaskType sets the "task_type" field.
 func (_c *DispatchTaskCreate) SetTaskType(v string) *DispatchTaskCreate {
 	_c.mutation.SetTaskType(v)
@@ -170,6 +182,22 @@ func (_c *DispatchTaskCreate) check() error {
 			return &ValidationError{Name: "task_no", err: fmt.Errorf(`ent: validator failed for field "DispatchTask.task_no": %w`, err)}
 		}
 	}
+	if _, ok := _c.mutation.RequestNo(); !ok {
+		return &ValidationError{Name: "request_no", err: errors.New(`ent: missing required field "DispatchTask.request_no"`)}
+	}
+	if v, ok := _c.mutation.RequestNo(); ok {
+		if err := dispatchtask.RequestNoValidator(v); err != nil {
+			return &ValidationError{Name: "request_no", err: fmt.Errorf(`ent: validator failed for field "DispatchTask.request_no": %w`, err)}
+		}
+	}
+	if _, ok := _c.mutation.Target(); !ok {
+		return &ValidationError{Name: "target", err: errors.New(`ent: missing required field "DispatchTask.target"`)}
+	}
+	if v, ok := _c.mutation.Target(); ok {
+		if err := dispatchtask.TargetValidator(v); err != nil {
+			return &ValidationError{Name: "target", err: fmt.Errorf(`ent: validator failed for field "DispatchTask.target": %w`, err)}
+		}
+	}
 	if _, ok := _c.mutation.TaskType(); !ok {
 		return &ValidationError{Name: "task_type", err: errors.New(`ent: missing required field "DispatchTask.task_type"`)}
 	}
@@ -233,6 +261,14 @@ func (_c *DispatchTaskCreate) createSpec() (*DispatchTask, *sqlgraph.CreateSpec)
 	if value, ok := _c.mutation.TaskNo(); ok {
 		_spec.SetField(dispatchtask.FieldTaskNo, field.TypeString, value)
 		_node.TaskNo = value
+	}
+	if value, ok := _c.mutation.RequestNo(); ok {
+		_spec.SetField(dispatchtask.FieldRequestNo, field.TypeString, value)
+		_node.RequestNo = value
+	}
+	if value, ok := _c.mutation.Target(); ok {
+		_spec.SetField(dispatchtask.FieldTarget, field.TypeString, value)
+		_node.Target = value
 	}
 	if value, ok := _c.mutation.TaskType(); ok {
 		_spec.SetField(dispatchtask.FieldTaskType, field.TypeString, value)
@@ -366,6 +402,12 @@ func (u *DispatchTaskUpsertOne) UpdateNewValues() *DispatchTaskUpsertOne {
 		}
 		if _, exists := u.create.mutation.TaskNo(); exists {
 			s.SetIgnore(dispatchtask.FieldTaskNo)
+		}
+		if _, exists := u.create.mutation.RequestNo(); exists {
+			s.SetIgnore(dispatchtask.FieldRequestNo)
+		}
+		if _, exists := u.create.mutation.Target(); exists {
+			s.SetIgnore(dispatchtask.FieldTarget)
 		}
 		if _, exists := u.create.mutation.TaskType(); exists {
 			s.SetIgnore(dispatchtask.FieldTaskType)
@@ -626,6 +668,12 @@ func (u *DispatchTaskUpsertBulk) UpdateNewValues() *DispatchTaskUpsertBulk {
 			}
 			if _, exists := b.mutation.TaskNo(); exists {
 				s.SetIgnore(dispatchtask.FieldTaskNo)
+			}
+			if _, exists := b.mutation.RequestNo(); exists {
+				s.SetIgnore(dispatchtask.FieldRequestNo)
+			}
+			if _, exists := b.mutation.Target(); exists {
+				s.SetIgnore(dispatchtask.FieldTarget)
 			}
 			if _, exists := b.mutation.TaskType(); exists {
 				s.SetIgnore(dispatchtask.FieldTaskType)

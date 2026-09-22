@@ -6,18 +6,22 @@ option go_package = "oa.98ent.com/p9/node-dispatch/rpc/pb/nodedispatchrpc/dispat
 
 // 调度任务信息
 message TaskInfo {
-  // 任务编号
+  // 调度中心生成的任务编号
   string task_no = 1;
+  // 调用方生成的请求编号
+  string request_no = 2;
+  // 任务目标服务
+  string target = 3;
   // 任务类型
-  string task_type = 2;
+  string task_type = 4;
   // 任务状态: 1待执行, 2执行中, 3成功, 4失败
-  int64 status = 3;
+  int64 status = 5;
   // 执行节点编码
-  string node_code = 4;
+  string node_code = 6;
   // 创建时间, Unix毫秒时间戳
-  int64 created_at = 5;
+  int64 created_at = 7;
   // 更新时间, Unix毫秒时间戳
-  int64 updated_at = 6;
+  int64 updated_at = 8;
 }
 
 // 调度任务执行信息
@@ -40,23 +44,30 @@ message TaskRunInfo {
 
 // 提交调度任务请求
 message SubmitTaskRequest {
-  // 全局唯一任务编号
-  string task_no = 1;
+  // 调用方生成的请求编号
+  string request_no = 1;
+  // 任务目标服务
+  string target = 2;
   // 任务类型
-  string task_type = 2;
+  string task_type = 3;
   // 执行节点编码
-  string node_code = 3;
+  string node_code = 4;
   // 任务参数, JSON数据
-  string params = 4;
+  string params = 5;
 }
 
 // 提交调度任务响应
-message SubmitTaskResponse {}
+message SubmitTaskResponse {
+  // 调度中心生成的任务编号
+  string task_no = 1;
+}
 
 // 获取调度任务请求
 message GetTaskRequest {
-  // 任务编号
-  string task_no = 1;
+  // 调度中心任务编号, 与request_no二选一
+  optional string task_no = 1;
+  // 调用方请求编号, 与task_no二选一
+  optional string request_no = 2;
 }
 
 // 获取调度任务响应
@@ -75,7 +86,7 @@ message ListTasksRequest {
   int64 page = 1;
   // 每页数量
   int64 page_size = 2;
-  // 搜索关键字, 匹配任务编号
+  // 搜索关键字, 匹配任务编号或请求编号
   optional string keyword = 3;
   // 任务类型
   optional string task_type = 4;
