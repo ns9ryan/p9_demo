@@ -19,9 +19,8 @@ func (s *Service) checkIdempotent(ctx context.Context, req SubmitRequest) (*ent.
 		Query().
 		Where(dispatchtask.RequestNoEQ(req.RequestNo)).
 		Only(ctx)
-
 	if err != nil {
-		// 任务不存在, 继续创建
+		// 请求未处理过, 继续创建任务
 		if ent.IsNotFound(err) {
 			return nil, false, nil
 		}
@@ -41,9 +40,8 @@ func (s *Service) checkIdempotent(ctx context.Context, req SubmitRequest) (*ent.
 		return nil, false, err
 	}
 
-	// 获取执行节点
-	nodeData, err := s.db.Node.
-		Get(ctx, runData.NodeID)
+	// 获取首次执行节点
+	nodeData, err := s.db.Node.Get(ctx, runData.NodeID)
 	if err != nil {
 		return nil, false, err
 	}
@@ -54,7 +52,7 @@ func (s *Service) checkIdempotent(ctx context.Context, req SubmitRequest) (*ent.
 		return nil, false, err
 	}
 
-	// 请求编号相同, 但任务内容不同
+	// 相同请求编号必须保持请求内容一致
 	if taskData.Target != req.Target ||
 		taskData.TaskType != req.TaskType ||
 		nodeData.Code != req.NodeCode ||
@@ -62,7 +60,7 @@ func (s *Service) checkIdempotent(ctx context.Context, req SubmitRequest) (*ent.
 		return nil, false, status.Error(codes.AlreadyExists, "request_no already exists with different content")
 	}
 
-	// 返回已有任务
+	// 相同请求直接复用已有任务
 	return taskData, true, nil
 }
 

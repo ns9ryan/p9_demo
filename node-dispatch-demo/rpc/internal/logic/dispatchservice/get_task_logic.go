@@ -2,13 +2,10 @@ package dispatchservicelogic
 
 import (
 	"context"
-	"fmt"
 	"strings"
 
-	"oa.98ent.com/p9/node-dispatch/rpc/ent"
-	"oa.98ent.com/p9/node-dispatch/rpc/ent/dispatchtask"
-	"oa.98ent.com/p9/node-dispatch/rpc/ent/dispatchtaskrun"
 	"oa.98ent.com/p9/node-dispatch/rpc/internal/svc"
+	"oa.98ent.com/p9/node-dispatch/rpc/internal/task"
 	"oa.98ent.com/p9/node-dispatch/rpc/pb/nodedispatchrpc/dispatchpb"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -32,13 +29,11 @@ func NewGetTaskLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetTaskLo
 
 // GetTask 获取调度任务
 func (l *GetTaskLogic) GetTask(in *dispatchpb.GetTaskRequest) (*dispatchpb.GetTaskResponse, error) {
-	// ---------- 参数整理 ----------
-
-	// 整理查询编号
+	// 整理查询参数
 	taskNo := strings.TrimSpace(in.GetTaskNo())
 	requestNo := strings.TrimSpace(in.GetRequestNo())
 
-	// 任务编号和请求编号必须且只能提供一个
+	// 校验查询参数
 	if taskNo == "" && requestNo == "" {
 		return nil, status.Error(codes.InvalidArgument, "task_no or request_no is required")
 	}
@@ -46,27 +41,14 @@ func (l *GetTaskLogic) GetTask(in *dispatchpb.GetTaskRequest) (*dispatchpb.GetTa
 		return nil, status.Error(codes.InvalidArgument, "task_no and request_no cannot be provided together")
 	}
 
-	// ---------- 任务查询 ----------
-
-	// 创建任务查询
-	query := l.svcCtx.DB.DispatchTask.Query()
-
-	// 根据指定编号查询任务
-	if taskNo != "" {
-		query = query.Where(dispatchtask.TaskNoEQ(taskNo))
-	} else {
-		query = query.Where(dispatchtask.RequestNoEQ(requestNo))
-	}
-
-	// 获取调度任务
-	taskData, err := query.Only(l.ctx)
+	// 查询调度任务
+	taskResult, err := l.svcCtx.Task.Get(l.ctx, task.GetRequest{
+		TaskNo:    taskNo,    // 调度任务编号
+		RequestNo: requestNo, // 调用方请求编号
+	})
 	if err != nil {
-		if ent.IsNotFound(err) {
-			return nil, status.Error(codes.NotFound, "task not found")
-		}
-
 		l.Logger.Errorw(
-			"查询调度任务失败",
+			"获取调度任务失败",
 			logx.Field("task_no", taskNo),
 			logx.Field("request_no", requestNo),
 			logx.Field("error", err.Error()),
@@ -74,53 +56,37 @@ func (l *GetTaskLogic) GetTask(in *dispatchpb.GetTaskRequest) (*dispatchpb.GetTa
 		return nil, err
 	}
 
-	// ---------- 执行记录查询 ----------
-
-	// 获取任务全部执行记录及执行节点
-	runList, err := l.svcCtx.DB.DispatchTaskRun.
-		Query().
-		Where(dispatchtaskrun.TaskIDEQ(taskData.ID)).
-		WithNode().
-		Order(ent.Asc(dispatchtaskrun.FieldRunNo)).
-		All(l.ctx)
-	if err != nil {
+	// 校验查询结果
+	if taskResult == nil || taskResult.Task == nil {
 		l.Logger.Errorw(
-			"查询调度任务执行记录失败",
-			logx.Field("task_no", taskData.TaskNo),
-			logx.Field("error", err.Error()),
+			"获取调度任务结果为空",
+			logx.Field("task_no", taskNo),
+			logx.Field("request_no", requestNo),
 		)
-		return nil, err
+		return nil, status.Error(codes.Internal, "task result is empty")
 	}
 
-	// 调度任务创建后必须至少存在一条执行记录
-	if len(runList) == 0 {
-		err = fmt.Errorf("调度任务执行记录不存在: %s", taskData.TaskNo)
-		l.Logger.Errorw(
-			"调度任务执行记录不存在",
-			logx.Field("task_no", taskData.TaskNo),
-			logx.Field("error", err.Error()),
-		)
-		return nil, err
-	}
+	taskData := taskResult.Task
 
-	// ---------- 响应转换 ----------
-
-	// 转换任务执行记录
-	runs := make([]*dispatchpb.TaskRunInfo, 0, len(runList))
+	// 转换执行记录
+	runs := make([]*dispatchpb.TaskRunInfo, 0, len(taskResult.Runs))
 	var nodeCode string
 
-	for _, runData := range runList {
+	for _, runData := range taskResult.Runs {
 		// 获取执行节点
-		nodeData, nodeErr := runData.Edges.NodeOrErr()
-		if nodeErr != nil {
+		nodeData, err := runData.Edges.NodeOrErr()
+		if err != nil {
 			l.Logger.Errorw(
-				"获取调度任务执行节点失败",
+				"获取任务执行节点失败",
 				logx.Field("task_no", taskData.TaskNo),
 				logx.Field("run_no", runData.RunNo),
-				logx.Field("error", nodeErr.Error()),
+				logx.Field("error", err.Error()),
 			)
-			return nil, nodeErr
+			return nil, err
 		}
+
+		// 保存执行节点编码
+		nodeCode = nodeData.Code
 
 		// 最近一条执行记录的节点作为任务当前执行节点
 		nodeCode = nodeData.Code
@@ -149,13 +115,13 @@ func (l *GetTaskLogic) GetTask(in *dispatchpb.GetTaskRequest) (*dispatchpb.GetTa
 
 		// 设置执行结束时间
 		if runData.FinishedAt != nil {
-			runInfo.FinishedAt = new(runData.FinishedAt.UnixMilli())
+			runInfo.StartedAt = new(runData.StartedAt.UnixMilli())
 		}
 
 		runs = append(runs, runInfo)
 	}
 
-	// 返回任务详情
+	// 返回调度任务信息
 	return &dispatchpb.GetTaskResponse{
 		Task: &dispatchpb.TaskInfo{
 			TaskNo:    taskData.TaskNo,                // 调度任务编号
@@ -163,7 +129,7 @@ func (l *GetTaskLogic) GetTask(in *dispatchpb.GetTaskRequest) (*dispatchpb.GetTa
 			Target:    taskData.Target,                // 目标服务
 			TaskType:  taskData.TaskType,              // 任务类型
 			Status:    taskData.Status,                // 任务状态
-			NodeCode:  nodeCode,                       // 最近执行节点编码
+			NodeCode:  nodeCode,                       // 执行节点编码
 			CreatedAt: taskData.CreatedAt.UnixMilli(), // 创建时间
 			UpdatedAt: taskData.UpdatedAt.UnixMilli(), // 更新时间
 		},

@@ -3,15 +3,17 @@ package task
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 
+	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
 	"oa.98ent.com/p9/node-dispatch/rpc/ent"
 	"oa.98ent.com/p9/node-dispatch/rpc/ent/node"
+	"oa.98ent.com/p9/node-dispatch/rpc/internal/connection"
 	"oa.98ent.com/p9/node-dispatch/rpc/internal/protocol"
-
-	"github.com/google/uuid"
 )
 
 // SubmitRequest 提交调度任务请求
@@ -74,6 +76,20 @@ func (s *Service) Submit(ctx context.Context, req SubmitRequest) (*SubmitRespons
 	taskData, err = s.createTask(ctx, tx, req)
 	if err != nil {
 		_ = tx.Rollback()
+
+		// 并发提交相同request_no时, 由数据库唯一约束完成最终幂等保护
+		if ent.IsConstraintError(err) {
+			existingTask, existing, idempotentErr := s.checkIdempotent(ctx, req)
+			if idempotentErr != nil {
+				return nil, idempotentErr
+			}
+			if existing {
+				return &SubmitResponse{
+					TaskNo: existingTask.TaskNo, // 已存在的调度任务编号
+				}, nil
+			}
+		}
+
 		return nil, err
 	}
 
@@ -94,7 +110,12 @@ func (s *Service) Submit(ctx context.Context, req SubmitRequest) (*SubmitRespons
 		// 标记任务下发失败
 		s.markDispatchFailed(ctx, taskData.ID, runData.ID, err.Error())
 
-		return nil, err
+		// 节点在任务创建后断开连接
+		if errors.Is(err, connection.ErrNodeOffline) {
+			return nil, status.Error(codes.Unavailable, "node is offline")
+		}
+
+		return nil, status.Error(codes.Unavailable, "failed to dispatch task")
 	}
 
 	// 返回任务编号

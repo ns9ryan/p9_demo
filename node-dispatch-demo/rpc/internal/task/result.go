@@ -2,7 +2,6 @@ package task
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"time"
 
@@ -53,14 +52,10 @@ func (s *Service) MarkResult(
 
 	// 校验执行节点
 	if nodeData.Code != nodeCode {
-		return fmt.Errorf(
-			"任务执行节点不匹配: expect=%s actual=%s",
-			nodeData.Code,
-			nodeCode,
-		)
+		return fmt.Errorf("任务执行节点不匹配: expect=%s actual=%s", nodeData.Code, nodeCode)
 	}
 
-	// 已完成的任务不重复处理
+	// 已完成的执行记录不重复处理
 	if runData.Status == 3 || runData.Status == 4 {
 		return nil
 	}
@@ -71,45 +66,67 @@ func (s *Service) MarkResult(
 		return fmt.Errorf("开启事务失败: %w", err)
 	}
 
-	// 更新执行记录
+	// 创建执行结果更新
 	runUpdate := tx.DispatchTaskRun.
-		UpdateOneID(runData.ID).
-		SetFinishedAt(time.Now())
+		Update().
+		Where(
+			dispatchtaskrun.IDEQ(runData.ID),
+			dispatchtaskrun.StatusIn(1, 2),
+		).
+		SetFinishedAt(time.Now()) // 执行结束时间
 
 	if success {
 		// 标记执行成功
 		runUpdate.
-			SetStatus(3). // 执行状态: 1待执行, 2执行中, 3成功, 4失败
-			SetResult(json.RawMessage(result))
+			SetStatus(3).     // 执行状态: 3成功
+			SetResult(result) // 执行结果
 	} else {
 		// 标记执行失败
 		runUpdate.
-			SetStatus(4). // 执行状态: 1待执行, 2执行中, 3成功, 4失败
-			SetErrorMessage(errorMessage)
+			SetStatus(4).                 // 执行状态: 4失败
+			SetErrorMessage(errorMessage) // 执行失败原因
 	}
 
 	// 保存执行结果
-	if err = runUpdate.Exec(ctx); err != nil {
+	affected, err := runUpdate.Save(ctx)
+	if err != nil {
 		_ = tx.Rollback()
 		return fmt.Errorf("更新任务执行结果失败: %w", err)
 	}
 
-	// 更新任务状态
-	if success {
-		err = tx.DispatchTask.
-			UpdateOneID(taskData.ID).
-			SetStatus(3). // 任务状态: 1待执行, 2执行中, 3成功, 4失败
-			Exec(ctx)
-	} else {
-		err = tx.DispatchTask.
-			UpdateOneID(taskData.ID).
-			SetStatus(4). // 任务状态: 1待执行, 2执行中, 3成功, 4失败
-			Exec(ctx)
+	// 执行记录已经被其他结果处理时直接忽略
+	if affected == 0 {
+		_ = tx.Rollback()
+		return nil
 	}
 
+	// 当前执行记录后面存在新的执行记录时, 不覆盖任务整体状态
+	hasNewerRun, err := tx.DispatchTaskRun.
+		Query().
+		Where(
+			dispatchtaskrun.TaskIDEQ(taskData.ID),
+			dispatchtaskrun.RunNoGT(runNo),
+		).
+		Exist(ctx)
 	if err != nil {
 		_ = tx.Rollback()
-		return fmt.Errorf("更新任务状态失败: %w", err)
+		return fmt.Errorf("检查后续任务执行记录失败: %w", err)
+	}
+
+	// 当前为最新执行记录时更新任务整体状态
+	if !hasNewerRun {
+		taskStatus := int64(4)
+		if success {
+			taskStatus = 3
+		}
+
+		if err = tx.DispatchTask.
+			UpdateOneID(taskData.ID).
+			SetStatus(taskStatus). // 任务状态: 3成功, 4失败
+			Exec(ctx); err != nil {
+			_ = tx.Rollback()
+			return fmt.Errorf("更新任务状态失败: %w", err)
+		}
 	}
 
 	// 提交事务
