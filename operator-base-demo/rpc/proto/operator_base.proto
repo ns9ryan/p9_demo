@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package operator_base;
+
+option go_package = "oa.98ent.com/p9/operator-base/rpc/pb/operatorbaserpc";
+
+import "types/operator_base_operator.proto";
+
+// 厅 operator 服务
+service OperatorService {
+  // 初始化厅 operator
+  rpc Initialize(operator_base_operator.InitializeOperatorRequest) returns (operator_base_operator.InitializeOperatorResponse);
+}
