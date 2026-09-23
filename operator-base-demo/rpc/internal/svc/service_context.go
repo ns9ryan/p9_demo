@@ -4,6 +4,7 @@ import (
 	"oa.98ent.com/p9/operator-base/rpc/ent"
 	_ "oa.98ent.com/p9/operator-base/rpc/ent/runtime"
 	"oa.98ent.com/p9/operator-base/rpc/internal/config"
+	operatorservice "oa.98ent.com/p9/operator-base/rpc/internal/operator"
 
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/service"
@@ -11,8 +12,9 @@ import (
 
 // ServiceContext 服务上下文
 type ServiceContext struct {
-	Config config.Config
-	DB     *ent.Client // Ent数据库客户端
+	Config   config.Config
+	DB       *ent.Client              // Ent数据库客户端
+	Operator *operatorservice.Service // operator业务服务
 }
 
 // NewServiceContext 创建服务上下文
@@ -35,9 +37,13 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	// 创建Ent数据库客户端
 	db := ent.NewClient(entOpts...)
 
+	// 创建operator业务服务
+	operatorService := operatorservice.NewService(db)
+
 	// 返回服务上下文
 	return &ServiceContext{
-		Config: c,
-		DB:     db,
+		Config:   c,
+		DB:       db,
+		Operator: operatorService,
 	}
 }
