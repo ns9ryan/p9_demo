@@ -23,11 +23,18 @@ func main() {
 
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
+
 	ctx := svc.NewServiceContext(c)
+	defer ctx.DB.Close()
+
+	// 执行数据库自动迁移
+	ctx.MustMigrate()
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
+		// 厅 operator 服务
 		operatorbaserpc.RegisterOperatorServiceServer(grpcServer, operatorserviceServer.NewOperatorServiceServer(ctx))
 
+		// 开发和测试环境额外开启服务反射
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)
 		}
