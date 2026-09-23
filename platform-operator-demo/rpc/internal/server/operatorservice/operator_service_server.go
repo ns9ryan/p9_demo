@@ -42,6 +42,12 @@ func (s *OperatorServiceServer) Get(ctx context.Context, in *operatorpb.GetOpera
 	return l.Get(in)
 }
 
+// 获取分站初始化数据
+func (s *OperatorServiceServer) GetInitializationData(ctx context.Context, in *operatorpb.GetInitializationDataRequest) (*operatorpb.GetInitializationDataResponse, error) {
+	l := operatorservicelogic.NewGetInitializationDataLogic(ctx, s.svcCtx)
+	return l.GetInitializationData(in)
+}
+
 // 获取分站管理列表
 func (s *OperatorServiceServer) List(ctx context.Context, in *operatorpb.ListOperatorsRequest) (*operatorpb.ListOperatorsResponse, error) {
 	l := operatorservicelogic.NewListLogic(ctx, s.svcCtx)

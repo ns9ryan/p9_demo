@@ -31,6 +31,9 @@ service OperatorService {
   // 获取分站
   rpc Get(platform_operator_operator.GetOperatorRequest) returns (platform_operator_operator.GetOperatorResponse);
 
+  // 获取分站初始化数据
+  rpc GetInitializationData(platform_operator_operator.GetInitializationDataRequest) returns (platform_operator_operator.GetInitializationDataResponse);
+
   // 获取分站管理列表
   rpc List(platform_operator_operator.ListOperatorsRequest) returns (platform_operator_operator.ListOperatorsResponse);
 

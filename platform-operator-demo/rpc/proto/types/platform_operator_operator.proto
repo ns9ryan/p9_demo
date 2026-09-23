@@ -135,3 +135,45 @@ message DeleteOperatorRequest {
 
 // 删除分站响应
 message DeleteOperatorResponse {}
+
+// 分站初始化基础信息
+message InitializationInfo {
+  // 分站全局唯一业务编码
+  string code = 1;
+  // 分站名称
+  string name = 2;
+  // IANA 时区编码
+  string timezone_code = 3;
+  // 结算币种编码
+  string settlement_currency_code = 4;
+  // 分站状态: 1正常, 2暂停, 3关闭
+  int64 status = 5;
+}
+
+// 分站初始化域名信息
+message DomainInitializationInfo {
+  // 域名, 不包含协议和端口
+  string domain_name = 1;
+  // 域名类型: 1分站后台, 2代理后台, 3会员H5
+  int64 domain_type = 2;
+}
+
+// 获取分站初始化数据请求
+message GetInitializationDataRequest {
+  // 分站全局唯一业务编码
+  string operator_code = 1;
+}
+
+// 获取分站初始化数据响应
+message GetInitializationDataResponse {
+  // 分站基础信息
+  InitializationInfo operator = 1;
+  // 当前启用域名
+  repeated DomainInitializationInfo domains = 2;
+  // 当前分配的语言编码
+  repeated string language_codes = 3;
+  // 当前分配的经营地区编码
+  repeated string region_codes = 4;
+  // 当前分配的代理子线路编码
+  repeated string agent_line_codes = 5;
+}

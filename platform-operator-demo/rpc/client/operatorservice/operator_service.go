@@ -23,6 +23,8 @@ type (
 		Update(ctx context.Context, in *operatorpb.UpdateOperatorRequest, opts ...grpc.CallOption) (*operatorpb.UpdateOperatorResponse, error)
 		// 获取分站
 		Get(ctx context.Context, in *operatorpb.GetOperatorRequest, opts ...grpc.CallOption) (*operatorpb.GetOperatorResponse, error)
+		// 获取分站初始化数据
+		GetInitializationData(ctx context.Context, in *operatorpb.GetInitializationDataRequest, opts ...grpc.CallOption) (*operatorpb.GetInitializationDataResponse, error)
 		// 获取分站管理列表
 		List(ctx context.Context, in *operatorpb.ListOperatorsRequest, opts ...grpc.CallOption) (*operatorpb.ListOperatorsResponse, error)
 		// 完成分站创建
@@ -60,6 +62,12 @@ func (m *defaultOperatorService) Update(ctx context.Context, in *operatorpb.Upda
 func (m *defaultOperatorService) Get(ctx context.Context, in *operatorpb.GetOperatorRequest, opts ...grpc.CallOption) (*operatorpb.GetOperatorResponse, error) {
 	client := platformoperatorrpc.NewOperatorServiceClient(m.cli.Conn())
 	return client.Get(ctx, in, opts...)
+}
+
+// 获取分站初始化数据
+func (m *defaultOperatorService) GetInitializationData(ctx context.Context, in *operatorpb.GetInitializationDataRequest, opts ...grpc.CallOption) (*operatorpb.GetInitializationDataResponse, error) {
+	client := platformoperatorrpc.NewOperatorServiceClient(m.cli.Conn())
+	return client.GetInitializationData(ctx, in, opts...)
 }
 
 // 获取分站管理列表
