@@ -1,6 +1,6 @@
 {
   "common": {
-    "success": "ok",
+    "success": "Success",
     "unauthorized": "unauthorized",
     "forbidden": "forbidden",
     "notFound": "not found",

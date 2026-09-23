@@ -3,7 +3,6 @@ package i18n
 import (
 	"context"
 
-	"oa.98ent.com/p9/common/i18n"
 	"oa.98ent.com/p9/core/api/internal/convert"
 	"oa.98ent.com/p9/core/api/internal/svc"
 	"oa.98ent.com/p9/core/api/internal/types"
@@ -31,5 +30,5 @@ func (l *GetEnabledI18nLangsLogic) GetEnabledI18nLangs() (resp *types.I18nLangLi
 	if err != nil {
 		return nil, err
 	}
-	return convert.I18nLangList(l.ctx, i18n.CodeByPartnerMode(l.svcCtx.Config.PartnerMode), out), nil
+	return convert.I18nLangList(l.ctx, l.svcCtx.Config.GetI18nCode(), out), nil
 }

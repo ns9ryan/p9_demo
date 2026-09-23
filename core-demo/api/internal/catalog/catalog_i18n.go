@@ -228,6 +228,7 @@ func errorI18n(i18nCode string) []*coreclient.I18NItem {
 	add("common.forbidden", "无权限", "無權限", "Forbidden")
 	add("common.tokenExpired", "登录已过期", "登錄已過期", "Login expired")
 	add("common.internal", "内部错误", "內部錯誤", "Internal error")
+	add("common.internalError", "内部错误", "內部錯誤", "Internal error")
 	add("common.notFound", "资源不存在", "資源不存在", "Resource not found")
 	add("common.badRequest", "请求错误", "請求錯誤", "Bad request")
 	add("common.timeout", "请求超时", "請求超時", "Request timeout")

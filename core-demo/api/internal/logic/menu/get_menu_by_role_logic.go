@@ -3,7 +3,6 @@ package menu
 import (
 	"context"
 
-	"oa.98ent.com/p9/common/i18n"
 	"oa.98ent.com/p9/core/api/internal/convert"
 	"oa.98ent.com/p9/core/api/internal/svc"
 	"oa.98ent.com/p9/core/api/internal/types"
@@ -31,5 +30,5 @@ func (l *GetMenuByRoleLogic) GetMenuByRole() (resp []types.MenuNode, err error) 
 	if err != nil {
 		return nil, err
 	}
-	return convert.MenuNodes(l.ctx, i18n.CodeByPartnerMode(l.svcCtx.Config.PartnerMode), out.GetList()), nil
+	return convert.MenuNodes(l.ctx, l.svcCtx.Config.GetI18nCode(), out.GetList()), nil
 }

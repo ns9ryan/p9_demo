@@ -1,6 +1,6 @@
 {
   "common": {
-    "success": "ok",
+    "success": "成功",
     "unauthorized": "未登录",
     "forbidden": "无权限",
     "notFound": "不存在",
