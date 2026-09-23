@@ -38,8 +38,12 @@ P9 默认开发端口按部署域划分。
 
 ## Operator
 
-厅侧当前预留 `38xxx / 39xxx` 端口段。
+| 服务 | API | RPC |
+|---|---:|---:|
+| operator-base | `38001` | `39001` |
 
-`operator-base` 等厅侧服务的具体端口，在对应服务运行方式和接口边界确认后再补充。
+说明：
 
-`node-agent` 主动连接 node-dispatch WebSocket，当前不分配固定对外监听端口。
+- `38001` 用于厅后台访问 operator-base HTTP API，当前先预留，API 后续实现
+- `39001` 用于 node-agent 等厅侧内部服务调用 operator-base RPC
+- `node-agent` 主动连接 node-dispatch WebSocket，当前不分配固定对外监听端口
