@@ -23,11 +23,13 @@ type OperatorLanguage struct {
 func (OperatorLanguage) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int64("operator_id").
+			Immutable().
 			Comment("所属 operator 本地主键"),
 
 		field.String("language_code").
 			NotEmpty().
 			MaxLen(16).
+			Immutable().
 			Comment("系统语言唯一业务编码"),
 
 		field.Time("created_at").
@@ -47,7 +49,8 @@ func (OperatorLanguage) Edges() []ent.Edge {
 			Ref("languages").
 			Field("operator_id").
 			Unique().
-			Required(),
+			Required().
+			Immutable(),
 	}
 }
 

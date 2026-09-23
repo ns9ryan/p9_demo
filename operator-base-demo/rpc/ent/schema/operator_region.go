@@ -24,6 +24,7 @@ type OperatorRegion struct {
 func (OperatorRegion) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int64("operator_id").
+			Immutable().
 			Comment("所属 operator 本地主键"),
 
 		field.String("region_code").
@@ -31,6 +32,7 @@ func (OperatorRegion) Fields() []ent.Field {
 			MinLen(2).
 			MaxLen(2).
 			Match(regexp.MustCompile(`^[A-Z]{2}$`)).
+			Immutable().
 			Comment("国家或地区唯一业务编码"),
 
 		field.Time("created_at").
@@ -50,7 +52,8 @@ func (OperatorRegion) Edges() []ent.Edge {
 			Ref("regions").
 			Field("operator_id").
 			Unique().
-			Required(),
+			Required().
+			Immutable(),
 	}
 }
 

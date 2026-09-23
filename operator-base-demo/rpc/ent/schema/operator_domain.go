@@ -27,6 +27,7 @@ type OperatorDomain struct {
 func (OperatorDomain) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int64("operator_id").
+			Immutable().
 			Comment("所属 operator 本地主键"),
 
 		field.String("domain_name").
@@ -37,6 +38,7 @@ func (OperatorDomain) Fields() []ent.Field {
 
 		field.Int64("domain_type").
 			Range(1, 3).
+			Immutable().
 			SchemaType(map[string]string{
 				dialect.Postgres: "smallint",
 			}).
@@ -51,7 +53,8 @@ func (OperatorDomain) Edges() []ent.Edge {
 			Ref("domains").
 			Field("operator_id").
 			Unique().
-			Required(),
+			Required().
+			Immutable(),
 	}
 }
 

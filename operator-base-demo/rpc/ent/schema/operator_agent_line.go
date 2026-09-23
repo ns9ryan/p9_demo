@@ -23,11 +23,13 @@ type OperatorAgentLine struct {
 func (OperatorAgentLine) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int64("operator_id").
+			Immutable().
 			Comment("所属 operator 本地主键"),
 
 		field.String("agent_line_code").
 			NotEmpty().
 			MaxLen(32).
+			Immutable().
 			Comment("代理子线路编码"),
 
 		field.Time("created_at").
@@ -47,7 +49,8 @@ func (OperatorAgentLine) Edges() []ent.Edge {
 			Ref("agent_lines").
 			Field("operator_id").
 			Unique().
-			Required(),
+			Required().
+			Immutable(),
 	}
 }
 
