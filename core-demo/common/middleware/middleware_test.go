@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"oa.98ent.com/p9/core/common/ctxdata"
+	"oa.98ent.com/p9/common/ctxdata"
 )
 
 func TestPreviewWriteDenied(t *testing.T) {

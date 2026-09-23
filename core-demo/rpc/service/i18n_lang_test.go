@@ -4,8 +4,10 @@ import (
 	"context"
 	"testing"
 
-	"oa.98ent.com/p9/core/common/i18n"
-	"oa.98ent.com/p9/core/common/xerr"
+	"oa.98ent.com/p9/common/i18n"
+	"oa.98ent.com/p9/common/xerr"
+
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 )
 
 func testLangSeeds() []CreateI18nLangReq {
@@ -110,7 +112,7 @@ func TestI18nLangCreateRules(t *testing.T) {
 
 	if _, err := d.CreateI18nLang(ctx, CreateI18nLangReq{Lang: "  ja-JP  "}); err == nil {
 		t.Fatal("expected name required")
-	} else if got := xerr.AsError(err); got.Message != i18n.I18nNameRequired {
+	} else if got := xerr.AsError(err); got.Message != coreI18n.I18nNameRequired {
 		t.Fatalf("name required=%v", got.Message)
 	}
 	row, err := d.CreateI18nLang(ctx, CreateI18nLangReq{Lang: "  ja-JP  ", Name: " 日本語 "})
@@ -122,7 +124,7 @@ func TestI18nLangCreateRules(t *testing.T) {
 	}
 	if _, err := d.CreateI18nLang(ctx, CreateI18nLangReq{Lang: "ja-JP", Name: "Japanese"}); err == nil {
 		t.Fatal("expected duplicate lang")
-	} else if got := xerr.AsError(err); got.Message != i18n.I18nLangExists {
+	} else if got := xerr.AsError(err); got.Message != coreI18n.I18nLangExists {
 		t.Fatalf("duplicate=%v", got.Message)
 	}
 
@@ -170,12 +172,12 @@ func TestI18nLangBlockedWhenEntriesExist(t *testing.T) {
 	back := "ja-JP"
 	if err := d.UpdateI18nLang(ctx, UpdateI18nLangReq{ID: got.ID, Lang: &back}); err == nil {
 		t.Fatal("expected cannot change lang with entries")
-	} else if got := xerr.AsError(err); got.Message != i18n.I18nCannotChangeLangWithEntries {
+	} else if got := xerr.AsError(err); got.Message != coreI18n.I18nCannotChangeLangWithEntries {
 		t.Fatalf("change lang=%v", got.Message)
 	}
 	if err := d.DeleteI18nLangs(ctx, []int64{row.ID}); err == nil {
 		t.Fatal("expected cannot delete lang with entries")
-	} else if got := xerr.AsError(err); got.Message != i18n.I18nCannotDeleteLangWithEntries {
+	} else if got := xerr.AsError(err); got.Message != coreI18n.I18nCannotDeleteLangWithEntries {
 		t.Fatalf("delete lang=%v", got.Message)
 	}
 }
@@ -185,7 +187,7 @@ func TestCreateI18nRequiresSupportedLang(t *testing.T) {
 	ctx := context.Background()
 	if _, err := d.CreateI18n(ctx, CreateI18nReq{I18nGroup: "menu", TransKey: "route.demo", Lang: "ja-JP", Value: "demo"}); err == nil {
 		t.Fatal("expected unsupported lang")
-	} else if got := xerr.AsError(err); got.Message != i18n.I18nLangNotSupported {
+	} else if got := xerr.AsError(err); got.Message != coreI18n.I18nLangNotSupported {
 		t.Fatalf("unsupported=%v", got.Message)
 	}
 	if _, err := d.CreateI18nLang(ctx, CreateI18nLangReq{Lang: "ja-JP", Name: "日本語"}); err != nil {
@@ -196,7 +198,7 @@ func TestCreateI18nRequiresSupportedLang(t *testing.T) {
 	}
 	if err := d.UpdateI18nByKey(ctx, UpdateI18nByKeyReq{TransKey: "menu.route.demo", Data: map[string]string{"fr-FR": "x"}}); err == nil {
 		t.Fatal("expected unsupported lang on by-key create")
-	} else if got := xerr.AsError(err); got.Message != i18n.I18nLangNotSupported {
+	} else if got := xerr.AsError(err); got.Message != coreI18n.I18nLangNotSupported {
 		t.Fatalf("by-key=%v", got.Message)
 	}
 }
@@ -292,12 +294,12 @@ func TestReorderI18nLang(t *testing.T) {
 
 	if err := d.ReorderI18nLang(ctx, 0, zh.ID); err == nil {
 		t.Fatal("expected invalid param")
-	} else if got := xerr.AsError(err); got.Message != i18n.InvalidParam {
+	} else if got := xerr.AsError(err); got.Message != coreI18n.InvalidParam {
 		t.Fatalf("invalid=%v", got.Message)
 	}
 	if err := d.ReorderI18nLang(ctx, en.ID, 99999); err == nil {
 		t.Fatal("expected not found")
-	} else if got := xerr.AsError(err); got.Message != i18n.I18nLangNotFound {
+	} else if got := xerr.AsError(err); got.Message != coreI18n.I18nLangNotFound {
 		t.Fatalf("not found=%v", got.Message)
 	}
 }

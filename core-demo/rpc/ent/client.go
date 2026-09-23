@@ -24,6 +24,7 @@ import (
 	"oa.98ent.com/p9/core/rpc/ent/loginlog"
 	"oa.98ent.com/p9/core/rpc/ent/menu"
 	"oa.98ent.com/p9/core/rpc/ent/role"
+	"oa.98ent.com/p9/core/rpc/ent/sysinit"
 	"oa.98ent.com/p9/core/rpc/ent/user"
 
 	stdsql "database/sql"
@@ -52,6 +53,8 @@ type Client struct {
 	Menu *MenuClient
 	// Role is the client for interacting with the Role builders.
 	Role *RoleClient
+	// SysInit is the client for interacting with the SysInit builders.
+	SysInit *SysInitClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 }
@@ -74,6 +77,7 @@ func (c *Client) init() {
 	c.LoginLog = NewLoginLogClient(c.config)
 	c.Menu = NewMenuClient(c.config)
 	c.Role = NewRoleClient(c.config)
+	c.SysInit = NewSysInitClient(c.config)
 	c.User = NewUserClient(c.config)
 }
 
@@ -176,6 +180,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		LoginLog:       NewLoginLogClient(cfg),
 		Menu:           NewMenuClient(cfg),
 		Role:           NewRoleClient(cfg),
+		SysInit:        NewSysInitClient(cfg),
 		User:           NewUserClient(cfg),
 	}, nil
 }
@@ -205,6 +210,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		LoginLog:       NewLoginLogClient(cfg),
 		Menu:           NewMenuClient(cfg),
 		Role:           NewRoleClient(cfg),
+		SysInit:        NewSysInitClient(cfg),
 		User:           NewUserClient(cfg),
 	}, nil
 }
@@ -236,7 +242,7 @@ func (c *Client) Close() error {
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
 		c.API, c.AdminActionLog, c.CasbinRule, c.ErrorLog, c.I18n, c.I18nLang,
-		c.LoginLog, c.Menu, c.Role, c.User,
+		c.LoginLog, c.Menu, c.Role, c.SysInit, c.User,
 	} {
 		n.Use(hooks...)
 	}
@@ -247,7 +253,7 @@ func (c *Client) Use(hooks ...Hook) {
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
 		c.API, c.AdminActionLog, c.CasbinRule, c.ErrorLog, c.I18n, c.I18nLang,
-		c.LoginLog, c.Menu, c.Role, c.User,
+		c.LoginLog, c.Menu, c.Role, c.SysInit, c.User,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -274,6 +280,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Menu.mutate(ctx, m)
 	case *RoleMutation:
 		return c.Role.mutate(ctx, m)
+	case *SysInitMutation:
+		return c.SysInit.mutate(ctx, m)
 	case *UserMutation:
 		return c.User.mutate(ctx, m)
 	default:
@@ -1582,6 +1590,139 @@ func (c *RoleClient) mutate(ctx context.Context, m *RoleMutation) (Value, error)
 	}
 }
 
+// SysInitClient is a client for the SysInit schema.
+type SysInitClient struct {
+	config
+}
+
+// NewSysInitClient returns a client for the SysInit from the given config.
+func NewSysInitClient(c config) *SysInitClient {
+	return &SysInitClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `sysinit.Hooks(f(g(h())))`.
+func (c *SysInitClient) Use(hooks ...Hook) {
+	c.hooks.SysInit = append(c.hooks.SysInit, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `sysinit.Intercept(f(g(h())))`.
+func (c *SysInitClient) Intercept(interceptors ...Interceptor) {
+	c.inters.SysInit = append(c.inters.SysInit, interceptors...)
+}
+
+// Create returns a builder for creating a SysInit entity.
+func (c *SysInitClient) Create() *SysInitCreate {
+	mutation := newSysInitMutation(c.config, OpCreate)
+	return &SysInitCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of SysInit entities.
+func (c *SysInitClient) CreateBulk(builders ...*SysInitCreate) *SysInitCreateBulk {
+	return &SysInitCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *SysInitClient) MapCreateBulk(slice any, setFunc func(*SysInitCreate, int)) *SysInitCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &SysInitCreateBulk{err: fmt.Errorf("calling to SysInitClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*SysInitCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &SysInitCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for SysInit.
+func (c *SysInitClient) Update() *SysInitUpdate {
+	mutation := newSysInitMutation(c.config, OpUpdate)
+	return &SysInitUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *SysInitClient) UpdateOne(_m *SysInit) *SysInitUpdateOne {
+	mutation := newSysInitMutation(c.config, OpUpdateOne, withSysInit(_m))
+	return &SysInitUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *SysInitClient) UpdateOneID(id int64) *SysInitUpdateOne {
+	mutation := newSysInitMutation(c.config, OpUpdateOne, withSysInitID(id))
+	return &SysInitUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for SysInit.
+func (c *SysInitClient) Delete() *SysInitDelete {
+	mutation := newSysInitMutation(c.config, OpDelete)
+	return &SysInitDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *SysInitClient) DeleteOne(_m *SysInit) *SysInitDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *SysInitClient) DeleteOneID(id int64) *SysInitDeleteOne {
+	builder := c.Delete().Where(sysinit.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &SysInitDeleteOne{builder}
+}
+
+// Query returns a query builder for SysInit.
+func (c *SysInitClient) Query() *SysInitQuery {
+	return &SysInitQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeSysInit},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a SysInit entity by its id.
+func (c *SysInitClient) Get(ctx context.Context, id int64) (*SysInit, error) {
+	return c.Query().Where(sysinit.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *SysInitClient) GetX(ctx context.Context, id int64) *SysInit {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *SysInitClient) Hooks() []Hook {
+	return c.hooks.SysInit
+}
+
+// Interceptors returns the client interceptors.
+func (c *SysInitClient) Interceptors() []Interceptor {
+	return c.inters.SysInit
+}
+
+func (c *SysInitClient) mutate(ctx context.Context, m *SysInitMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&SysInitCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&SysInitUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&SysInitUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&SysInitDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown SysInit mutation op: %q", m.Op())
+	}
+}
+
 // UserClient is a client for the User schema.
 type UserClient struct {
 	config
@@ -1785,11 +1926,11 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 type (
 	hooks struct {
 		API, AdminActionLog, CasbinRule, ErrorLog, I18n, I18nLang, LoginLog, Menu, Role,
-		User []ent.Hook
+		SysInit, User []ent.Hook
 	}
 	inters struct {
 		API, AdminActionLog, CasbinRule, ErrorLog, I18n, I18nLang, LoginLog, Menu, Role,
-		User []ent.Interceptor
+		SysInit, User []ent.Interceptor
 	}
 )
 

@@ -3,7 +3,7 @@ package coreadapt
 import (
 	"context"
 
-	"oa.98ent.com/p9/core/common/errorlog"
+	"oa.98ent.com/p9/common/errorlog"
 	"oa.98ent.com/p9/core/rpc/coreclient"
 
 	"github.com/zeromicro/go-zero/core/logx"

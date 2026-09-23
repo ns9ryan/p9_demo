@@ -4,11 +4,11 @@ import (
 	"context"
 	"net/http"
 
+	"oa.98ent.com/p9/common/ctxdata"
+	"oa.98ent.com/p9/common/utils"
 	"oa.98ent.com/p9/core/api/internal/convert"
 	"oa.98ent.com/p9/core/api/internal/svc"
 	"oa.98ent.com/p9/core/api/internal/types"
-	"oa.98ent.com/p9/core/common/ctxdata"
-	"oa.98ent.com/p9/core/common/utils"
 	"oa.98ent.com/p9/core/rpc/coreclient"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -47,5 +47,5 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	if err != nil {
 		return nil, err
 	}
-	return convert.LoginResp(ctx, out), nil
+	return convert.LoginResp(ctx, l.svcCtx.Trans, out), nil
 }

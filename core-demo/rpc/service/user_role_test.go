@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"oa.98ent.com/p9/core/common/i18n"
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/rpc/model"
 )
 
@@ -27,7 +27,7 @@ func TestRolesOfUsers(t *testing.T) {
 		t.Fatal(err)
 	}
 	sys, err := d.Client.Role.Create().
-		SetRoleCode(RoleSuperAdmin).SetRoleName(i18n.RoleSuperAdmin).SetStatus(model.StatusNormal).SetSortNo(1).Save(ctx)
+		SetRoleCode(RoleSuperAdmin).SetRoleName(coreI18n.RoleSuperAdmin).SetStatus(model.StatusNormal).SetSortNo(1).Save(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -65,7 +65,7 @@ func TestRolesOfUsers(t *testing.T) {
 	if !reflect.DeepEqual(got[admin.ID].Codes, []string{RoleSuperAdmin, "editor"}) {
 		t.Fatalf("admin codes=%v", got[admin.ID].Codes)
 	}
-	if !reflect.DeepEqual(got[admin.ID].Names, []string{i18n.RoleSuperAdmin, "运营"}) {
+	if !reflect.DeepEqual(got[admin.ID].Names, []string{coreI18n.RoleSuperAdmin, "运营"}) {
 		t.Fatalf("admin names=%v", got[admin.ID].Names)
 	}
 	if !reflect.DeepEqual(got[mixed.ID].Codes, []string{"editor"}) || !reflect.DeepEqual(got[mixed.ID].Names, []string{"运营"}) {

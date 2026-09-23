@@ -3,8 +3,8 @@ package auth
 import (
 	"context"
 
-	"oa.98ent.com/p9/core/common/i18n"
-	"oa.98ent.com/p9/core/common/xerr"
+	"oa.98ent.com/p9/common/xerr"
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/rpc/bootstrap"
 	"oa.98ent.com/p9/core/rpc/internal/logic"
 	"oa.98ent.com/p9/core/rpc/internal/svc"
@@ -30,7 +30,7 @@ func NewBootstrapOperatorLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 
 func (l *BootstrapOperatorLogic) BootstrapOperator(in *core.BootstrapOperatorReq) (*core.UserPublic, error) {
 	if l.svcCtx.Config.InitToken == "" || in.InitToken != l.svcCtx.Config.InitToken {
-		return nil, xerr.RpcErr(xerr.Unauthorized(i18n.AuthInvalidInitToken))
+		return nil, xerr.RpcErr(xerr.Unauthorized(coreI18n.AuthInvalidInitToken))
 	}
 	u, err := bootstrap.CreateOperatorAdmin(l.ctx, l.svcCtx.Deps, bootstrap.CreateOperatorAdminReq{
 		OperatorCode: in.OperatorCode, Username: in.Username,

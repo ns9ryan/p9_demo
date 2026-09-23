@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"oa.98ent.com/p9/core/common/ctxdata"
-	"oa.98ent.com/p9/core/common/errorlog"
-	"oa.98ent.com/p9/core/common/response"
+	"oa.98ent.com/p9/common/ctxdata"
+	"oa.98ent.com/p9/common/errorlog"
+	"oa.98ent.com/p9/common/response"
 )
 
 type errChanRecorder struct {

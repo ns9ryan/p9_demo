@@ -29,5 +29,5 @@ func (l *CreateRoleLogic) CreateRole(req *types.CreateRoleReq) (resp *types.Role
 	if err != nil {
 		return nil, err
 	}
-	return convert.RoleInfo(l.ctx, out), nil
+	return convert.RoleInfo(l.ctx, l.svcCtx.Trans, out), nil
 }

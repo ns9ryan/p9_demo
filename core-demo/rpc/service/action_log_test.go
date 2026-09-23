@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"oa.98ent.com/p9/core/common/ctxdata"
+	"oa.98ent.com/p9/common/ctxdata"
 	"oa.98ent.com/p9/core/rpc/ent"
 	"oa.98ent.com/p9/core/rpc/ent/adminactionlog"
 	"oa.98ent.com/p9/core/rpc/model"

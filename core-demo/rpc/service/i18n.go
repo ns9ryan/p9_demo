@@ -4,8 +4,9 @@ import (
 	"context"
 	"strings"
 
-	"oa.98ent.com/p9/core/common/i18n"
-	"oa.98ent.com/p9/core/common/xerr"
+	"oa.98ent.com/p9/common/i18n"
+	"oa.98ent.com/p9/common/xerr"
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/rpc/ent"
 	enti18n "oa.98ent.com/p9/core/rpc/ent/i18n"
 	"oa.98ent.com/p9/core/rpc/model"
@@ -77,14 +78,14 @@ func (d *Deps) CreateI18n(ctx context.Context, req CreateI18nReq) (*model.I18n, 
 		return nil, err
 	}
 	if taken {
-		return nil, xerr.BadRequest(i18n.I18nExists)
+		return nil, xerr.BadRequest(coreI18n.I18nExists)
 	}
 	row, err := d.Client.I18n.Create().
 		SetI18nCode(norm.I18nCode).SetI18nGroup(norm.I18nGroup).SetTransKey(norm.TransKey).
 		SetLang(norm.Lang).SetValue(norm.Value).
 		Save(ctx)
 	if err != nil {
-		return nil, xerr.BadRequest(i18n.I18nCreateFailed)
+		return nil, xerr.BadRequest(coreI18n.I18nCreateFailed)
 	}
 	out := i18nFromEnt(row)
 	return &out, nil
@@ -110,7 +111,7 @@ func (d *Deps) UpdateI18n(ctx context.Context, req UpdateI18nReq) error {
 		return err
 	}
 	if taken {
-		return xerr.BadRequest(i18n.I18nExists)
+		return xerr.BadRequest(coreI18n.I18nExists)
 	}
 	return d.Client.I18n.UpdateOneID(row.ID).
 		SetI18nCode(norm.I18nCode).SetI18nGroup(norm.I18nGroup).SetTransKey(norm.TransKey).
@@ -133,14 +134,14 @@ func (d *Deps) DeleteI18ns(ctx context.Context, ids []int64) error {
 func (d *Deps) DeleteI18nsByKey(ctx context.Context, code, group, transKey string) error {
 	key := strings.TrimSpace(transKey)
 	if key == "" {
-		return xerr.BadRequest(i18n.I18nTransKeyRequired)
+		return xerr.BadRequest(coreI18n.I18nTransKeyRequired)
 	}
 	group = strings.TrimSpace(group)
 	if group == "" {
 		group = inferI18nGroup(key)
 	}
 	if group == "" {
-		return xerr.BadRequest(i18n.I18nGroupKeyLangRequired)
+		return xerr.BadRequest(coreI18n.I18nGroupKeyLangRequired)
 	}
 	code = normalizeI18nCode(code)
 	key = concatTransKey(group, key)
@@ -151,7 +152,7 @@ func (d *Deps) DeleteI18nsByKey(ctx context.Context, code, group, transKey strin
 		return err
 	}
 	if n == 0 {
-		return xerr.NotFound(i18n.I18nNotFound)
+		return xerr.NotFound(coreI18n.I18nNotFound)
 	}
 	return nil
 }
@@ -210,7 +211,7 @@ func (d *Deps) GetI18nDict(ctx context.Context, code, group, lang string) (map[s
 func (d *Deps) ExportI18ns(ctx context.Context, lang, code, group string) ([]I18nFileItem, error) {
 	lang = strings.TrimSpace(lang)
 	if lang == "" {
-		return nil, xerr.BadRequest(i18n.I18nLangRequired)
+		return nil, xerr.BadRequest(coreI18n.I18nLangRequired)
 	}
 	code = strings.TrimSpace(code)
 	group = strings.TrimSpace(group)
@@ -240,10 +241,10 @@ func (d *Deps) ExportI18ns(ctx context.Context, lang, code, group string) ([]I18
 func (d *Deps) ImportI18ns(ctx context.Context, lang string, items []I18nFileItem) (ImportI18nResult, error) {
 	lang = strings.TrimSpace(lang)
 	if lang == "" {
-		return ImportI18nResult{}, xerr.BadRequest(i18n.I18nLangRequired)
+		return ImportI18nResult{}, xerr.BadRequest(coreI18n.I18nLangRequired)
 	}
 	if len(items) == 0 {
-		return ImportI18nResult{}, xerr.BadRequest(i18n.I18nDataRequired)
+		return ImportI18nResult{}, xerr.BadRequest(coreI18n.I18nDataRequired)
 	}
 	if err := d.requireSupportedLang(ctx, lang); err != nil {
 		return ImportI18nResult{}, err
@@ -279,7 +280,7 @@ func (d *Deps) ImportI18ns(ctx context.Context, lang string, items []I18nFileIte
 			}
 		}
 		if valid == 0 {
-			return xerr.BadRequest(i18n.I18nDataRequired)
+			return xerr.BadRequest(coreI18n.I18nDataRequired)
 		}
 		return nil
 	})
@@ -290,6 +291,10 @@ func (d *Deps) ImportI18ns(ctx context.Context, lang string, items []I18nFileIte
 }
 
 func (d *Deps) UpsertI18n(ctx context.Context, item I18nItem) error {
+	return d.upsertI18n(ctx, item, false)
+}
+
+func (d *Deps) upsertI18n(ctx context.Context, item I18nItem, insertOnly bool) error {
 	norm, err := normalizeI18n(item.I18nCode, item.I18nGroup, item.TransKey, item.Lang, item.Value)
 	if err != nil {
 		return err
@@ -310,16 +315,19 @@ func (d *Deps) UpsertI18n(ctx context.Context, item I18nItem) error {
 	if err != nil {
 		return err
 	}
+	if insertOnly {
+		return nil
+	}
 	return d.Client.I18n.UpdateOne(exist).SetI18nGroup(norm.I18nGroup).SetValue(norm.Value).Exec(ctx)
 }
 
 func (d *Deps) UpdateI18nByKey(ctx context.Context, req UpdateI18nByKeyReq) error {
 	key := strings.TrimSpace(req.TransKey)
 	if key == "" {
-		return xerr.BadRequest(i18n.I18nTransKeyRequired)
+		return xerr.BadRequest(coreI18n.I18nTransKeyRequired)
 	}
 	if len(req.Data) == 0 {
-		return xerr.BadRequest(i18n.I18nDataRequired)
+		return xerr.BadRequest(coreI18n.I18nDataRequired)
 	}
 	code := strings.TrimSpace(req.I18nCode)
 	group := strings.TrimSpace(req.I18nGroup)
@@ -342,7 +350,7 @@ func (d *Deps) UpdateI18nByKey(ctx context.Context, req UpdateI18nByKeyReq) erro
 		}
 	}
 	if !wrote {
-		return xerr.BadRequest(i18n.I18nDataRequired)
+		return xerr.BadRequest(coreI18n.I18nDataRequired)
 	}
 	return nil
 }
@@ -420,7 +428,7 @@ func (d *Deps) i18nByID(ctx context.Context, id int64) (model.I18n, error) {
 	row, err := d.Client.I18n.Get(ctx, id)
 	if err != nil {
 		if ent.IsNotFound(err) {
-			return model.I18n{}, xerr.NotFound(i18n.I18nNotFound)
+			return model.I18n{}, xerr.NotFound(coreI18n.I18nNotFound)
 		}
 		return model.I18n{}, err
 	}
@@ -453,7 +461,7 @@ func normalizeI18n(code, group, key, lang, value string) (i18nNorm, error) {
 	}
 	out.TransKey = concatTransKey(out.I18nGroup, out.TransKey)
 	if out.I18nGroup == "" || out.TransKey == "" || out.Lang == "" {
-		return i18nNorm{}, xerr.BadRequest(i18n.I18nGroupKeyLangRequired)
+		return i18nNorm{}, xerr.BadRequest(coreI18n.I18nGroupKeyLangRequired)
 	}
 	return out, nil
 }
@@ -471,7 +479,7 @@ func concatTransKey(group, key string) string {
 		return key
 	}
 	prefix := group + "."
-	if strings.HasPrefix(key, prefix) {
+	if strings.HasPrefix(key, prefix) || group == i18n.GroupError {
 		return key
 	}
 	return prefix + key

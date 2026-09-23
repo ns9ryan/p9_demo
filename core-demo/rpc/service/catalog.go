@@ -4,8 +4,8 @@ import (
 	"context"
 	"strings"
 
-	"oa.98ent.com/p9/core/common/i18n"
-	"oa.98ent.com/p9/core/common/xerr"
+	"oa.98ent.com/p9/common/xerr"
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/rpc/casbinx"
 	"oa.98ent.com/p9/core/rpc/ent"
 	"oa.98ent.com/p9/core/rpc/ent/api"
@@ -74,10 +74,10 @@ func (d *Deps) CreateMenu(ctx context.Context, req CreateMenuReq) (*model.Menu, 
 	req.Name = strings.TrimSpace(req.Name)
 	req.Title = strings.TrimSpace(req.Title)
 	if req.Name == "" || req.Title == "" {
-		return nil, xerr.BadRequest(i18n.MenuNameTitleRequired)
+		return nil, xerr.BadRequest(coreI18n.MenuNameTitleRequired)
 	}
 	if !validMenuType(req.MenuType) {
-		return nil, xerr.BadRequest(i18n.MenuInvalidType)
+		return nil, xerr.BadRequest(coreI18n.MenuInvalidType)
 	}
 	if err := d.assertMenuParent(ctx, 0, req.ParentID); err != nil {
 		return nil, err
@@ -87,7 +87,7 @@ func (d *Deps) CreateMenu(ctx context.Context, req CreateMenuReq) (*model.Menu, 
 		return nil, err
 	}
 	if taken {
-		return nil, xerr.BadRequest(i18n.MenuNameExists)
+		return nil, xerr.BadRequest(coreI18n.MenuNameExists)
 	}
 	row, err := d.Client.Menu.Create().
 		SetParentID(req.ParentID).SetMenuType(req.MenuType).SetPath(strings.TrimSpace(req.Path)).
@@ -97,7 +97,7 @@ func (d *Deps) CreateMenu(ctx context.Context, req CreateMenuReq) (*model.Menu, 
 		SetHideMenu(req.HideMenu).SetSort(req.Sort).SetDisabled(req.Disabled).
 		Save(ctx)
 	if err != nil {
-		return nil, xerr.BadRequest(i18n.MenuCreateFailed)
+		return nil, xerr.BadRequest(coreI18n.MenuCreateFailed)
 	}
 	if err := d.grantMenuToSupers(ctx, row.ID); err != nil {
 		logx.Errorf("grant menu to supers failed: %v", err)
@@ -137,14 +137,14 @@ func (d *Deps) CreateAPI(ctx context.Context, req CreateAPIReq) (*model.API, err
 		return nil, err
 	}
 	if taken {
-		return nil, xerr.BadRequest(i18n.APIExists)
+		return nil, xerr.BadRequest(coreI18n.APIExists)
 	}
 	row, err := d.Client.API.Create().
 		SetDescription(norm.Description).SetAPIGroup(norm.APIGroup).SetMethod(norm.Method).
 		SetPath(norm.Path).SetIsRequired(norm.IsRequired).SetServiceName(norm.ServiceName).
 		Save(ctx)
 	if err != nil {
-		return nil, xerr.BadRequest(i18n.APICreateFailed)
+		return nil, xerr.BadRequest(coreI18n.APICreateFailed)
 	}
 	if err := d.grantAPIToSupers(ctx, row.Path, row.Method); err != nil {
 		return nil, err
@@ -168,29 +168,65 @@ type RegisterMenuReq struct {
 	ParentName string
 }
 
-// 注册目录。menus: 菜单，apis: API，items: 多语言词条，langs: 语言列表
+// 注册目录。menus: 菜单，apis: API，items: 多语言词条，langs: 语言列表。
+// 各类首次写入后记入 sys_init，之后只插入缺失记录，不覆盖已有行。
 func (d *Deps) RegisterCatalog(ctx context.Context, menus []RegisterMenuReq, apis []CreateAPIReq, items []I18nItem, langs []CreateI18nLangReq) error {
-	if err := d.UpsertI18nLangs(ctx, langs); err != nil {
-		return err
-	}
-	for _, m := range menus {
-		if _, err := d.upsertRegisterMenu(ctx, m); err != nil {
+	// 注册多语言语言列表
+	if len(langs) > 0 {
+		langInit, err := d.hasInit(ctx, InitKeyI18nLangs)
+		if err != nil {
+			return err
+		}
+		if err := d.upsertI18nLangs(ctx, langs, langInit); err != nil {
+			return err
+		}
+		if err := d.markInit(ctx, InitKeyI18nLangs); err != nil {
 			return err
 		}
 	}
-	if err := d.linkRegisterMenuParents(ctx, menus); err != nil {
-		return err
-	}
-	for _, a := range apis {
-		if _, err := d.RegisterAPI(ctx, a); err != nil {
+
+	// 注册菜单
+	if len(menus) > 0 {
+		for _, m := range menus {
+			if _, err := d.upsertRegisterMenu(ctx, m); err != nil {
+				return err
+			}
+		}
+		if err := d.linkRegisterMenuParents(ctx, menus); err != nil {
 			return err
 		}
 	}
-	for _, it := range items {
-		if err := d.UpsertI18n(ctx, it); err != nil {
+
+	// 注册API
+	if len(apis) > 0 {
+		apiInit, err := d.hasInit(ctx, InitKeyAPI)
+		if err != nil {
+			return err
+		}
+		for _, a := range apis {
+			if _, err := d.registerAPI(ctx, a, apiInit); err != nil {
+				return err
+			}
+		}
+		if err := d.markInit(ctx, InitKeyAPI); err != nil {
 			return err
 		}
 	}
+
+	// 注册多语言词条
+	if len(items) > 0 {
+		dictInit, err := d.hasInit(ctx, InitKeyI18nDict)
+		if err != nil {
+			return err
+		}
+		for _, it := range items {
+			if err := d.upsertI18n(ctx, it, dictInit); err != nil {
+				return err
+			}
+		}
+		return d.markInit(ctx, InitKeyI18nDict)
+	}
+
 	return nil
 }
 
@@ -198,10 +234,10 @@ func (d *Deps) upsertRegisterMenu(ctx context.Context, req RegisterMenuReq) (*en
 	req.Name = strings.TrimSpace(req.Name)
 	req.Title = strings.TrimSpace(req.Title)
 	if req.Name == "" || req.Title == "" {
-		return nil, xerr.BadRequest(i18n.MenuNameTitleRequired)
+		return nil, xerr.BadRequest(coreI18n.MenuNameTitleRequired)
 	}
 	if !validMenuType(req.MenuType) {
-		return nil, xerr.BadRequest(i18n.MenuInvalidType)
+		return nil, xerr.BadRequest(coreI18n.MenuInvalidType)
 	}
 	exist, err := d.Client.Menu.Query().Where(menu.NameEQ(req.Name)).Only(ctx)
 	if ent.IsNotFound(err) {
@@ -252,7 +288,7 @@ func (d *Deps) linkRegisterMenuParents(ctx context.Context, menus []RegisterMenu
 		}
 		pid, ok := ids[m.ParentName]
 		if !ok {
-			return xerr.BadRequest(i18n.MenuParentNotFound)
+			return xerr.BadRequest(coreI18n.MenuParentNotFound)
 		}
 		if _, err := d.Client.Menu.Update().Where(menu.NameEQ(m.Name)).SetParentID(pid).Save(ctx); err != nil {
 			return err
@@ -262,6 +298,10 @@ func (d *Deps) linkRegisterMenuParents(ctx context.Context, menus []RegisterMenu
 }
 
 func (d *Deps) RegisterAPI(ctx context.Context, req CreateAPIReq) (*model.API, error) {
+	return d.registerAPI(ctx, req, false)
+}
+
+func (d *Deps) registerAPI(ctx context.Context, req CreateAPIReq, insertOnly bool) (*model.API, error) {
 	norm, err := normalizeAPI(req.Method, req.Path, req.Description, req.APIGroup, req.ServiceName, req.IsRequired)
 	if err != nil {
 		return nil, err
@@ -272,7 +312,7 @@ func (d *Deps) RegisterAPI(ctx context.Context, req CreateAPIReq) (*model.API, e
 			SetDescription(norm.Description).SetAPIGroup(norm.APIGroup).SetMethod(norm.Method).
 			SetPath(norm.Path).SetIsRequired(norm.IsRequired).SetServiceName(norm.ServiceName).
 			Save(ctx)
-	} else if err == nil {
+	} else if err == nil && !insertOnly {
 		err = d.Client.API.UpdateOne(row).
 			SetDescription(norm.Description).SetAPIGroup(norm.APIGroup).
 			SetIsRequired(norm.IsRequired).SetServiceName(norm.ServiceName).
@@ -285,10 +325,10 @@ func (d *Deps) RegisterAPI(ctx context.Context, req CreateAPIReq) (*model.API, e
 		return nil, err
 	}
 	if row == nil {
-		return nil, xerr.InternalServerError(i18n.APIRegisterFailed)
+		return nil, xerr.InternalServerError(coreI18n.APIRegisterFailed)
 	}
 	a := apiFromEnt(row)
-	if a.Description != norm.Description {
+	if !insertOnly && a.Description != norm.Description {
 		a.Description = norm.Description
 		a.APIGroup = norm.APIGroup
 		a.IsRequired = norm.IsRequired
@@ -312,7 +352,7 @@ func (d *Deps) UpdateAPI(ctx context.Context, req UpdateAPIReq) error {
 		return err
 	}
 	if taken {
-		return xerr.BadRequest(i18n.APIExists)
+		return xerr.BadRequest(coreI18n.APIExists)
 	}
 	if err := d.Client.API.UpdateOneID(row.ID).
 		SetDescription(norm.Description).SetAPIGroup(norm.APIGroup).SetMethod(norm.Method).
@@ -343,19 +383,19 @@ func (d *Deps) SuperRoles(ctx context.Context) ([]*ent.Role, error) {
 
 func (d *Deps) prepareMenuUpdate(ctx context.Context, row model.Menu, req *UpdateMenuReq) error {
 	if req.MenuType != nil && !validMenuType(*req.MenuType) {
-		return xerr.BadRequest(i18n.MenuInvalidType)
+		return xerr.BadRequest(coreI18n.MenuInvalidType)
 	}
 	if req.Name != nil {
 		name := strings.TrimSpace(*req.Name)
 		if name == "" {
-			return xerr.BadRequest(i18n.MenuNameRequired)
+			return xerr.BadRequest(coreI18n.MenuNameRequired)
 		}
 		taken, err := d.menuNameTaken(ctx, name, row.ID)
 		if err != nil {
 			return err
 		}
 		if taken {
-			return xerr.BadRequest(i18n.MenuNameExists)
+			return xerr.BadRequest(coreI18n.MenuNameExists)
 		}
 		req.Name = &name
 	}
@@ -416,7 +456,7 @@ func (d *Deps) deleteMenu(ctx context.Context, id int64) error {
 		return err
 	}
 	if n > 0 {
-		return xerr.BadRequest(i18n.MenuHasChildren)
+		return xerr.BadRequest(coreI18n.MenuHasChildren)
 	}
 	if _, err := d.Client.Menu.UpdateOneID(id).ClearRoles().Save(ctx); err != nil {
 		return err
@@ -439,7 +479,7 @@ func (d *Deps) menuByID(ctx context.Context, id int64) (model.Menu, error) {
 	row, err := d.Client.Menu.Get(ctx, id)
 	if err != nil {
 		if ent.IsNotFound(err) {
-			return model.Menu{}, xerr.NotFound(i18n.MenuNotFound)
+			return model.Menu{}, xerr.NotFound(coreI18n.MenuNotFound)
 		}
 		return model.Menu{}, err
 	}
@@ -450,7 +490,7 @@ func (d *Deps) apiByID(ctx context.Context, id int64) (model.API, error) {
 	row, err := d.Client.API.Get(ctx, id)
 	if err != nil {
 		if ent.IsNotFound(err) {
-			return model.API{}, xerr.NotFound(i18n.APINotFound)
+			return model.API{}, xerr.NotFound(coreI18n.APINotFound)
 		}
 		return model.API{}, err
 	}
@@ -478,12 +518,12 @@ func (d *Deps) assertMenuParent(ctx context.Context, id, parentID int64) error {
 		return nil
 	}
 	if parentID == id {
-		return xerr.BadRequest(i18n.MenuInvalidParentID)
+		return xerr.BadRequest(coreI18n.MenuInvalidParentID)
 	}
 	parent, err := d.Client.Menu.Get(ctx, parentID)
 	if err != nil {
 		if ent.IsNotFound(err) {
-			return xerr.BadRequest(i18n.MenuParentNotFound)
+			return xerr.BadRequest(coreI18n.MenuParentNotFound)
 		}
 		return err
 	}
@@ -492,7 +532,7 @@ func (d *Deps) assertMenuParent(ctx context.Context, id, parentID int64) error {
 	}
 	for i, cur := 0, parent.ParentID; i < 64 && cur != 0; i++ {
 		if cur == id {
-			return xerr.BadRequest(i18n.MenuInvalidParentID)
+			return xerr.BadRequest(coreI18n.MenuInvalidParentID)
 		}
 		row, err := d.Client.Menu.Get(ctx, cur)
 		if err != nil {
@@ -591,10 +631,10 @@ func normalizeAPI(method, path, desc, group, svc string, required int16) (apiNor
 		IsRequired: required,
 	}
 	if _, ok := apiMethods[out.Method]; !ok {
-		return apiNorm{}, xerr.BadRequest(i18n.APIInvalidMethod)
+		return apiNorm{}, xerr.BadRequest(coreI18n.APIInvalidMethod)
 	}
 	if out.Path == "" || out.Path[0] != '/' {
-		return apiNorm{}, xerr.BadRequest(i18n.APIPathMustStartWithSlash)
+		return apiNorm{}, xerr.BadRequest(coreI18n.APIPathMustStartWithSlash)
 	}
 	if out.Description == "" {
 		out.Description = out.Method + " " + out.Path
@@ -606,7 +646,7 @@ func normalizeAPI(method, path, desc, group, svc string, required int16) (apiNor
 		out.ServiceName = "admin"
 	}
 	if out.IsRequired != 0 && out.IsRequired != 1 {
-		return apiNorm{}, xerr.BadRequest(i18n.APIInvalidIsRequired)
+		return apiNorm{}, xerr.BadRequest(coreI18n.APIInvalidIsRequired)
 	}
 	return out, nil
 }

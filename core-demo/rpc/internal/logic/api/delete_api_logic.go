@@ -3,8 +3,8 @@ package api
 import (
 	"context"
 
-	"oa.98ent.com/p9/core/common/utils"
-	"oa.98ent.com/p9/core/common/xerr"
+	"oa.98ent.com/p9/common/utils"
+	"oa.98ent.com/p9/common/xerr"
 	"oa.98ent.com/p9/core/rpc/internal/svc"
 	"oa.98ent.com/p9/core/rpc/types/core"
 

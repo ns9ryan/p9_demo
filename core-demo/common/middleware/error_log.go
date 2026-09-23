@@ -6,15 +6,15 @@ import (
 	"runtime/debug"
 	"time"
 
-	"oa.98ent.com/p9/core/common/ctxdata"
-	"oa.98ent.com/p9/core/common/errorlog"
-	"oa.98ent.com/p9/core/common/i18n"
-	"oa.98ent.com/p9/core/common/response"
-	"oa.98ent.com/p9/core/common/tracing"
-	"oa.98ent.com/p9/core/common/utils"
-	"oa.98ent.com/p9/core/common/xerr"
+	"oa.98ent.com/p9/common/ctxdata"
+	"oa.98ent.com/p9/common/errorlog"
+	"oa.98ent.com/p9/common/tracing"
+	"oa.98ent.com/p9/common/utils"
+	"oa.98ent.com/p9/common/xerr"
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 
 	"github.com/zeromicro/go-zero/rest"
+	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 // ErrorLog 错误日志中间件
@@ -34,7 +34,8 @@ func ErrorLog(serviceName string, rec errorlog.Recorder) rest.Middleware {
 				if v := recover(); v != nil {
 					bag.Subject = panicSubject(v)
 					bag.Detail = xerr.ClipStack(string(debug.Stack()))
-					response.FailCtx(r.Context(), cw, xerr.InternalServerError(i18n.InternalError))
+					// response.FailCtx(r.Context(), cw, xerr.InternalServerError(coreI18n.InternalError))
+					httpx.Error(w, xerr.InternalServerError(coreI18n.InternalError))
 				}
 				// 如果状态码小于500，则不收集错误日志
 				if !errorlog.ShouldCollect(cw.status) {

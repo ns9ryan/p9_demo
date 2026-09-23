@@ -1,7 +1,7 @@
 package catalog
 
 import (
-	"oa.98ent.com/p9/core/common/i18n"
+	"oa.98ent.com/p9/common/i18n"
 	"oa.98ent.com/p9/core/rpc/coreclient"
 )
 
@@ -9,7 +9,7 @@ import (
 func langSeeds(i18nCode string) []*coreclient.CreateI18NLangReq {
 	// 如果i18nCode为运营商，则返回空，等建分站分配语言在迁移
 	if i18nCode == i18n.CodeOperator {
-		return []*coreclient.CreateI18NLangReq{}
+		// return []*coreclient.CreateI18NLangReq{}
 	}
 
 	return []*coreclient.CreateI18NLangReq{
@@ -24,23 +24,26 @@ func i18nSeeds(i18nCode string) []*coreclient.I18NItem {
 	items := make([]*coreclient.I18NItem, 0)
 	// 如果i18nCode为运营商，则返回空，等建分站分配语言在迁移
 	if i18nCode == i18n.CodeOperator {
-		return items
+		// return items
 	}
 	items = append(items, menuI18n(i18nCode)...)
 	items = append(items, apiI18n(i18nCode)...)
 	items = append(items, frontI18n(i18nCode)...)
 	items = append(items, langI18n(i18nCode)...)
+	items = append(items, errorI18n(i18nCode)...)
 	// 如果i18nCode为总网平台，则添加运营商和代理站点的多语言数据
 	if i18nCode == i18n.CodePlatform {
 		items = append(items, menuI18n(i18n.CodeOperator)...)
 		items = append(items, apiI18n(i18n.CodeOperator)...)
 		items = append(items, frontI18n(i18n.CodeOperator)...)
 		items = append(items, langI18n(i18n.CodeOperator)...)
+		items = append(items, errorI18n(i18n.CodeOperator)...)
 	}
 
 	return items
 }
 
+// 语言多语言数据
 func langI18n(i18nCode string) []*coreclient.I18NItem {
 	var out []*coreclient.I18NItem
 	add := func(key, zh, hk, en string) {
@@ -56,6 +59,7 @@ func langI18n(i18nCode string) []*coreclient.I18NItem {
 	return out
 }
 
+// 菜单多语言数据
 func menuI18n(i18nCode string) []*coreclient.I18NItem {
 	var out []*coreclient.I18NItem
 	add := func(key, zh, hk, en string) {
@@ -89,6 +93,7 @@ func menuI18n(i18nCode string) []*coreclient.I18NItem {
 	return out
 }
 
+// 接口多语言数据
 func apiI18n(i18nCode string) []*coreclient.I18NItem {
 	var out []*coreclient.I18NItem
 	add := func(key, zh, hk, en string) {
@@ -142,6 +147,7 @@ func apiI18n(i18nCode string) []*coreclient.I18NItem {
 	return out
 }
 
+// 前端多语言数据
 func frontI18n(i18nCode string) []*coreclient.I18NItem {
 	var out []*coreclient.I18NItem
 	add := func(key, zh, hk, en string) {
@@ -204,5 +210,30 @@ func frontI18n(i18nCode string) []*coreclient.I18NItem {
 	addLogin("login.form.forgetPassword", "忘记密码?", "忘記密碼?", "Forgot password?")
 	addLogin("login.form.login", "登录", "登錄", "Sign in")
 	addLogin("login.form.login.success", "登录成功", "登錄成功", "Signed in successfully")
+	return out
+}
+
+// 错误多语言数据
+func errorI18n(i18nCode string) []*coreclient.I18NItem {
+	var out []*coreclient.I18NItem
+	add := func(key, zh, hk, en string) {
+		out = append(out,
+			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupError, TransKey: key, Lang: i18n.LangZH, Value: zh},
+			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupError, TransKey: key, Lang: i18n.LangHK, Value: hk},
+			&coreclient.I18NItem{I18NCode: i18nCode, I18NGroup: i18n.GroupError, TransKey: key, Lang: i18n.LangEN, Value: en},
+		)
+	}
+	add("common.success", "成功", "成功", "Success")
+	add("common.unauthorized", "未授权", "未授權", "Unauthorized")
+	add("common.forbidden", "无权限", "無權限", "Forbidden")
+	add("common.tokenExpired", "登录已过期", "登錄已過期", "Login expired")
+	add("common.internal", "内部错误", "內部錯誤", "Internal error")
+	add("common.notFound", "资源不存在", "資源不存在", "Resource not found")
+	add("common.badRequest", "请求错误", "請求錯誤", "Bad request")
+	add("common.timeout", "请求超时", "請求超時", "Request timeout")
+	add("common.serviceUnavailable", "服务不可用", "服務不可用", "Service unavailable")
+	add("auth.ipMismatch", "登录 IP 已变化，请重新登录", "登錄 IP 已變化，請重新登錄", "Login IP has changed, please login again")
+	add("auth.ipNotAllowed", "当前 IP 不在白名单内", "當前 IP 不在白名單內", "Current IP is not in the whitelist")
+	add("auth.userDisabled", "账号已停用", "賬號已停用", "Account disabled")
 	return out
 }

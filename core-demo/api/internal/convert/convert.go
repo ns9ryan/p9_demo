@@ -3,8 +3,9 @@ package convert
 import (
 	"context"
 
+	"oa.98ent.com/p9/common/i18n"
 	"oa.98ent.com/p9/core/api/internal/types"
-	"oa.98ent.com/p9/core/common/i18n"
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/rpc/coreclient"
 	"oa.98ent.com/p9/core/rpc/model"
 )
@@ -34,7 +35,7 @@ func i64Ptr(v int64) *int64 {
 }
 
 // 将用户公共信息转换为API响应
-func UserPublic(ctx context.Context, in *coreclient.UserPublic) *types.UserPublic {
+func UserPublic(ctx context.Context, trans *i18n.Translator, in *coreclient.UserPublic) *types.UserPublic {
 	if in == nil {
 		return nil
 	}
@@ -46,14 +47,14 @@ func UserPublic(ctx context.Context, in *coreclient.UserPublic) *types.UserPubli
 	if roleNames == nil {
 		roleNames = []string{}
 	}
-	trans := make([]string, 0, len(roleNames))
+	transRoleNames := make([]string, 0, len(roleNames))
 	for _, name := range roleNames {
-		trans = append(trans, i18n.T(ctx, name))
+		transRoleNames = append(transRoleNames, trans.T(ctx, name))
 	}
 	return &types.UserPublic{
 		Id: in.Id, UserCode: in.UserCode, Username: in.Username, DisplayName: in.DisplayName,
 		OperatorCode: in.GetOperatorCode(), IsSuperAdmin: in.IsSuperAdmin, Status: in.Status,
-		RoleCodes: codes, RoleNames: trans, HomePath: in.HomePath,
+		RoleCodes: codes, RoleNames: transRoleNames, HomePath: in.HomePath,
 		CreatedAt: in.CreatedAt, LastLoginAt: in.GetLastLoginAt(),
 		Mobile: in.GetMobile(), Email: in.GetEmail(),
 		IpWhitelistEnabled: in.IpWhitelistEnabled, IpWhitelist: copyStrSlice(in.IpWhitelist),
@@ -71,7 +72,7 @@ func copyStrSlice(in []string) []string {
 }
 
 // 登录响应转换为API响应
-func LoginResp(ctx context.Context, in *coreclient.LoginResp) *types.LoginResp {
+func LoginResp(ctx context.Context, trans *i18n.Translator, in *coreclient.LoginResp) *types.LoginResp {
 	if in == nil {
 		return nil
 	}
@@ -82,7 +83,7 @@ func LoginResp(ctx context.Context, in *coreclient.LoginResp) *types.LoginResp {
 			Expire: in.Token.Expire, RefreshExpire: in.Token.RefreshExpire,
 		}
 	}
-	if u := UserPublic(ctx, in.User); u != nil {
+	if u := UserPublic(ctx, trans, in.User); u != nil {
 		out.User = *u
 	}
 	return out
@@ -132,13 +133,13 @@ func menuNode(ctx context.Context, code string, n *coreclient.MenuNode) types.Me
 }
 
 // 角色信息转换为API响应
-func RoleInfo(ctx context.Context, in *coreclient.RoleInfo) *types.RoleInfo {
+func RoleInfo(ctx context.Context, trans *i18n.Translator, in *coreclient.RoleInfo) *types.RoleInfo {
 	if in == nil {
 		return nil
 	}
 	return &types.RoleInfo{
-		Id: in.Id, OperatorCode: in.GetOperatorCode(), RoleCode: in.RoleCode, RoleName: i18n.T(ctx, in.RoleName),
-		Description: i18n.T(ctx, in.GetDescription()), Status: in.Status, IsSystem: in.IsSystem, SortNo: in.SortNo,
+		Id: in.Id, OperatorCode: in.GetOperatorCode(), RoleCode: in.RoleCode, RoleName: trans.T(ctx, in.RoleName),
+		Description: trans.T(ctx, in.GetDescription()), Status: in.Status, IsSystem: in.IsSystem, SortNo: in.SortNo,
 		CreatedAt: in.CreatedAt, UpdatedAt: in.UpdatedAt,
 	}
 }
@@ -168,10 +169,10 @@ func ApiInfo(ctx context.Context, code string, in *coreclient.ApiInfo) *types.Ap
 }
 
 // 用户列表响应转换为API响应
-func UserList(ctx context.Context, in *coreclient.UserListResp) *types.UserListResp {
+func UserList(ctx context.Context, trans *i18n.Translator, in *coreclient.UserListResp) *types.UserListResp {
 	list := make([]types.UserPublic, 0, len(in.GetList()))
 	for _, u := range in.GetList() {
-		if p := UserPublic(ctx, u); p != nil {
+		if p := UserPublic(ctx, trans, u); p != nil {
 			list = append(list, *p)
 		}
 	}
@@ -179,10 +180,10 @@ func UserList(ctx context.Context, in *coreclient.UserListResp) *types.UserListR
 }
 
 // 角色列表响应转换为API响应
-func RoleList(ctx context.Context, in *coreclient.RoleListResp) *types.RoleListResp {
+func RoleList(ctx context.Context, trans *i18n.Translator, in *coreclient.RoleListResp) *types.RoleListResp {
 	list := make([]types.RoleInfo, 0, len(in.GetList()))
 	for _, r := range in.GetList() {
-		if p := RoleInfo(ctx, r); p != nil {
+		if p := RoleInfo(ctx, trans, r); p != nil {
 			list = append(list, *p)
 		}
 	}
@@ -378,16 +379,16 @@ func LoginLogListReq(in *types.LoginLogListReq) *coreclient.LoginLogListReq {
 }
 
 // 登录日志列表响应转换为API响应
-func LoginLogList(ctx context.Context, in *coreclient.LoginLogListResp) *types.LoginLogListResp {
+func LoginLogList(ctx context.Context, trans *i18n.Translator, in *coreclient.LoginLogListResp) *types.LoginLogListResp {
 	list := make([]types.LoginLogInfo, 0, len(in.GetList()))
 	for _, row := range in.GetList() {
-		list = append(list, loginLogInfo(ctx, row))
+		list = append(list, loginLogInfo(ctx, trans, row))
 	}
 	return &types.LoginLogListResp{List: list, Total: in.GetTotal()}
 }
 
 // 登录日志信息转换为API响应
-func loginLogInfo(ctx context.Context, in *coreclient.LoginLogInfo) types.LoginLogInfo {
+func loginLogInfo(ctx context.Context, trans *i18n.Translator, in *coreclient.LoginLogInfo) types.LoginLogInfo {
 	if in == nil {
 		return types.LoginLogInfo{}
 	}
@@ -395,25 +396,25 @@ func loginLogInfo(ctx context.Context, in *coreclient.LoginLogInfo) types.LoginL
 		Id:          in.Id,
 		UserId:      in.GetUserId(),
 		Username:    in.Username,
-		LoginResult: loginResultText(ctx, in.LoginResult),
+		LoginResult: loginResultText(ctx, trans, in.LoginResult),
 		LoginIp:     in.LoginIp,
 		DeviceId:    in.GetDeviceId(),
 		UserAgent:   in.GetUserAgent(),
 		LoginAt:     in.LoginAt,
 	}
 	if reason := in.GetFailureReason(); reason != "" {
-		out.FailureReason = i18n.T(ctx, reason)
+		out.FailureReason = trans.T(ctx, reason)
 	}
 	return out
 }
 
 // 登录结果文本转换为字符串
-func loginResultText(ctx context.Context, result int32) string {
+func loginResultText(ctx context.Context, trans *i18n.Translator, result int32) string {
 	switch int16(result) {
 	case model.LoginResultSuccess:
-		return i18n.T(ctx, i18n.LoginLogResultSuccess)
+		return trans.T(ctx, coreI18n.LoginLogResultSuccess)
 	case model.LoginResultFail:
-		return i18n.T(ctx, i18n.LoginLogResultFail)
+		return trans.T(ctx, coreI18n.LoginLogResultFail)
 	default:
 		return ""
 	}
@@ -435,16 +436,16 @@ func AdminActionLogListReq(in *types.AdminActionLogListReq) *coreclient.AdminAct
 }
 
 // 管理员操作日志列表响应转换为API响应
-func AdminActionLogList(ctx context.Context, in *coreclient.AdminActionLogListResp) *types.AdminActionLogListResp {
+func AdminActionLogList(ctx context.Context, trans *i18n.Translator, in *coreclient.AdminActionLogListResp) *types.AdminActionLogListResp {
 	list := make([]types.AdminActionLogInfo, 0, len(in.GetList()))
 	for _, row := range in.GetList() {
-		list = append(list, adminActionLogInfo(ctx, row))
+		list = append(list, adminActionLogInfo(ctx, trans, row))
 	}
 	return &types.AdminActionLogListResp{List: list, Total: in.GetTotal()}
 }
 
 // 管理员操作日志信息转换为API响应
-func adminActionLogInfo(ctx context.Context, in *coreclient.AdminActionLogInfo) types.AdminActionLogInfo {
+func adminActionLogInfo(ctx context.Context, trans *i18n.Translator, in *coreclient.AdminActionLogInfo) types.AdminActionLogInfo {
 	if in == nil {
 		return types.AdminActionLogInfo{}
 	}
@@ -456,7 +457,7 @@ func adminActionLogInfo(ctx context.Context, in *coreclient.AdminActionLogInfo) 
 		RequestPath:    in.RequestPath,
 		RequestQuery:   in.GetRequestQuery(),
 		RequestBody:    in.GetRequestBody(),
-		ActionResult:   loginResultText(ctx, in.ActionResult),
+		ActionResult:   loginResultText(ctx, trans, in.ActionResult),
 		ResponseStatus: in.ResponseStatus,
 		ResponseBody:   in.GetResponseBody(),
 		DurationMs:     in.DurationMs,

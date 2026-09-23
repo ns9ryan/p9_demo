@@ -21,6 +21,7 @@ import (
 	"oa.98ent.com/p9/core/rpc/ent/loginlog"
 	"oa.98ent.com/p9/core/rpc/ent/menu"
 	"oa.98ent.com/p9/core/rpc/ent/role"
+	"oa.98ent.com/p9/core/rpc/ent/sysinit"
 	"oa.98ent.com/p9/core/rpc/ent/user"
 )
 
@@ -91,6 +92,7 @@ func checkColumn(t, c string) error {
 			loginlog.Table:       loginlog.ValidColumn,
 			menu.Table:           menu.ValidColumn,
 			role.Table:           role.ValidColumn,
+			sysinit.Table:        sysinit.ValidColumn,
 			user.Table:           user.ValidColumn,
 		})
 	})

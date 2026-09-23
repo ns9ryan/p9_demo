@@ -4,10 +4,10 @@ import (
 	"context"
 	"testing"
 
-	"oa.98ent.com/p9/core/common/ctxdata"
-	"oa.98ent.com/p9/core/common/i18n"
+	"oa.98ent.com/p9/common/ctxdata"
+	"oa.98ent.com/p9/common/xerr"
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/common/jwt"
-	"oa.98ent.com/p9/core/common/xerr"
 )
 
 func TestLoginRefreshTokenBindsClientIP(t *testing.T) {
@@ -38,7 +38,7 @@ func TestLoginRefreshTokenBindsClientIP(t *testing.T) {
 		t.Fatalf("mapped: %v", err)
 	}
 	_, err = d.CheckToken(ctxdata.WithClientIP(context.Background(), "11.0.0.1"), res.Token.AccessToken)
-	if got := xerr.AsError(err); got.Status != 401 || got.Message != i18n.AuthIPMismatch {
+	if got := xerr.AsError(err); got.Status != 401 || got.Message != coreI18n.AuthIPMismatch {
 		t.Fatalf("check mismatch %+v", got)
 	}
 
@@ -52,7 +52,7 @@ func TestLoginRefreshTokenBindsClientIP(t *testing.T) {
 	}
 
 	_, err = d.Refresh(ctxdata.WithClientIP(context.Background(), "11.0.0.1"), RefreshReq{RefreshToken: same.Token.RefreshToken})
-	if got := xerr.AsError(err); got.Status != 401 || got.Message != i18n.AuthIPMismatch {
+	if got := xerr.AsError(err); got.Status != 401 || got.Message != coreI18n.AuthIPMismatch {
 		t.Fatalf("refresh mismatch %+v", got)
 	}
 }

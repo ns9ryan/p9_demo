@@ -17,7 +17,6 @@ import (
 
 	"github.com/redis/go-redis/v9"
 	"github.com/zeromicro/go-zero/core/logx"
-	gozeroservice "github.com/zeromicro/go-zero/core/service"
 )
 
 type ServiceContext struct {
@@ -41,7 +40,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	}
 
 	// 开发和测试环境开启Ent调试模式
-	if c.Mode == gozeroservice.DevMode || c.Mode == gozeroservice.TestMode {
+	if c.IsDebug() {
 		entOpts = append(entOpts, ent.Debug())
 	}
 	// 创建Ent客户端

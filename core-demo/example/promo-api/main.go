@@ -7,16 +7,18 @@ import (
 	"net/http"
 	"time"
 
+	"oa.98ent.com/p9/common/ctxdata"
+	"oa.98ent.com/p9/common/i18n"
+	"oa.98ent.com/p9/common/response"
 	"oa.98ent.com/p9/core/common/coreadapt"
-	"oa.98ent.com/p9/core/common/ctxdata"
 	"oa.98ent.com/p9/core/common/entdb"
 	"oa.98ent.com/p9/core/common/entmixin"
 	"oa.98ent.com/p9/core/common/middleware"
-	"oa.98ent.com/p9/core/common/response"
 	"oa.98ent.com/p9/core/example/promo-api/ent"
 	"oa.98ent.com/p9/core/example/promo-api/ent/intercept"
 	"oa.98ent.com/p9/core/example/promo-api/ent/migrate"
 	_ "oa.98ent.com/p9/core/example/promo-api/ent/runtime"
+	promoi18n "oa.98ent.com/p9/core/example/promo-api/i18n"
 	"oa.98ent.com/p9/core/rpc/coreclient"
 
 	"github.com/zeromicro/go-zero/core/conf"
@@ -28,11 +30,22 @@ import (
 
 type Config struct {
 	rest.RestConf
-	DB struct {
+	I18n i18n.Config
+	DB   struct {
 		Driver string
 		DSN    string
 	}
 	CoreRpc zrpc.RpcClientConf
+}
+
+// IsDebug 是否为调试模式
+func (c *Config) IsDebug() bool {
+	return c.Mode == service.DevMode || c.Mode == service.TestMode
+}
+
+// GetI18nCode 获取i18n代码
+func (c *Config) GetI18nCode() string {
+	return i18n.CodePlatform
 }
 
 var configFile = flag.String("f", "etc/promo-api.yaml", "config file")
@@ -41,8 +54,6 @@ func main() {
 	flag.Parse()
 	var c Config
 	conf.MustLoad(*configFile, &c)
-	// 设置HTTP响应格式、错误处理等
-	response.SetupHTTPX(c.Mode == service.DevMode || c.Mode == service.TestMode)
 
 	promo, err := openPromo(c.DB.Driver, c.DB.DSN)
 	logx.Must(err)
@@ -56,8 +67,18 @@ func main() {
 
 	server := rest.MustNewServer(c.RestConf)
 	defer server.Stop()
+	// 设置多语言字典加载器
+	coreadapt.SetDictLoader(coreCli)
+	// 注册多语言中间件
 	server.Use(middleware.I18n)
+	// 注册客户端 IP 中间件(可选)
 	server.Use(middleware.ClientIP)
+	// 多语言翻译器
+	trans, err := i18n.New(c.I18n, promoi18n.LocaleFS)
+	logx.Must(err)
+	// 设置HTTP响应格式、错误处理等
+	response.SetupHTTPX(trans, c.GetI18nCode(), c.IsDebug())
+	// 注册路由
 	server.AddRoutes(
 		rest.WithMiddlewares(
 			[]rest.Middleware{middleware.JWT(auth), middleware.Authority(auth)},
@@ -65,6 +86,7 @@ func main() {
 		),
 		rest.WithPrefix("/admin"),
 	)
+
 	logx.Infof("promo-api listening on %s:%d", c.Host, c.Port)
 	server.Start()
 }
@@ -106,7 +128,7 @@ func promoList(promo *ent.Client) http.HandlerFunc {
 			})
 		}
 		response.OkCtx(r.Context(), w, map[string]any{
-			"operator_code": code, "list": out, "scoped": len(rows), "unscoped_total": len(all),
+			"operator_code": code, "list": out, "scoped": len(rows), "total": len(all),
 		})
 	}
 }

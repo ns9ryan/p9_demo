@@ -3,7 +3,7 @@ package coreadapt
 import (
 	"context"
 
-	"oa.98ent.com/p9/core/common/i18n"
+	"oa.98ent.com/p9/common/i18n"
 	"oa.98ent.com/p9/core/rpc/coreclient"
 )
 

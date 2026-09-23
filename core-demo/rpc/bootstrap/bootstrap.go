@@ -4,8 +4,9 @@ import (
 	"context"
 	"strings"
 
-	"oa.98ent.com/p9/core/common/i18n"
-	"oa.98ent.com/p9/core/common/xerr"
+	"oa.98ent.com/p9/common/xerr"
+
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/rpc/casbinx"
 	"oa.98ent.com/p9/core/rpc/ent"
 	"oa.98ent.com/p9/core/rpc/ent/menu"
@@ -45,7 +46,7 @@ func CreateOperatorAdmin(ctx context.Context, d *service.Deps, req CreateOperato
 	}
 	req.OperatorCode = strings.TrimSpace(req.OperatorCode)
 	if req.OperatorCode == "" || req.Username == "" || req.Password == "" {
-		return nil, xerr.BadRequest(i18n.AuthBootstrapFieldsRequired)
+		return nil, xerr.BadRequest(coreI18n.AuthBootstrapFieldsRequired)
 	}
 	if req.DisplayName == "" {
 		req.DisplayName = req.Username
@@ -67,7 +68,7 @@ func createRoot(ctx context.Context, d *service.Deps, req createRootReq) (*model
 	req.Username = strings.TrimSpace(req.Username)
 	req.DisplayName = strings.TrimSpace(req.DisplayName)
 	if req.Username == "" || req.Password == "" {
-		return nil, xerr.BadRequest(i18n.AuthUsernamePasswordRequired)
+		return nil, xerr.BadRequest(coreI18n.AuthUsernamePasswordRequired)
 	}
 	if req.DisplayName == "" {
 		req.DisplayName = req.Username
@@ -107,7 +108,7 @@ func assertNoRoot(ctx context.Context, d *service.Deps, operatorCode *string) er
 		return err
 	}
 	if n > 0 {
-		return xerr.BadRequest(i18n.AuthRootUserExists)
+		return xerr.BadRequest(coreI18n.AuthRootUserExists)
 	}
 	return nil
 }

@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/duke-git/lancet/v2/retry"
+	"oa.98ent.com/p9/common/i18n"
 	"oa.98ent.com/p9/core/api/internal/svc"
-	"oa.98ent.com/p9/core/common/i18n"
 )
 
 // 注册菜单、API目录、多语言数据

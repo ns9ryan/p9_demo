@@ -239,7 +239,7 @@ refresh token 过期仍返回 **401**，不要用 498 刷新，避免死循环�
 | `parent_id`  | int64      | 父菜单 id，根为 `0`                      |
 | `menu_type`  | int32      | `0` 目录，`1` 菜单，`2` 按钮               |
 | `path`       | string     | 前端路由 path                          |
-| `name`       | string     | 全局唯一标识，`RegisterCatalog` 按此 upsert |
+| `name`       | string     | 全局唯一标识；`RegisterCatalog` 首次按此 upsert，已初始化后只插入缺失 |
 | `component`  | string     | 前端组件路径                             |
 | `redirect`   | string     | 重定向                                |
 | `title`      | string     | 显示标题；内置为 i18n key，响应已按语言翻译         |
@@ -1211,7 +1211,7 @@ Query：`/admin/role/detail?id=2`
 
 | 字段           | 位置   | 必填  | 类型     | 说明                                    |
 | ------------ | ---- | --- | ------ | ------------------------------------- |
-| `name`       | json | 是   | string | 全局唯一标识，后续 `RegisterCatalog` 按此 upsert |
+| `name`       | json | 是   | string | 全局唯一标识；后续 `RegisterCatalog` 首次按此 upsert，已初始化后只插入缺失 |
 | `title`      | json | 是   | string | 显示标题                                  |
 | `menu_type`  | json | 是   | int32  | `0` 目录，`1` 菜单，`2` 按钮                  |
 | `parent_id`  | json | 否   | int64  | 父菜单 id，须已存在；根省略为 `0`                  |
@@ -1537,7 +1537,7 @@ Query：`/admin/role/detail?id=2`
 
 词条按 `(i18n_code, trans_key, lang)` 唯一。`i18n_code` 区分业务站点/服务（`core`、`promo` 等），**不是**分站租户；空则服务端当作 `core`。同一 `trans_key`+`lang` 可在不同站点各有一条。`trans_key` 为业务标识，形如 `menu.route.dashboard`（group 拼进 key）。`i18n_group` 仍保留，供列表过滤和按组分发。创建/目录注册仍可传短 key（如 `route.dashboard`），服务端会拼成完整 key。菜单 `title` 仍存短 key。新增词条（含按 key 更新时新建、目录 upsert 新建）的 `lang` 必须已在 `sys_i18n_lang`。
 
-支持的语言存在 `sys_i18n_lang`（全局，不分站点）。core-api 启动时随 `RegisterCatalog` 幂等种子 `zh-CN` / 简体中文 / `i18n_key=lang.zh-CN`（`sort_no=1`）、`zh-HK` / 繁體中文 / `lang.zh-HK`（`sort_no=2`）、`en-US` / English / `lang.en-US`（`sort_no=3`）；已存在不改 `disabled` / `sort_no`，仅当 `name` 或 `i18n_key` 为空时回填。HTTP 出参 `name` 是库里的回退原文，`i18n_key` 是词条 key，`i18n_name` 按当前 `X-Lang` 用 `i18n.TG`（`i18n_group=lang`）翻译，无词条则回退 `name`。该语言在 `sys_i18n` 已有词条时，不能改 `lang`、不能删除。拖拽排序见 [POST /admin/i18n/lang/reorder](#post-admini18nlangreorder)，按当前 `sort_no` 序列把 `id` 挪到 `target_id` 的位置后重写全表 `sort_no` 为 `1..n`。管理 CRUD（含 reorder、导出、导入）走 JWT + Casbin；已开启列表和词条下发仅 JWT（登录后切语言 / 拉文案），不进 Casbin 目录，见 [GET /admin/i18n/lang/enabled](#get-admini18nlangenabled)、[GET /admin/i18n/dict](#get-admini18ndict)。一种语言一个 JSON 文件的导入导出见 [POST /admin/i18n/export](#post-admini18nexport)、[POST /admin/i18n/import](#post-admini18nimport)。
+支持的语言存在 `sys_i18n_lang`（全局，不分站点）。core-api 启动时随 `RegisterCatalog` 种子 `zh-CN` / 简体中文 / `i18n_key=lang.zh-CN`（`sort_no=1`）、`zh-HK` / 繁體中文 / `lang.zh-HK`（`sort_no=2`）、`en-US` / English / `lang.en-US`（`sort_no=3`）。首次写入后 `sys_init` 记下 `i18n_langs`，之后只插入缺失语言；首次尚未打标时已存在不改 `disabled` / `sort_no`，仅当 `name` 或 `i18n_key` 为空时回填。HTTP 出参 `name` 是库里的回退原文，`i18n_key` 是词条 key，`i18n_name` 按当前 `X-Lang` 用 `i18n.TG`（`i18n_group=lang`）翻译，无词条则回退 `name`。该语言在 `sys_i18n` 已有词条时，不能改 `lang`、不能删除。拖拽排序见 [POST /admin/i18n/lang/reorder](#post-admini18nlangreorder)，按当前 `sort_no` 序列把 `id` 挪到 `target_id` 的位置后重写全表 `sort_no` 为 `1..n`。管理 CRUD（含 reorder、导出、导入）走 JWT + Casbin；已开启列表和词条下发仅 JWT（登录后切语言 / 拉文案），不进 Casbin 目录，见 [GET /admin/i18n/lang/enabled](#get-admini18nlangenabled)、[GET /admin/i18n/dict](#get-admini18ndict)。一种语言一个 JSON 文件的导入导出见 [POST /admin/i18n/export](#post-admini18nexport)、[POST /admin/i18n/import](#post-admini18nimport)。
 
 #### POST /admin/i18n/create
 
@@ -2383,13 +2383,12 @@ HTTP 对应：`POST /admin/bootstrap/admin`、`POST /admin/bootstrap/operator`�
 
 ## 三、菜单 / API 自动迁移（RegisterCatalog）
 
-业务服务**不要**在 core-rpc 里写死 path。各 HTTP 进程启动时调 RPC `registerCatalog`：
+业务服务**不要**在 core-rpc 里写死 path。各 HTTP 进程启动时调 RPC `registerCatalog`。四类数据（`menu` / `api` / `i18n_langs` / `i18n_dict`）首次成功写入后记入 `sys_init`；**尚未打标**时按下面规则 upsert（存量库升级会再同步一次），**已打标**后只插入缺失行，不覆盖运营改过的字段。已有记录仍会给各分站 `super_admin` 补菜单与 Casbin（增量，不替换已有授权）。
 
-- 菜单按 `name` upsert；`parent_name` 在本批全部写入后再挂父子
-- API 按 `(method, path)` upsert
-- 多语言按 `(i18n_code, trans_key, lang)` upsert；短 key 会拼上 `i18n_group`（如 `menu` + `route.dashboard` → `menu.route.dashboard`）。站点编码写在每条 `I18nItem.i18n_code`（core-api 为 `platform`，promo-api 为 `promo`）；空则 `platform`
-- 支持的语言按 `lang` 幂等插入；已存在不改 `disabled` / `sort_no`，仅当 `name` 为空时回填
-- 新建或更新后给各分站 `super_admin` 补菜单与 Casbin（增量，不替换已有授权）
+- 菜单按 `name`：首次 upsert；已初始化后只插入新 `name`。`parent_name` 在本批写入后再挂父子；已初始化后只给**本批新建**的菜单设父节点
+- API 按 `(method, path)`：首次 upsert；已初始化后只插入新接口
+- 多语言按 `(i18n_code, trans_key, lang)`：首次 upsert；已初始化后只插入新词条。短 key 会拼上 `i18n_group`（如 `menu` + `route.dashboard` → `menu.route.dashboard`）。站点编码写在每条 `I18nItem.i18n_code`（core-api 为 `platform`，promo-api 为 `promo`）；空则 `platform`
+- 支持的语言按 `lang`：首次幂等插入（已存在不改 `disabled` / `sort_no`，仅当 `name` 为空时回填）；已初始化后只插入新语言
 
 core-api 启动时注册系统管理菜单、`/admin/user|role|menu|api|authority|operator|i18n/*`，以及默认语言 `zh-CN` / `zh-HK` / `en-US`（见 `[api/internal/catalog/catalog.go](../api/internal/catalog/catalog.go)`）。若先 bootstrap 再启 HTTP，重启一次即可写入。
 
@@ -2402,10 +2401,10 @@ core-api 启动时注册系统管理菜单、`/admin/user|role|menu|api|authorit
 
 | 字段           | 必填  | 类型       | 说明                                              |
 | ------------ | --- | -------- | ----------------------------------------------- |
-| `menus`      | 否   | object[] | 要注册的菜单，按 `name` upsert                          |
-| `apis`       | 否   | object[] | 要注册的 API，按 method+path upsert                   |
-| `i18n`       | 否   | object[] | 要注册的多语言，按 `(i18n_code, trans_key, lang)` upsert |
-| `i18n_langs` | 否   | object[] | 要注册的支持语言，按 `lang` 幂等插入；已存在不改 disabled/sort_no   |
+| `menus`      | 否   | object[] | 要注册的菜单；首次按 `name` upsert，已初始化后只插入缺失 |
+| `apis`       | 否   | object[] | 要注册的 API；首次按 method+path upsert，已初始化后只插入缺失 |
+| `i18n`       | 否   | object[] | 要注册的多语言；首次按 `(i18n_code, trans_key, lang)` upsert，已初始化后只插入缺失 |
+| `i18n_langs` | 否   | object[] | 要注册的支持语言；首次按 `lang` 幂等插入，已初始化后只插入缺失 |
 
 
 `menus[]`（`RegisterMenuReq`）：

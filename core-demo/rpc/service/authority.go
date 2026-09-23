@@ -4,9 +4,9 @@ import (
 	"context"
 	"strings"
 
-	"oa.98ent.com/p9/core/common/ctxdata"
-	"oa.98ent.com/p9/core/common/i18n"
-	"oa.98ent.com/p9/core/common/xerr"
+	"oa.98ent.com/p9/common/ctxdata"
+	"oa.98ent.com/p9/common/xerr"
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/rpc/casbinx"
 	"oa.98ent.com/p9/core/rpc/ent"
 	"oa.98ent.com/p9/core/rpc/ent/api"
@@ -36,7 +36,7 @@ func (d *Deps) UpdateMenuAuthority(ctx context.Context, claims *ctxdata.Claims, 
 		return err
 	}
 	if r.IsSystem {
-		return xerr.Forbidden(i18n.AuthorityCannotChangeSystemMenus)
+		return xerr.Forbidden(coreI18n.AuthorityCannotChangeSystemMenus)
 	}
 	upd := d.Client.Role.UpdateOneID(r.ID).ClearMenus()
 	if len(req.MenuIDs) > 0 {
@@ -59,7 +59,7 @@ func (d *Deps) UpdateAPIAuthority(ctx context.Context, claims *ctxdata.Claims, r
 		return err
 	}
 	if r.IsSystem {
-		return xerr.Forbidden(i18n.AuthorityCannotChangeSystemAPIs)
+		return xerr.Forbidden(coreI18n.AuthorityCannotChangeSystemAPIs)
 	}
 	required, err := d.Client.API.Query().Where(api.IsRequiredEQ(1)).All(ctx)
 	if err != nil {
@@ -144,7 +144,7 @@ func (d *Deps) ListAPIs(ctx context.Context, req APIListReq) ([]model.API, int64
 
 func (d *Deps) MenusByRole(ctx context.Context, claims *ctxdata.Claims) ([]model.Menu, error) {
 	if claims == nil {
-		return nil, xerr.Unauthorized(i18n.Unauthorized)
+		return nil, xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	if len(claims.RoleCodes) == 0 {
 		return make([]model.Menu, 0), nil

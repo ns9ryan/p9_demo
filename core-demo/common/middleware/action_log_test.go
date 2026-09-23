@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"oa.98ent.com/p9/core/common/ctxdata"
+	"oa.98ent.com/p9/common/ctxdata"
 )
 
 type chanRecorder struct {

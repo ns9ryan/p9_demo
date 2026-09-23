@@ -29,5 +29,5 @@ func (l *GetRoleListLogic) GetRoleList(req *types.RoleListReq) (resp *types.Role
 	if err != nil {
 		return nil, err
 	}
-	return convert.RoleList(l.ctx, out), nil
+	return convert.RoleList(l.ctx, l.svcCtx.Trans, out), nil
 }

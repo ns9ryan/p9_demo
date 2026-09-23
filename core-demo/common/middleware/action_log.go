@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"oa.98ent.com/p9/core/common/ctxdata"
+	"oa.98ent.com/p9/common/ctxdata"
+	"oa.98ent.com/p9/common/utils"
 	"oa.98ent.com/p9/core/common/jwt"
-	"oa.98ent.com/p9/core/common/utils"
 
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest"

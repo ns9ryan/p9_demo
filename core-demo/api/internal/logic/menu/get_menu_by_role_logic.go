@@ -3,10 +3,10 @@ package menu
 import (
 	"context"
 
+	"oa.98ent.com/p9/common/i18n"
 	"oa.98ent.com/p9/core/api/internal/convert"
 	"oa.98ent.com/p9/core/api/internal/svc"
 	"oa.98ent.com/p9/core/api/internal/types"
-	"oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/rpc/coreclient"
 
 	"github.com/zeromicro/go-zero/core/logx"

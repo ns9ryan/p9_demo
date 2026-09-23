@@ -32,6 +32,8 @@ type Tx struct {
 	Menu *MenuClient
 	// Role is the client for interacting with the Role builders.
 	Role *RoleClient
+	// SysInit is the client for interacting with the SysInit builders.
+	SysInit *SysInitClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 
@@ -174,6 +176,7 @@ func (tx *Tx) init() {
 	tx.LoginLog = NewLoginLogClient(tx.config)
 	tx.Menu = NewMenuClient(tx.config)
 	tx.Role = NewRoleClient(tx.config)
+	tx.SysInit = NewSysInitClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 }
 

@@ -4,11 +4,11 @@ import (
 	"context"
 	"strings"
 
-	"oa.98ent.com/p9/core/common/ctxdata"
-	"oa.98ent.com/p9/core/common/i18n"
+	"oa.98ent.com/p9/common/ctxdata"
+	"oa.98ent.com/p9/common/utils"
+	"oa.98ent.com/p9/common/xerr"
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/common/jwt"
-	"oa.98ent.com/p9/core/common/utils"
-	"oa.98ent.com/p9/core/common/xerr"
 	"oa.98ent.com/p9/core/rpc/ent"
 	"oa.98ent.com/p9/core/rpc/ent/user"
 	"oa.98ent.com/p9/core/rpc/model"
@@ -27,11 +27,11 @@ type PreviewToken struct {
 
 func (d *Deps) IssuePreviewToken(ctx context.Context, req IssuePreviewTokenReq) (*PreviewToken, error) {
 	if d.Mode != ModeOn {
-		return nil, xerr.BadRequest(i18n.OperatorAPIOnlyOnMode)
+		return nil, xerr.BadRequest(coreI18n.OperatorAPIOnlyOnMode)
 	}
 	code := strings.TrimSpace(req.OperatorCode)
 	if code == "" {
-		return nil, xerr.BadRequest(i18n.AuthOperatorCodeRequired)
+		return nil, xerr.BadRequest(coreI18n.AuthOperatorCodeRequired)
 	}
 	admin, err := d.Client.User.Query().
 		Where(
@@ -43,7 +43,7 @@ func (d *Deps) IssuePreviewToken(ctx context.Context, req IssuePreviewTokenReq) 
 		Only(ctxdata.SkipTenant(ctx))
 	if err != nil {
 		if ent.IsNotFound(err) {
-			return nil, xerr.NotFound(i18n.UserNotFound)
+			return nil, xerr.NotFound(coreI18n.UserNotFound)
 		}
 		return nil, err
 	}

@@ -7,11 +7,11 @@ import (
 	"strings"
 	"time"
 
-	"oa.98ent.com/p9/core/common/ctxdata"
-	"oa.98ent.com/p9/core/common/i18n"
+	"oa.98ent.com/p9/common/ctxdata"
+	"oa.98ent.com/p9/common/utils"
+	"oa.98ent.com/p9/common/xerr"
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/common/jwt"
-	"oa.98ent.com/p9/core/common/utils"
-	"oa.98ent.com/p9/core/common/xerr"
 	"oa.98ent.com/p9/core/rpc/ent"
 	"oa.98ent.com/p9/core/rpc/ent/role"
 	"oa.98ent.com/p9/core/rpc/ent/user"
@@ -77,7 +77,7 @@ func (d *Deps) DomainFromClaims(c *ctxdata.Claims) string {
 
 func (d *Deps) RequireMode(want string) error {
 	if d.Mode != want {
-		return xerr.BadRequest(i18n.AuthPartnerModeMismatch)
+		return xerr.BadRequest(coreI18n.AuthPartnerModeMismatch)
 	}
 	return nil
 }
@@ -163,7 +163,7 @@ func (d *Deps) RotateSalt(ctx context.Context, userID int64) error {
 		return err
 	}
 	if n == 0 {
-		return xerr.NotFound(i18n.UserNotFound)
+		return xerr.NotFound(coreI18n.UserNotFound)
 	}
 	return nil
 }

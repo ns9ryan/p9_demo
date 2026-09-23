@@ -1,0 +1,15 @@
+{
+    "common": {
+        "success": "ok",
+        "unauthorized": "unauthorized",
+        "forbidden": "forbidden",
+        "notFound": "not found",
+        "tokenExpired": "token expired",
+        "internalError": "internal error",
+        "invalidParam": "invalid request parameter",
+        "paramRequired": "required parameter missing: {{.Field}}",
+        "paramTypeMismatch": "parameter type mismatch: {{.Field}}",
+        "paramValueInvalid": "invalid parameter value",
+        "paramValueInvalidField": "invalid parameter value: {{.Field}}"
+    }
+}

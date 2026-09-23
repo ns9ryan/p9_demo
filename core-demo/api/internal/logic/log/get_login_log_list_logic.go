@@ -29,5 +29,5 @@ func (l *GetLoginLogListLogic) GetLoginLogList(req *types.LoginLogListReq) (resp
 	if err != nil {
 		return nil, err
 	}
-	return convert.LoginLogList(l.ctx, out), nil
+	return convert.LoginLogList(l.ctx, l.svcCtx.Trans, out), nil
 }

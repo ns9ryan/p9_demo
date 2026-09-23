@@ -29,5 +29,5 @@ func (l *GetAdminActionLogListLogic) GetAdminActionLogList(req *types.AdminActio
 	if err != nil {
 		return nil, err
 	}
-	return convert.AdminActionLogList(l.ctx, out), nil
+	return convert.AdminActionLogList(l.ctx, l.svcCtx.Trans, out), nil
 }

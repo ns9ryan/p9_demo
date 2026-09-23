@@ -8,9 +8,9 @@ import (
 	"strings"
 	"unicode"
 
+	"oa.98ent.com/p9/common/xerr"
 	"oa.98ent.com/p9/core/api/internal/types"
-	"oa.98ent.com/p9/core/common/i18n"
-	"oa.98ent.com/p9/core/common/xerr"
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/rpc/coreclient"
 )
 
@@ -50,25 +50,25 @@ func MarshalI18nFile(in *types.ExportI18nResp) ([]byte, error) {
 // 读取I18n上传文件
 func ReadI18nUploadFile(r *http.Request) ([]byte, error) {
 	if r == nil {
-		return nil, xerr.BadRequest(i18n.I18nDataRequired)
+		return nil, xerr.BadRequest(coreI18n.I18nDataRequired)
 	}
 	if err := r.ParseMultipartForm(I18nFileMaxBytes); err != nil {
-		return nil, xerr.BadRequest(i18n.InvalidParam)
+		return nil, xerr.BadRequest(coreI18n.InvalidParam)
 	}
 	f, _, err := r.FormFile("file")
 	if err != nil {
 		if errors.Is(err, http.ErrMissingFile) {
-			return nil, xerr.BadRequest(i18n.I18nDataRequired)
+			return nil, xerr.BadRequest(coreI18n.I18nDataRequired)
 		}
-		return nil, xerr.BadRequest(i18n.InvalidParam)
+		return nil, xerr.BadRequest(coreI18n.InvalidParam)
 	}
 	defer f.Close()
 	data, err := io.ReadAll(io.LimitReader(f, I18nFileMaxBytes+1))
 	if err != nil {
-		return nil, xerr.BadRequest(i18n.InvalidParam)
+		return nil, xerr.BadRequest(coreI18n.InvalidParam)
 	}
 	if int64(len(data)) > I18nFileMaxBytes {
-		return nil, xerr.BadRequest(i18n.InvalidParam)
+		return nil, xerr.BadRequest(coreI18n.InvalidParam)
 	}
 	return data, nil
 }
@@ -92,7 +92,7 @@ func CheckImportI18nLang(reqLang, fileLang string) error {
 		return nil
 	}
 	if reqLang != strings.TrimSpace(fileLang) {
-		return xerr.BadRequest(i18n.I18nLangMismatch)
+		return xerr.BadRequest(coreI18n.I18nLangMismatch)
 	}
 	return nil
 }
@@ -100,11 +100,11 @@ func CheckImportI18nLang(reqLang, fileLang string) error {
 // 解析I18n上传文件
 func UnmarshalI18nFile(data []byte) (*types.ExportI18nResp, error) {
 	if len(data) == 0 {
-		return nil, xerr.BadRequest(i18n.I18nDataRequired)
+		return nil, xerr.BadRequest(coreI18n.I18nDataRequired)
 	}
 	var out types.ExportI18nResp
 	if err := json.Unmarshal(data, &out); err != nil {
-		return nil, xerr.BadRequest(i18n.InvalidParam)
+		return nil, xerr.BadRequest(coreI18n.InvalidParam)
 	}
 	if out.I18nItems == nil {
 		out.I18nItems = []types.I18nFileItem{}

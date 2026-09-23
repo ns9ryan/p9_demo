@@ -7,6 +7,10 @@ Log:
   Mode: console
   Level: info
 
+# 国际化配置
+I18n:
+  DefaultLanguage: zh-CN        # 默认语言
+
 # 链路追踪, 生产建议 Sampler 0.01~0.1
 Telemetry:
   Name: platform-core-api

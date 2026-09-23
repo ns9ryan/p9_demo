@@ -9,16 +9,15 @@ import (
 	"fmt"
 	"net/http"
 
+	"oa.98ent.com/p9/common/response"
 	"oa.98ent.com/p9/core/api/internal/catalog"
 	"oa.98ent.com/p9/core/api/internal/config"
 	"oa.98ent.com/p9/core/api/internal/handler"
 	"oa.98ent.com/p9/core/api/internal/svc"
 	"oa.98ent.com/p9/core/common/middleware"
-	"oa.98ent.com/p9/core/common/response"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/rest"
 )
 
@@ -29,26 +28,27 @@ func main() {
 
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
-	// 注册HTTPX的OK和Error处理函数
-	response.SetupHTTPX(c.Mode == service.DevMode || c.Mode == service.TestMode)
 
 	server := rest.MustNewServer(c.RestConf, rest.WithCors(c.CROSConf.Address))
 	defer server.Stop()
-
-	ctx := svc.NewServiceContext(c)
 	// 注册I18n中间件
 	server.Use(middleware.I18n)
 	// 注册客户端 IP 中间件
 	server.Use(middleware.ClientIP)
+	// 注册服务上下文
+	ctx := svc.NewServiceContext(c)
 	// 注册错误日志中间件
 	server.Use(ctx.ErrorLog)
+
+	// 注册HTTPX的OK和Error处理函数
+	response.SetupHTTPX(ctx.Trans, c.GetI18nCode(), c.IsDebug())
 
 	// 注册菜单、API目录、多语言数据
 	logx.Must(catalog.Register(ctx))
 	// 注册API路由
 	handler.RegisterHandlers(server, ctx)
-	// 开发环境或测试环境注册swagger接口文档路由
-	if c.Mode == service.DevMode || c.Mode == service.TestMode {
+	// 调试模式下注册swagger接口文档路由
+	if c.IsDebug() {
 		registerSwagger(server)
 	}
 

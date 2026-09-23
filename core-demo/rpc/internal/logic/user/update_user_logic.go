@@ -3,8 +3,8 @@ package user
 import (
 	"context"
 
-	"oa.98ent.com/p9/core/common/ctxdata"
-	"oa.98ent.com/p9/core/common/xerr"
+	"oa.98ent.com/p9/common/ctxdata"
+	"oa.98ent.com/p9/common/xerr"
 	"oa.98ent.com/p9/core/rpc/internal/logic"
 	"oa.98ent.com/p9/core/rpc/internal/svc"
 	"oa.98ent.com/p9/core/rpc/service"

@@ -365,6 +365,27 @@ var (
 			},
 		},
 	}
+	// SysInitColumns holds the columns for the "sys_init" table.
+	SysInitColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键ID", SchemaType: map[string]string{"postgres": "bigint"}},
+		{Name: "created_at", Type: field.TypeTime, Comment: "Created At | 创建时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "Updated At | 更新时间", Default: schema.Expr("CURRENT_TIMESTAMP")},
+		{Name: "init_key", Type: field.TypeString, Size: 32, Comment: "Init category key | 初始化类别"},
+	}
+	// SysInitTable holds the schema information for the "sys_init" table.
+	SysInitTable = &schema.Table{
+		Name:       "sys_init",
+		Comment:    "Catalog init flag | 目录初始化标记",
+		Columns:    SysInitColumns,
+		PrimaryKey: []*schema.Column{SysInitColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "uk_sys_init_key",
+				Unique:  true,
+				Columns: []*schema.Column{SysInitColumns[3]},
+			},
+		},
+	}
 	// SysUserColumns holds the columns for the "sys_user" table.
 	SysUserColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "Primary key | 主键ID", SchemaType: map[string]string{"postgres": "bigint"}},
@@ -490,6 +511,7 @@ var (
 		SysLoginLogTable,
 		SysMenuTable,
 		SysRoleTable,
+		SysInitTable,
 		SysUserTable,
 		SysRoleMenuTable,
 		SysUserRoleTable,
@@ -526,6 +548,9 @@ func init() {
 	}
 	SysRoleTable.Annotation = &entsql.Annotation{
 		Table: "sys_role",
+	}
+	SysInitTable.Annotation = &entsql.Annotation{
+		Table: "sys_init",
 	}
 	SysUserTable.Annotation = &entsql.Annotation{
 		Table: "sys_user",

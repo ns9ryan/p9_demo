@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
-	"oa.98ent.com/p9/core/common/ctxdata"
-	"oa.98ent.com/p9/core/common/i18n"
-	"oa.98ent.com/p9/core/common/xerr"
+	"oa.98ent.com/p9/common/ctxdata"
+	"oa.98ent.com/p9/common/xerr"
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/rpc/ent"
 	"oa.98ent.com/p9/core/rpc/ent/adminactionlog"
 	"oa.98ent.com/p9/core/rpc/ent/user"
@@ -90,10 +90,10 @@ func (d *Deps) CreateAdminActionLog(ctx context.Context, req CreateAdminActionLo
 
 func (d *Deps) ListAdminActionLogs(ctx context.Context, claims *ctxdata.Claims, req AdminActionLogListReq) ([]model.AdminActionLog, int64, error) {
 	if claims == nil {
-		return nil, 0, xerr.Unauthorized(i18n.Unauthorized)
+		return nil, 0, xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	if d.Mode == ModeOn && claims.OperatorCode == "" {
-		return nil, 0, xerr.Unauthorized(i18n.Unauthorized)
+		return nil, 0, xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	ctx = ctxdata.WithClaims(ctx, claims)
 	q := d.Client.AdminActionLog.Query().WithUser()

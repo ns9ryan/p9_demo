@@ -3,18 +3,18 @@ package service
 import (
 	"context"
 
-	"oa.98ent.com/p9/core/common/ctxdata"
-	"oa.98ent.com/p9/core/common/i18n"
+	"oa.98ent.com/p9/common/ctxdata"
+	"oa.98ent.com/p9/common/utils"
+	"oa.98ent.com/p9/common/xerr"
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/common/jwt"
-	"oa.98ent.com/p9/core/common/utils"
-	"oa.98ent.com/p9/core/common/xerr"
 	"oa.98ent.com/p9/core/rpc/model"
 )
 
 func (d *Deps) Logout(ctx context.Context, refreshToken string) error {
 	claims := ctxdata.ClaimsFromCtx(ctx)
 	if claims == nil {
-		return xerr.Unauthorized(i18n.Unauthorized)
+		return xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	raw, exp, err := d.parseOwnRefresh(claims, refreshToken)
 	if err != nil {
@@ -29,11 +29,11 @@ func (d *Deps) Logout(ctx context.Context, refreshToken string) error {
 func (d *Deps) parseOwnRefresh(claims *ctxdata.Claims, refreshToken string) (string, int64, error) {
 	raw := jwt.StripBearer(refreshToken)
 	if raw == "" {
-		return "", 0, xerr.BadRequest(i18n.AuthRefreshTokenRequired)
+		return "", 0, xerr.BadRequest(coreI18n.AuthRefreshTokenRequired)
 	}
 	c, err := jwt.ParseTyped(d.JWTRefreshSecret, raw, jwt.TokenRefresh)
 	if err != nil || c.UserID != claims.UserID || c.Salt != claims.Salt {
-		return "", 0, xerr.Unauthorized(i18n.Unauthorized)
+		return "", 0, xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	exp := int64(0)
 	if c.ExpiresAt != nil {
@@ -45,7 +45,7 @@ func (d *Deps) parseOwnRefresh(claims *ctxdata.Claims, refreshToken string) (str
 func (d *Deps) LogoutAll(ctx context.Context) error {
 	claims := ctxdata.ClaimsFromCtx(ctx)
 	if claims == nil {
-		return xerr.Unauthorized(i18n.Unauthorized)
+		return xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	return d.RotateSalt(ctx, claims.UserID)
 }
@@ -53,11 +53,11 @@ func (d *Deps) LogoutAll(ctx context.Context) error {
 func (d *Deps) CurrentUser(ctx context.Context) (UserPublic, error) {
 	claims := ctxdata.ClaimsFromCtx(ctx)
 	if claims == nil {
-		return UserPublic{}, xerr.Unauthorized(i18n.Unauthorized)
+		return UserPublic{}, xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	u, err := d.ActiveUserByID(ctx, claims.UserID)
 	if err != nil {
-		return UserPublic{}, xerr.Unauthorized(i18n.Unauthorized)
+		return UserPublic{}, xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	roles, err := d.RolesOfUser(ctx, u.ID)
 	if err != nil {
@@ -71,35 +71,35 @@ func (d *Deps) CheckToken(ctx context.Context, raw string) (*ctxdata.Claims, err
 	claims, err := jwt.Parse(d.JWTSecret, raw)
 	if err != nil {
 		if jwt.IsExpired(err) {
-			return nil, xerr.TokenExpired(i18n.TokenExpired)
+			return nil, xerr.TokenExpired(coreI18n.TokenExpired)
 		}
-		return nil, xerr.Unauthorized(i18n.Unauthorized)
+		return nil, xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	if claims.TokenType == jwt.TokenRefresh {
-		return nil, xerr.Unauthorized(i18n.Unauthorized)
+		return nil, xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	if err := d.checkTokenClientIP(ctx, claims); err != nil {
 		return nil, err
 	}
 	if d.TokenBlacklisted(ctx, raw) {
-		return nil, xerr.Unauthorized(i18n.Unauthorized)
+		return nil, xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	// if claims.TokenType == jwt.TokenPreview {
 	// 	return d.checkPreviewToken(ctx, claims)
 	// }
 	u, err := d.ActiveUserByID(ctx, claims.UserID)
 	if err != nil {
-		return nil, xerr.Unauthorized(i18n.Unauthorized)
+		return nil, xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	if u.Status != model.StatusNormal || u.Salt != claims.Salt {
-		return nil, xerr.Unauthorized(i18n.Unauthorized)
+		return nil, xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	if err := d.checkTokenTenant(ctx, u, claims); err != nil {
 		return nil, err
 	}
 	codes, err := d.RoleCodesOfUser(ctx, u.ID)
 	if err != nil {
-		return nil, xerr.Unauthorized(i18n.Unauthorized)
+		return nil, xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	exp := int64(0)
 	if claims.ExpiresAt != nil {
@@ -121,20 +121,20 @@ func (d *Deps) CheckToken(ctx context.Context, raw string) (*ctxdata.Claims, err
 
 func (d *Deps) checkPreviewToken(ctx context.Context, claims *jwt.Claims) (*ctxdata.Claims, error) {
 	if claims.OperatorCode == "" {
-		return nil, xerr.Unauthorized(i18n.Unauthorized)
+		return nil, xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	if claims.UserID == 0 {
-		return nil, xerr.Unauthorized(i18n.Unauthorized)
+		return nil, xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	u, err := d.ActiveUserByID(ctxdata.SkipTenant(ctx), claims.UserID)
 	if err != nil {
-		return nil, xerr.Unauthorized(i18n.Unauthorized)
+		return nil, xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	if u.Status != model.StatusNormal || u.Salt != claims.Salt {
-		return nil, xerr.Unauthorized(i18n.Unauthorized)
+		return nil, xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	if u.OperatorCode == nil || *u.OperatorCode != claims.OperatorCode {
-		return nil, xerr.Unauthorized(i18n.Unauthorized)
+		return nil, xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	codes := claims.RoleCodes
 	if codes == nil {
@@ -162,7 +162,7 @@ func (d *Deps) checkTokenClientIP(ctx context.Context, claims *jwt.Claims) error
 	got := utils.NormalizeIP(claims.ClientIP)
 	want := utils.NormalizeIP(ctxdata.ClientIPFromCtx(ctx))
 	if got == "" || got != want {
-		return xerr.Unauthorized(i18n.AuthIPMismatch)
+		return xerr.Unauthorized(coreI18n.AuthIPMismatch)
 	}
 	return nil
 }
@@ -191,10 +191,10 @@ func (d *Deps) Enforce(ctx context.Context, claims *ctxdata.Claims, path, method
 func (d *Deps) sessionFromClaims(ctx context.Context, c *jwt.Claims) (*model.User, UserRoles, error) {
 	u, err := d.ActiveUserByID(ctx, c.UserID)
 	if err != nil {
-		return nil, UserRoles{}, xerr.Unauthorized(i18n.Unauthorized)
+		return nil, UserRoles{}, xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	if u.Status != model.StatusNormal || u.Salt != c.Salt {
-		return nil, UserRoles{}, xerr.Unauthorized(i18n.Unauthorized)
+		return nil, UserRoles{}, xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	if err := d.checkTokenTenant(ctx, u, c); err != nil {
 		return nil, UserRoles{}, err
@@ -204,7 +204,7 @@ func (d *Deps) sessionFromClaims(ctx context.Context, c *jwt.Claims) (*model.Use
 		return nil, UserRoles{}, err
 	}
 	if len(roles.Codes) == 0 {
-		return nil, UserRoles{}, xerr.Forbidden(i18n.AuthNoActiveRole)
+		return nil, UserRoles{}, xerr.Forbidden(coreI18n.AuthNoActiveRole)
 	}
 	return u, roles, nil
 }
@@ -212,12 +212,12 @@ func (d *Deps) sessionFromClaims(ctx context.Context, c *jwt.Claims) (*model.Use
 func (d *Deps) checkTokenTenant(ctx context.Context, u *model.User, c *jwt.Claims) error {
 	if d.Mode != ModeOn {
 		if strVal(u.OperatorCode) != "" || c.OperatorCode != "" {
-			return xerr.Unauthorized(i18n.Unauthorized)
+			return xerr.Unauthorized(coreI18n.Unauthorized)
 		}
 		return nil
 	}
 	if strVal(u.OperatorCode) == "" || c.OperatorCode == "" || strVal(u.OperatorCode) != c.OperatorCode {
-		return xerr.Unauthorized(i18n.Unauthorized)
+		return xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	return nil
 }

@@ -5,10 +5,10 @@ import (
 	"strings"
 	"time"
 
-	"oa.98ent.com/p9/core/common/ctxdata"
-	"oa.98ent.com/p9/core/common/i18n"
-	"oa.98ent.com/p9/core/common/utils"
-	"oa.98ent.com/p9/core/common/xerr"
+	"oa.98ent.com/p9/common/ctxdata"
+	"oa.98ent.com/p9/common/utils"
+	"oa.98ent.com/p9/common/xerr"
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/rpc/ent"
 	"oa.98ent.com/p9/core/rpc/ent/role"
 	"oa.98ent.com/p9/core/rpc/ent/user"
@@ -69,14 +69,14 @@ func (d *Deps) CreateUser(ctx context.Context, claims *ctxdata.Claims, req Creat
 	req.Username = strings.TrimSpace(req.Username)
 	req.DisplayName = strings.TrimSpace(req.DisplayName)
 	if req.Username == "" || req.Password == "" || req.DisplayName == "" {
-		return nil, xerr.BadRequest(i18n.UserCreateFieldsRequired)
+		return nil, xerr.BadRequest(coreI18n.UserCreateFieldsRequired)
 	}
 	if req.Status == 0 {
 		req.Status = model.StatusNormal
 	}
 	if d.Mode == ModeOn {
 		if claims == nil || claims.OperatorCode == "" {
-			return nil, xerr.Unauthorized(i18n.Unauthorized)
+			return nil, xerr.Unauthorized(coreI18n.Unauthorized)
 		}
 	}
 	hash, err := HashPassword(req.Password)
@@ -99,8 +99,8 @@ func (d *Deps) CreateUser(ctx context.Context, claims *ctxdata.Claims, req Creat
 		SetIsSuperAdmin(false).
 		Save(ctx)
 	if err != nil {
-		logx.Errorw(i18n.UserCreateFailed, logx.Field("error", err))
-		return nil, xerr.BadRequest(i18n.UserCreateFailed)
+		logx.Errorw(coreI18n.UserCreateFailed, logx.Field("error", err))
+		return nil, xerr.BadRequest(coreI18n.UserCreateFailed)
 	}
 	u := userFromEnt(row)
 	if len(req.RoleIDs) > 0 {
@@ -139,14 +139,14 @@ func (d *Deps) UpdateUser(ctx context.Context, claims *ctxdata.Claims, req Updat
 
 func (d *Deps) UpdateUserIpWhitelist(ctx context.Context, claims *ctxdata.Claims, req UpdateUserIpWhitelistReq) error {
 	if req.IPWhitelistEnabled != 0 && req.IPWhitelistEnabled != 1 {
-		return xerr.BadRequest(i18n.InvalidParam)
+		return xerr.BadRequest(coreI18n.InvalidParam)
 	}
 	list, ok := utils.NormalizeIPWhitelist(req.IPWhitelist)
 	if !ok {
-		return xerr.BadRequest(i18n.UserInvalidIpWhitelist)
+		return xerr.BadRequest(coreI18n.UserInvalidIpWhitelist)
 	}
 	if req.IPWhitelistEnabled == 1 && len(list) == 0 {
-		return xerr.BadRequest(i18n.UserInvalidIpWhitelist)
+		return xerr.BadRequest(coreI18n.UserInvalidIpWhitelist)
 	}
 	u, err := d.mustTenantUser(ctx, claims, req.ID)
 	if err != nil {
@@ -160,18 +160,18 @@ func (d *Deps) UpdateUserIpWhitelist(ctx context.Context, claims *ctxdata.Claims
 
 func (d *Deps) DeleteUsers(ctx context.Context, claims *ctxdata.Claims, ids []int64) error {
 	if claims == nil {
-		return xerr.Unauthorized(i18n.Unauthorized)
+		return xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	for _, id := range ids {
 		if id == claims.UserID {
-			return xerr.BadRequest(i18n.UserCannotDeleteSelf)
+			return xerr.BadRequest(coreI18n.UserCannotDeleteSelf)
 		}
 		u, err := d.mustTenantUser(ctx, claims, id)
 		if err != nil {
 			return err
 		}
 		if u.IsSuperAdmin {
-			return xerr.Forbidden(i18n.UserCannotDeleteRoot)
+			return xerr.Forbidden(coreI18n.UserCannotDeleteRoot)
 		}
 		if err := d.Client.User.UpdateOneID(u.ID).SetDeletedAt(time.Now()).Exec(ctx); err != nil {
 			return err
@@ -192,7 +192,7 @@ func (d *Deps) GetUser(ctx context.Context, claims *ctxdata.Claims, id int64) (*
 
 func (d *Deps) ListUsers(ctx context.Context, claims *ctxdata.Claims, req UserListReq) ([]model.User, int64, error) {
 	if claims == nil {
-		return nil, 0, xerr.Unauthorized(i18n.Unauthorized)
+		return nil, 0, xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	q := d.Client.User.Query().Where(user.DeletedAtIsNil())
 	if s := strings.TrimSpace(req.Username); s != "" {
@@ -239,14 +239,14 @@ func (d *Deps) bindRoles(ctx context.Context, u *model.User, roleIDs []int64) er
 		return err
 	}
 	if len(roles) != len(roleIDs) {
-		return xerr.BadRequest(i18n.RoleNotFound)
+		return xerr.BadRequest(coreI18n.RoleNotFound)
 	}
 	return d.Client.User.UpdateOneID(u.ID).ClearRoles().AddRoleIDs(roleIDs...).Exec(ctx)
 }
 
 func (d *Deps) ChangePassword(ctx context.Context, claims *ctxdata.Claims, userID int64, newPassword string) error {
 	if strings.TrimSpace(newPassword) == "" {
-		return xerr.BadRequest(i18n.UserPasswordRequired)
+		return xerr.BadRequest(coreI18n.UserPasswordRequired)
 	}
 	u, err := d.mustTenantUser(ctx, claims, userID)
 	if err != nil {
@@ -264,14 +264,14 @@ func (d *Deps) ChangePassword(ctx context.Context, claims *ctxdata.Claims, userI
 
 func (d *Deps) ChangeOwnPassword(ctx context.Context, claims *ctxdata.Claims, oldPw, newPw string) error {
 	if claims == nil {
-		return xerr.Unauthorized(i18n.Unauthorized)
+		return xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	u, err := d.ActiveUserByID(ctx, claims.UserID)
 	if err != nil {
-		return xerr.Unauthorized(i18n.Unauthorized)
+		return xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	if !CheckPassword(u.PasswordHash, oldPw) {
-		return xerr.BadRequest(i18n.UserOldPasswordMismatch)
+		return xerr.BadRequest(coreI18n.UserOldPasswordMismatch)
 	}
 	return d.ChangePassword(ctx, claims, u.ID, newPw)
 }
@@ -280,7 +280,7 @@ func (d *Deps) mustTenantUser(ctx context.Context, claims *ctxdata.Claims, id in
 	u, err := d.ActiveUserByID(ctx, id)
 	if err != nil {
 		if ent.IsNotFound(err) {
-			return nil, xerr.NotFound(i18n.UserNotFound)
+			return nil, xerr.NotFound(coreI18n.UserNotFound)
 		}
 		return nil, err
 	}

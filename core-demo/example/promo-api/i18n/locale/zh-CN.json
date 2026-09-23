@@ -1,0 +1,15 @@
+{
+    "common": {
+        "success": "ok",
+        "unauthorized": "未登录",
+        "forbidden": "无权限",
+        "notFound": "不存在",
+        "tokenExpired": "登录已过期",
+        "internalError": "内部错误",
+        "invalidParam": "请求参数错误",
+        "paramRequired": "缺少必填参数: {{.Field}}",
+        "paramTypeMismatch": "参数类型错误: {{.Field}}",
+        "paramValueInvalid": "参数值错误",
+        "paramValueInvalidField": "参数值错误: {{.Field}}"
+    }
+}

@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"oa.98ent.com/p9/core/common/ctxdata"
-	"oa.98ent.com/p9/core/common/i18n"
-	"oa.98ent.com/p9/core/common/xerr"
+	"oa.98ent.com/p9/common/ctxdata"
+	"oa.98ent.com/p9/common/xerr"
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/rpc/ent"
 	"oa.98ent.com/p9/core/rpc/ent/loginlog"
 )
@@ -23,17 +23,17 @@ func TestUpdateUserIpWhitelistAndLogin(t *testing.T) {
 
 	if err := d.UpdateUserIpWhitelist(ctx, claims, UpdateUserIpWhitelistReq{
 		ID: u.ID, IPWhitelistEnabled: 1,
-	}); err == nil || xerr.AsError(err).Message != i18n.UserInvalidIpWhitelist {
+	}); err == nil || xerr.AsError(err).Message != coreI18n.UserInvalidIpWhitelist {
 		t.Fatalf("enable empty: %v", err)
 	}
 	if err := d.UpdateUserIpWhitelist(ctx, claims, UpdateUserIpWhitelistReq{
 		ID: u.ID, IPWhitelistEnabled: 1, IPWhitelist: []string{"not-an-ip"},
-	}); err == nil || xerr.AsError(err).Message != i18n.UserInvalidIpWhitelist {
+	}); err == nil || xerr.AsError(err).Message != coreI18n.UserInvalidIpWhitelist {
 		t.Fatalf("bad ip: %v", err)
 	}
 	if err := d.UpdateUserIpWhitelist(ctx, claims, UpdateUserIpWhitelistReq{
 		ID: u.ID, IPWhitelistEnabled: 3, IPWhitelist: []string{"1.1.1.1"},
-	}); err == nil || xerr.AsError(err).Message != i18n.InvalidParam {
+	}); err == nil || xerr.AsError(err).Message != coreI18n.InvalidParam {
 		t.Fatalf("bad flag: %v", err)
 	}
 
@@ -59,14 +59,14 @@ func TestUpdateUserIpWhitelistAndLogin(t *testing.T) {
 	}
 
 	_, err = d.Login(ctx, LoginReq{Username: "admin", Password: "pass", ClientIP: "11.0.0.1"})
-	if err == nil || xerr.AsError(err).Message != i18n.AuthIPNotAllowed {
+	if err == nil || xerr.AsError(err).Message != coreI18n.AuthIPNotAllowed {
 		t.Fatalf("deny: %v", err)
 	}
 	row, err := d.Client.LoginLog.Query().Order(ent.Desc(loginlog.FieldID)).First(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if row.LoginResult == 1 || row.FailureReason == nil || *row.FailureReason != i18n.AuthIPNotAllowed {
+	if row.LoginResult == 1 || row.FailureReason == nil || *row.FailureReason != coreI18n.AuthIPNotAllowed {
 		t.Fatalf("fail log %+v", row)
 	}
 

@@ -15,6 +15,7 @@ import (
 	"oa.98ent.com/p9/core/rpc/ent/menu"
 	"oa.98ent.com/p9/core/rpc/ent/role"
 	"oa.98ent.com/p9/core/rpc/ent/schema"
+	"oa.98ent.com/p9/core/rpc/ent/sysinit"
 	"oa.98ent.com/p9/core/rpc/ent/user"
 )
 
@@ -406,6 +407,25 @@ func init() {
 	roleDescSortNo := roleFields[5].Descriptor()
 	// role.DefaultSortNo holds the default value on creation for the sort_no field.
 	role.DefaultSortNo = roleDescSortNo.Default.(int)
+	sysinitMixin := schema.SysInit{}.Mixin()
+	sysinitMixinFields1 := sysinitMixin[1].Fields()
+	_ = sysinitMixinFields1
+	sysinitFields := schema.SysInit{}.Fields()
+	_ = sysinitFields
+	// sysinitDescCreatedAt is the schema descriptor for created_at field.
+	sysinitDescCreatedAt := sysinitMixinFields1[0].Descriptor()
+	// sysinit.DefaultCreatedAt holds the default value on creation for the created_at field.
+	sysinit.DefaultCreatedAt = sysinitDescCreatedAt.Default.(func() time.Time)
+	// sysinitDescUpdatedAt is the schema descriptor for updated_at field.
+	sysinitDescUpdatedAt := sysinitMixinFields1[1].Descriptor()
+	// sysinit.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	sysinit.DefaultUpdatedAt = sysinitDescUpdatedAt.Default.(func() time.Time)
+	// sysinit.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	sysinit.UpdateDefaultUpdatedAt = sysinitDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// sysinitDescInitKey is the schema descriptor for init_key field.
+	sysinitDescInitKey := sysinitFields[0].Descriptor()
+	// sysinit.InitKeyValidator is a validator for the "init_key" field. It is called by the builders before save.
+	sysinit.InitKeyValidator = sysinitDescInitKey.Validators[0].(func(string) error)
 	userMixin := schema.User{}.Mixin()
 	userMixinHooks2 := userMixin[2].Hooks()
 	userMixinHooks3 := userMixin[3].Hooks()

@@ -5,10 +5,10 @@ import (
 	"testing"
 	"time"
 
-	"oa.98ent.com/p9/core/common/ctxdata"
-	"oa.98ent.com/p9/core/common/i18n"
+	"oa.98ent.com/p9/common/ctxdata"
+	"oa.98ent.com/p9/common/xerr"
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/common/jwt"
-	"oa.98ent.com/p9/core/common/xerr"
 
 	jwtv5 "github.com/golang-jwt/jwt/v5"
 )
@@ -18,7 +18,7 @@ func TestCheckTokenExpired(t *testing.T) {
 	tok := mustSignExpired(t, "secret", jwt.Claims{UserID: 1, Salt: "s1", TokenType: jwt.TokenAccess})
 	_, err := d.CheckToken(context.Background(), tok)
 	got := xerr.AsError(err)
-	if got.Status != xerr.StatusTokenExpired || got.Message != i18n.TokenExpired {
+	if got.Status != xerr.StatusTokenExpired || got.Message != coreI18n.TokenExpired {
 		t.Fatalf("got %+v", got)
 	}
 }
@@ -63,11 +63,11 @@ func TestCheckTokenClientIP(t *testing.T) {
 		t.Fatal(err)
 	}
 	_, err = d.CheckToken(context.Background(), tok)
-	if got := xerr.AsError(err); got.Status != 401 || got.Message != i18n.AuthIPMismatch {
+	if got := xerr.AsError(err); got.Status != 401 || got.Message != coreI18n.AuthIPMismatch {
 		t.Fatalf("empty ctx %+v", got)
 	}
 	_, err = d.CheckToken(ctxdata.WithClientIP(context.Background(), "11.0.0.1"), tok)
-	if got := xerr.AsError(err); got.Status != 401 || got.Message != i18n.AuthIPMismatch {
+	if got := xerr.AsError(err); got.Status != 401 || got.Message != coreI18n.AuthIPMismatch {
 		t.Fatalf("mismatch %+v", got)
 	}
 	old, _, err := jwt.Sign("secret", 60, jwt.Claims{UserID: 1, Salt: "s1", TokenType: jwt.TokenAccess})
@@ -75,7 +75,7 @@ func TestCheckTokenClientIP(t *testing.T) {
 		t.Fatal(err)
 	}
 	_, err = d.CheckToken(ctxdata.WithClientIP(context.Background(), "10.0.0.1"), old)
-	if got := xerr.AsError(err); got.Status != 401 || got.Message != i18n.AuthIPMismatch {
+	if got := xerr.AsError(err); got.Status != 401 || got.Message != coreI18n.AuthIPMismatch {
 		t.Fatalf("old token %+v", got)
 	}
 }

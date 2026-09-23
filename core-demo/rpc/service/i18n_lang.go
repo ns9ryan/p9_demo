@@ -4,8 +4,8 @@ import (
 	"context"
 	"strings"
 
-	"oa.98ent.com/p9/core/common/i18n"
-	"oa.98ent.com/p9/core/common/xerr"
+	"oa.98ent.com/p9/common/xerr"
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/rpc/ent"
 	enti18n "oa.98ent.com/p9/core/rpc/ent/i18n"
 	enti18nlang "oa.98ent.com/p9/core/rpc/ent/i18nlang"
@@ -37,6 +37,10 @@ type I18nLangListReq struct {
 
 // UpsertI18nLangs 更新或创建语言列表
 func (d *Deps) UpsertI18nLangs(ctx context.Context, seeds []CreateI18nLangReq) error {
+	return d.upsertI18nLangs(ctx, seeds, false)
+}
+
+func (d *Deps) upsertI18nLangs(ctx context.Context, seeds []CreateI18nLangReq, insertOnly bool) error {
 	for _, s := range seeds {
 		row, err := d.Client.I18nLang.Query().Where(enti18nlang.LangEQ(s.Lang)).Only(ctx)
 		if err != nil {
@@ -49,6 +53,9 @@ func (d *Deps) UpsertI18nLangs(ctx context.Context, seeds []CreateI18nLangReq) e
 				Save(ctx); err != nil {
 				return err
 			}
+			continue
+		}
+		if insertOnly {
 			continue
 		}
 		up := d.Client.I18nLang.UpdateOneID(row.ID)
@@ -87,14 +94,14 @@ func (d *Deps) CreateI18nLang(ctx context.Context, req CreateI18nLangReq) (*mode
 		return nil, err
 	}
 	if taken {
-		return nil, xerr.BadRequest(i18n.I18nLangExists)
+		return nil, xerr.BadRequest(coreI18n.I18nLangExists)
 	}
 	row, err := d.Client.I18nLang.Create().
 		SetLang(lang).SetName(name).SetI18nKey(strings.TrimSpace(req.I18nKey)).
 		SetDisabled(req.Disabled).SetSortNo(req.SortNo).
 		Save(ctx)
 	if err != nil {
-		return nil, xerr.BadRequest(i18n.I18nLangCreateFailed)
+		return nil, xerr.BadRequest(coreI18n.I18nLangCreateFailed)
 	}
 	m := i18nLangFromEnt(row)
 	return &m, nil
@@ -117,7 +124,7 @@ func (d *Deps) UpdateI18nLang(ctx context.Context, req UpdateI18nLangReq) error 
 				return err
 			}
 			if used {
-				return xerr.BadRequest(i18n.I18nCannotChangeLangWithEntries)
+				return xerr.BadRequest(coreI18n.I18nCannotChangeLangWithEntries)
 			}
 		}
 		next.Lang = lang
@@ -146,7 +153,7 @@ func (d *Deps) UpdateI18nLang(ctx context.Context, req UpdateI18nLangReq) error 
 		return err
 	}
 	if taken {
-		return xerr.BadRequest(i18n.I18nLangExists)
+		return xerr.BadRequest(coreI18n.I18nLangExists)
 	}
 	return d.Client.I18nLang.UpdateOneID(row.ID).
 		SetLang(next.Lang).SetName(next.Name).SetI18nKey(next.I18nKey).
@@ -165,7 +172,7 @@ func (d *Deps) DeleteI18nLangs(ctx context.Context, ids []int64) error {
 			return err
 		}
 		if used {
-			return xerr.BadRequest(i18n.I18nCannotDeleteLangWithEntries)
+			return xerr.BadRequest(coreI18n.I18nCannotDeleteLangWithEntries)
 		}
 		if err := d.Client.I18nLang.DeleteOneID(id).Exec(ctx); err != nil {
 			return err
@@ -209,7 +216,7 @@ func (d *Deps) i18nLangByID(ctx context.Context, id int64) (model.I18nLang, erro
 	row, err := d.Client.I18nLang.Get(ctx, id)
 	if err != nil {
 		if ent.IsNotFound(err) {
-			return model.I18nLang{}, xerr.NotFound(i18n.I18nLangNotFound)
+			return model.I18nLang{}, xerr.NotFound(coreI18n.I18nLangNotFound)
 		}
 		return model.I18nLang{}, err
 	}
@@ -234,7 +241,7 @@ func (d *Deps) requireSupportedLang(ctx context.Context, lang string) error {
 		return err
 	}
 	if !exist {
-		return xerr.BadRequest(i18n.I18nLangNotSupported)
+		return xerr.BadRequest(coreI18n.I18nLangNotSupported)
 	}
 	return nil
 }
@@ -255,7 +262,7 @@ func (d *Deps) withTx(ctx context.Context, fn func(*Deps) error) error {
 
 func (d *Deps) ReorderI18nLang(ctx context.Context, id, targetID int64) error {
 	if id <= 0 || targetID <= 0 {
-		return xerr.BadRequest(i18n.InvalidParam)
+		return xerr.BadRequest(coreI18n.InvalidParam)
 	}
 	if id == targetID {
 		return nil
@@ -283,7 +290,7 @@ func (d *Deps) ReorderI18nLang(ctx context.Context, id, targetID int64) error {
 			}
 		}
 		if from < 0 || to < 0 {
-			return xerr.NotFound(i18n.I18nLangNotFound)
+			return xerr.NotFound(coreI18n.I18nLangNotFound)
 		}
 		item := list[from]
 		list = append(list[:from], list[from+1:]...)
@@ -300,7 +307,7 @@ func (d *Deps) ReorderI18nLang(ctx context.Context, id, targetID int64) error {
 func normalizeLangCode(lang string) (string, error) {
 	lang = strings.TrimSpace(lang)
 	if lang == "" {
-		return "", xerr.BadRequest(i18n.I18nLangRequired)
+		return "", xerr.BadRequest(coreI18n.I18nLangRequired)
 	}
 	return lang, nil
 }
@@ -308,14 +315,14 @@ func normalizeLangCode(lang string) (string, error) {
 func normalizeLangName(name string, required bool) (string, error) {
 	name = strings.TrimSpace(name)
 	if required && name == "" {
-		return "", xerr.BadRequest(i18n.I18nNameRequired)
+		return "", xerr.BadRequest(coreI18n.I18nNameRequired)
 	}
 	return name, nil
 }
 
 func validFlag01(v int16) error {
 	if v != 0 && v != 1 {
-		return xerr.BadRequest(i18n.InvalidParam)
+		return xerr.BadRequest(coreI18n.InvalidParam)
 	}
 	return nil
 }

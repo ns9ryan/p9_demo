@@ -6,11 +6,11 @@ import (
 	"strings"
 	"time"
 
-	"oa.98ent.com/p9/core/common/ctxdata"
-	"oa.98ent.com/p9/core/common/i18n"
+	"oa.98ent.com/p9/common/ctxdata"
+	"oa.98ent.com/p9/common/utils"
+	"oa.98ent.com/p9/common/xerr"
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/common/jwt"
-	"oa.98ent.com/p9/core/common/utils"
-	"oa.98ent.com/p9/core/common/xerr"
 	"oa.98ent.com/p9/core/rpc/ent"
 	"oa.98ent.com/p9/core/rpc/ent/user"
 	"oa.98ent.com/p9/core/rpc/model"
@@ -105,27 +105,27 @@ func (d *Deps) Login(ctx context.Context, req LoginReq) (*LoginResult, error) {
 
 func (d *Deps) doLogin(ctx context.Context, req LoginReq) (*LoginResult, *model.User, string, error) {
 	if req.Username == "" || req.Password == "" {
-		return nil, nil, i18n.AuthUsernamePasswordRequired, xerr.BadRequest(i18n.AuthUsernamePasswordRequired)
+		return nil, nil, coreI18n.AuthUsernamePasswordRequired, xerr.BadRequest(coreI18n.AuthUsernamePasswordRequired)
 	}
 	u, err := d.loginUser(ctx, req)
 	if err != nil {
 		return nil, nil, xerr.AsError(err).Message, err
 	}
 	if u.Status != model.StatusNormal {
-		return nil, u, i18n.AuthUserDisabled, xerr.Forbidden(i18n.AuthUserDisabled)
+		return nil, u, coreI18n.AuthUserDisabled, xerr.Forbidden(coreI18n.AuthUserDisabled)
 	}
 	if !CheckPassword(u.PasswordHash, req.Password) {
-		return nil, u, i18n.AuthPasswordIncorrect, xerr.BadRequest(i18n.AuthPasswordIncorrect)
+		return nil, u, coreI18n.AuthPasswordIncorrect, xerr.BadRequest(coreI18n.AuthPasswordIncorrect)
 	}
 	roles, err := d.RolesOfUser(ctx, u.ID)
 	if err != nil {
 		return nil, u, xerr.AsError(err).Message, err
 	}
 	if len(roles.Codes) == 0 {
-		return nil, u, i18n.AuthNoActiveRole, xerr.Forbidden(i18n.AuthNoActiveRole)
+		return nil, u, coreI18n.AuthNoActiveRole, xerr.Forbidden(coreI18n.AuthNoActiveRole)
 	}
 	if u.IPWhitelistEnabled == 1 && !utils.IPAllowed(req.ClientIP, u.IPWhitelist) {
-		return nil, u, i18n.AuthIPNotAllowed, xerr.Forbidden(i18n.AuthIPNotAllowed)
+		return nil, u, coreI18n.AuthIPNotAllowed, xerr.Forbidden(coreI18n.AuthIPNotAllowed)
 	}
 	// 如果ctx客户端IP为空，则设置ctx客户端IP
 	if ctxdata.ClientIPFromCtx(ctx) == "" && req.ClientIP != "" {
@@ -201,18 +201,18 @@ func (d *Deps) loginUser(ctx context.Context, req LoginReq) (*model.User, error)
 	if d.Mode != ModeOn {
 		row, err := q.Where(user.OperatorCodeIsNil()).Only(ctx)
 		if err != nil {
-			return nil, xerr.Unauthorized(i18n.AuthInvalidCredentials)
+			return nil, xerr.Unauthorized(coreI18n.AuthInvalidCredentials)
 		}
 		return userFromEnt(row), nil
 	}
 	code := strings.TrimSpace(req.OperatorCode)
 	if code == "" {
-		return nil, xerr.BadRequest(i18n.AuthOperatorCodeRequired)
+		return nil, xerr.BadRequest(coreI18n.AuthOperatorCodeRequired)
 	}
 	row, err := q.Where(user.OperatorCodeEQ(code)).Only(ctx)
 	if err != nil {
 		if ent.IsNotFound(err) {
-			return nil, xerr.Unauthorized(i18n.AuthInvalidCredentials)
+			return nil, xerr.Unauthorized(coreI18n.AuthInvalidCredentials)
 		}
 		return nil, err
 	}
@@ -231,10 +231,10 @@ func (d *Deps) Refresh(ctx context.Context, req RefreshReq) (*LoginResult, error
 	raw := jwt.StripBearer(req.RefreshToken)
 	c, err := jwt.ParseTyped(d.JWTRefreshSecret, raw, jwt.TokenRefresh)
 	if err != nil {
-		return nil, xerr.Unauthorized(i18n.Unauthorized)
+		return nil, xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	if d.TokenBlacklisted(ctx, raw) {
-		return nil, xerr.Unauthorized(i18n.Unauthorized)
+		return nil, xerr.Unauthorized(coreI18n.Unauthorized)
 	}
 	if err := d.checkTokenClientIP(ctx, c); err != nil {
 		return nil, err

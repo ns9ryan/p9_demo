@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"oa.98ent.com/p9/core/common/ctxdata"
+	"oa.98ent.com/p9/common/ctxdata"
 	"oa.98ent.com/p9/core/common/entmixin"
-	"oa.98ent.com/p9/core/common/i18n"
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/rpc/ent"
 	"oa.98ent.com/p9/core/rpc/ent/enttest"
 	"oa.98ent.com/p9/core/rpc/ent/intercept"
@@ -115,7 +115,7 @@ func TestLoginWritesSuccessAndFailLogs(t *testing.T) {
 	if rows[1].LoginResult != model.LoginResultFail || rows[1].UserID == nil || *rows[1].UserID != u.ID {
 		t.Fatalf("wrong password log %+v", rows[1])
 	}
-	if rows[1].FailureReason == nil || *rows[1].FailureReason != i18n.AuthPasswordIncorrect {
+	if rows[1].FailureReason == nil || *rows[1].FailureReason != coreI18n.AuthPasswordIncorrect {
 		t.Fatalf("reason %+v", rows[1].FailureReason)
 	}
 	if rows[2].LoginResult != model.LoginResultFail || rows[2].UserID != nil {
@@ -169,7 +169,7 @@ func TestLoginWritesOperatorCodeModeOn(t *testing.T) {
 
 func TestWriteLoginLogNilClient(t *testing.T) {
 	d := &Deps{}
-	d.writeLoginLog(context.Background(), LoginReq{Username: "a"}, nil, false, i18n.AuthPasswordIncorrect)
+	d.writeLoginLog(context.Background(), LoginReq{Username: "a"}, nil, false, coreI18n.AuthPasswordIncorrect)
 }
 
 func TestListLoginLogsFilterAndTenant(t *testing.T) {
@@ -182,7 +182,7 @@ func TestListLoginLogsFilterAndTenant(t *testing.T) {
 	if err := d.Client.LoginLog.Create().SetUsername("alice").SetLoginResult(model.LoginResultSuccess).SetLoginIP("1.1.1.1").SetUserID(u1.ID).SetOperatorCode(code1).SetLoginAt(now).Exec(ctx); err != nil {
 		t.Fatal(err)
 	}
-	if err := d.Client.LoginLog.Create().SetUsername("bob").SetLoginResult(model.LoginResultFail).SetLoginIP("2.2.2.2").SetUserID(u2.ID).SetOperatorCode(code2).SetFailureReason(i18n.AuthPasswordIncorrect).SetLoginAt(now).Exec(ctx); err != nil {
+	if err := d.Client.LoginLog.Create().SetUsername("bob").SetLoginResult(model.LoginResultFail).SetLoginIP("2.2.2.2").SetUserID(u2.ID).SetOperatorCode(code2).SetFailureReason(coreI18n.AuthPasswordIncorrect).SetLoginAt(now).Exec(ctx); err != nil {
 		t.Fatal(err)
 	}
 	if err := d.Client.LoginLog.Create().SetUsername("ghost").SetLoginResult(model.LoginResultFail).SetLoginIP("3.3.3.3").SetOperatorCode(code1).SetLoginAt(now).Exec(ctx); err != nil {

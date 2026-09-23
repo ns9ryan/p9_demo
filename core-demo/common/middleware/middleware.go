@@ -5,12 +5,14 @@ import (
 	"net/http"
 	"strings"
 
-	"oa.98ent.com/p9/core/common/ctxdata"
-	"oa.98ent.com/p9/core/common/i18n"
+	"oa.98ent.com/p9/common/ctxdata"
+	"oa.98ent.com/p9/common/i18n"
+	"oa.98ent.com/p9/common/response"
+	"oa.98ent.com/p9/common/utils"
+	"oa.98ent.com/p9/common/xerr"
+
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/core/common/jwt"
-	"oa.98ent.com/p9/core/common/response"
-	"oa.98ent.com/p9/core/common/utils"
-	"oa.98ent.com/p9/core/common/xerr"
 
 	"github.com/zeromicro/go-zero/rest"
 )
@@ -51,7 +53,7 @@ func JWT(c Client) rest.Middleware {
 				return
 			}
 			if claims != nil && claims.TokenType == jwt.TokenPreview && previewWriteDenied(r.Method, r.URL.Path) {
-				response.FailCtx(ctx, w, xerr.Forbidden(i18n.AuthPreviewReadOnly))
+				response.FailCtx(ctx, w, xerr.Forbidden(coreI18n.AuthPreviewReadOnly))
 				return
 			}
 			ctx = ctxdata.WithClaims(ctx, claims)
@@ -72,7 +74,7 @@ func Authority(c Client) rest.Middleware {
 				return
 			}
 			if !ok {
-				response.FailCtx(r.Context(), w, xerr.Forbidden(i18n.Forbidden))
+				response.FailCtx(r.Context(), w, xerr.Forbidden(coreI18n.Forbidden))
 				return
 			}
 			next(w, r)

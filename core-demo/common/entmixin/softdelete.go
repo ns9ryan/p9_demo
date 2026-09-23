@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"oa.98ent.com/p9/core/common/ctxdata"
+	"oa.98ent.com/p9/common/ctxdata"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"

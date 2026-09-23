@@ -32,5 +32,5 @@ func (l *BootstrapAdminLogic) BootstrapAdmin(req *types.BootstrapAdminReq) (resp
 	if err != nil {
 		return nil, err
 	}
-	return convert.UserPublic(l.ctx, out), nil
+	return convert.UserPublic(l.ctx, l.svcCtx.Trans, out), nil
 }

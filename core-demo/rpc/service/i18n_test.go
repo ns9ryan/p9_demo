@@ -4,8 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"oa.98ent.com/p9/core/common/i18n"
-	"oa.98ent.com/p9/core/common/xerr"
+	"oa.98ent.com/p9/common/i18n"
+	"oa.98ent.com/p9/common/xerr"
+	coreI18n "oa.98ent.com/p9/core/common/i18n"
 )
 
 func TestI18nCodeIsolation(t *testing.T) {
@@ -35,7 +36,7 @@ func TestI18nCodeIsolation(t *testing.T) {
 
 	if _, err := d.CreateI18n(ctx, CreateI18nReq{I18nGroup: "front", TransKey: "common.hi", Lang: i18n.LangZH, Value: "dup"}); err == nil {
 		t.Fatal("expected duplicate core key")
-	} else if got := xerr.AsError(err); got.Message != i18n.I18nExists {
+	} else if got := xerr.AsError(err); got.Message != coreI18n.I18nExists {
 		t.Fatalf("duplicate=%v", got.Message)
 	}
 
@@ -165,7 +166,7 @@ func TestExportImportI18n(t *testing.T) {
 
 	if _, err := d.ExportI18ns(ctx, "", "", ""); err == nil {
 		t.Fatal("expected lang required")
-	} else if got := xerr.AsError(err); got.Message != i18n.I18nLangRequired {
+	} else if got := xerr.AsError(err); got.Message != coreI18n.I18nLangRequired {
 		t.Fatalf("export empty lang=%v", got.Message)
 	}
 
@@ -215,17 +216,17 @@ func TestExportImportI18n(t *testing.T) {
 
 	if _, err := d.ImportI18ns(ctx, i18n.LangEN, nil); err == nil {
 		t.Fatal("expected empty items")
-	} else if got := xerr.AsError(err); got.Message != i18n.I18nDataRequired {
+	} else if got := xerr.AsError(err); got.Message != coreI18n.I18nDataRequired {
 		t.Fatalf("empty items=%v", got.Message)
 	}
 	if _, err := d.ImportI18ns(ctx, "fr-FR", []I18nFileItem{{I18nGroup: "front", I18nKey: "front.x", I18nValue: "x"}}); err == nil {
 		t.Fatal("expected unsupported lang")
-	} else if got := xerr.AsError(err); got.Message != i18n.I18nLangNotSupported {
+	} else if got := xerr.AsError(err); got.Message != coreI18n.I18nLangNotSupported {
 		t.Fatalf("unsupported lang=%v", got.Message)
 	}
 	if _, err := d.ImportI18ns(ctx, i18n.LangEN, []I18nFileItem{{I18nKey: ""}, {I18nKey: "   "}}); err == nil {
 		t.Fatal("expected all skipped")
-	} else if got := xerr.AsError(err); got.Message != i18n.I18nDataRequired {
+	} else if got := xerr.AsError(err); got.Message != coreI18n.I18nDataRequired {
 		t.Fatalf("all skipped=%v", got.Message)
 	}
 
@@ -295,12 +296,12 @@ func TestDeleteI18nsByKey(t *testing.T) {
 
 	if err := d.DeleteI18nsByKey(ctx, "", "", ""); err == nil {
 		t.Fatal("expected empty key")
-	} else if got := xerr.AsError(err); got.Message != i18n.I18nTransKeyRequired {
+	} else if got := xerr.AsError(err); got.Message != coreI18n.I18nTransKeyRequired {
 		t.Fatalf("empty key=%v", got.Message)
 	}
 	if err := d.DeleteI18nsByKey(ctx, i18n.CodePlatform, "front", "missing.key"); err == nil {
 		t.Fatal("expected not found")
-	} else if got := xerr.AsError(err); got.Message != i18n.I18nNotFound {
+	} else if got := xerr.AsError(err); got.Message != coreI18n.I18nNotFound {
 		t.Fatalf("missing=%v", got.Message)
 	}
 

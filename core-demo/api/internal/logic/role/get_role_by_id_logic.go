@@ -30,5 +30,5 @@ func (l *GetRoleByIdLogic) GetRoleById(req *types.IDQuery) (resp *types.RoleInfo
 	if err != nil {
 		return nil, err
 	}
-	return convert.RoleInfo(l.ctx, out), nil
+	return convert.RoleInfo(l.ctx, l.svcCtx.Trans, out), nil
 }

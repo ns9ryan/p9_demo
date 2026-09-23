@@ -3,9 +3,9 @@ package i18n
 import (
 	"context"
 
+	"oa.98ent.com/p9/common/i18n"
 	"oa.98ent.com/p9/core/api/internal/svc"
 	"oa.98ent.com/p9/core/api/internal/types"
-	"oa.98ent.com/p9/core/common/i18n"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

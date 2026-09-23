@@ -4,14 +4,13 @@ import (
 	"flag"
 	"fmt"
 
-	"oa.98ent.com/p9/core/common/tracing"
+	"oa.98ent.com/p9/common/tracing"
 	"oa.98ent.com/p9/core/rpc/internal/config"
 	"oa.98ent.com/p9/core/rpc/internal/server"
 	"oa.98ent.com/p9/core/rpc/internal/svc"
 	"oa.98ent.com/p9/core/rpc/types/core"
 
 	"github.com/zeromicro/go-zero/core/conf"
-	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -29,7 +28,8 @@ func main() {
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
 		core.RegisterCoreServer(grpcServer, server.NewCoreServer(ctx))
 
-		if c.Mode == service.DevMode || c.Mode == service.TestMode {
+		// 调试环境额外开启服务反射
+		if c.IsDev() || c.IsTest() {
 			reflection.Register(grpcServer)
 		}
 	})
