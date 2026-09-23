@@ -5,14 +5,14 @@ import (
 
 	"context"
 
-	corei18n "oa.98ent.com/p9/core/common/i18n"
 	"oa.98ent.com/p9/platform-game/api/internal/types"
+	"oa.98ent.com/p9/platform-game/api/internal/utils"
 	platformgame "oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 )
 
 func CategoryProtoToResponse(ctx context.Context, category *platformgame.GameCategoryInfo) *types.GameCategoryResp {
 	// 调用 TG 进行翻译
-	name := corei18n.TG(ctx, corei18n.CodePlatform, "game", category.NameKey)
+	name := utils.TGPlatformGame(ctx, category.NameKey)
 	return &types.GameCategoryResp{
 		ID:                 category.Id,
 		SourceID:           category.SourceId,
@@ -29,7 +29,7 @@ func CategoryProtoToResponse(ctx context.Context, category *platformgame.GameCat
 }
 
 func ChannelProtoToResponse(ctx context.Context, channel *platformgame.GameChannelInfo) *types.GameChannelResp {
-	name := corei18n.TG(ctx, corei18n.CodePlatform, "game", channel.NameKey)
+	name := utils.TGPlatformGame(ctx, channel.NameKey)
 	return &types.GameChannelResp{
 		ID:                channel.Id,
 		SourceID:          channel.SourceId,
@@ -68,7 +68,7 @@ func CheckpointProtoToResponse(checkpoint *platformgame.GameSyncCheckpointInfo) 
 }
 
 func CurrencyProtoToResponse(ctx context.Context, currency *platformgame.GameCurrencyInfo) *types.GameCurrencyResp {
-	currencyName := corei18n.TG(ctx, corei18n.CodePlatform, "base", currency.CurrencyNameKey)
+	currencyName := utils.TGPlatformBase(ctx, currency.CurrencyNameKey)
 	return &types.GameCurrencyResp{
 		ID:           currency.Id,
 		GameID:       currency.GameId,
@@ -89,15 +89,15 @@ func GameProtoToResponse(ctx context.Context, game *platformgame.GameInfo) *type
 	gameCurrencyArray := []map[string]interface{}{}
 	gameCurrencyInfo := []types.GameCurrencyInfo{}
 	json.Unmarshal([]byte(game.GameCurrencyInfo), &gameCurrencyArray)
-	categoryName := corei18n.TG(ctx, corei18n.CodePlatform, "game", game.CategoryNameKey)
-	providerName := corei18n.TG(ctx, corei18n.CodePlatform, "game", game.ProviderNameKey)
-	channelName := corei18n.TG(ctx, corei18n.CodePlatform, "game", game.ChannelNameKey)
+	categoryName := utils.TGPlatformGame(ctx, game.CategoryNameKey)
+	providerName := utils.TGPlatformGame(ctx, game.ProviderNameKey)
+	channelName := utils.TGPlatformGame(ctx, game.ChannelNameKey)
 	for _, currencyMap := range gameCurrencyArray {
 		currency := types.GameCurrencyInfo{
 			CurrencyID:   int64(currencyMap["currency_id"].(float64)),
 			CurrencyName: "",
 		}
-		currencyName := corei18n.TG(ctx, corei18n.CodePlatform, "base", currencyMap["currency_name_key"].(string))
+		currencyName := utils.TGPlatformBase(ctx, currencyMap["currency_name_key"].(string))
 		currency.CurrencyName = currencyName
 		gameCurrencyInfo = append(gameCurrencyInfo, currency)
 	}
@@ -129,7 +129,7 @@ func GameProtoToResponse(ctx context.Context, game *platformgame.GameInfo) *type
 }
 
 func ProviderProtoToResponse(ctx context.Context, provider *platformgame.ProviderInfo) *types.GameProviderResp {
-	name := corei18n.TG(ctx, corei18n.CodePlatform, "game", provider.NameKey)
+	name := utils.TGPlatformGame(ctx, provider.NameKey)
 	return &types.GameProviderResp{
 		ID:                 provider.Id,
 		SourceID:           provider.SourceId,

@@ -7,11 +7,11 @@ import (
 	"context"
 	"strings"
 
+	"oa.98ent.com/p9/common/xerr"
 	"oa.98ent.com/p9/core/rpc/coreclient"
 	"oa.98ent.com/p9/platform-operator/api/internal/i18nkey"
 	"oa.98ent.com/p9/platform-operator/api/internal/svc"
 	"oa.98ent.com/p9/platform-operator/api/internal/types"
-	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/languageallocationpb"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -54,7 +54,7 @@ func (l *SaveLanguageAllocationsLogic) SaveLanguageAllocations(req *types.SaveLa
 
 			standardCode, ok := languageMap[code]
 			if !ok {
-				return nil, grpcerror.InvalidArgument(i18nkey.LanguageUnavailable)
+				return nil, xerr.BadRequest(i18nkey.LanguageUnavailable)
 			}
 
 			languageCodes = append(languageCodes, standardCode)

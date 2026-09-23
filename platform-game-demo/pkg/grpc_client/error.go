@@ -1,4 +1,4 @@
-package rpcerror
+package grpc_client
 
 import (
 	"errors"

@@ -9,16 +9,15 @@ import (
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/rest/httpx"
+	"oa.98ent.com/p9/common/i18n"
+	"oa.98ent.com/p9/common/response"
+	"oa.98ent.com/p9/common/validate"
 	"oa.98ent.com/p9/platform-operator/api/internal/catalog"
 	"oa.98ent.com/p9/platform-operator/api/internal/config"
 	"oa.98ent.com/p9/platform-operator/api/internal/handler"
 	"oa.98ent.com/p9/platform-operator/api/internal/svc"
-	"oa.98ent.com/p9/platform-operator/pkg/api/errorhandler"
-	"oa.98ent.com/p9/platform-operator/pkg/api/response"
-	"oa.98ent.com/p9/platform-operator/pkg/api/validate"
 )
 
 var configFile = flag.String("f", "etc/platform_operator.yaml", "the config file")
@@ -47,22 +46,11 @@ func main() {
 	// 注册菜单和API目录
 	logx.Must(catalog.Register(ctx.Core))
 
-	// 开发和测试环境返回调试信息
-	debug := c.Mode == service.DevMode || c.Mode == service.TestMode
-
-	// 注册全局错误响应处理器
-	httpx.SetErrorHandlerCtx(
-		errorhandler.New(ctx.Trans, debug).Handle,
-	)
-
-	// 注册全局成功响应处理器
-	httpx.SetOkHandler(response.Ok)
+	// 设置HTTP响应格式
+	response.SetupHTTPX(ctx.Trans, i18n.CodeOperator, c.IsDebug())
 
 	// 注册Core国际化中间件
 	server.Use(ctx.CoreI18n)
-
-	// 注册API语言中间件
-	server.Use(ctx.Language)
 
 	// 注册全局错误日志中间件
 	server.Use(ctx.ErrorLog)

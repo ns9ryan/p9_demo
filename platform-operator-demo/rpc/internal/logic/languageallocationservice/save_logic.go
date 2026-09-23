@@ -4,8 +4,8 @@ import (
 	"context"
 	"strings"
 
+	"oa.98ent.com/p9/common/xerr"
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
-	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-operator/rpc/ent"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatorlanguageallocation"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/enterror"
@@ -33,7 +33,7 @@ func NewSaveLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SaveLogic {
 func (l *SaveLogic) Save(in *languageallocationpb.SaveLanguageAllocationsRequest) (*languageallocationpb.SaveLanguageAllocationsResponse, error) {
 	// 分站ID必须大于0
 	if in.OperatorId <= 0 {
-		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
+		return nil, xerr.RpcErr(xerr.BadRequest(i18nkey.ValidationError))
 	}
 
 	// 整理语言编码并去重
@@ -42,7 +42,7 @@ func (l *SaveLogic) Save(in *languageallocationpb.SaveLanguageAllocationsRequest
 	for _, code := range in.LanguageCodes {
 		languageCode := strings.TrimSpace(code)
 		if languageCode == "" {
-			return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
+			return nil, xerr.RpcErr(xerr.BadRequest(i18nkey.ValidationError))
 		}
 
 		if _, exists := languageCodeSet[languageCode]; exists {

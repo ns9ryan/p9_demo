@@ -3,8 +3,8 @@ package agentlineallocationservicelogic
 import (
 	"context"
 
+	"oa.98ent.com/p9/common/xerr"
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
-	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoragentlineallocation"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
@@ -32,7 +32,7 @@ func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {
 func (l *ListLogic) List(in *agentlineallocationpb.ListAgentLineAllocationsRequest) (*agentlineallocationpb.ListAgentLineAllocationsResponse, error) {
 	// 分站ID必须大于0
 	if in.OperatorId <= 0 {
-		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
+		return nil, xerr.RpcErr(xerr.BadRequest(i18nkey.ValidationError))
 	}
 
 	// 确认分站存在

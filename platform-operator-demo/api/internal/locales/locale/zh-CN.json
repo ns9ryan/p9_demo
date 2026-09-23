@@ -1,5 +1,6 @@
 {
 	"common": {
+		"success": "成功",
 		"invalid_request": "请求参数格式错误",
 		"data_not_found": "数据不存在",
 		"constraint_error": "数据约束冲突",

@@ -3,8 +3,8 @@ package operatoradminservicelogic
 import (
 	"context"
 
+	"oa.98ent.com/p9/common/xerr"
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
-	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoradmin"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
@@ -30,7 +30,7 @@ func NewDeleteByOperatorIdLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 // DeleteByOperatorId 按分站删除管理员
 func (l *DeleteByOperatorIdLogic) DeleteByOperatorId(in *adminpb.DeleteAdminsByOperatorIdRequest) (*adminpb.DeleteAdminsByOperatorIdResponse, error) {
 	if in.OperatorId <= 0 {
-		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
+		return nil, xerr.RpcErr(xerr.BadRequest(i18nkey.ValidationError))
 	}
 
 	_, err := l.svcCtx.DB.OperatorAdmin.

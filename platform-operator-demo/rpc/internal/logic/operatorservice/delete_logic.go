@@ -3,8 +3,8 @@ package operatorservicelogic
 import (
 	"context"
 
+	"oa.98ent.com/p9/common/xerr"
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
-	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoradmin"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatoragentlineallocation"
 	"oa.98ent.com/p9/platform-operator/rpc/ent/operatordomain"
@@ -36,7 +36,7 @@ func NewDeleteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteLogi
 func (l *DeleteLogic) Delete(in *operatorpb.DeleteOperatorRequest) (*operatorpb.DeleteOperatorResponse, error) {
 	// 分站ID必须大于0
 	if in.Id <= 0 {
-		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
+		return nil, xerr.RpcErr(xerr.BadRequest(i18nkey.ValidationError))
 	}
 
 	// 获取当前分站
@@ -48,7 +48,7 @@ func (l *DeleteLogic) Delete(in *operatorpb.DeleteOperatorRequest) (*operatorpb.
 
 	// 仅未发布或发布失败的分站允许删除
 	if current.PublishStatus != 1 && current.PublishStatus != 4 {
-		return nil, grpcerror.InvalidArgument(i18nkey.ConstraintError)
+		return nil, xerr.RpcErr(xerr.BadRequest(i18nkey.ConstraintError))
 	}
 
 	// 开启数据库事务

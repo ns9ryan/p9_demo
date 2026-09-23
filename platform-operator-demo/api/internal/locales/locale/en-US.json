@@ -1,5 +1,6 @@
 {
 	"common": {
+		"success": "Success",
 		"invalid_request": "Invalid request",
 		"data_not_found": "Data not found",
 		"constraint_error": "Data constraint conflict",

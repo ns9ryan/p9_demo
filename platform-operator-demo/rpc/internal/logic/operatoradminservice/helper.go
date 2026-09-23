@@ -34,3 +34,4 @@ func toAdminInfo(data *ent.OperatorAdmin) *adminpb.AdminInfo {
 		UpdatedAt:    data.UpdatedAt.UnixMilli(), // 更新时间, Unix毫秒时间戳
 	}
 }
+

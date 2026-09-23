@@ -7,7 +7,7 @@ import (
 	"context"
 	"fmt"
 
-	"oa.98ent.com/p9/core/common/i18n"
+	"oa.98ent.com/p9/common/i18n"
 	"oa.98ent.com/p9/platform-game/rpc/pb/platform_game"
 	"oa.98ent.com/p9/platform-operator/api/internal/svc"
 	"oa.98ent.com/p9/platform-operator/api/internal/types"

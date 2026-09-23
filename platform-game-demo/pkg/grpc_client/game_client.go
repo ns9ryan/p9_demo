@@ -3,7 +3,6 @@ package grpc_client
 import (
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/zrpc"
-	"oa.98ent.com/p9/platform-base/pkg/api/rpcerror"
 	"oa.98ent.com/p9/platform-game/rpc/client/gamecategoryservice"
 	"oa.98ent.com/p9/platform-game/rpc/client/gamechannelservice"
 	"oa.98ent.com/p9/platform-game/rpc/client/gamecurrencyservice"
@@ -40,7 +39,7 @@ func NewGameClientManager(cfg zrpc.RpcClientConf) (*GameClientManager, error) {
 	logx.Infof("create version 1.0.0 game client manager")
 	client := zrpc.MustNewClient(
 		cfg,
-		zrpc.WithUnaryClientInterceptor(rpcerror.UnaryClientInterceptor),
+		zrpc.WithUnaryClientInterceptor(UnaryClientInterceptor),
 	)
 
 	return &GameClientManager{

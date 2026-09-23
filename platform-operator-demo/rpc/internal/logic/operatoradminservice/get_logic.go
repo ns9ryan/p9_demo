@@ -3,8 +3,8 @@ package operatoradminservicelogic
 import (
 	"context"
 
+	"oa.98ent.com/p9/common/xerr"
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
-	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-operator/rpc/ent"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
@@ -32,7 +32,7 @@ func (l *GetLogic) Get(in *adminpb.GetAdminRequest) (*adminpb.GetAdminResponse, 
 	adminInfo, err := l.svcCtx.DB.OperatorAdmin.Get(l.ctx, in.Id)
 	if err != nil {
 		if ent.IsNotFound(err) {
-			return nil, grpcerror.NotFound(i18nkey.DataNotFound)
+			return nil, xerr.RpcErr(xerr.NotFound(i18nkey.DataNotFound))
 		}
 		return nil, enterror.Handle(l.Logger, err)
 	}

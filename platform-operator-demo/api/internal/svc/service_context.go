@@ -13,12 +13,10 @@ import (
 	"oa.98ent.com/p9/platform-base/rpc/client/regionservice"
 	"oa.98ent.com/p9/platform-base/rpc/client/timezoneservice"
 
+	"oa.98ent.com/p9/common/i18n"
 	game_grpc_client "oa.98ent.com/p9/platform-game/pkg/grpc_client"
 	"oa.98ent.com/p9/platform-operator/api/internal/config"
 	"oa.98ent.com/p9/platform-operator/api/internal/locales"
-	apimiddleware "oa.98ent.com/p9/platform-operator/pkg/api/middleware"
-	"oa.98ent.com/p9/platform-operator/pkg/api/rpcerror"
-	"oa.98ent.com/p9/platform-operator/pkg/i18n"
 	"oa.98ent.com/p9/platform-operator/rpc/client/agentlineallocationservice"
 	"oa.98ent.com/p9/platform-operator/rpc/client/basicresourceallocationservice"
 	"oa.98ent.com/p9/platform-operator/rpc/client/languageallocationservice"
@@ -30,7 +28,6 @@ import (
 	"oa.98ent.com/p9/platform-operator/rpc/client/regionallocationservice"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
 )
@@ -64,7 +61,6 @@ type ServiceContext struct {
 
 	// 多语言
 	Trans    *i18n.Translator // API翻译器
-	Language rest.Middleware  // API语言中间件
 	CoreI18n rest.Middleware  // Core多语言中间件
 
 	// 认证权限
@@ -87,7 +83,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	// 创建Platform Operator RPC客户端，并注册RPC错误拦截器
 	platformOperatorClient := zrpc.MustNewClient(
 		c.PlatformOperatorRpc,
-		zrpc.WithUnaryClientInterceptor(rpcerror.UnaryClientInterceptor),
 	)
 
 	// ============================== Platform Base RPC ==============================
@@ -95,7 +90,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	// 创建Platform Base RPC客户端，并注册RPC错误拦截器
 	platformBaseClient := zrpc.MustNewClient(
 		c.PlatformBaseRpc,
-		zrpc.WithUnaryClientInterceptor(rpcerror.UnaryClientInterceptor),
 	)
 
 	// ============================== Platform Game RPC ==============================
@@ -121,7 +115,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 
 	jwt := coremiddleware.JWT(auth)
 	authority := coremiddleware.Authority(auth)
-	if c.Mode == service.DevMode {
+	if c.IsDev() {
 		// 如果是开发环境，跳过权限校验
 		jwt = func(next http.HandlerFunc) http.HandlerFunc {
 			return func(w http.ResponseWriter, r *http.Request) {
@@ -164,9 +158,8 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		GameGrpcClient: gameGrpcClient, // 分站游戏GRPC客户端
 
 		// 多语言
-		Trans:    trans,                                        // API翻译器
-		Language: apimiddleware.NewLanguageMiddleware().Handle, // API语言中间件
-		CoreI18n: coremiddleware.I18n,                          // Core多语言中间件
+		Trans:    trans,               // API翻译器
+		CoreI18n: coremiddleware.I18n, // Core多语言中间件
 
 		// 认证权限
 		Jwt:       jwt,       // JWT认证中间件

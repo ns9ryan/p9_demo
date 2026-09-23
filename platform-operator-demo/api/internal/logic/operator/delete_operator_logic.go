@@ -6,10 +6,10 @@ package operator
 import (
 	"context"
 
+	"oa.98ent.com/p9/common/xerr"
 	"oa.98ent.com/p9/platform-operator/api/internal/svc"
 	"oa.98ent.com/p9/platform-operator/api/internal/types"
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
-	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/operatorpb"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -44,7 +44,7 @@ func (l *DeleteOperatorLogic) DeleteOperator(req *types.DeleteOperatorRequest) (
 
 	// 仅未发布或发布失败的分站允许删除
 	if current.Operator.PublishStatus != 1 && current.Operator.PublishStatus != 4 {
-		return nil, grpcerror.InvalidArgument(i18nkey.ConstraintError)
+		return nil, xerr.BadRequest(i18nkey.ConstraintError)
 	}
 
 	// 按分站清理管理员账号，统一放 OperatorRpc.Delete 中处理

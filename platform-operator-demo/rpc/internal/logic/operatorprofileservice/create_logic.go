@@ -3,8 +3,8 @@ package operatorprofileservicelogic
 import (
 	"context"
 
+	"oa.98ent.com/p9/common/xerr"
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
-	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
 	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/profilepb"
@@ -30,7 +30,7 @@ func NewCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateLogi
 func (l *CreateLogic) Create(in *profilepb.CreateOperatorProfileRequest) (*profilepb.CreateOperatorProfileResponse, error) {
 	// 分站ID必须大于0
 	if in.OperatorId <= 0 {
-		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
+		return nil, xerr.RpcErr(xerr.BadRequest(i18nkey.ValidationError))
 	}
 
 	// 确认分站存在

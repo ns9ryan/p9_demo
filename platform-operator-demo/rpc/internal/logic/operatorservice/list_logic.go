@@ -4,10 +4,9 @@ import (
 	"context"
 	"strings"
 
+	"oa.98ent.com/p9/common/xerr"
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
-	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
 	entoperator "oa.98ent.com/p9/platform-operator/rpc/ent/operator"
-	"oa.98ent.com/p9/platform-operator/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
 	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/operatorpb"
 
@@ -33,22 +32,22 @@ func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {
 func (l *ListLogic) List(in *operatorpb.ListOperatorsRequest) (*operatorpb.ListOperatorsResponse, error) {
 	// 校验分页参数
 	if in.Page < 1 || in.PageSize < 1 || in.PageSize > 100 {
-		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
+		return nil, xerr.RpcErr(xerr.BadRequest(i18nkey.ValidationError))
 	}
 
 	// 校验创建状态
 	if in.CreationStatus != nil && (*in.CreationStatus < 1 || *in.CreationStatus > 2) {
-		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
+		return nil, xerr.RpcErr(xerr.BadRequest(i18nkey.ValidationError))
 	}
 
 	// 校验发布状态
 	if in.PublishStatus != nil && (*in.PublishStatus < 1 || *in.PublishStatus > 4) {
-		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
+		return nil, xerr.RpcErr(xerr.BadRequest(i18nkey.ValidationError))
 	}
 
 	// 校验分站状态
 	if in.Status != nil && (*in.Status < 1 || *in.Status > 3) {
-		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
+		return nil, xerr.RpcErr(xerr.BadRequest(i18nkey.ValidationError))
 	}
 
 	// 创建分站查询
@@ -86,7 +85,7 @@ func (l *ListLogic) List(in *operatorpb.ListOperatorsRequest) (*operatorpb.ListO
 	total, err := query.Clone().Count(l.ctx)
 	if err != nil {
 		// 转换Ent错误为gRPC错误
-		return nil, enterror.Handle(l.Logger, err)
+		return nil, xerr.RpcErr(err)
 	}
 
 	// 计算分页偏移量
@@ -103,7 +102,7 @@ func (l *ListLogic) List(in *operatorpb.ListOperatorsRequest) (*operatorpb.ListO
 		All(l.ctx)
 	if err != nil {
 		// 转换Ent错误为gRPC错误
-		return nil, enterror.Handle(l.Logger, err)
+		return nil, xerr.RpcErr(err)
 	}
 
 	// 转换分站列表

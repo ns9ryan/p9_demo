@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/zeromicro/go-zero/rest"
-	corei18n "oa.98ent.com/p9/core/common/i18n"
+	corei18n "oa.98ent.com/p9/common/i18n"
 )
 
 // LanguageMiddleware 语言中间件 - 从请求头读取语言并设置到context

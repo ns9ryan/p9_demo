@@ -4,8 +4,8 @@ import (
 	"context"
 	"strings"
 
+	"oa.98ent.com/p9/common/xerr"
 	"oa.98ent.com/p9/platform-operator/pkg/i18nkey"
-	"oa.98ent.com/p9/platform-operator/pkg/rpc/grpcerror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/enterror"
 	"oa.98ent.com/p9/platform-operator/rpc/internal/svc"
 	"oa.98ent.com/p9/platform-operator/rpc/pb/platformoperatorrpc/operatorpb"
@@ -31,7 +31,7 @@ func NewUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateLogi
 func (l *UpdateLogic) Update(in *operatorpb.UpdateOperatorRequest) (*operatorpb.UpdateOperatorResponse, error) {
 	// 分站ID必须大于0
 	if in.Id <= 0 {
-		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
+		return nil, xerr.RpcErr(xerr.BadRequest(i18nkey.ValidationError))
 	}
 
 	// 至少需要修改一个字段
@@ -40,7 +40,7 @@ func (l *UpdateLogic) Update(in *operatorpb.UpdateOperatorRequest) (*operatorpb.
 		in.SettlementCurrencyCode == nil &&
 		in.Status == nil &&
 		in.Remark == nil {
-		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
+		return nil, xerr.RpcErr(xerr.BadRequest(i18nkey.ValidationError))
 	}
 
 	// 整理修改参数
@@ -68,7 +68,7 @@ func (l *UpdateLogic) Update(in *operatorpb.UpdateOperatorRequest) (*operatorpb.
 	// 发布中或已经发布过的分站不能修改时区和结算币种
 	if (current.PublishStatus == 2 || current.PublishedAt != nil) &&
 		(timezoneChanged || currencyChanged) {
-		return nil, grpcerror.InvalidArgument(i18nkey.ValidationError)
+		return nil, xerr.RpcErr(xerr.BadRequest(i18nkey.ValidationError))
 	}
 
 	// 修改分站

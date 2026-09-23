@@ -12,11 +12,10 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
+	"oa.98ent.com/p9/common/i18n"
 	"oa.98ent.com/p9/core/common/coreadapt"
 	coremiddleware "oa.98ent.com/p9/core/common/middleware"
 	"oa.98ent.com/p9/core/rpc/coreclient"
-	basemiddleware "oa.98ent.com/p9/platform-base/pkg/api/middleware"
-	"oa.98ent.com/p9/platform-base/pkg/i18n"
 	"oa.98ent.com/p9/platform-game/api/internal/config"
 	"oa.98ent.com/p9/platform-game/api/internal/locales"
 	"oa.98ent.com/p9/platform-game/pkg/grpc_client"
@@ -89,7 +88,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	jwt := coremiddleware.JWT(coreAuth)
 	authority := coremiddleware.Authority(coreAuth)
 	logx.Infof("[ServiceContext] mode = %s", c.Mode)
-	if isLocal := c.Mode == "dev"; isLocal {
+	if c.IsLocal() {
 		// 如果是本地环境，跳过权限校验
 		jwt = func(next http.HandlerFunc) http.HandlerFunc {
 			return func(w http.ResponseWriter, r *http.Request) {
@@ -109,7 +108,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Core:            coreCli,
 		SyncRateLimiter: NewSyncRateLimiter(),
 		Trans:           trans,
-		Language:        basemiddleware.NewLanguageMiddleware().Handle,
 		Jwt:             jwt,       // JWT认证中间件
 		Authority:       authority, // 权限校验中间件
 
