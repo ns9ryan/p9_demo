@@ -11,7 +11,7 @@ import (
 	nodeserviceServer "oa.98ent.com/p9/node-dispatch/rpc/internal/server/nodeservice"
 	pingserviceServer "oa.98ent.com/p9/node-dispatch/rpc/internal/server/pingservice"
 	"oa.98ent.com/p9/node-dispatch/rpc/internal/svc"
-	"oa.98ent.com/p9/node-dispatch/rpc/internal/websocketserver"
+	"oa.98ent.com/p9/node-dispatch/rpc/internal/websocket"
 	"oa.98ent.com/p9/node-dispatch/rpc/pb/nodedispatchrpc"
 
 	"github.com/zeromicro/go-zero/core/conf"
@@ -58,7 +58,7 @@ func main() {
 	defer s.Stop()
 
 	// 创建WebSocket服务
-	webSocketServer := websocketserver.NewServer(ctx)
+	webSocketServer := websocket.NewServer(ctx)
 	defer webSocketServer.Stop()
 
 	// 启动WebSocket服务

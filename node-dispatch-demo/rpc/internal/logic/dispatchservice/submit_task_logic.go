@@ -5,13 +5,13 @@ import (
 	"encoding/json"
 	"strings"
 
-	"oa.98ent.com/p9/node-dispatch/rpc/internal/svc"
-	"oa.98ent.com/p9/node-dispatch/rpc/internal/task"
-	"oa.98ent.com/p9/node-dispatch/rpc/pb/nodedispatchrpc/dispatchpb"
-
 	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"oa.98ent.com/p9/node-dispatch/rpc/internal/svc"
+	"oa.98ent.com/p9/node-dispatch/rpc/internal/task"
+	"oa.98ent.com/p9/node-dispatch/rpc/pb/nodedispatchrpc/dispatchpb"
 )
 
 type SubmitTaskLogic struct {
@@ -74,7 +74,6 @@ func (l *SubmitTaskLogic) SubmitTask(in *dispatchpb.SubmitTaskRequest) (*dispatc
 		return nil, err
 	}
 
-	// 返回提交结果
 	return &dispatchpb.SubmitTaskResponse{
 		TaskNo: result.TaskNo, // 调度任务编号
 	}, nil

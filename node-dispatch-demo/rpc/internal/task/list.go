@@ -20,10 +20,16 @@ type ListRequest struct {
 	NodeCode string // 执行节点编码
 }
 
+// ListItem 调度任务列表项
+type ListItem struct {
+	Task     *ent.DispatchTask // 调度任务
+	NodeCode string            // 当前执行节点编码
+}
+
 // ListResult 调度任务列表结果
 type ListResult struct {
-	Total int64               // 数据总数
-	List  []*ent.DispatchTask // 调度任务列表
+	Total int64       // 数据总数
+	List  []*ListItem // 调度任务列表
 }
 
 // List 查询调度任务列表
@@ -41,41 +47,91 @@ func (s *Service) List(ctx context.Context, req ListRequest) (*ListResult, error
 		)
 	}
 
-	// 查询任务类型
+	// 按任务类型筛选
 	if req.TaskType != "" {
 		query = query.Where(dispatchtask.TaskTypeEQ(req.TaskType))
 	}
 
-	// 查询任务状态
+	// 按任务状态筛选
 	if req.Status != nil {
 		query = query.Where(dispatchtask.StatusEQ(*req.Status))
 	}
 
-	// 查询执行节点
+	// 按执行节点筛选
 	if req.NodeCode != "" {
 		query = query.Where(
 			dispatchtask.HasRunsWith(
-				dispatchtaskrun.HasNodeWith(
-					node.CodeEQ(req.NodeCode),
-				),
+				dispatchtaskrun.HasNodeWith(node.CodeEQ(req.NodeCode)),
 			),
 		)
 	}
 
-	// 查询总数量
-	total, err := query.Count(ctx)
+	// 查询数据总数
+	total, err := query.Clone().Count(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("统计任务数量失败: %w", err)
 	}
 
-	// 查询任务列表
-	list, err := query.
-		Order(ent.Desc(dispatchtask.FieldCreatedAt)).
+	// 查询当前页任务
+	taskList, err := query.
+		Order(ent.Desc(dispatchtask.FieldCreatedAt), ent.Desc(dispatchtask.FieldID)).
 		Limit(int(req.PageSize)).
 		Offset(int((req.Page - 1) * req.PageSize)).
 		All(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("查询任务列表失败: %w", err)
+	}
+
+	// 当前页没有数据时直接返回
+	if len(taskList) == 0 {
+		return &ListResult{
+			Total: int64(total),  // 数据总数
+			List:  []*ListItem{}, // 调度任务列表
+		}, nil
+	}
+
+	// 收集当前页任务ID
+	taskIDs := make([]int64, 0, len(taskList))
+	for _, taskData := range taskList {
+		taskIDs = append(taskIDs, taskData.ID)
+	}
+
+	// 查询当前页任务的执行记录
+	runList, err := s.db.DispatchTaskRun.
+		Query().
+		Where(dispatchtaskrun.TaskIDIn(taskIDs...)).
+		WithNode().
+		Order(
+			ent.Asc(dispatchtaskrun.FieldTaskID),
+			ent.Desc(dispatchtaskrun.FieldRunNo),
+		).
+		All(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("查询任务执行记录失败: %w", err)
+	}
+
+	// 获取每个任务最新一次执行节点
+	nodeCodeMap := make(map[int64]string, len(taskList))
+	for _, runData := range runList {
+		if _, exists := nodeCodeMap[runData.TaskID]; exists {
+			continue
+		}
+
+		nodeData, err := runData.Edges.NodeOrErr()
+		if err != nil {
+			return nil, fmt.Errorf("获取任务执行节点失败: %w", err)
+		}
+
+		nodeCodeMap[runData.TaskID] = nodeData.Code
+	}
+
+	// 组装列表结果
+	list := make([]*ListItem, 0, len(taskList))
+	for _, taskData := range taskList {
+		list = append(list, &ListItem{
+			Task:     taskData,                 // 调度任务
+			NodeCode: nodeCodeMap[taskData.ID], // 当前执行节点编码
+		})
 	}
 
 	return &ListResult{

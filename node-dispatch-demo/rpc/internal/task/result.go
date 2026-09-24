@@ -2,6 +2,7 @@ package task
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -10,21 +11,20 @@ import (
 	"oa.98ent.com/p9/node-dispatch/rpc/ent/node"
 )
 
+// MarkResultRequest 标记任务执行结果请求
+type MarkResultRequest struct {
+	TaskNo       string          // 任务编号
+	RunNo        int64           // 执行序号
+	NodeCode     string          // 节点编码
+	Success      bool            // 是否执行成功
+	Result       json.RawMessage // 执行结果
+	ErrorMessage string          // 失败原因
+}
+
 // MarkResult 标记任务执行结果
-func (s *Service) MarkResult(
-	ctx context.Context,
-	taskNo string,
-	runNo int64,
-	nodeCode string,
-	success bool,
-	result []byte,
-	errorMessage string,
-) error {
+func (s *Service) MarkResult(ctx context.Context, req MarkResultRequest) error {
 	// 查询调度任务
-	taskData, err := s.db.DispatchTask.
-		Query().
-		Where(dispatchtask.TaskNoEQ(taskNo)).
-		Only(ctx)
+	taskData, err := s.db.DispatchTask.Query().Where(dispatchtask.TaskNoEQ(req.TaskNo)).Only(ctx)
 	if err != nil {
 		return fmt.Errorf("查询调度任务失败: %w", err)
 	}
@@ -34,7 +34,7 @@ func (s *Service) MarkResult(
 		Query().
 		Where(
 			dispatchtaskrun.TaskIDEQ(taskData.ID),
-			dispatchtaskrun.RunNoEQ(runNo),
+			dispatchtaskrun.RunNoEQ(req.RunNo),
 		).
 		Only(ctx)
 	if err != nil {
@@ -42,21 +42,18 @@ func (s *Service) MarkResult(
 	}
 
 	// 查询执行节点
-	nodeData, err := s.db.Node.
-		Query().
-		Where(node.IDEQ(runData.NodeID)).
-		Only(ctx)
+	nodeData, err := s.db.Node.Query().Where(node.IDEQ(runData.NodeID)).Only(ctx)
 	if err != nil {
 		return fmt.Errorf("查询执行节点失败: %w", err)
 	}
 
 	// 校验执行节点
-	if nodeData.Code != nodeCode {
-		return fmt.Errorf("任务执行节点不匹配: expect=%s actual=%s", nodeData.Code, nodeCode)
+	if nodeData.Code != req.NodeCode {
+		return fmt.Errorf("任务执行节点不匹配: expect=%s actual=%s", nodeData.Code, req.NodeCode)
 	}
 
 	// 已完成的执行记录不重复处理
-	if runData.Status == 3 || runData.Status == 4 {
+	if runData.Status == StatusSuccess || runData.Status == StatusFailed {
 		return nil
 	}
 
@@ -71,20 +68,16 @@ func (s *Service) MarkResult(
 		Update().
 		Where(
 			dispatchtaskrun.IDEQ(runData.ID),
-			dispatchtaskrun.StatusIn(1, 2),
+			dispatchtaskrun.StatusIn(StatusPending, StatusRunning),
 		).
-		SetFinishedAt(time.Now()) // 执行结束时间
+		SetFinishedAt(time.Now())
 
-	if success {
+	if req.Success {
 		// 标记执行成功
-		runUpdate.
-			SetStatus(3).     // 执行状态: 3成功
-			SetResult(result) // 执行结果
+		runUpdate.SetStatus(StatusSuccess).SetResult(req.Result)
 	} else {
 		// 标记执行失败
-		runUpdate.
-			SetStatus(4).                 // 执行状态: 4失败
-			SetErrorMessage(errorMessage) // 执行失败原因
+		runUpdate.SetStatus(StatusFailed).SetErrorMessage(req.ErrorMessage)
 	}
 
 	// 保存执行结果
@@ -100,12 +93,12 @@ func (s *Service) MarkResult(
 		return nil
 	}
 
-	// 当前执行记录后面存在新的执行记录时, 不覆盖任务整体状态
+	// 检查当前执行记录后面是否存在新的执行
 	hasNewerRun, err := tx.DispatchTaskRun.
 		Query().
 		Where(
 			dispatchtaskrun.TaskIDEQ(taskData.ID),
-			dispatchtaskrun.RunNoGT(runNo),
+			dispatchtaskrun.RunNoGT(req.RunNo),
 		).
 		Exist(ctx)
 	if err != nil {
@@ -115,15 +108,12 @@ func (s *Service) MarkResult(
 
 	// 当前为最新执行记录时更新任务整体状态
 	if !hasNewerRun {
-		taskStatus := int64(4)
-		if success {
-			taskStatus = 3
+		taskStatus := StatusFailed
+		if req.Success {
+			taskStatus = StatusSuccess
 		}
 
-		if err = tx.DispatchTask.
-			UpdateOneID(taskData.ID).
-			SetStatus(taskStatus). // 任务状态: 3成功, 4失败
-			Exec(ctx); err != nil {
+		if err = tx.DispatchTask.UpdateOneID(taskData.ID).SetStatus(taskStatus).Exec(ctx); err != nil {
 			_ = tx.Rollback()
 			return fmt.Errorf("更新任务状态失败: %w", err)
 		}

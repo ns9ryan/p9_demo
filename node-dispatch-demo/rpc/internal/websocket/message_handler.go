@@ -1,18 +1,19 @@
-package websocketserver
+package websocket
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
 
-	"oa.98ent.com/p9/node-dispatch/rpc/internal/protocol"
-
 	coderws "github.com/coder/websocket"
 	"github.com/zeromicro/go-zero/core/logx"
+
+	"oa.98ent.com/p9/node-dispatch/rpc/internal/protocol"
+	"oa.98ent.com/p9/node-dispatch/rpc/internal/task"
 )
 
 // handleMessage 处理节点WebSocket业务消息
-func (s *Server) handleMessage(ctx context.Context, nodeID int64, nodeCode string, messageType coderws.MessageType, data []byte) error {
+func (s *Server) handleMessage(ctx context.Context, nodeCode string, messageType coderws.MessageType, data []byte) error {
 	// 只处理文本消息
 	if messageType != coderws.MessageText {
 		return fmt.Errorf("不支持的WebSocket消息类型: %d", messageType)
@@ -33,7 +34,7 @@ func (s *Server) handleMessage(ctx context.Context, nodeID int64, nodeCode strin
 		return s.handleTaskResult(ctx, nodeCode, message.Data)
 
 	default:
-		return fmt.Errorf("不支持的WebSocket消息类型: %s", message.Type)
+		return fmt.Errorf("不支持的WebSocket业务消息类型: %s", message.Type)
 	}
 }
 
@@ -70,15 +71,14 @@ func (s *Server) handleTaskResult(ctx context.Context, nodeCode string, data jso
 	}
 
 	// 标记任务执行结果
-	if err := s.svcCtx.Task.MarkResult(
-		ctx,
-		result.TaskNo,       // 任务编号
-		result.RunNo,        // 执行序号
-		nodeCode,            // 节点编号
-		result.Success,      // 是否执行成功
-		result.Result,       // 执行结果
-		result.ErrorMessage, // 失败原因
-	); err != nil {
+	if err := s.svcCtx.Task.MarkResult(ctx, task.MarkResultRequest{
+		TaskNo:       result.TaskNo,       // 任务编号
+		RunNo:        result.RunNo,        // 执行序号
+		NodeCode:     nodeCode,            // 节点编码
+		Success:      result.Success,      // 是否执行成功
+		Result:       result.Result,       // 执行结果
+		ErrorMessage: result.ErrorMessage, // 失败原因
+	}); err != nil {
 		return fmt.Errorf("更新任务执行结果失败: %w", err)
 	}
 
