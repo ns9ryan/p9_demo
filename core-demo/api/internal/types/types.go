@@ -138,7 +138,7 @@ type PageReq struct {
 // ID query | ID 查询
 type IDQuery struct {
 	// ID | 主键
-	Id int64 `form:"id,range=(0:]"`
+	Id int64 `form:"id" validate:"required,gt=0"`
 }
 
 // Base message | 结果信息
@@ -168,11 +168,11 @@ type IssuePreviewTokenResp struct {
 // Create user request | 创建用户
 type CreateUserReq struct {
 	// Username | 用户名
-	Username string `json:"username"`
+	Username string `json:"username" validate:"required,notblank,max=64"`
 	// Password | 密码
-	Password string `json:"password"`
+	Password string `json:"password" validate:"required,notblank,min=6,max=32"`
 	// Display name | 显示名
-	DisplayName string `json:"display_name"`
+	DisplayName string `json:"display_name" validate:"required,notblank,max=100"`
 	// Mobile | 手机号
 	Mobile string `json:"mobile,optional"`
 	// Email | 邮箱

@@ -61,7 +61,7 @@ type ServiceContext struct {
 
 	// 多语言
 	Trans    *i18n.Translator // API翻译器
-	CoreI18n rest.Middleware  // Core多语言中间件
+	I18nLang rest.Middleware  // Core多语言中间件
 
 	// 认证权限
 	Jwt       rest.Middleware // JWT认证中间件
@@ -158,8 +158,8 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		GameGrpcClient: gameGrpcClient, // 分站游戏GRPC客户端
 
 		// 多语言
-		Trans:    trans,               // API翻译器
-		CoreI18n: coremiddleware.I18n, // Core多语言中间件
+		Trans:    trans,                                                     // API翻译器
+		I18nLang: i18n.NewI18nLangMiddleware(c.I18n.DefaultLanguage).Handle, // Core多语言中间件
 
 		// 认证权限
 		Jwt:       jwt,       // JWT认证中间件

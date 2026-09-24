@@ -4,9 +4,9 @@ package ent
 
 import (
 	"context"
+	"oa.98ent.com/p9/core/example/promo-api/ent/promotion"
 	"errors"
 	"fmt"
-	"oa.98ent.com/p9/core/example/promo-api/ent/promotion"
 	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"

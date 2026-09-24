@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"oa.98ent.com/p9/common/ctxdata"
-	"oa.98ent.com/p9/common/i18n"
 	"oa.98ent.com/p9/common/response"
 	"oa.98ent.com/p9/common/utils"
 	"oa.98ent.com/p9/common/xerr"
@@ -21,14 +20,6 @@ import (
 type Client interface {
 	CheckToken(ctx context.Context, accessToken string) (*ctxdata.Claims, error)
 	Enforce(ctx context.Context, claims *ctxdata.Claims, path, method string) (bool, error)
-}
-
-// I18n 国际化
-func I18n(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		lang := i18n.ParseLang(r.Header.Get("X-Lang"))
-		next(w, r.WithContext(i18n.WithLang(r.Context(), lang)))
-	}
 }
 
 // ClientIP 把客户端 IP 写入上下文（含 gRPC outgoing metadata）。

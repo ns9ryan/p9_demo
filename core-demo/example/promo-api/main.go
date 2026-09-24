@@ -70,7 +70,7 @@ func main() {
 	// 设置多语言字典加载器
 	coreadapt.SetDictLoader(coreCli)
 	// 注册多语言中间件
-	server.Use(middleware.I18n)
+	server.Use(i18n.NewI18nLangMiddleware(c.I18n.DefaultLanguage).Handle)
 	// 注册客户端 IP 中间件(可选)
 	server.Use(middleware.ClientIP)
 	// 多语言翻译器

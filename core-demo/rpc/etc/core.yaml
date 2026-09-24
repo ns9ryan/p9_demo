@@ -14,11 +14,11 @@ Etcd:
   Key: platform-core-rpc
 
 # 链路追踪, 生产建议 Sampler 0.01~0.1
-Telemetry:
-  Name: platform-core-rpc
-  Endpoint: 127.0.0.1:4317
-  Sampler: 1.0
-  Batcher: otlpgrpc
+#Telemetry:
+#  Name: platform-core-rpc
+#  Endpoint: 127.0.0.1:4317
+#  Sampler: 1.0
+#  Batcher: otlpgrpc
 
 DB:
   Driver: postgres

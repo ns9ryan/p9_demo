@@ -9,7 +9,9 @@ import (
 	"fmt"
 	"net/http"
 
+	"oa.98ent.com/p9/common/i18n"
 	"oa.98ent.com/p9/common/response"
+	"oa.98ent.com/p9/common/validate"
 	"oa.98ent.com/p9/core/api/internal/catalog"
 	"oa.98ent.com/p9/core/api/internal/config"
 	"oa.98ent.com/p9/core/api/internal/handler"
@@ -19,6 +21,7 @@ import (
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest"
+	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 var configFile = flag.String("f", "etc/core.yaml", "the config file")
@@ -29,10 +32,16 @@ func main() {
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 
+	// 创建参数校验器
+	v, err := validate.New(c.I18n.DefaultLanguage)
+	logx.Must(err)
+	// 注册全局参数校验器
+	httpx.SetValidator(v)
+
 	server := rest.MustNewServer(c.RestConf, rest.WithCors(c.CROSConf.Address))
 	defer server.Stop()
-	// 注册I18n中间件
-	server.Use(middleware.I18n)
+	// 注册I18n语言中间件
+	server.Use(i18n.NewI18nLangMiddleware(c.I18n.DefaultLanguage).Handle)
 	// 注册客户端 IP 中间件
 	server.Use(middleware.ClientIP)
 	// 注册服务上下文

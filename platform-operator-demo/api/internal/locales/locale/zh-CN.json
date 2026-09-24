@@ -10,7 +10,11 @@
 		"internal_error": "系统内部错误",
 		"too_many_requests": "请求过于频繁",
 		"service_unavailable": "服务暂不可用",
-		"request_timeout": "请求超时"
+		"request_timeout": "请求超时",
+		"paramRequired": "缺少必填参数: {{.Field}}",
+		"paramTypeMismatch": "参数类型错误: {{.Field}}",
+		"paramValueInvalid": "参数值错误",
+		"paramValueInvalidField": "参数值错误: {{.Field}}"
 	},
 
 	"operator": {

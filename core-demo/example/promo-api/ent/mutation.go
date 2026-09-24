@@ -4,10 +4,10 @@ package ent
 
 import (
 	"context"
-	"errors"
-	"fmt"
 	"oa.98ent.com/p9/core/example/promo-api/ent/predicate"
 	"oa.98ent.com/p9/core/example/promo-api/ent/promotion"
+	"errors"
+	"fmt"
 	"sync"
 	"time"
 

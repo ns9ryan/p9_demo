@@ -10,7 +10,12 @@
 		"internal_error": "Internal server error",
 		"too_many_requests": "Too many requests",
 		"service_unavailable": "Service unavailable",
-		"request_timeout": "Request timeout"
+		"request_timeout": "Request timeout",
+		"invalidParam": "invalid request parameter",
+		"paramRequired": "required parameter missing: {{.Field}}",
+		"paramTypeMismatch": "parameter type mismatch: {{.Field}}",
+		"paramValueInvalid": "invalid parameter value",
+		"paramValueInvalidField": "invalid parameter value: {{.Field}}"
 	},
 
 	"operator": {

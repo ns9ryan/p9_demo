@@ -4,8 +4,8 @@ package hook
 
 import (
 	"context"
-	"fmt"
 	"oa.98ent.com/p9/core/example/promo-api/ent"
+	"fmt"
 )
 
 // The PromotionFunc type is an adapter to allow the use of ordinary

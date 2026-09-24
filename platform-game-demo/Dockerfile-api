@@ -31,6 +31,8 @@ RUN apk update --no-cache && apk add --no-cache tzdata
 # 从 builder 阶段复制编译好的二进制
 COPY --from=builder /app/platform_game_api ./
 COPY ./api/etc/${CONFIG_FILE} ./etc/
+# 复制 i18n 多语言文件
+COPY ./api/internal/locales ./internal/locales/
 
 EXPOSE 18003
 

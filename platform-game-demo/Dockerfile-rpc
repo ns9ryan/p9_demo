@@ -31,6 +31,10 @@ RUN apk update --no-cache && apk add --no-cache tzdata
 # 从 builder 阶段复制编译好的二进制
 COPY --from=builder /app/platform_game_rpc ./
 COPY ./rpc/etc/${CONFIG_FILE} ./etc/
+# 复制 vendor_remote 数据文件（用于本地同步测试）
+COPY ./rpc/internal/locales/vendor_remote ./internal/locales/vendor_remote/
+# 复制 i18n 多语言文件
+COPY ./rpc/internal/locales/i18n ./internal/locales/i18n/
 
 EXPOSE 19003
 

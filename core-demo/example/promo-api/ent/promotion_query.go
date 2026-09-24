@@ -4,10 +4,10 @@ package ent
 
 import (
 	"context"
-	"fmt"
-	"math"
 	"oa.98ent.com/p9/core/example/promo-api/ent/predicate"
 	"oa.98ent.com/p9/core/example/promo-api/ent/promotion"
+	"fmt"
+	"math"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"

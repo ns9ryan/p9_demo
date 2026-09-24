@@ -10,8 +10,8 @@ require (
 	github.com/zeromicro/go-zero v1.10.3
 	google.golang.org/grpc v1.84.0
 	google.golang.org/protobuf v1.36.12
-	oa.98ent.com/p9/common v1.0.1
-	oa.98ent.com/p9/core v1.1.11
+	oa.98ent.com/p9/common v1.0.2
+	oa.98ent.com/p9/core v1.2.0
 	oa.98ent.com/p9/platform-base v0.1.0
 	oa.98ent.com/p9/platform-game v1.0.0
 )

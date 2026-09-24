@@ -4030,8 +4030,6 @@
         "operationId": "roleGetRoleById",
         "parameters": [
           {
-            "minimum": 0,
-            "exclusiveMinimum": true,
             "type": "integer",
             "description": "ID | 主键",
             "name": "id",
@@ -4298,7 +4296,8 @@
               "properties": {
                 "display_name": {
                   "description": "Display name | 显示名",
-                  "type": "string"
+                  "type": "string",
+                  "maxLength": 100
                 },
                 "email": {
                   "description": "Email | 邮箱",
@@ -4310,7 +4309,9 @@
                 },
                 "password": {
                   "description": "Password | 密码",
-                  "type": "string"
+                  "type": "string",
+                  "maxLength": 32,
+                  "minLength": 6
                 },
                 "role_ids": {
                   "description": "Role IDs | 角色ID",
@@ -4325,7 +4326,8 @@
                 },
                 "username": {
                   "description": "Username | 用户名",
-                  "type": "string"
+                  "type": "string",
+                  "maxLength": 64
                 }
               }
             }
@@ -4482,8 +4484,6 @@
         "operationId": "userGetUserById",
         "parameters": [
           {
-            "minimum": 0,
-            "exclusiveMinimum": true,
             "type": "integer",
             "description": "ID | 主键",
             "name": "id",
@@ -5175,7 +5175,7 @@
       "Token": []
     }
   ],
-  "x-date": "2026-09-18 15:22:11",
+  "x-date": "2026-09-24 09:34:12",
   "x-description": "This is a goctls generated swagger file.",
   "x-github": "https://github.com/suyuan32/simple-admin-core",
   "x-goctl-version": "v1.14.8",

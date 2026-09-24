@@ -343,10 +343,10 @@ k8s.io/kube-openapi v0.0.0-20250710124328-f3f2b991d03b h1:MloQ9/bdJyIu9lb1PzujOP
 k8s.io/kube-openapi v0.0.0-20250710124328-f3f2b991d03b/go.mod h1:UZ2yyWbFTpuhSbFhv24aGNOdoRdJZgsIObGBUaYVsts=
 k8s.io/utils v0.0.0-20260319190234-28399d86e0b5 h1:kBawHLSnx/mYHmRnNUf9d4CpjREbeZuxoSGOX/J+aYM=
 k8s.io/utils v0.0.0-20260319190234-28399d86e0b5/go.mod h1:xDxuJ0whA3d0I4mf/C4ppKHxXynQ+fxnkmQH0vTHnuk=
-oa.98ent.com/p9/common v1.0.1 h1:aHcmcZBzsZIEC02/67uhOvCUoZ9HHcydcdJVyA1Bh4Y=
-oa.98ent.com/p9/common v1.0.1/go.mod h1:jrGfNrcMdv6bgojpMa8gZimXte1B/JFRF3D0Wab1ZRE=
-oa.98ent.com/p9/core v1.1.11 h1:xAW/sJHzUW11b3A3Jhw4bivsNwXX7vrpWe3KwGsV9vs=
-oa.98ent.com/p9/core v1.1.11/go.mod h1:3B03vgvthPs5cnlj8GlpiXwa1DwMMqXqp1t8F3Q30+8=
+oa.98ent.com/p9/common v1.0.2 h1:ZE1Hq8fXqULPh6VmcEpa7UBW87D2khWu05orcQmToGE=
+oa.98ent.com/p9/common v1.0.2/go.mod h1:jrGfNrcMdv6bgojpMa8gZimXte1B/JFRF3D0Wab1ZRE=
+oa.98ent.com/p9/core v1.2.0 h1:d3MeZ78JrCi8hZWhJ/ahw5jiYjHSRFAttPgJhU/8aFs=
+oa.98ent.com/p9/core v1.2.0/go.mod h1:k9YSeuXqZeMFor/gM4j6R18Qx0UHhnWnlTkuPc79kfc=
 oa.98ent.com/p9/platform-base v0.1.0 h1:WsvuIz4abAtUBWv2iA0TydLBDJY2YetdVDCBGggx7uw=
 oa.98ent.com/p9/platform-base v0.1.0/go.mod h1:WbyJysO7YprQC0jV17hdct/dtjLYXvKpWbLzB4T45Uw=
 oa.98ent.com/p9/platform-game v1.0.0 h1:RZ0MDIYYdXbHe05UGVyq0IBzUgQT2Z5BaGO0qHoOcYo=

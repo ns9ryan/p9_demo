@@ -3,8 +3,8 @@
 package ent
 
 import (
-	"fmt"
 	"oa.98ent.com/p9/core/example/promo-api/ent/promotion"
+	"fmt"
 	"strings"
 	"time"
 

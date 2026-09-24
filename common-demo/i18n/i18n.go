@@ -2,6 +2,7 @@ package i18n
 
 import (
 	"context"
+	"net/http"
 	"strings"
 )
 
@@ -11,7 +12,22 @@ const (
 	LangEN = "en-US"
 )
 
+// langKey 语言上下文键
 type langKey struct{}
+
+// I18nLangMiddleware 国际化语言中间件
+type I18nLangMiddleware struct{ defaultLang string }
+
+func NewI18nLangMiddleware(defaultLang string) *I18nLangMiddleware {
+	return &I18nLangMiddleware{defaultLang: defaultLang}
+}
+
+func (m *I18nLangMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		lang := ParseLangWithDefault(r.Header.Get("X-Lang"), m.defaultLang)
+		next(w, r.WithContext(WithLang(r.Context(), lang)))
+	}
+}
 
 // WithLang 设置语言到上下文
 func WithLang(ctx context.Context, lang string) context.Context {
@@ -35,10 +51,10 @@ func Lang(ctx context.Context, defaultLang *string) string {
 	return LangEN
 }
 
-// ParseLang 解析语言
-func ParseLang(header string) string {
+// ParseLangWithDefault 解析语言，默认返回默认语言
+func ParseLangWithDefault(header string, defaultLang string) string {
 	if header == "" {
-		return LangEN
+		return defaultLang
 	}
 	first := strings.TrimSpace(strings.Split(header, ",")[0])
 	first = strings.TrimSpace(strings.Split(first, ";")[0])

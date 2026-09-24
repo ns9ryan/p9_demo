@@ -32,8 +32,6 @@ func NewSyncRunLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SyncRunLo
 // 同步执行（执行同步操作）
 func (l *SyncRunLogic) SyncRun(in *platform_game.SyncRunRequest) (*platform_game.SyncRunResp, error) {
 	l.Infof("🚀 SyncRun 请求开始")
-	l.Infof("   📋 ObjectType: %s", in.ObjectType)
-	l.Infof("   ⚙️  SyncCols: %v", in.SyncCols)
 
 	// 检查数据库连接
 	if l.svcCtx.DB == nil {
@@ -43,15 +41,9 @@ func (l *SyncRunLogic) SyncRun(in *platform_game.SyncRunRequest) (*platform_game
 			Message: "Database not available",
 		}, nil
 	}
-	l.Infof("✅ 数据库连接已确认")
 
 	// 根据对象类型获取同步范围
 	syncScope := l.objectTypeToSyncScope(in.ObjectType)
-	l.Infof("📍 同步范围: %s", syncScope)
-
-	// 从配置读取 grpcServerAddr
-	grpcServerAddr := l.svcCtx.Config.VendorGrpcServerAddr
-	l.Infof("📍 gRPC 服务器地址配置: %s", grpcServerAddr)
 
 	// 第一步：创建同步检查点记录（RPC 侧创建）
 	checkpoint := &ent.GameSyncCheckpoint{
@@ -78,7 +70,7 @@ func (l *SyncRunLogic) SyncRun(in *platform_game.SyncRunRequest) (*platform_game
 		}, nil
 	}
 
-	l.Infof("[RPC SyncRun] checkpoint created: id=%d", createdCheckpoint.ID)
+	l.Infof("[RPC SyncRun] 检查点已创建: id=%d", createdCheckpoint.ID)
 
 	// 第二步：立即返回检查点 ID，不阻塞
 	resp := &platform_game.SyncRunResp{

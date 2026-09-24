@@ -414,10 +414,11 @@ func (s *CategorySyncService) getRemoteGameCategory(ctx context.Context, client 
 		s.Infof("[同步数据源] ✓ 获取远程分类数据成功, 共 %d 条", len(remoteResp.CategoryList))
 		return &RemoteCategoryResponse{Data: remoteResp.CategoryList}, nil
 	} else {
-		s.Infof("[同步数据源] 正在获取本地分类数据...")
+		s.Infof("[同步数据源] 📂 准备加载本地分类数据...")
+		s.Infof("[同步数据源]    - 数据源: vendor_remote/category.json")
 		var list []*vendors.GameCategoryInfo
 		if err := locales.LoadLocalVendorRemoteJSON("category.json", &list); err != nil {
-			s.Errorf("[同步数据源] 读取 category.json 失败: %v", err)
+			s.Errorf("[同步数据源] ❌ 读取 category.json 失败: %v", err)
 			return &RemoteCategoryResponse{Data: []*vendors.GameCategoryInfo{}}, err
 		}
 

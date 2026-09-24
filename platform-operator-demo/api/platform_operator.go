@@ -47,10 +47,10 @@ func main() {
 	logx.Must(catalog.Register(ctx.Core))
 
 	// 设置HTTP响应格式
-	response.SetupHTTPX(ctx.Trans, i18n.CodeOperator, c.IsDebug())
+	response.SetupHTTPX(ctx.Trans, i18n.CodePlatform, c.IsDebug())
 
-	// 注册Core国际化中间件
-	server.Use(ctx.CoreI18n)
+	// 注册国际化语言中间件
+	server.Use(ctx.I18nLang)
 
 	// 注册全局错误日志中间件
 	server.Use(ctx.ErrorLog)
