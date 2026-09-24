@@ -5,3 +5,15 @@ AuthSecret: 6ba1434d45011c4eefed669a5eb234334b7f32d72bcf126b0cde434c16d5280c  # 
 # 调度中心连接配置
 Dispatch:
   WebSocketURL: ws://127.0.0.1:28002/ws/node                                  # WebSocket连接地址
+
+# 总网分站RPC配置
+PlatformOperatorRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:12379                                                       # Etcd地址
+    Key: platform-operator-rpc                                                # 服务注册Key
+
+# 当前节点分站基础RPC配置
+OperatorBaseRpc:
+  Endpoints:
+    - 127.0.0.1:39001                                                         # 当前节点operator-base RPC地址
